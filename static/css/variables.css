@@ -1,0 +1,16 @@
+:root {
+  /* Regra 60% - Cores Dominantes */
+  --bg-primary: #0F0C1B;
+  --bg-surface-1: #19191B;
+  --bg-surface-2: #181826;
+
+  /* Regra 30% - Cores Secundárias  */
+  --brand-primary: #7C4DFF;
+  --brand-secondary: #B093FF;
+  --brand-dark: #4300FF;
+
+  /* Regra 10% - Cores de Destaque = */
+  --accent-primary: #00E676;
+  --accent-secondary: #58E4A0;
+  --accent-dark: #00E374;
+}
