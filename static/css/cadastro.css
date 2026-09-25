@@ -1,0 +1,317 @@
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    min-height: 100vh;
+    background-color: #0d0a18;
+    border: 2px solid #159bd3;
+
+    font-family: Arial, Helvetica, sans-serif;
+    color: white;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    padding-top: 45px;
+}
+
+
+/* =========================
+   LOGO DUCKFY
+   ========================= */
+
+h1 {
+    position: static;
+
+    text-align: center;
+
+    font-size: 32px;
+    font-weight: 400;
+
+    line-height: 1;
+
+    margin-bottom: 35px;
+
+    letter-spacing: 0;
+
+    width: 100%;
+}
+
+
+/* DUCK */
+
+h1:first-letter {
+    background-color: #9147ff;
+}
+
+
+/* Se estiver usando:
+   <span class="duck">DUCK</span>
+   <span class="fy">FY</span>
+*/
+
+.duck {
+    background-color: #9147ff;
+    color: #0d0a18;
+
+    padding: 2px 6px;
+
+    border-radius: 3px;
+}
+
+.fy {
+    color: white;
+}
+
+
+/* =========================
+   FORMULÁRIO
+   ========================= */
+
+form {
+    width: 430px;
+
+    background-color: #12101d;
+
+    border: 1px solid #302b3d;
+
+    border-radius: 14px;
+
+    padding: 35px 40px 30px;
+
+    box-shadow:
+        0 15px 40px rgba(0, 0, 0, 0.35);
+}
+
+
+/* =========================
+   LABELS
+   ========================= */
+
+label {
+    display: block;
+
+    color: #eeeeee;
+
+    font-size: 13px;
+
+    margin-bottom: 7px;
+}
+
+
+/* =========================
+   INPUTS
+   ========================= */
+
+input[type="email"],
+input[type="text"],
+input[type="password"] {
+    display: block;
+
+    width: 100%;
+    height: 42px;
+
+    background-color: #0d0a15;
+
+    border: 1px solid #40394d;
+
+    border-radius: 7px;
+
+    color: white;
+
+    padding: 0 12px;
+
+    font-size: 14px;
+
+    outline: none;
+
+    margin-bottom: 22px;
+
+    transition: 0.2s;
+}
+
+
+input[type="email"]:focus,
+input[type="text"]:focus,
+input[type="password"]:focus {
+    border-color: #9147ff;
+
+    box-shadow: 0 0 0 3px rgba(145, 71, 255, 0.12);
+}
+
+
+/* =========================
+   REMOVE OS BR
+   ========================= */
+
+form br {
+    display: none;
+}
+
+
+/* =========================
+   NÃO SOU UM ROBÔ
+   ========================= */
+
+label:has(input[type="checkbox"]) {
+    width: 230px;
+    height: 56px;
+
+    background-color: white;
+
+    color: #333;
+
+    border-radius: 7px;
+
+    display: flex;
+    align-items: center;
+
+    gap: 12px;
+
+    padding: 7px 12px;
+
+    margin: 25px auto 0;
+
+    font-size: 11px;
+}
+
+
+/* CHECKBOX */
+
+input[type="checkbox"] {
+    appearance: none;
+
+    width: 38px;
+    height: 38px;
+
+    flex-shrink: 0;
+
+    background-color: #b18aff;
+
+    border-radius: 5px;
+
+    margin: 0;
+
+    cursor: pointer;
+}
+
+
+/* checkbox marcado */
+
+input[type="checkbox"]:checked {
+    background-color: #9147ff;
+}
+
+input[type="checkbox"]:checked::after {
+    content: "✓";
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    width: 100%;
+    height: 100%;
+
+    color: white;
+
+    font-size: 20px;
+}
+
+
+/* =========================
+   BOTÕES
+   ========================= */
+
+button {
+    display: inline-block;
+
+    height: 44px;
+
+    border: none;
+
+    border-radius: 8px;
+
+    font-size: 11px;
+    font-weight: 500;
+
+    color: white;
+
+    cursor: pointer;
+
+    margin-top: 45px;
+
+    transition: 0.2s;
+}
+
+
+/* CANCELAR */
+
+button[type="button"] {
+    width: 48%;
+
+    background-color: #29243a;
+
+    margin-left: 0;
+}
+
+
+/* CADASTRAR */
+
+button[type="submit"] {
+    width: 48%;
+
+    background-color: #9147ff;
+
+    margin-left: 3%;
+}
+
+
+/* HOVER */
+
+button[type="button"]:hover {
+    background-color: #383149;
+}
+
+button[type="submit"]:hover {
+    background-color: #a15cff;
+
+    transform: translateY(-1px);
+
+    box-shadow: 0 7px 18px rgba(145, 71, 255, 0.25);
+}
+
+
+
+   /* RESPONSIVO */
+
+
+@media (max-width: 600px) {
+
+    body {
+        padding-top: 30px;
+    }
+
+    h1 {
+        font-size: 27px;
+        margin-bottom: 25px;
+    }
+
+    form {
+        width: 90%;
+        padding: 30px 25px;
+    }
+
+    button[type="button"],
+    button[type="submit"] {
+        width: 100%;
+        margin-left: 0;
+    }
+
+    button[type="submit"] {
+        margin-top: 10px;
+    }
+}
