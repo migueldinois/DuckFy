@@ -1,0 +1,191 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, Roboto, sans-serif;
+}
+
+html, body {
+    width: 100%;
+    min-height: 100vh;
+    background-color: var(--bg-primary);
+}
+
+
+.tela-edicao {
+    width: 100%;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    background-color: var(--bg-primary);
+}
+
+/* seção do cabeçalho */
+.cabecalho-perfil {
+    width: 100%;
+    background-color: var(--brand-primary);
+    padding: 40px 60px 50px 60px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    position: relative;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+}
+
+.link-voltar {
+    position: absolute;
+    top: 36px;
+    left: 60px;
+    color: var(--bg-primary);
+    text-decoration: none;
+    font-size: 2rem;
+    font-weight: bold;
+    transition: transform 0.2s ease;
+}
+
+.link-voltar:hover {
+    transform: translateX(-4px);
+}
+
+.link-salvar {
+    position: absolute;
+    top: 40px;
+    right: 60px;
+    color: var(--bg-primary);
+    text-decoration: none;
+    font-size: 1.2rem;
+    font-weight: 700;
+    transition: opacity 0.2s ease;
+}
+
+.link-salvar:hover {
+    opacity: 0.75;
+}
+
+.titulo-pagina {
+    font-size: 2rem;
+    font-weight: 700;
+    color: var(--bg-primary);
+    margin-bottom: 24px;
+}
+
+.resumo-perfil {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 16px;
+}
+
+/* avatar */
+.avatar.avatar-grande {
+    width: 140px;
+    height: 140px;
+    border-radius: 50%;
+    background-color: var(--bg-primary);
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+}
+
+.avatar-cabeca {
+    width: 48px;
+    height: 48px;
+    background-color: var(--brand-primary);
+    border-radius: 50%;
+    position: absolute;
+    top: 28px;
+}
+
+.avatar-corpo {
+    width: 86px;
+    height: 56px;
+    background-color: var(--brand-primary);
+    border-radius: 50% 50% 0 0;
+    position: absolute;
+    bottom: 0;
+}
+
+.link-foto {
+    color: var(--bg-primary);
+    text-decoration: none;
+    font-size: 1.05rem;
+    font-weight: 600;
+    padding: 6px 16px;
+    border-radius: 20px;
+    transition: background-color 0.2s ease;
+}
+
+.link-foto:hover {
+    background-color: rgba(15, 12, 27, 0.15);
+}
+
+/* formulario */
+.formulario-perfil {
+    width: 100%;
+    max-width: 600px;
+    margin: 0 auto;
+    padding: 60px 20px;
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+}
+
+.formulario-perfil label {
+    font-size: 1.1rem;
+    color: #ffffff;
+    font-weight: 600;
+    margin-bottom: 8px;
+    margin-top: 16px;
+}
+
+.formulario-perfil label:first-of-type {
+    margin-top: 0;
+}
+
+.formulario-perfil input[type="text"],
+.formulario-perfil input[type="email"] {
+    width: 100%;
+    padding: 16px 20px;
+    background-color: var(--bg-surface-1);
+    border: 2px solid var(--bg-surface-2);
+    border-radius: 12px;
+    color: #ffffff;
+    font-size: 1.05rem;
+    outline: none;
+    margin-bottom: 16px;
+    transition: border-color 0.2s ease;
+}
+
+.formulario-perfil input::placeholder {
+    color: #6b6b80;
+}
+
+.formulario-perfil input:focus {
+    border-color: var(--brand-primary);
+}
+
+/* botões com a cor primária */
+.formulario-perfil button {
+    width: 100%;
+    padding: 16px;
+    background-color: var(--brand-primary);
+    color: #ffffff;
+    border: none;
+    border-radius: 14px;
+    font-size: 1.1rem;
+    font-weight: 700;
+    cursor: pointer;
+    margin-top: 16px;
+    transition: background-color 0.2s ease, transform 0.1s ease;
+}
+
+.formulario-perfil button:hover {
+    background-color: var(--brand-secondary);
+}
+
+.formulario-perfil button:active {
+    transform: scale(0.99);
+}
