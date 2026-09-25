@@ -18,6 +18,10 @@ def perfil():
 def editar_perfil():
     return render_template("editar_perfil.html")
 
+@app.get("/login")
+def login():
+    return render_template("tela_login.html")
+
 
 if __name__ == "__main__":
     app.run(debug=True)
