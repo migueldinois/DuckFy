@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DuckFy - Configurações</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/perfil.css') }}">
+</head>
+<body>
+    <main class="phone-screen">
+        <section class="profile-header">
+            <h1 class="page-title">Configurações</h1>
+
+            <div class="profile-summary">
+                <div class="avatar" aria-hidden="true">
+                    <span class="avatar-head"></span>
+                    <span class="avatar-body"></span>
+                </div>
+                <p>Olá, Fulano!</p>
+                <a class="edit-link" href="{{ url_for('editar_perfil') }}">Editar perfil</a>
+            </div>
+        </section>
+
+        <nav class="settings-list" aria-label="Configurações">
+            <a href="#">Acessibilidade</a>
+            <a href="#">Termos</a>
+        </nav>
+    </main>
+</body>
+</html>
