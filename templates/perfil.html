@@ -4,26 +4,36 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>DuckFy - Configurações</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/variables.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/perfil.css') }}">
 </head>
 <body>
-    <main class="phone-screen">
-        <section class="profile-header">
-            <h1 class="page-title">Configurações</h1>
+    <main class="tela-configuracoes">
+        <!-- Topo Roxo -->
+        <section class="cabecalho-perfil">
+            <a class="link-voltar" href="#" aria-label="Voltar">&larr;</a>
+            <h1 class="titulo-pagina">Configurações</h1>
 
-            <div class="profile-summary">
+            <div class="resumo-perfil">
                 <div class="avatar" aria-hidden="true">
-                    <span class="avatar-head"></span>
-                    <span class="avatar-body"></span>
+                    <span class="avatar-cabeca"></span>
+                    <span class="avatar-corpo"></span>
                 </div>
-                <p>Olá, Fulano!</p>
-                <a class="edit-link" href="{{ url_for('editar_perfil') }}">Editar perfil</a>
+                <p class="nome-usuario">Olá, Fulano!</p>
+                <a class="link-editar" href="{{ url_for('editar_perfil') }}" aria-label="Editar perfil">✏️</a>
             </div>
         </section>
 
-        <nav class="settings-list" aria-label="Configurações">
-            <a href="#">Acessibilidade</a>
-            <a href="#">Termos</a>
+        <!-- Lista de Opções (Fundo Escuro) -->
+        <nav class="lista-configuracoes" aria-label="Configurações">
+            <a href="#" class="item-configuracao">
+                <span>Acessibilidade</span>
+                <span class="seta">&gt;</span>
+            </a>
+            <a href="#" class="item-configuracao">
+                <span>Termos</span>
+                <span class="seta">&gt;</span>
+            </a>
         </nav>
     </main>
 </body>
