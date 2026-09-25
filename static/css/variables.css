@@ -1,16 +1,97 @@
-:root {
-  /* Regra 60% - Cores Dominantes */
-  --bg-primary: #0F0C1B;
-  --bg-surface-1: #19191B;
-  --bg-surface-2: #181826;
+/* ==========================================
+   1. ESTILOS GERAIS DA APLICAÇÃO
+   ========================================== */
+body {
+    background-color: #000000;
+    color: #ffffff;
+    font-family: system-ui, -apple-system, sans-serif;
+    margin: 0;
+    padding: 0;
+}
 
-  /* Regra 30% - Cores Secundárias  */
-  --brand-primary: #7C4DFF;
-  --brand-secondary: #B093FF;
-  --brand-dark: #4300FF;
+/* Garante o formato de tela de smartphone no computador */
+.app-container {
+    max-width: 450px;
+    min-height: 100vh;
+    margin: 0 auto;
+}
 
-  /* Regra 10% - Cores de Destaque = */
-  --accent-primary: #00E676;
-  --accent-secondary: #58E4A0;
-  --accent-dark: #00E374;
+/* ==========================================
+   2. INPUTS DE APORTE (TOPO)
+   ========================================== */
+.custom-input {
+    background-color: #d9d9d9 !important;
+    border: none !important;
+    height: 48px;
+    border-radius: 4px;
+    font-weight: bold;
+    color: #000000 !important;
+}
+
+.custom-input:focus {
+    box-shadow: 0 0 0 2px #ffffff !important;
+}
+
+/* ==========================================
+   3. CARD CENTRAL CINZA CLARO
+   ========================================== */
+.card-cinza {
+    background-color: #d9d9d9;
+    color: #000000;
+}
+
+/* Botões de seleção de tempo (5 anos, 10 anos) */
+.btn-periodo {
+    background-color: #999999;
+    color: #ffffff;
+    border-radius: 20px;
+    border: none;
+    padding: 6px 18px;
+    font-size: 0.85rem;
+    font-weight: 500;
+}
+
+.btn-periodo.active {
+    background-color: #777777;
+}
+
+/* Botão circular de edição (Lápis) */
+.btn-edit {
+    background-color: #999999;
+    color: #000000;
+    border-radius: 50%;
+    width: 36px;
+    height: 36px;
+    border: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Conteúdo reservado ao Gráfico */
+.grafic-container {
+    min-height: 200px;
+}
+
+/* ==========================================
+   4. BARRA DE NAVEGAÇÃO INFERIOR
+   ========================================== */
+.nav-btn {
+    background-color: #404040;
+    color: #ffffff;
+    width: 52px;
+    height: 52px;
+    border-radius: 50%;
+    border: none;
+    font-weight: bold;
+    font-size: 1.1rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background-color 0.2s ease;
+}
+
+/* Destaque visual do botão selecionado na barra */
+.nav-btn.active {
+    box-shadow: 0 0 0 4px #cccccc;
 }
