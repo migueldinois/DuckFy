@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simulador Patrimõnio</title>
+</head>
+
+<body>
+
+    <main class="container mobile">
+
+        <header class="header">
+            <a href="" aria-label="Voltar"></a>
+            <h1>Simulador de Investimentos</h1>
+        </header>
+
+        <main>
+            <form class="" id="aporte-inicial">
+                <div class="input-group">
+                    <label for="aporte-inicial">Aporte Inicial (R$)</label>
+                    <input type="number" id="aporte-inicial" name="aporte_inicial" step="0.01" placeholder="0,00"
+                        required>
+                </div>
+
+                <div input-group>
+                    <label for="aporte-inicial">Aporte Mensal (R$)</label>
+                    <input type="number" id="aporte-inicial" name="aporte_inicial" step="0.01" placeholder="0,00"
+                        required>
+                </div>
+            </form>
+
+            <section class="period-selector">
+
+                <div class="periodos">
+                    <button type="button" class="btn-periodo">5 anos</button>
+                    <button type="button" class="btn-periodo">10 anos</button>
+                    <button type="button" class="btn-edit" id="btn-editar-periodo" title="Editar Período"> ✏️ </button>
+                </div>
+
+                <div class="metrics-container">
+
+                    <div class="metric-box">
+                        <span class="value" id="total-investido">R$00,00</span>
+                        <span>Investido</span>
+                    </div>
+
+                    <div class="metric-box">
+                        <span class="value" id="total-investido">R$00,00</span>
+                        <span>Rendimento</span>
+                    </div>
+
+                    <div class="grafic-container">
+                        
+                    </div>
+
+                </div>
+                
+            </section>
+
+        </main>
+
+    </main>
+
+</body>
+
+</html>
