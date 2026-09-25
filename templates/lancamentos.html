@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Duckfy - Lançamentos</title>
+</head>
+
+<body>
+    <main class="container">
+
+        <!-- Card Principal do Formulário -->
+        <div class="card">
+            <form action="form-lançamento">
+
+                <!-- Input Alternador de tipo (Entrada / Saída)  -->
+                <div class="toggle-type" role="radiogroup" label="Tipo de Lançamento">
+                    <input type="radio" id="entrada" name="tipo" value="entrada" checked />
+                    <label for="entrada">Entrada</label>
+
+                    <input type="radio" id="saida" name="tipo" value="saida" />
+                    <label for="saida">Saída</label>
+                </div>
+
+                <!-- Campo: local -->
+                <div class="form-group">
+                    <label for="local">Local</label>
+                    <input type="text" id="local" name="local" />
+                </div>
+
+                <!-- Campo: Categoria -->
+                <div class="form-group">
+                    <label>Categoria</label>
+                    <div class="category-selector" role="radiogroup" label="Categoria">
+
+                        <input type="radio" id="cat-casa" name="categoria" value="casa" />
+                        <label for="cat-casa" label="Casa"><span class="icon-home"></span></label>
+
+
+                    </div>
+                </div>
+
+                <!-- Campo: Sub-Categoria -->
+                <div class="form-group">
+                    <label for="subcategoria">Sub-Categoria</label>
+                    <select name="subcategoria" id="subcategoria">
+                        <option value=""></option>
+                    </select>
+                </div>
+                
+                <!-- Campo: Observação -->
+                <div class="form-group">
+                    <label for="valor">Valor</label>
+                    <div class="input-prefix">
+                        <span class="currency-symbol">$</span>
+                        <input type="number" id="valor" name="valor" step="0.01" min="0" placeholder="" />
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="observacao">Observação (opcional)</label>
+                    <textarea name="observacao" id="observacao" rows="3"></textarea>
+                </div>
+            </form>
+        </div>
+
+        <div class="actions">
+            <button type="submit" form="form-lancamento" class="btn-primary">
+                Lançar Entrada
+            </button>
+        </div>
+    </main>
+    
+</body>
+
+</html>
