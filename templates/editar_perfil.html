@@ -4,25 +4,28 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>DuckFy - Editar Perfil</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/variables.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/editar_perfil.css') }}">
 </head>
 <body>
-    <main class="phone-screen edit-screen">
-        <section class="profile-header edit-header">
-            <a class="back-link" href="{{ url_for('perfil') }}" aria-label="Voltar">&larr;</a>
-            <span class="page-title">Editar Perfil</span>
-            <a class="save-link" href="{{ url_for('perfil') }}">Salvar</a>
+    <main class="tela-edicao">
+        <!-- Topo Roxo -->
+        <section class="cabecalho-perfil">
+            <a class="link-voltar" href="{{ url_for('perfil') }}" aria-label="Voltar para o perfil">&larr;</a>
+            <h1 class="titulo-pagina">Editar Perfil</h1>
+            <a class="link-salvar" href="{{ url_for('perfil') }}">Salvar</a>
 
-            <div class="edit-profile-summary">
-                <div class="avatar large-avatar" aria-hidden="true">
-                    <span class="avatar-head"></span>
-                    <span class="avatar-body"></span>
+            <div class="resumo-perfil">
+                <div class="avatar avatar-grande" aria-hidden="true">
+                    <span class="avatar-cabeca"></span>
+                    <span class="avatar-corpo"></span>
                 </div>
-                <a class="photo-link" href="#">Alterar foto</a>
+                <a class="link-foto" href="#">Alterar foto</a>
             </div>
         </section>
 
-        <form class="profile-form">
+        <!-- Formulário Inferior -->
+        <form class="formulario-perfil">
             <label for="nome">Nome</label>
             <input id="nome" name="nome" type="text" placeholder="Digite seu nome">
 
