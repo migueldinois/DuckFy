@@ -18,6 +18,10 @@ def perfil():
 def editar_perfil():
     return render_template("editar_perfil.html")
 
+@app.get("/cadastro")
+def cadastro():
+    return render_template("cadastro.html")
+
 
 if __name__ == "__main__":
     app.run(debug=True)
