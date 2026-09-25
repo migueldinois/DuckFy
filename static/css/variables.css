@@ -9,11 +9,17 @@ body {
     padding: 0;
 }
 
+html, body {
+    height: 100%;
+    background-color: #000; /* Garante o fundo preto no desktop fora do app */
+}
+
 /* Garante o formato de tela de smartphone no computador */
 .app-container {
-    max-width: 450px;
-    min-height: 100vh;
-    margin: 0 auto;
+    max-width: 430px; /* Largura padrão de smartphones grandes (ex: iPhone Pro Max) */
+    width: 100%;
+    min-height: 100vh; /* Ocupa a altura total da tela */
+    margin: 0 auto; /* Centraliza na tela do computador */
 }
 
 /* ==========================================
