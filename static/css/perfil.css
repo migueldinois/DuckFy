@@ -2,56 +2,30 @@
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-    font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, Roboto, sans-serif;
 }
 
 html, body {
     width: 100%;
     min-height: 100vh;
     background-color: var(--bg-primary);
-    display: flex;
-    justify-content: center;
-    align-items: center;
 }
 
-/* Container Responsivo para Desktop */
-.container-desktop {
+/* Ocupar a tela inteira sem limites fixos de largura */
+.cartao-perfil-principal {
     width: 100%;
     min-height: 100vh;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    padding: 40px 20px;
     background-color: var(--bg-primary);
 }
 
-/* Card Principal da Página de Perfil */
-.cartao-perfil-principal {
-    width: 100%;
-    max-width: 850px;
-    background-color: var(--bg-surface-1);
-    border-radius: 28px;
-    overflow: hidden;
-    box-shadow: 0 12px 35px rgba(0, 0, 0, 0.5);
-    display: flex;
-    flex-direction: column;
-}
-
-/* 1. SEÇÃO DO TOPO (ROXO) */
+/* 1. TOPO ROXO DE BORDA A BORDA */
 .cabecalho-perfil {
     width: 100%;
     background-color: var(--brand-primary);
-    padding: 35px 40px 45px 40px;
-    position: relative;
 }
 
 .link-voltar {
-    position: absolute;
-    top: 30px;
-    left: 40px;
-    color: var(--bg-primary);
-    font-size: 1.5rem;
-    text-decoration: none;
+    top: 28px;
+    left: 28px;
     transition: transform 0.2s ease;
 }
 
@@ -59,143 +33,90 @@ html, body {
     transform: translateX(-4px);
 }
 
-.titulo-pagina {
-    font-size: 1.8rem;
-    font-weight: 700;
-    color: var(--bg-primary);
-    text-align: center;
-    margin-bottom: 25px;
-}
-
-/* Card do Usuário sobre o fundo Roxo */
+/* Bloco centralizado do usuário no topo */
 .cartao-usuario {
-    display: flex;
-    align-items: center;
+    max-width: 900px;
     background-color: var(--bg-primary);
-    padding: 20px 28px;
-    border-radius: 20px;
-    gap: 20px;
     box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
 }
 
+/* Avatar Personagem */
 .avatar {
-    width: 75px;
-    height: 75px;
+    width: 70px;
+    height: 70px;
     border-radius: 50%;
     background-color: var(--bg-surface-2);
     position: relative;
     overflow: hidden;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    flex-shrink: 0;
 }
 
 .avatar-cabeca {
-    width: 26px;
-    height: 26px;
+    width: 24px;
+    height: 24px;
     background-color: var(--brand-primary);
     border-radius: 50%;
     position: absolute;
-    top: 15px;
+    top: 14px;
+    left: 50%;
+    transform: translateX(-50%);
 }
 
 .avatar-corpo {
-    width: 48px;
-    height: 32px;
+    width: 44px;
+    height: 30px;
     background-color: var(--brand-primary);
     border-radius: 50% 50% 0 0;
     position: absolute;
     bottom: 0;
-}
-
-.detalhes-usuario {
-    display: flex;
-    flex-direction: column;
-    gap: 6px;
-    flex-grow: 1;
-}
-
-.nome-usuario {
-    font-size: 1.4rem;
-    font-weight: 700;
-    color: #ffffff;
+    left: 50%;
+    transform: translateX(-50%);
 }
 
 .tag-nivel {
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
     background-color: var(--bg-surface-2);
     color: var(--accent-primary);
-    font-size: 0.85rem;
-    font-weight: 600;
-    padding: 4px 12px;
-    border-radius: 12px;
-    width: fit-content;
+    padding: 6px 12px;
 }
 
-.botao-editar-perfil {
+.btn-editar {
     background-color: var(--brand-primary);
     color: #ffffff;
-    text-decoration: none;
-    padding: 10px 18px;
     border-radius: 12px;
     font-weight: 600;
-    font-size: 0.95rem;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    transition: background-color 0.2s ease, transform 0.1s ease;
+    transition: background-color 0.2s ease;
 }
 
-.botao-editar-perfil:hover {
+.btn-editar:hover {
     background-color: var(--brand-dark);
-    transform: scale(1.03);
+    color: #ffffff;
 }
 
-/* 2. ÁREA INFERIOR (CONTEÚDO ESCURO) */
+/* 2. ÁREA INFERIOR DE BORDA A BORDA */
 .conteudo-perfil {
-    padding: 40px;
-    display: flex;
-    flex-direction: column;
-    gap: 32px;
+    width: 100%;
     background-color: var(--bg-primary);
 }
 
-/* Grade de Cards de Ação */
-.grade-acoes {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 20px;
+/* Container para alinhar o conteúdo interno no PC */
+.container-conteudo {
+    max-width: 1000px;
 }
 
+/* Cards de Ação */
 .cartao-acao {
-    display: flex;
-    align-items: center;
-    gap: 16px;
     background-color: var(--bg-surface-1);
-    padding: 20px;
-    border-radius: 18px;
-    text-decoration: none;
     border: 1px solid var(--bg-surface-2);
     transition: transform 0.2s ease, border-color 0.2s ease;
 }
 
 .cartao-acao:hover {
-    transform: translateY(-3px);
+    transform: translateY(-2px);
     border-color: var(--brand-primary);
 }
 
 .icone-acao {
-    width: 48px;
-    height: 48px;
-    border-radius: 14px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    font-size: 1.2rem;
-    flex-shrink: 0;
+    width: 46px;
+    height: 46px;
 }
 
 .icone-acao.roxo {
@@ -208,51 +129,14 @@ html, body {
     color: var(--accent-primary);
 }
 
-.texto-acao h3 {
-    font-size: 1.05rem;
-    color: #ffffff;
-    font-weight: 600;
-    margin-bottom: 2px;
-}
-
-.texto-acao p {
-    font-size: 0.85rem;
-    color: #a0a0b0;
-}
-
-.seta {
-    color: #6b6b80;
-    margin-left: auto;
-    font-size: 0.9rem;
-}
-
-/* Lista Secundária de Configurações */
-.secao-lista-config {
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
-}
-
+/* Lista Secundária */
 .titulo-secao {
-    font-size: 1rem;
-    color: #8b8b9e;
-    font-weight: 600;
-    margin-bottom: 4px;
-    text-transform: uppercase;
+    font-size: 0.85rem;
     letter-spacing: 0.5px;
 }
 
 .item-lista-config {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
     background-color: var(--bg-surface-1);
-    padding: 16px 20px;
-    border-radius: 14px;
-    text-decoration: none;
-    color: #ffffff;
-    font-size: 1rem;
-    font-weight: 500;
     transition: background-color 0.2s ease;
 }
 
@@ -260,27 +144,7 @@ html, body {
     background-color: var(--bg-surface-2);
 }
 
-.esquerda-item {
-    display: flex;
-    align-items: center;
-    gap: 14px;
-}
-
 .icone-lista {
     color: var(--brand-secondary);
-    font-size: 1.1rem;
 }
 
-.item-lista-config.sair {
-    margin-top: 8px;
-    background-color: rgba(255, 77, 77, 0.1);
-}
-
-.item-lista-config.sair .icone-lista,
-.item-lista-config.sair span {
-    color: #ff4d4d;
-}
-
-.item-lista-config.sair:hover {
-    background-color: rgba(255, 77, 77, 0.2);
-}
