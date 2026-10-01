@@ -1,88 +1,89 @@
 <!DOCTYPE html>
-<html lang="en">
-
+<html lang="pt-BR">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Duckfy - Lançamentos</title>
-
-    <!-- Link arquivo CSS -->
-    <link rel="stylesheet" href="../static/css/lancamentos.css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Lançamento</title>
+  <link rel="stylesheet" href="style.css" />
 </head>
-
 <body>
-    <main class="container">
 
-        <!-- Header -->
-        <header class="header">
-            <button type="button" class="btn-back" aria-label="Voltar">
-                <span class="icon-arrow-left"></span>
-            </button>
-            <h1>Lançamento</h1>
-        </header>
+  <main class="container">
+    <!-- Cabeçalho -->
+    <header class="header">
+      <button type="button" class="btn-back" aria-label="Voltar">&larr;</button>
+      <h1>Lançamento</h1>
+    </header>
 
-        <!-- Card Principal do Formulário -->
-        <div class="card">
-            <form action="form-lançamento">
+    <!-- Cartão Principal -->
+    <div class="card">
+      <form id="form-lancamento">
+        
+        <!-- Toggle Entrada / Saída -->
+        <div class="toggle-type" role="radiogroup" aria-label="Tipo de Lançamento">
+          <input type="radio" id="entrada" name="tipo" value="entrada" checked />
+          <label for="entrada">Entrada</label>
 
-                <!-- Input Alternador de tipo (Entrada / Saída)  -->
-                <div class="toggle-type" role="radiogroup" label="Tipo de Lançamento">
-                    <input type="radio" id="entrada" name="tipo" value="entrada" checked />
-                    <label for="entrada">Entrada</label>
-
-                    <input type="radio" id="saida" name="tipo" value="saida" />
-                    <label for="saida">Saída</label>
-                </div>
-
-                <!-- Campo: local -->
-                <div class="form-group">
-                    <label for="local">Local</label>
-                    <input type="text" id="local" name="local" />
-                </div>
-
-                <!-- Campo: Categoria -->
-                <div class="form-group">
-                    <label>Categoria</label>
-                    <div class="category-selector" role="radiogroup" label="Categoria">
-
-                        <input type="radio" id="cat-casa" name="categoria" value="casa" />
-                        <label for="cat-casa" label="Casa"><span class="icon-home"></span></label>
-
-
-                    </div>
-                </div>
-
-                <!-- Campo: Sub-Categoria -->
-                <div class="form-group">
-                    <label for="subcategoria">Sub-Categoria</label>
-                    <select name="subcategoria" id="subcategoria">
-                        <option value=""></option>
-                    </select>
-                </div>
-
-                <!-- Campo: Observação -->
-                <div class="form-group">
-                    <label for="valor">Valor</label>
-                    <div class="input-prefix">
-                        <span class="currency-symbol">$</span>
-                        <input type="number" id="valor" name="valor" step="0.01" min="0" placeholder="" />
-                    </div>
-                </div>
-
-                <div class="form-group">
-                    <label for="observacao">Observação (opcional)</label>
-                    <textarea name="observacao" id="observacao" rows="3"></textarea>
-                </div>
-            </form>
+          <input type="radio" id="saida" name="tipo" value="saida" />
+          <label for="saida">Saída</label>
         </div>
 
-        <div class="actions">
-            <button type="submit" form="form-lancamento" class="btn-primary">
-                Lançar Entrada
-            </button>
+        <!-- Local -->
+        <div class="form-group">
+          <label for="local">Local</label>
+          <input type="text" id="local" name="local" />
         </div>
-    </main>
+
+        <!-- Categoria -->
+        <div class="form-group">
+          <label>Categoria</label>
+          <div class="category-selector" role="radiogroup" aria-label="Categoria">
+            <input type="radio" id="cat1" name="categoria" value="casa" />
+            <label for="cat1"></label>
+
+            <input type="radio" id="cat2" name="categoria" value="carro" />
+            <label for="cat2"></label>
+
+            <input type="radio" id="cat3" name="categoria" value="comida" />
+            <label for="cat3"></label>
+
+
+          </div>
+        </div>
+
+        <!-- Sub-Categoria -->
+        <div class="form-group">
+          <label for="subcategoria">Sub-Categoria</label>
+          <select id="subcategoria" name="subcategoria">
+            <option value="" disabled selected></option>
+          </select>
+        </div>
+
+        <!-- Valor -->
+        <div class="form-group">
+          <label for="valor">Valor</label>
+          <div class="input-prefix">
+            <span class="currency-symbol">$</span>
+            <input type="number" id="valor" name="valor" step="0.01" />
+          </div>
+        </div>
+
+        <!-- Observação -->
+        <div class="form-group">
+          <label for="observacao">Observação (opcional)</label>
+          <textarea id="observacao" name="observacao" rows="3"></textarea>
+        </div>
+
+      </form>
+    </div>
+
+    <!-- Botão de Ação -->
+    <div class="actions">
+      <button type="submit" form="form-lancamento" class="btn-primary">
+        Lançar Entrada
+      </button>
+    </div>
+  </main>
 
 </body>
-
 </html>
