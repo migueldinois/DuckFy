@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{% block title %}DuckFy{% endblock %}</title>
+</head>
+<body class="app-body">
+
+  <div class="app-container">
+    
+    <aside class="sidebar">
+      <a class="sidebar-brand">
+        <span class="brand-icon"></span>
+        <span class="brand-text">DuckFy</span>
+      </a>
+      
+      <hr class="sidebar-divider">
+      
+      <ul class="sidebar-menu">
+        <li class="sidebar-item">
+          <a class="sidebar-link {% if request.endpoint == 'dashboard' %}active{% endif %}">Dashboard</a>
+        </li>
+        <li class="sidebar-item">
+          <a class="sidebar-link {% if request.endpoint == 'explorar' %}active{% endif %}">Explorar</a>
+        </li>
+        <li class="sidebar-item">
+          <a class="sidebar-link {% if request.endpoint == 'servicos' %}active{% endif %}">Serviços</a>
+        </li>
+        <li class="sidebar-item">
+          <a class="sidebar-link {% if request.endpoint == 'perfil' %}active{% endif %}">Perfil</a>
+        </li>
+      </ul>
+    </aside>
+
+    <main class="main-content">
+      {% block content %}{% endblock %}
+    </main>
+
+  </div>
+
+  {% include 'components/bottom_bar.html' %}
+
+</body>
+</html>
