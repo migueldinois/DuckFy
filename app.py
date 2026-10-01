@@ -1,10 +1,29 @@
-from flask import Flask, render_template, request, redirect, url_for
+from flask import Flask, render_template
+
 
 app = Flask(__name__)
+
+
 
 @app.get("/")
 def index():
     return render_template("index.html")
+
+
+@app.get("/perfil")
+def perfil():
+    return render_template("perfil.html")
+
+
+@app.get("/editar-perfil")
+def editar_perfil():
+    return render_template("editar_perfil.html")
+
+@app.get("/login")
+def login():
+    return render_template("tela_login.html")
+
+
 
 if __name__ == "__main__":
     app.run(debug=True)
