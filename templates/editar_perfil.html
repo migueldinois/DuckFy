@@ -26,15 +26,21 @@
 
         <!-- Formulário Inferior -->
         <form class="formulario-perfil">
-            <label for="nome">Nome</label>
-            <input id="nome" name="nome" type="text" placeholder="Digite seu nome">
+            <div class="mb-3">
+        <label for="nome" class="form-label text-white">Nome</label>
+        <input id="nome" name="nome" type="text" class="form-control" placeholder="Digite seu nome">
+    </div>
 
-            <label for="email">E-mail</label>
-            <input id="email" name="email" type="email" placeholder="seuemail@exemplo.com">
+    <div class="mb-3">
+        <label for="email" class="form-label text-white">E-mail</label>
+        <input id="email" name="email" type="email" class="form-control" placeholder="seuemail@exemplo.com">
+    </div>
 
-            <button type="button">Alterar senha</button>
-            <button type="button">Sair da conta</button>
-            <button type="button">Excluir conta</button>
+    <div class="d-grid gap-2 mt-4">
+        <button class="btn btn-primary" type="button">Alterar senha</button>
+        <button class="btn btn-outline-light" type="button">Sair da conta</button>
+        <button class="btn btn-danger" type="button">Excluir conta</button>
+    </div>
         </form>
     </main>
 </body>
