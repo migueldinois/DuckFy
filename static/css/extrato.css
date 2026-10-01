@@ -1,0 +1,150 @@
+/* --- CONFIGURAÇÕES GLOBAIS (MOBILE-FIRST) --- */
+html, body {
+    min-height: 100vh;
+    background-color: #000000;
+    color: #ffffff;
+    font-family: system-ui, -apple-system, sans-serif;
+    margin: 0;
+    padding: 0;
+}
+
+/* Container Fixo na Dimensão Mobile (430px) e Responsivo/Centralizado */
+.app-container {
+    max-width: 430px;
+    width: 100%;
+    min-height: 100vh;
+    margin: 0 auto;
+}
+
+/* --- TABS DE FILTRO (TUDO, SAÍDA, ENTRADA) --- */
+.filter-tabs .tab-btn {
+    background: none;
+    border: none;
+    color: #a0a0a0;
+    font-size: 0.9rem;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    padding-bottom: 6px;
+    cursor: pointer;
+    transition: color 0.2s ease, border-color 0.2s ease;
+}
+
+.filter-tabs .tab-btn.active {
+    color: #ffffff;
+    border-bottom: 2px solid #ffffff;
+}
+
+/* --- LINHA DO TEMPO (TIMELINE) --- */
+.timeline-container {
+    position: relative;
+    padding-left: 10px;
+}
+
+.timeline-item {
+    position: relative;
+    display: flex;
+    align-items: center;
+    margin-bottom: 24px;
+}
+
+/* Linha vertical conectando as transações */
+.timeline-item::before {
+    content: '';
+    position: absolute;
+    left: 21px;
+    top: 42px;
+    width: 2px;
+    height: calc(100% - 18px);
+    background-color: var(--bg-surface-2);
+    z-index: 1;
+}
+
+.timeline-item.last-item::before {
+    display: none;
+}
+
+/* Bolinhas dos Ícones */
+.icon-box {
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    background-color: #ffffff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.2rem;
+    z-index: 2;
+    flex-shrink: 0;
+}
+
+/* Cores dos Ícones com Variáveis do Projeto */
+.icon-box.entrada i {
+    color: var(--accent-primary); /* Verde de Entrada */
+}
+
+.icon-box.salida i {
+    color: #ff4d4d; /* Vermelho de Saída */
+}
+
+/* Informações da Transação */
+.timeline-item .info {
+    margin-left: 16px;
+    flex-grow: 1;
+}
+
+.timeline-item .date-time {
+    font-size: 0.78rem;
+    color: #b0b0c0;
+}
+
+.timeline-item .date-time .time {
+    font-weight: 700;
+    color: #ffffff;
+    margin-right: 4px;
+}
+
+.timeline-item .description {
+    font-size: 0.88rem;
+    color: #d0d0e0;
+    margin-top: 1px;
+}
+
+/* Valores (+R$ / -R$) */
+.timeline-item .amount {
+    font-weight: 700;
+    font-size: 0.95rem;
+    white-space: nowrap;
+}
+
+.timeline-item .amount.positive {
+    color: #ffffff;
+}
+
+.timeline-item .amount.negative {
+    color: #ffffff;
+}
+
+/* --- BARRA DE NAVEGAÇÃO INFERIOR --- */
+.nav-bottom {
+    background-color: var(--brand-primary); /* Roxo da Marca */
+}
+
+.nav-btn {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    border: none;
+    background-color: var(--bg-surface-1); /* Superfície Escura */
+    color: #ffffff;
+    font-weight: bold;
+    font-size: 0.95rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.nav-btn.active {
+    border: 2px solid #ffffff;
+}

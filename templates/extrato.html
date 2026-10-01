@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="pt-br">
+
 <head>
 
     <meta charset="UTF-8">
@@ -15,6 +16,7 @@
     <link rel="stylesheet" href="/static/css/extrato.css">
 
 </head>
+
 <body>
 
     <div class="app-container d-flex flex-column justify-content-between p-3">
@@ -29,16 +31,59 @@
         </header>
 
         <main class="flex-grow-1 d-flex flex-column">
+
             <div class="filter-tabs d-flex justify-content-between text-uppercase mb-4 px-2">
-                <button type="button" class="tab-btn active" >TUDO</button>
-                <button type="button" class="tab-btn"        >SAIDA</button>
-                <button type="button" class="tab-btn"        >ENTRADA</button>
-            </div> 
+                <a href="/extrato?tipo=tudo"
+                    class="tab-btn text-decoration-none {% if tipo_ativo == 'tudo' %}active{% endif %}">
+                    TUDO
+                </a>
+
+                <a href="/extrato?tipo=saida"
+                    class="tab-btn text-decoration-none {% if tipo_ativo == 'saida' %}active{% endif %}">
+                    SAÍDA
+                </a>
+
+                <a href="/extrato?tipo=entrada"
+                    class="tab-btn text-decoration-none {% if tipo_ativo == 'entrada' %}active{% endif %}">
+                    ENTRADA
+                </a>
+            </div>
+
+            <div class="timeline-container flex-grow-1 mb-1">
+                <div class="timeline-item">
+                    <div class="icon-box entrada">
+                        <i class="bi bi-cart"></i>
+                    </div>
+                    <div class="info">
+                        <div class="date-time">
+                            <span class="time">09:10</span>
+                            <span class="date">10/12/2026</span>
+                        </div>
+                        <div class="description">Transferência</div>
+                    </div>
+                    <div class="amount positive">-R$ 120,90</div>
+                </div>
+                <div class="timeline-item">
+                    <div class="icon-box entrada">
+                        <i class="bi bi-cart"></i>
+                    </div>
+                    <div class="info">
+                        <div class="date-time">
+                            <span class="time">09:10</span>
+                            <span class="date">10/12/2026</span>
+                        </div>
+                        <div class="description">Transferência</div>
+                    </div>
+                    <div class="amount positive">+R$ 199</div>
+                </div>
+            </div>
         </main>
 
-        
+
+
 
     </div>
-    
+
 </body>
+
 </html>
