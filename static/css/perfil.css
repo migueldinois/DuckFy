@@ -1,10 +1,153 @@
-@import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&display=swap');
 
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, Roboto, sans-serif;
+}
 
+html, body {
+    width: 100%;
+    min-height: 100vh;
+    background-color: var(--bg-primary);
+}
 
-@media (min-width: 600px) {
-	.phone-screen {
-		min-height: 646px;
-		margin: 18px auto;
-	}
+/* Container de Tela Inteira para PC */
+.tela-configuracoes {
+    width: 100%;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    background-color: var(--bg-primary);
+}
+
+/* 1. SEÇÃO SUPERIOR ROXA */
+.cabecalho-perfil {
+    width: 100%;
+    background-color: var(--brand-primary);
+    padding: 40px 60px 50px 60px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    position: relative;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+}
+
+.link-voltar {
+    position: absolute;
+    top: 36px;
+    left: 60px;
+    color: var(--bg-primary);
+    text-decoration: none;
+    font-size: 2rem;
+    font-weight: bold;
+    transition: transform 0.2s ease;
+}
+
+.link-voltar:hover {
+    transform: translateX(-4px);
+}
+
+.titulo-pagina {
+    font-size: 2rem;
+    font-weight: 700;
+    color: var(--bg-primary);
+    margin-bottom: 30px;
+}
+
+.resumo-perfil {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    position: relative;
+    width: 100%;
+    max-width: 600px;
+    justify-content: flex-start;
+}
+
+/* Avatar com fundo escuro */
+.avatar {
+    width: 90px;
+    height: 90px;
+    border-radius: 50%;
+    background-color: var(--bg-primary);
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.3);
+    flex-shrink: 0;
+}
+
+.avatar-cabeca {
+    width: 32px;
+    height: 32px;
+    background-color: var(--brand-primary);
+    border-radius: 50%;
+    position: absolute;
+    top: 18px;
+}
+
+.avatar-corpo {
+    width: 58px;
+    height: 38px;
+    background-color: var(--brand-primary);
+    border-radius: 50% 50% 0 0;
+    position: absolute;
+    bottom: 0;
+}
+
+.nome-usuario {
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: #ffffff;
+}
+
+.link-editar {
+    position: absolute;
+    right: 0;
+    color: var(--bg-primary);
+    text-decoration: none;
+    font-size: 1.4rem;
+    transition: transform 0.2s ease;
+}
+
+.link-editar:hover {
+    transform: scale(1.15);
+}
+
+/* 2. LISTA DE OPÇÕES (FUNDO ESCURO INFERIOR) */
+.lista-configuracoes {
+    width: 100%;
+    max-width: 600px;
+    margin: 0 auto;
+    padding: 40px 20px;
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+}
+
+.item-configuracao {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px 10px;
+    color: #ffffff;
+    text-decoration: none;
+    font-size: 1.2rem;
+    font-weight: 500;
+    border-bottom: 1px solid var(--bg-surface-2);
+    transition: background-color 0.2s ease, padding-left 0.2s ease;
+}
+
+.item-configuracao:hover {
+    background-color: var(--bg-surface-1);
+    padding-left: 16px;
+    border-radius: 8px;
+}
+
+.seta {
+    font-weight: bold;
+    color: var(--brand-secondary);
 }
