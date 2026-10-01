@@ -3,38 +3,93 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>DuckFy - Configurações</title>
+    <title>DuckFy - Perfil e Configurações</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/variables.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/perfil.css') }}">
 </head>
 <body>
-    <main class="tela-configuracoes">
-        <!-- Topo Roxo -->
-        <section class="cabecalho-perfil">
-            <a class="link-voltar" href="#" aria-label="Voltar">&larr;</a>
-            <h1 class="titulo-pagina">Configurações</h1>
+    <main class="container-desktop">
+        <div class="cartao-perfil-principal">
+            
+            <section class="cabecalho-perfil">
+                <a class="link-voltar" href="#" aria-label="Voltar">
+                    <i class="fa-solid fa-arrow-left"></i>
+                </a>
+                <h1 class="titulo-pagina">Meu Perfil</h1>
 
-            <div class="resumo-perfil">
-                <div class="avatar" aria-hidden="true">
-                    <span class="avatar-cabeca"></span>
-                    <span class="avatar-corpo"></span>
+                <div class="cartao-usuario">
+                    <div class="avatar-container">
+                        <div class="avatar" aria-hidden="true">
+                            <span class="avatar-cabeca"></span>
+                            <span class="avatar-corpo"></span>
+                        </div>
+                    </div>
+                    <div class="detalhes-usuario">
+                        <h2 class="nome-usuario">Olá, Fulano!</h2>
+                        
+                    </div>
+                    <a class="botao-editar-perfil" href="{{ url_for('editar_perfil') }}">
+                        <i class="fa-solid fa-pen-to-square"></i> Editar
+                    </a>
                 </div>
-                <p class="nome-usuario">Olá, Fulano!</p>
-                <a class="link-editar" href="{{ url_for('editar_perfil') }}" aria-label="Editar perfil">✏️</a>
-            </div>
-        </section>
+            </section>
 
-        <!-- Lista de Opções (Fundo Escuro) -->
-        <nav class="lista-configuracoes" aria-label="Configurações">
-            <a href="#" class="item-configuracao">
-                <span>Acessibilidade</span>
-                <span class="seta">&gt;</span>
-            </a>
-            <a href="#" class="item-configuracao">
-                <span>Termos</span>
-                <span class="seta">&gt;</span>
-            </a>
-        </nav>
+            <section class="conteudo-perfil">
+                
+                <div class="grade-acoes">
+                    <a href="#" class="cartao-acao">
+                        <div class="icone-acao roxo">
+                            <i class="fa-solid fa-shield-halved"></i>
+                        </div>
+                        <div class="texto-acao">
+                            <h3>Segurança</h3>
+                            <p>Alterar senha e dados</p>
+                        </div>
+                        <i class="fa-solid fa-chevron-right seta"></i>
+                    </a>
+
+                    <a href="#" class="cartao-acao">
+                        <div class="icone-acao verde">
+                            <i class="fa-solid fa-universal-access"></i>
+                        </div>
+                        <div class="texto-acao">
+                            <h3>Acessibilidade</h3>
+                            <p>Ajustar fonte e cores</p>
+                        </div>
+                        <i class="fa-solid fa-chevron-right seta"></i>
+                    </a>
+                </div>
+
+                <nav class="secao-lista-config" aria-label="Configurações Adicionais">
+                    <h3 class="titulo-secao">Outras opções</h3>
+
+                    <a href="#" class="item-lista-config">
+                        <div class="esquerda-item">
+                            <i class="fa-regular fa-file-lines icone-lista"></i>
+                            <span>Termos e Condições</span>
+                        </div>
+                        <i class="fa-solid fa-chevron-right seta"></i>
+                    </a>
+
+                    <a href="#" class="item-lista-config">
+                        <div class="esquerda-item">
+                            <i class="fa-solid fa-headset icone-lista"></i>
+                            <span>Suporte e Ajuda</span>
+                        </div>
+                        <i class="fa-solid fa-chevron-right seta"></i>
+                    </a>
+
+                    <a href="#" class="item-lista-config sair">
+                        <div class="esquerda-item">
+                            <i class="fa-solid fa-right-from-bracket icone-lista"></i>
+                            <span>Sair da conta</span>
+                        </div>
+                    </a>
+                </nav>
+
+            </section>
+        </div>
     </main>
 </body>
 </html>
