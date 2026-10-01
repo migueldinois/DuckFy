@@ -35,6 +35,7 @@ body.app-body {
 .app-container {
   display: flex;
   min-height: 100vh;
+  background-color: #0d0e15; 
 }
 
 /* ==========================================================================
@@ -100,11 +101,10 @@ body.app-body {
    4. CONTEÚDO PRINCIPAL (Main Content)
    ========================================================================== */
 .main-content {
-  flex: 1;
-  margin-left: var(--sidebar-width);
-  padding: 2rem;
+  flex-grow: 1;
+  padding: 2rem 1.5rem;
+  overflow-y: auto;
 }
-
 .content-header {
   margin-bottom: 1.5rem;
 }
