@@ -1,0 +1,186 @@
+/* ==========================================================================
+   1. VARIÁVEIS & INTEGRAÇÃO COM BOOTSTRAP (Regra 60-30-10)
+   ========================================================================== */
+:root {
+  /* 60% - Fundo Base */
+  --bg-primary: #f8f9fa;
+  --bg-surface: #ffffff;
+  --text-main: #212529;
+
+  /* 30% - Estrutura da Sidebar (Escuro) */
+  --bg-sidebar: #212529; /* Dark padrão do Bootstrap */
+  --text-sidebar: #94a3b8;
+  --text-sidebar-active: #ffffff;
+
+  /* 10% - Destaque (Primary Bootstrap) */
+  --accent-color: #0d6efd;
+  --accent-hover: #0b5ed7;
+  --accent-soft: rgba(13, 110, 253, 0.12);
+
+  /* Dimensões do Layout */
+  --sidebar-width: 250px;
+  --bottom-bar-height: 60px;
+  --transition: all 0.2s ease-in-out;
+}
+
+/* ==========================================================================
+   2. ESTRUTURA GLOBAL & LAYOUT
+   ========================================================================== */
+body.app-body {
+  background-color: var(--bg-primary);
+  color: var(--text-main);
+  min-height: 100vh;
+}
+
+.app-container {
+  display: flex;
+  min-height: 100vh;
+}
+
+/* ==========================================================================
+   3. SIDEBAR (Navegação Desktop)
+   ========================================================================== */
+.sidebar {
+  width: var(--sidebar-width);
+  background-color: var(--bg-sidebar);
+  color: var(--text-sidebar);
+  padding: 1.25rem 1rem;
+  display: flex;
+  flex-direction: column;
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  z-index: 100;
+}
+
+.sidebar-brand {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  color: var(--text-sidebar-active);
+  font-size: 1.25rem;
+  font-weight: 700;
+  padding: 0.25rem 0.5rem;
+}
+
+.sidebar-divider {
+  border-top: 1px solid rgba(255, 255, 255, 0.15);
+  margin: 1rem 0;
+}
+
+.sidebar-menu {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.sidebar-link {
+  display: flex;
+  align-items: center;
+  padding: 0.6rem 1rem;
+  color: var(--text-sidebar);
+  text-decoration: none;
+  border-radius: 0.375rem;
+  font-weight: 500;
+  transition: var(--transition);
+}
+
+.sidebar-link:hover {
+  color: var(--text-sidebar-active);
+  background-color: rgba(255, 255, 255, 0.08);
+}
+
+.sidebar-link.active {
+  color: var(--text-sidebar-active);
+  background-color: var(--accent-color);
+}
+
+/* ==========================================================================
+   4. CONTEÚDO PRINCIPAL (Main Content)
+   ========================================================================== */
+.main-content {
+  flex: 1;
+  margin-left: var(--sidebar-width);
+  padding: 2rem;
+}
+
+.content-header {
+  margin-bottom: 1.5rem;
+}
+
+.page-title {
+  font-size: 1.75rem;
+  font-weight: 700;
+}
+
+.content-body {
+  background-color: var(--bg-surface);
+  padding: 1.5rem;
+  border-radius: 0.5rem;
+  border: 1px solid #dee2e6;
+}
+
+/* ==========================================================================
+   5. BOTTOM BAR (Navegação Mobile)
+   ========================================================================== */
+.bottom-bar {
+  display: none; /* Oculto no desktop */
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: var(--bottom-bar-height);
+  background-color: var(--bg-surface);
+  border-top: 1px solid #dee2e6;
+  z-index: 1000;
+}
+
+.bottom-bar-container {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  height: 100%;
+  padding: 0 0.5rem;
+}
+
+.nav-icon-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  color: #6c757d;
+  text-decoration: none;
+  transition: var(--transition);
+}
+
+.nav-icon-btn.active {
+  background-color: var(--accent-soft);
+  color: var(--accent-color);
+}
+
+.nav-icon-btn:hover:not(.active) {
+  color: var(--text-main);
+  background-color: rgba(0, 0, 0, 0.05);
+}
+
+/* ==========================================================================
+   6. RESPONSIVIDADE (Mobile & Tablet)
+   ========================================================================== */
+@media (max-width: 768px) {
+  .sidebar {
+    display: none;
+  }
+
+  .main-content {
+    margin-left: 0;
+    padding: 1rem;
+    padding-bottom: calc(var(--bottom-bar-height) + 1.5rem);
+  }
+
+  .bottom-bar {
+    display: block;
+  }
+}
