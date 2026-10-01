@@ -1,8 +1,6 @@
 @import url('./variables.css');
 
-/* ==========================================================================
-   VARIÁVEIS DE CORES
-   ========================================================================== */
+/* VARIÁVEIS DE CORES  */
 :root {
   /* Regra 60% - Cores Dominantes */
   --bg-primary: #0F0C1B;
@@ -25,50 +23,48 @@
   --border-color: rgba(255, 255, 255, 0.15);
 }
 
-/* ==========================================================================
-   RESET & ESTILOS GERAIS
-   ========================================================================== */
+/* RESET & ESTILOS GERAIS */
 *, label, h1, span, p, input, select, textarea {
-      color: var(--text-primary) !important;
+      color: var(--text-primary);
     }
 
     body {
-      background-color: var(--bg-primary) !important;
+      background-color: var(--bg-primary);
       min-height: 100vh;
     }
 
     /* Cartão Principal */
     .custom-card {
-      background-color: var(--bg-surface-2) !important;
+      background-color: var(--bg-surface-2);
       border: none;
     }
 
     /* Campos de Entrada (Inputs, Select e Textarea) */
     .custom-input {
-      background-color: var(--bg-surface-1) !important;
-      border: 1px solid var(--border-color) !important;
+      background-color: var(--bg-surface-1);
+      border: 1px solid var(--border-color);
     }
 
     .custom-input:focus {
-      border-color: var(--brand-primary) !important;
-      box-shadow: 0 0 0 0.25rem rgba(176, 147, 255, 0.25) !important;
+      border-color: var(--brand-primary);
+      box-shadow: 0 0 0 0.25rem rgba(176, 147, 255, 0.25);
     }
 
     /* Alternador (Toggle Entrada / Saída) */
     .toggle-container {
-      background-color: var(--bg-surface-1) !important;
-      border: 1px solid var(--border-color) !important;
+      background-color: var(--bg-surface-1);
+      border: 1px solid var(--border-color);
     }
 
     .btn-custom-toggle {
       background-color: transparent;
-      color: var(--text-muted) !important;
+      color: var(--text-muted);
       border: none;
     }
 
     .btn-check:checked + .btn-custom-toggle {
-      background-color: var(--brand-primary) !important;
-      color: var(--text-primary) !important;
+      background-color: var(--brand-primary);
+      color: var(--text-primary);
       box-shadow: 0 2px 8px rgba(176, 147, 255, 0.4);
     }
 
@@ -76,25 +72,26 @@
     .category-btn {
       width: 40px;
       height: 40px;
-      background-color: #D9D9D9 !important;
+      background-color: #D9D9D9;
     }
 
     .category-btn i {
-      color: #1F1F1F !important;
+      color: #1F1F1F;
     }
 
     .btn-check:checked + .category-btn {
-      background-color: var(--brand-primary) !important;
+      background-color: var(--brand-primary);
     }
 
     .btn-check:checked + .category-btn i {
-      color: var(--text-primary) !important;
+      color: var(--text-primary);
     }
 
     /* Botão Principal "Lançar Entrada" */
     .btn-launch {
-      background-color: var(--brand-primary) !important;
+      background-color: var(--brand-primary);
       border: none;
+      color: var(--text-primary);
     }
 
     .btn-launch:hover {
