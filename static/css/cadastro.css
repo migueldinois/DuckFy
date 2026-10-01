@@ -7,7 +7,6 @@
 body {
     min-height: 100vh;
     background-color: #0d0a18;
-    border: 2px solid #9147ff;
     font-family: Arial, Helvetica, sans-serif;
     color: white;
 
@@ -45,7 +44,7 @@ h1:first-letter {
     color: white;
 }
 
-/* FORMULÁRIO */
+
 form {
     width: 430px;
     max-width: 100%;
@@ -57,7 +56,7 @@ form {
     box-shadow: 0 15px 40px rgba(0, 0, 0, 0.35);
 }
 
-/* LABELS */
+
 label {
     display: block;
     color: #eeeeee;
@@ -65,7 +64,7 @@ label {
     margin-bottom: 7px;
 }
 
-/* CAMPOS */
+
 input[type="email"],
 input[type="text"],
 input[type="password"] {
@@ -148,7 +147,7 @@ form {
     flex-direction: column;
 }
 
-/* ORGANIZA OS BOTÕES */
+/* organizaçâo dos botoes  */
 form button {
     height: 44px;
     border: none;
@@ -160,21 +159,21 @@ form button {
     transition: 0.2s;
 }
 
-/* CANCELAR */
+/* cancelar */
 button[type="button"] {
     width: 48%;
     background-color: #29243a;
     margin: 20px 0 0 0;
 }
 
-/* CADASTRAR */
+/* cadastrar */
 button[type="submit"] {
     width: 48%;
     background-color: #9147ff;
     margin: 20px 0 0 0;
 }
 
-/* HOVER */
+
 button[type="button"]:hover {
     background-color: #383149;
 }
@@ -186,7 +185,7 @@ button[type="submit"]:hover {
 }
 
 
-/* RESPONSIVO */
+/* responsivo */
 @media (max-width: 600px) {
     body {
         padding: 30px 15px;
