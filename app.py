@@ -18,6 +18,12 @@ def perfil():
 def editar_perfil():
     return render_template("editar_perfil.html")
 
+@app.get("/extrato")
+def tela_extrato():
+    return render_template("extrato.html")
+
+
+
 
 if __name__ == "__main__":
     app.run(debug=True)
