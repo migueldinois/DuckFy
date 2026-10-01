@@ -5,7 +5,8 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Lançamento</title>
-    
+
+
     <!-- Bootstrap 5 CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" />
     <!-- Bootstrap Icons -->
@@ -14,87 +15,111 @@
     <link rel="stylesheet" href="/static/css/variables.css">
     
     <link rel="stylesheet" href="/static/css/lancamentos.css">
+
 </head>
 
-<body>
+<body class="d-flex align-items-center justify-content-center py-5">
 
-    <main class="container">
-        <!-- Cabeçalho -->
-        <header class="header">
-            <button type="button" class="btn-back" aria-label="Voltar">&larr;</button>
-            <h1>Lançamento</h1>
+    <div class="container my-auto" style="max-width: 720px;">
+
+        <!-- Header -->
+        <header class="d-flex align-items-center gap-3 mb-3">
+            <button type="button" class="btn p-0 fs-4" aria-label="Voltar">
+                <i class="bi bi-arrow-left"></i>
+            </button>
+            <h1 class="h3 mb-0 fw-bold">Lançamento</h1>
         </header>
 
         <!-- Cartão Principal -->
-        <div class="card">
+        <div class="card custom-card w-100 rounded-4 p-4 shadow-lg mb-3">
+            <h2 class="h5 text-center fw-normal mb-4">Lançar Entrada</h2>
             <form id="form-lancamento">
 
-                <!-- Toggle Entrada / Saída -->
-                <div class="toggle-type" role="radiogroup" aria-label="Tipo de Lançamento">
-                    <input type="radio" id="entrada" name="tipo" value="entrada" checked />
-                    <label for="entrada">Entrada</label>
+                <!-- Alternador Entrada/Saída -->
+                <div class="d-flex justify-content-center mb-4">
+                    <div class="toggle-container p-1 rounded-pill d-inline-flex">
+                        <input type="radio" class="btn-check" name="tipo" id="entrada-bs" value="entrada" checked>
+                        <label class="btn btn-custom-toggle rounded-pill px-4 py-1" for="entrada-bs">Entrada</label>
 
-                    <input type="radio" id="saida" name="tipo" value="saida" />
-                    <label for="saida">Saída</label>
+                        <input type="radio" class="btn-check" name="tipo" id="saida-bs" value="saida">
+                        <label class="btn btn-custom-toggle rounded-pill px-4 py-1" for="saida-bs">Saída</label>
+                    </div>
                 </div>
 
                 <!-- Local -->
-                <div class="form-group">
-                    <label for="local">Local</label>
-                    <input type="text" id="local" name="local" />
+                <div class="mb-3">
+                    <label for="local-bs" class="form-label small">Local</label>
+                    <input type="text" class="form-control custom-input rounded-3 py-2" id="local-bs" name="local">
                 </div>
 
                 <!-- Categoria -->
-                <div class="form-group">
-                    <label>Categoria</label>
-                    <div class="category-selector" role="radiogroup" aria-label="Categoria">
-                        <input type="radio" id="cat1" name="categoria" value="casa" />
-                        <label for="cat1"></label>
+                <div class="mb-3">
+                    <label class="form-label small d-block">Categoria</label>
+                    <div class="d-flex flex-wrap gap-2">
 
-                        <input type="radio" id="cat2" name="categoria" value="carro" />
-                        <label for="cat2"></label>
+                        <input type="radio" class="btn-check" name="categoria" id="cat1-bs">
+                        <label
+                            class="btn category-btn rounded-circle d-flex align-items-center justify-content-center p-0"
+                            for="cat1-bs">
+                            <i class="bi bi-house-door"></i>
+                        </label>
 
-                        <input type="radio" id="cat3" name="categoria" value="comida" />
-                        <label for="cat3"></label>
+                        <input type="radio" class="btn-check" name="categoria" id="cat2-bs">
+                        <label
+                            class="btn category-btn rounded-circle d-flex align-items-center justify-content-center p-0"
+                            for="cat2-bs">
+                            <i class="bi bi-car-front"></i>
+                        </label>
 
+                        <input type="radio" class="btn-check" name="categoria" id="cat3-bs">
+                        <label
+                            class="btn category-btn rounded-circle d-flex align-items-center justify-content-center p-0"
+                            for="cat3-bs">
+                            <i class="bi bi-cup-hot"></i>
+                        </label>
 
                     </div>
                 </div>
 
                 <!-- Sub-Categoria -->
-                <div class="form-group">
-                    <label for="subcategoria">Sub-Categoria</label>
-                    <select id="subcategoria" name="subcategoria">
+                <div class="mb-3">
+                    <label for="subcategoria-bs" class="form-label small">Sub-Categoria</label>
+                    <select class="form-select custom-input rounded-3 py-2" id="subcategoria-bs" name="subcategoria">
                         <option value="" disabled selected></option>
                     </select>
                 </div>
 
                 <!-- Valor -->
-                <div class="form-group">
-                    <label for="valor">Valor</label>
-                    <div class="input-prefix">
-                        <span class="currency-symbol">$</span>
-                        <input type="text" id="valor" name="valor" placeholder="0,00" inputmode="numeric" />
+                <div class="mb-3">
+                    <label for="valor-bs" class="form-label small">Valor</label>
+                    <div class="input-group">
+                        <span class="input-group-text custom-input border-end-0">$</span>
+                        <input type="number" class="form-control custom-input border-start-0 rounded-end-3 py-2"
+                            id="valor-bs" name="valor" step="0.01">
                     </div>
                 </div>
 
                 <!-- Observação -->
-                <div class="form-group">
-                    <label for="observacao">Observação (opcional)</label>
-                    <textarea id="observacao" name="observacao" rows="3"></textarea>
+                <div class="mb-2">
+                    <label for="observacao-bs" class="form-label small">Observação (opcional)</label>
+                    <textarea class="form-control custom-input rounded-3" id="observacao-bs" name="observacao"
+                        rows="3"></textarea>
                 </div>
 
             </form>
         </div>
 
-        <!-- Botão de Ação -->
-        <div class="actions">
-            <button type="submit" form="form-lancamento" class="btn-primary">
+        <!-- Botão Principal -->
+        <div class="w-100 d-flex justify-content-center mb-4">
+            <button type="submit" form="form-lancamento" class="btn btn-launch rounded-3 px-5 py-2 fw-medium">
                 Lançar Entrada
             </button>
         </div>
-    </main>
 
+    </div>
+
+    <!-- Bootstrap 5 JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 
 </html>
