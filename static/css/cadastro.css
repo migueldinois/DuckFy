@@ -7,22 +7,18 @@
 body {
     min-height: 100vh;
     background-color: #0d0a18;
-    border: 2px solid #159bd3;
+    border: 2px solid #9147ff;
 
     font-family: Arial, Helvetica, sans-serif;
     color: white;
 
     display: flex;
-    flex-direction: column;
+    flex-direction: column; 
     align-items: center;
 
     padding-top: 45px;
 }
 
-
-/* =========================
-   LOGO DUCKFY
-   ========================= */
 
 h1 {
     position: static;
@@ -49,10 +45,7 @@ h1:first-letter {
 }
 
 
-/* Se estiver usando:
-   <span class="duck">DUCK</span>
-   <span class="fy">FY</span>
-*/
+
 
 .duck {
     background-color: #9147ff;
@@ -68,9 +61,6 @@ h1:first-letter {
 }
 
 
-/* =========================
-   FORMULÁRIO
-   ========================= */
 
 form {
     width: 430px;
@@ -88,9 +78,6 @@ form {
 }
 
 
-/* =========================
-   LABELS
-   ========================= */
 
 label {
     display: block;
@@ -103,9 +90,7 @@ label {
 }
 
 
-/* =========================
-   INPUTS
-   ========================= */
+
 
 input[type="email"],
 input[type="text"],
@@ -144,18 +129,14 @@ input[type="password"]:focus {
 }
 
 
-/* =========================
-   REMOVE OS BR
-   ========================= */
+/* remove os br */
 
 form br {
     display: none;
 }
 
 
-/* =========================
-   NÃO SOU UM ROBÔ
-   ========================= */
+/* robo la */
 
 label:has(input[type="checkbox"]) {
     width: 230px;
@@ -180,7 +161,7 @@ label:has(input[type="checkbox"]) {
 }
 
 
-/* CHECKBOX */
+/* checkboxxx*/
 
 input[type="checkbox"] {
     appearance: none;
@@ -222,68 +203,56 @@ input[type="checkbox"]:checked::after {
 }
 
 
-/* =========================
-   BOTÕES
-   ========================= */
+/*  BOTÕES */
 
 button {
-    display: inline-block;
-
     height: 44px;
-
     border: none;
-
     border-radius: 8px;
-
     font-size: 11px;
     font-weight: 500;
-
     color: white;
-
     cursor: pointer;
-
-    margin-top: 45px;
-
-    transition: 0.2s;
+    margin-top: 6;
 }
-
 
 /* CANCELAR */
-
 button[type="button"] {
     width: 48%;
-
     background-color: #29243a;
-
-    margin-left: 0;
 }
 
-
 /* CADASTRAR */
-
 button[type="submit"] {
     width: 48%;
-
     background-color: #9147ff;
-
     margin-left: 3%;
 }
 
-
 /* HOVER */
-
 button[type="button"]:hover {
     background-color: #383149;
 }
 
 button[type="submit"]:hover {
     background-color: #a15cff;
-
     transform: translateY(-1px);
-
     box-shadow: 0 7px 18px rgba(145, 71, 255, 0.25);
 }
 
+/* RESPONSIVO */
+@media (max-width: 600px) {
+    button[type="button"],
+    button[type="submit"] {
+        width: 35%;
+        margin-left: 0;
+    }
+
+    button[type="submit"] {
+        margin-left: 3%;
+        margin-top: 45px;
+    }
+}
 
 
    /* RESPONSIVO */
