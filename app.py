@@ -9,18 +9,12 @@ app.secret_key = "duckfy999"
 @app.get("/login")
 def index():
 
-    conexao, cursor = Conexao.conectar()
-    conexao.close()
-
     if "usuario" in session:
-        return redirect("/admin")
-    
-    
+        return redirect("/dashboard")
 
     return render_template("tela_login.html")
 
-
-@app.post("/login/usuario")
+@app.route("/login/usuario", methods=["POST"])
 def logar():
     input_email = request.form.get("email", "").strip()
     input_senha = request.form.get("senha", "")
@@ -30,19 +24,27 @@ def logar():
         flash("Preencha e-mail e senha.", "error")
         return redirect(url_for("index"))
 
-    if Usuario.validar_usuario(input_email, input_senha):
-        session["usuario"] = input_email
-        flash(f"Bem vindo, {input_email}!", "success")
+    if usuario_logado:
+        session["usuario"] = usuario_logado
         return redirect(url_for("dashboard"))
-
-    flash("Usuario ou senha invalidos!", "error")
-    return redirect(url_for("index"))
+    else:
+        flash("Usuario ou senha invalidos!", "error")
+        return redirect('/login')
     
-
+@app.route("/logout")
+def logout():
+    session.pop("usuario", None)
+    flash("Você saiu da sua conta!", "success")
+    return redirect("/login")
+    
 
 @app.get('/dashboard')
 def dashboard():
-    return render_template("dashboard.html")
+    if "usuario" in session:
+        return render_template("dashboard.html")
+    else:
+        flash("Você precisa estar logado para acessar o dashboard!", "error")
+        return redirect('/login')
 
 # Rota para exibir o perfil do usuário
 @app.route("/perfil", methods=["GET", "POST"])
@@ -62,15 +64,39 @@ def perfil():
 
 @app.get("/editar-perfil")
 def editar_perfil():
-    return render_template("editar_perfil.html")
+    if "usuario" in session:
+        return render_template("editar_perfil.html")
+    else:
+        flash("Você precisa estar logado para editar o seu perfil!", "error")
+        return redirect('/login')
 
 @app.get("/extrato")
 def tela_extrato():
-    return render_template("extrato.html")
+    if "usuario" in session:
+        return render_template("extrato.html")
+    else:
+        flash("Você precisa estar logado para acessar o extrato!", "error")
+        return redirect('/login')
+
+
+@app.get("/reserva_emergencia")
+def reserva_emergencia():
+    if "usuario" in session:
+        return render_template("reserva_emergencia.html")
+    else:
+        flash("Você precisa estar logado para realizar lançamentos!", "error")
+        return redirect('/login')
+    
+
 
 @app.get("/lancamento")
 def lancamento():
-    return render_template("lancamentos.html")
+    if "usuario" in session:
+        return render_template("lancamentos.html")
+    else:
+        flash("Você precisa estar logado para realizar lançamentos!", "error")
+        return redirect('/login')
+
 
 @app.get("/cadastro")
 def cadastro():
