@@ -1,11 +1,9 @@
 {% extends 'layout.html' %}
 
-{% load static %}
-
 {% block title %}Categorias - DuckFy{% endblock %}
 
 {% block extra_css %}
-<link rel="stylesheet" href="{% static 'css/categorias.css' %}">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/categorias.css') }}">
 {% endblock %}
 
 {% block content %}
