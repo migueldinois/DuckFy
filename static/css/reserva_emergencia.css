@@ -8,13 +8,11 @@ body#page-reserva {
   min-height: 100vh;
 }
 
-
 body#page-reserva .style-reserva-container {
   max-width: 900px;
   width: 100%;
   margin: 0 auto;
 }
-
 
 body#page-reserva .btn-voltar {
   transition: opacity 0.2s ease, transform 0.2s ease;
@@ -26,18 +24,15 @@ body#page-reserva .btn-voltar:hover {
   transform: translateX(-3px);
 }
 
-
 body#page-reserva .reserva-block {
   background-color: var(--bg-surface-2);
   border: 1px solid var(--border-color);
 }
 
-
 body#page-reserva .reserva-inner-card {
   background-color: rgba(0, 0, 0, 0.25);
   border: 1px solid var(--border-color);
 }
-
 
 body#page-reserva .progress-reserva {
   height: 14px;
@@ -52,7 +47,6 @@ body#page-reserva .bar-progresso {
   height: 100%;
 }
 
-
 body#page-reserva .btn-acao-purple {
   background-color: #8b5cf6;
   border: none;
@@ -66,7 +60,6 @@ body#page-reserva .btn-acao-purple:hover {
   box-shadow: 0 6px 22px rgba(139, 92, 246, 0.4);
 }
 
-
 body#page-reserva .btn-acao-secondary {
   background-color: rgba(255, 255, 255, 0.08);
   border: 1px solid var(--border-color);
@@ -79,13 +72,11 @@ body#page-reserva .btn-acao-secondary:hover {
   transform: translateY(-2px);
 }
 
-
 body#page-reserva .icon-circle {
   width: 40px;
   height: 40px;
   font-size: 18px;
 }
-
 
 body#page-reserva .fs-7 {
   font-size: 13px;
