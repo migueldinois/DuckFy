@@ -26,6 +26,9 @@ def editar_perfil():
 def tela_extrato():
     return render_template("extrato.html")
 
+@app.get("/lancamento")
+def lancamento():
+    return render_template("lancamentos.html")
 
 
 
