@@ -28,24 +28,23 @@
         <!-- conteúdo do login -->
         <section class="login-conteudo">
 
-            <form action="/login/usuario">
+            <form action="/login/usuario" method="POST">
 
                 <!-- campo de e-mail -->
                 <div class="campo">
                     <label for="email">E-mail:</label>
-
-                    <input type="email" id="email" placeholder="Digite seu e-mail">
+                    <!-- ADICIONADO: name="email" -->
+                    <input type="email" id="email" name="email" placeholder="Digite seu e-mail" required>
                 </div>
 
 
                 <!-- campo de senha -->
                 <div class="campo">
-
                     <div class="senha-label">
                         <label for="senha">Senha:</label>
                     </div>
-
-                    <input type="password" id="senha" placeholder="Digite sua senha">
+                    <!-- ADICIONADO: name="senha" -->
+                    <input type="password" id="senha" name="senha" placeholder="Digite sua senha" required>
                 </div>
 
 
@@ -55,6 +54,7 @@
                 </button>
 
             </form>
+
 
 
             <div class="container__error">
