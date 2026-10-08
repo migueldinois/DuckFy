@@ -16,13 +16,9 @@ def index():
 
 @app.route("/login/usuario", methods=["POST"])
 def logar():
-    input_email = request.form.get("email", "").strip()
-    input_senha = request.form.get("senha", "")
-
-    # Validação de campos vazios
-    if not input_email or not input_senha:
-        flash("Preencha e-mail e senha.", "error")
-        return redirect(url_for("index"))
+    input_email = request.form.get("email")
+    input_senha = request.form.get("senha")
+    usuario_logado = Usuario.validar_usuario(input_email, input_senha)
 
     if usuario_logado:
         session["usuario"] = usuario_logado
