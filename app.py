@@ -1,13 +1,40 @@
-from flask import Flask, render_template
-
+from flask import Flask, render_template, request, redirect, session, flash, url_for
+from database.conexao import Conexao
+from model.usuarios import Usuario
 
 app = Flask(__name__)
-
-
+app.secret_key = "duckfy999"
 
 @app.get("/")
+@app.get("/login")
 def index():
-    return render_template("index.html")
+
+    conexao, cursor = Conexao.conectar()
+    conexao.close()
+
+    if "usuario" in session:
+        return redirect("/admin")
+    
+    
+
+    return render_template("tela_login.html")
+
+@app.get("/login/usuario")
+def logar():
+    input_email = request.form.get("email")
+    input_senha = request.form.get("senha")
+    usuario_logado = Usuario.validar_usuario(input_email, input_senha)
+
+    if Usuario.validar_usuario(input_email, input_senha):
+        session["usuario"] = usuario_logado
+        flash(f"Bem vindo, {usuario_logado}!", "success")
+        return redirect(url_for("dashboard"))
+    else:
+        flash("Usuario ou senha invalidos!", "error")
+        return redirect('/login')
+    
+
+    
 
 @app.get('/dashboard')
 def dashboard():
@@ -22,11 +49,10 @@ def perfil():
 def editar_perfil():
     return render_template("editar_perfil.html")
 
-@app.get("/login")
-def login():
-    return render_template("tela_login.html")
 
-
+@app.get("/cadastro")
+def cadastro():
+    return render_template("tela_cadastro.html")
 
 if __name__ == "__main__":
     app.run(debug=True)
