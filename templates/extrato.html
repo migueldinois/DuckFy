@@ -18,9 +18,10 @@
 
         <main class="flex-grow-1 d-flex flex-column">
 
+            <!-- TABS DE FILTRO -->
             <div class="filter-tabs d-flex justify-content-start gap-4 text-uppercase mb-4 px-2">
                 <a href="/extrato?tipo=tudo"
-                    class="tab-btn text-decoration-none {% if tipo_ativo == 'tudo' %}active{% endif %}">
+                    class="tab-btn text-decoration-none {% if not tipo_ativo or tipo_ativo == 'tudo' %}active{% endif %}">
                     TUDO
                 </a>
 
@@ -37,47 +38,41 @@
 
             <div class="timeline-container flex-grow-1 mb-3">
 
-                <div class="timeline-item">
-                    <div class="icon-box entrada">
-                        <i class="bi bi-cart"></i>
-                    </div>
-                    <div class="info">
-                        <div class="date-time">
-                            <span class="time">09:10</span>
-                            <span class="date">10/12/2026</span>
-                        </div>
-                        <div class="description">Transferência</div>
-                    </div>
-                    <div class="amount positive">+R$ 199</div>
-                </div>
+                {% if transacoes %}
+                    {% for item in transacoes %}
+                        <div class="timeline-item">
+                            
+                            <div class="icon-box {% if item.tipo == 'Receita' %}entrada{% else %}saida{% endif %}"
+                                 {% if item.cor %}style="background-color: {{ item.cor }};"{% endif %}>
+                                <span>{{ item.emoji }}</span>
+                            </div>
 
-                <div class="timeline-item">
-                    <div class="icon-box saida">
-                        <i class="bi bi-cart"></i>
-                    </div>
-                    <div class="info">
-                        <div class="date-time">
-                            <span class="time">12:51</span>
-                            <span class="date">01/02/2026</span>
-                        </div>
-                        <div class="description">Transferência</div>
-                    </div>
-                    <div class="amount negative">-R$ 19,99</div>
-                </div>
+                            <div class="info">
+                                <div class="date-time">
+                                    <span class="date">{{ item.data_transacao }}</span>
+                                </div>
+                                <div class="description fw-bold">{{ item.descricao }}</div>
+                                <small class="text-muted">{{ item.nome_categoria }} • {{ item.nome_conta }}</small>
+                            </div>
 
-                <div class="timeline-item">
-                    <div class="icon-box saida">
-                        <i class="bi bi-cart"></i>
-                    </div>
-                    <div class="info">
-                        <div class="date-time">
-                            <span class="time">16:20</span>
-                            <span class="date">01/02/2026</span>
+
+                            <div class="amount {% if item.tipo == 'Receita' %}positive{% else %}negative{% endif %}">
+                                {% if item.tipo == 'Receita' %}
+                                    +R$ {{ "%.2f"|format(item.valor) }}
+                                {% else %}
+                                    -R$ {{ "%.2f"|format(item.valor) }}
+                                {% endif %}
+                            </div>
+
                         </div>
-                        <div class="description">Transferência</div>
+                    {% endfor %}
+                {% else %}
+                    <!-- Caso não exista nenhuma transação para a busca -->
+                    <div class="text-center text-white-50 py-5">
+                        <i class="bi bi-inbox fs-1 d-block mb-2"></i>
+                        <p>Nenhuma movimentação encontrada.</p>
                     </div>
-                    <div class="amount negative">-R$ 1.000</div>
-                </div>
+                {% endif %}
 
             </div>
         </main>

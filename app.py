@@ -19,8 +19,9 @@ def index():
     
     return render_template("tela_login.html")
 
-@app.get("/login/usuario")
+@app.post("/login/usuario")
 def logar():
+    
     input_email = request.form.get("email")
     input_senha = request.form.get("senha")
     usuario_logado = Usuario.validar_usuario(input_email, input_senha)
@@ -60,10 +61,8 @@ def tela_extrato():
 
     lista_transacoes = Extrato.obter_extrato(id_usuario, id_conta, data_inicio, data_fim)
 
-    return render_template('extrato.html', transacoes=lista_transacoes)
+    return render_template("extrato.html", transacoes=lista_transacoes)      
 
-
-    return render_template("extrato.html")
 
 @app.get("/lancamento")
 def lancamento():

@@ -2,8 +2,6 @@ from database.conexao import Conexao
 from flask import Flask, render_template, request, redirect, session
 import bcrypt
 
-from database.conexao import Conexao
-
 class Extrato:
     @staticmethod
     def obter_extrato(id_usuario: int, id_conta: int = None, data_inicio: str = None, data_fim: str = None):
