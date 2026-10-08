@@ -1,104 +1,88 @@
 {% extends 'layout.html' %}
 
-{% block title %} Categorias - DuckFy{% endblock %}
+{% load static %}
+
+{% block title %}Categorias - DuckFy{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/categorias.css' %}">
+{% endblock %}
 
 {% block content %}
 
-    <main class="categorias">
+<main class="categorias">
 
-        <!-- título da página -->
-        <h1 class="categorias__titulo">Categorias</h1>
+    <h1 class="categorias__titulo">Categorias</h1>
 
-        <!-- categorias de saídas -->
-        <section class="categoria__grupo">
+    <section class="categoria__grupo">
 
-            <h2 class="categoria__titulo">Categorias de Saídas</h2>
+        <h2 class="categoria__titulo">Categorias de Saídas</h2>
 
-            <div class="categoria__lista">
+        <div class="categoria__lista">
 
-                <!-- alimentação -->
-                <article class="categoria">
-                    <div class="categoria__icone"></div>
+            <article class="categoria">
+                <div class="categoria__icone"></div>
 
-                    <div class="categoria__info">
-                        <h3>Alimentação</h3>
-                        <p>Restaurantes,<br>Mercados, Lanches</p>
-                    </div>
-                </article>
+                <div class="categoria__info">
+                    <h3>Alimentação</h3>
+                    <p>Restaurantes,<br>Mercados, Lanches</p>
+                </div>
+            </article>
 
-                <!-- transporte -->
-                <article class="categoria">
-                    <div class="categoria__icone"></div>
+            <article class="categoria">
+                <div class="categoria__icone"></div>
 
-                    <div class="categoria__info">
-                        <h3>Transporte</h3>
-                        <p>Combustível, Uber,<br>Ônibus</p>
-                    </div>
-                </article>
+                <div class="categoria__info">
+                    <h3>Transporte</h3>
+                    <p>Combustível, Uber,<br>Ônibus</p>
+                </div>
+            </article>
 
-                <!-- lazer -->
-                <article class="categoria">
-                    <div class="categoria__icone"></div>
+            <article class="categoria">
+                <div class="categoria__icone"></div>
 
-                    <div class="categoria__info">
-                        <h3>Lazer</h3>
-                        <p>Cinema, Shows,<br>Festas</p>
-                    </div>
+                <div class="categoria__info">
+                    <h3>Lazer</h3>
+                    <p>Cinema, Shows,<br>Festas</p>
+                </div>
 
-                    <span class="categoria__seta">></span>
-                </article>
+                <span class="categoria__seta">></span>
+            </article>
 
-            </div>
+        </div>
 
-        </section>
+    </section>
 
-        <!-- categorias de entradas -->
-        <section class="categoria__grupo">
+    <section class="categoria__grupo">
 
-            <h2 class="categoria__titulo">Categorias de Entradas</h2>
+        <h2 class="categoria__titulo">Categorias de Entradas</h2>
 
-            <div class="categoria__lista">
+        <div class="categoria__lista">
 
-                <!-- salário -->
-                <article class="categoria">
-                    <div class="categoria__icone"></div>
+            <article class="categoria">
+                <div class="categoria__icone"></div>
 
-                    <div class="categoria__info">
-                        <h3>Salário</h3>
-                        <p>Emprego 1, Emprego 2,<br>Empreendimento...</p>
-                    </div>
-                </article>
+                <div class="categoria__info">
+                    <h3>Salário</h3>
+                    <p>Emprego 1, Emprego 2,<br>Empreendimento...</p>
+                </div>
+            </article>
 
-                <!-- renda extra -->
-                <article class="categoria">
-                    <div class="categoria__icone"></div>
+            <article class="categoria">
+                <div class="categoria__icone"></div>
 
-                    <div class="categoria__info">
-                        <h3>Renda Extra</h3>
-                        <p>Pequenos serviços</p>
-                    </div>
+                <div class="categoria__info">
+                    <h3>Renda Extra</h3>
+                    <p>Pequenos serviços</p>
+                </div>
 
-                    <span class="categoria__seta">></span>
-                </article>
+                <span class="categoria__seta">></span>
+            </article>
 
-            </div>
+        </div>
 
-        </section>
+    </section>
 
-    </main>
-
-    <!-- navegação inferior -->
-    <nav class="menu__inferior">
-
-        <a href="#" class="menu__item">D</a>
-
-        <a href="#" class="menu__item">E</a>
-
-        <a href="#" class="menu__item">S</a>
-
-        <a href="#" class="menu__item">P</a>
-
-    </nav>
-
+</main>
 
 {% endblock %}
