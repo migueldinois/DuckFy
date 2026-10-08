@@ -19,22 +19,24 @@ def index():
 
     return render_template("tela_login.html")
 
-@app.get("/login/usuario")
+@app.post("/login/usuario")
 def logar():
-    input_email = request.form.get("email")
-    input_senha = request.form.get("senha")
-    usuario_logado = Usuario.validar_usuario(input_email, input_senha)
+    input_email = request.form.get("email", "").strip()
+    input_senha = request.form.get("senha", "")
+
+    if not input_email or not input_senha:
+        flash("Preencha e-mail e senha.", "error")
+        return redirect(url_for("index"))
 
     if Usuario.validar_usuario(input_email, input_senha):
-        session["usuario"] = usuario_logado
-        flash(f"Bem vindo, {usuario_logado}!", "success")
+        session["usuario"] = input_email
+        flash(f"Bem vindo, {input_email}!", "success")
         return redirect(url_for("dashboard"))
-    else:
-        flash("Usuario ou senha invalidos!", "error")
-        return redirect('/login')
+
+    flash("Usuario ou senha invalidos!", "error")
+    return redirect(url_for("index"))
     
 
-    
 
 @app.get('/dashboard')
 def dashboard():
