@@ -1,10 +1,15 @@
-from database.conexao import Conexao
-from flask import Flask, render_template, request, redirect, session
 import bcrypt
+from database.conexao import Conexao
 
 class Usuario():
+    @staticmethod
     def validar_usuario(email_input: str, senha_input: str):
         '''Função para verificar se o usuario existe e retorna um bool'''
+        
+        #  caso os campos venham vazios
+        if not email_input or not senha_input:
+            return False
+
         conexao, cursor = Conexao.conectar()
 
         # Buscando a senha hash filtrando o email
@@ -18,7 +23,8 @@ class Usuario():
         if resultado_senha is None:
             return False
 
-        senha_hash = resultado_senha[0]
+        senha_hash = resultado_senha['senha_hash']
+        
         try:
             # O bcrypt precisa que os valores estejam em formato de bytes (.encode('utf-8'))
             senha_bytes = senha_input.encode('utf-8')
@@ -31,6 +37,5 @@ class Usuario():
                 return False
                 
         except Exception as erro:
-            print({erro})
+            print(f"Erro no Bcrypt: {erro}")
             return False
-                

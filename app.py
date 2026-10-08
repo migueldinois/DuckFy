@@ -9,23 +9,18 @@ app.secret_key = "duckfy999"
 @app.get("/login")
 def index():
 
-    conexao, cursor = Conexao.conectar()
-    conexao.close()
-
     if "usuario" in session:
-        return redirect("/admin")
-    
-    
+        return redirect("/dashboard")
 
     return render_template("tela_login.html")
 
-@app.get("/login/usuario")
+@app.route("/login/usuario", methods=["POST"])
 def logar():
     input_email = request.form.get("email")
     input_senha = request.form.get("senha")
     usuario_logado = Usuario.validar_usuario(input_email, input_senha)
 
-    if Usuario.validar_usuario(input_email, input_senha):
+    if usuario_logado:
         session["usuario"] = usuario_logado
         flash(f"Bem vindo, {usuario_logado}!", "success")
         return redirect(url_for("dashboard"))
