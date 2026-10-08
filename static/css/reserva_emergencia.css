@@ -1,21 +1,27 @@
 @import url('../css/variables.css');
 
-/* Reset e Fundo Centralizado */
 body#page-reserva {
   background-color: var(--bg-primary);
   color: var(--text-primary);
   font-family: system-ui, -apple-system, sans-serif;
+  min-height: 100vh;
 }
 
-/* Card Principal da Reserva */
+
+body#page-reserva .style-reserva-container {
+  max-width: 900px;
+  width: 100%;
+  margin: 0 auto;
+}
+
 body#page-reserva .reserva-card {
-  max-width: 420px;
-  background-color: var(--bg-primary);
+  width: 100%;
+  background-color: var(--bg-surface-2);
   border: 1px solid var(--border-color);
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
 }
 
-/* Botão Voltar */
+
 body#page-reserva .btn-voltar {
   transition: opacity 0.2s ease, transform 0.2s ease;
   cursor: pointer;
@@ -26,40 +32,33 @@ body#page-reserva .btn-voltar:hover {
   transform: translateX(-3px);
 }
 
-/* Box Interna da Barra de Progresso */
-body#page-reserva .reserva-status-box {
-  background-color: var(--bg-surface-2);
-  border: 1px solid var(--border-color);
-}
-
+/* Labels e Textos Informativos */
 body#page-reserva .status-label {
   color: var(--text-muted);
-  font-size: 14px;
 }
 
 body#page-reserva .status-porcentagem {
   color: var(--accent-primary);
-  font-size: 14px;
 }
 
-/* Trilho da Barra */
+
 body#page-reserva .progress-reserva {
-  height: 42px;
+  height: 48px;
   background-color: rgba(255, 255, 255, 0.08);
-  padding: 3px;
+  padding: 4px;
 }
 
-/* Preenchimento Verde da Barra */
+
 body#page-reserva .bar-progresso {
   background-color: var(--accent-primary);
-  color: #0B0E14;
+  color: #000E14;
   letter-spacing: -0.3px;
   box-shadow: 0 0 12px rgba(0, 230, 118, 0.3);
+  height: 100%;
 }
 
 body#page-reserva .valor-meta {
   color: var(--text-primary);
-  font-size: 15px;
 }
 
 body#page-reserva .fs-7 {
@@ -67,14 +66,14 @@ body#page-reserva .fs-7 {
   color: var(--text-muted);
 }
 
-/* Botões de Ação */
+
 body#page-reserva .btn-acao {
   border: none;
   font-size: 16px;
   transition: all 0.2s ease-in-out;
 }
 
-/* Botão Guardar */
+
 body#page-reserva .btn-guardar {
   background-color: var(--brand-primary);
   color: #ffffff;
@@ -87,7 +86,7 @@ body#page-reserva .btn-guardar:hover {
   transform: translateY(-2px);
 }
 
-/* Botão Retirar */
+
 body#page-reserva .btn-retirar {
   background-color: transparent;
   color: var(--text-primary);
