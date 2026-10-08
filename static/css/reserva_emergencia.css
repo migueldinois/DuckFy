@@ -9,14 +9,16 @@ body#page-reserva {
 
 
 body#page-reserva .style-reserva-container {
-  max-width: 900px;
+  max-width: 1000px;
   width: 100%;
   margin: 0 auto;
 }
 
-body#page-reserva .reserva-card {
+
+body#page-reserva .reserva-card-wrapper {
   width: 100%;
-  background-color: var(--bg-surface-2);
+  min-height: 75vh; 
+  background-color: var(--bg-primary);
   border: 1px solid var(--border-color);
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
 }
@@ -32,7 +34,12 @@ body#page-reserva .btn-voltar:hover {
   transform: translateX(-3px);
 }
 
-/* Labels e Textos Informativos */
+
+body#page-reserva .reserva-status-box {
+  background-color: var(--bg-surface-2);
+  border: 1px solid var(--border-color);
+}
+
 body#page-reserva .status-label {
   color: var(--text-muted);
 }
@@ -43,7 +50,7 @@ body#page-reserva .status-porcentagem {
 
 
 body#page-reserva .progress-reserva {
-  height: 48px;
+  height: 52px;
   background-color: rgba(255, 255, 255, 0.08);
   padding: 4px;
 }
@@ -61,9 +68,10 @@ body#page-reserva .valor-meta {
   color: var(--text-primary);
 }
 
-body#page-reserva .fs-7 {
-  font-size: 13px;
-  color: var(--text-muted);
+
+body#page-reserva .reserva-historico-box {
+  background-color: var(--bg-surface-2);
+  border: 1px solid var(--border-color);
 }
 
 
