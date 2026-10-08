@@ -1,5 +1,6 @@
 @import url('../css/variables.css');
 
+/* Reset e Fundo */
 body#page-reserva {
   background-color: var(--bg-primary);
   color: var(--text-primary);
@@ -9,18 +10,9 @@ body#page-reserva {
 
 
 body#page-reserva .style-reserva-container {
-  max-width: 1000px;
+  max-width: 900px;
   width: 100%;
   margin: 0 auto;
-}
-
-
-body#page-reserva .reserva-card-wrapper {
-  width: 100%;
-  min-height: 75vh; 
-  background-color: var(--bg-primary);
-  border: 1px solid var(--border-color);
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
 }
 
 
@@ -35,75 +27,66 @@ body#page-reserva .btn-voltar:hover {
 }
 
 
-body#page-reserva .reserva-status-box {
+body#page-reserva .reserva-block {
   background-color: var(--bg-surface-2);
   border: 1px solid var(--border-color);
 }
 
-body#page-reserva .status-label {
-  color: var(--text-muted);
-}
 
-body#page-reserva .status-porcentagem {
-  color: var(--accent-primary);
+body#page-reserva .reserva-inner-card {
+  background-color: rgba(0, 0, 0, 0.25);
+  border: 1px solid var(--border-color);
 }
 
 
 body#page-reserva .progress-reserva {
-  height: 52px;
-  background-color: rgba(255, 255, 255, 0.08);
-  padding: 4px;
+  height: 14px;
+  background-color: rgba(255, 255, 255, 0.1);
+  padding: 0;
+  overflow: hidden;
 }
-
 
 body#page-reserva .bar-progresso {
   background-color: var(--accent-primary);
-  color: #000E14;
-  letter-spacing: -0.3px;
-  box-shadow: 0 0 12px rgba(0, 230, 118, 0.3);
+  box-shadow: 0 0 8px rgba(0, 230, 118, 0.4);
   height: 100%;
 }
 
-body#page-reserva .valor-meta {
-  color: var(--text-primary);
-}
 
-
-body#page-reserva .reserva-historico-box {
-  background-color: var(--bg-surface-2);
-  border: 1px solid var(--border-color);
-}
-
-
-body#page-reserva .btn-acao {
+body#page-reserva .btn-acao-purple {
+  background-color: #8b5cf6;
   border: none;
-  font-size: 16px;
-  transition: all 0.2s ease-in-out;
+  box-shadow: 0 4px 18px rgba(139, 92, 246, 0.3);
+  transition: all 0.2s ease;
 }
 
-
-body#page-reserva .btn-guardar {
-  background-color: var(--brand-primary);
-  color: #ffffff;
-  box-shadow: 0 4px 15px rgba(176, 147, 255, 0.25);
-}
-
-body#page-reserva .btn-guardar:hover {
-  background-color: var(--brand-secondary);
-  color: #ffffff;
+body#page-reserva .btn-acao-purple:hover {
+  background-color: #7c3aed;
   transform: translateY(-2px);
+  box-shadow: 0 6px 22px rgba(139, 92, 246, 0.4);
 }
 
 
-body#page-reserva .btn-retirar {
-  background-color: transparent;
-  color: var(--text-primary);
+body#page-reserva .btn-acao-secondary {
+  background-color: rgba(255, 255, 255, 0.08);
   border: 1px solid var(--border-color);
+  transition: all 0.2s ease;
 }
 
-body#page-reserva .btn-retirar:hover {
-  background-color: rgba(255, 255, 255, 0.05);
-  border-color: var(--brand-primary);
-  color: var(--brand-primary);
+body#page-reserva .btn-acao-secondary:hover {
+  background-color: rgba(255, 255, 255, 0.15);
+  border-color: #8b5cf6;
   transform: translateY(-2px);
+}
+
+
+body#page-reserva .icon-circle {
+  width: 40px;
+  height: 40px;
+  font-size: 18px;
+}
+
+
+body#page-reserva .fs-7 {
+  font-size: 13px;
 }

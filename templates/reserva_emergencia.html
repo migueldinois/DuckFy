@@ -5,20 +5,19 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Reserva de Emergência</title>
 
-
+  <!-- Bootstrap 5 CSS e Ícones -->
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" rel="stylesheet">
 
-
+  <!-- Estilos da aplicação -->
   <link rel="stylesheet" href="/static/css/variables.css">
   <link rel="stylesheet" href="/static/css/reserva_emergencia.css">
 </head>
 <body id="page-reserva" class="py-4">
 
-
   <main class="container style-reserva-container">
 
-
+    <!-- Header superior -->
     <header class="d-flex align-items-center mb-3">
       <button type="button" class="btn-voltar border-0 bg-transparent text-white p-0 me-3 fs-4" aria-label="Voltar">
         <i class="bi bi-arrow-left"></i>
@@ -26,65 +25,97 @@
       <h1 class="h4 mb-0 fw-semibold text-white">Reserva de Emergência</h1>
     </header>
 
- 
-    <div class="reserva-card-wrapper p-4 p-md-5 rounded-4 shadow-lg d-flex flex-column justify-content-between">
-      
-      <div>
-
-        <section class="reserva-status-box p-4 rounded-4 mb-4">
-          <div class="d-flex justify-content-between align-items-center mb-3">
-            <span class="status-label fs-5 fw-medium">Guardado</span>
-            <span class="status-porcentagem fw-bold fs-3">77%</span>
-          </div>
-
-
-          <div class="progress progress-reserva rounded-pill mb-3">
-            <div class="progress-bar bar-progresso rounded-pill d-flex align-items-center px-4 fw-bold fs-5"
-                 role="progressbar" 
-                 style="width: 77%;" 
-                 aria-valuenow="2309" 
-                 aria-valuemin="0" 
-                 aria-valuemax="3000">
-              R$ 2.309,00
-            </div>
-          </div>
-
-          <div class="d-flex justify-content-between align-items-center">
-            <span class="fs-6 text-muted">Meta Total</span>
-            <span class="valor-meta fw-semibold fs-5">R$ 3.000,00</span>
-          </div>
-        </section>
-
-
-        <section class="row g-3 mb-4">
-          <div class="col-12 col-md-6">
-            <button type="button" class="btn btn-acao btn-guardar py-3 w-100 rounded-3 fw-semibold d-flex align-items-center justify-content-center gap-2 fs-5">
-              <i class="bi bi-plus-circle fs-4"></i> Guardar Dinheiro
-            </button>
-          </div>
-          <div class="col-12 col-md-6">
-            <button type="button" class="btn btn-acao btn-retirar py-3 w-100 rounded-3 fw-semibold d-flex align-items-center justify-content-center gap-2 fs-5">
-              <i class="bi bi-dash-circle fs-4"></i> Retirar Dinheiro
-            </button>
-          </div>
-        </section>
+    <!-- Card Superior da Reserva -->
+    <div class="reserva-block p-4 rounded-4 shadow-lg mb-3">
+      <div class="d-flex justify-content-between align-items-start mb-3">
+        <div>
+          <h2 class="h5 mb-1 text-white fw-bold">Status da Reserva</h2>
+          <span class="text-white-50 fs-7">Meta total: R$ 3.000,00</span>
+        </div>
+        <div class="text-end">
+          <span class="d-block text-uppercase text-white-50 fs-7 fw-bold">PROGRESSO</span>
+          <span class="fs-5 fw-bold text-success">77%</span>
+        </div>
       </div>
 
+      <!-- Card Interno -->
+      <div class="reserva-inner-card p-4 rounded-4">
+        <div class="d-flex justify-content-between align-items-baseline mb-3">
+          <div>
+            <span class="text-white-50 fs-7 d-block mb-1">Total Guardado</span>
+            <span class="fs-2 fw-bold text-white">R$ 2.309,00</span>
+          </div>
+        </div>
 
-      <section class="reserva-historico-box p-4 rounded-4">
-        <h2 class="h6 text-white mb-3 fw-semibold">Movimentações da Reserva</h2>
-        <div class="d-flex justify-content-between align-items-center py-2 border-bottom border-secondary border-opacity-25">
+        <!-- Barra de Progresso Proporcional -->
+        <div class="progress progress-reserva rounded-pill mb-2">
+          <div class="progress-bar bar-progresso rounded-pill"
+               role="progressbar" 
+               style="width: 77%;" 
+               aria-valuenow="2309" 
+               aria-valuemin="0" 
+               aria-valuemax="3000">
+          </div>
+        </div>
+
+        <div class="d-flex justify-content-between text-white-50 fs-7 pt-1">
+          <span>R$ 0,00</span>
+          <span>Faltam R$ 691,00 para a meta</span>
+          <span>R$ 3.000,00</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Botões de Ação (Guardar, Retirar e Ir para Lançamentos) -->
+    <div class="row g-3 mb-3">
+      <div class="col-12 col-md-6">
+        <button type="button" class="btn btn-acao-purple w-100 py-3 rounded-3 fw-semibold text-white fs-6 d-flex align-items-center justify-content-center gap-2">
+          <i class="bi bi-plus-circle fs-5"></i> Guardar Dinheiro
+        </button>
+      </div>
+      <div class="col-12 col-md-6">
+        <a href="/lancamentos" class="btn btn-acao-secondary w-100 py-3 rounded-3 fw-semibold text-white fs-6 d-flex align-items-center justify-content-center gap-2 text-decoration-none">
+          <i class="bi bi-arrow-left-right fs-5"></i> Novo Lançamento (Entrada/Saída)
+        </a>
+      </div>
+    </div>
+
+    <!-- Card de Histórico da Reserva -->
+    <div class="reserva-block p-4 rounded-4 shadow-lg">
+      <div class="d-flex justify-content-between align-items-center mb-3">
+        <h3 class="h5 text-white fw-bold mb-0">Histórico de Movimentações</h3>
+        <a href="#" class="text-white text-decoration-none fs-7 fw-semibold">Ver Extrato Completo <i class="bi bi-arrow-right"></i></a>
+      </div>
+
+      <div class="d-flex flex-column gap-3">
+        <!-- Item 1: Entrada -->
+        <div class="d-flex justify-content-between align-items-center">
           <div class="d-flex align-items-center gap-3">
-            <i class="bi bi-arrow-down-circle-fill text-success fs-4"></i>
+            <div class="icon-circle bg-success text-dark rounded-circle d-flex align-items-center justify-content-center fw-bold">
+              +
+            </div>
             <div>
-              <p class="mb-0 text-white fw-medium">Depósito realizado</p>
-              <small class="text-muted">Hoje às 14:30</small>
+              <span class="d-block text-white fw-medium fs-6">Depósito na Reserva</span>
+              <span class="text-white-50 fs-7">16:20 • Entrada</span>
             </div>
           </div>
-          <span class="text-success fw-bold">+ R$ 300,00</span>
+          <span class="text-success fw-bold fs-6">+ R$ 200,00</span>
         </div>
-      </section>
 
+        <!-- Item 2: Saída -->
+        <div class="d-flex justify-content-between align-items-center">
+          <div class="d-flex align-items-center gap-3">
+            <div class="icon-circle bg-danger text-white rounded-circle d-flex align-items-center justify-content-center fw-bold">
+              -
+            </div>
+            <div>
+              <span class="d-block text-white fw-medium fs-6">Resgate Emergencial</span>
+              <span class="text-white-50 fs-7">16:19 • Saída</span>
+            </div>
+          </div>
+          <span class="text-danger fw-bold fs-6">- R$ 50,00</span>
+        </div>
+      </div>
     </div>
 
   </main>
