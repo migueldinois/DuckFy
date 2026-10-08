@@ -1,9 +1,7 @@
-
 * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-    font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, Roboto, sans-serif;
 }
 
 html, body {
@@ -12,35 +10,22 @@ html, body {
     background-color: var(--bg-primary);
 }
 
-/* Container de Tela Inteira para PC */
-.tela-configuracoes {
+/* Ocupar a tela inteira sem limites fixos de largura */
+.cartao-perfil-principal {
     width: 100%;
     min-height: 100vh;
-    display: flex;
-    flex-direction: column;
     background-color: var(--bg-primary);
 }
 
-/* 1. SEÇÃO SUPERIOR ROXA */
+/* 1. TOPO ROXO DE BORDA A BORDA */
 .cabecalho-perfil {
     width: 100%;
     background-color: var(--brand-primary);
-    padding: 40px 60px 50px 60px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    position: relative;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
 }
 
 .link-voltar {
-    position: absolute;
-    top: 36px;
-    left: 60px;
-    color: var(--bg-primary);
-    text-decoration: none;
-    font-size: 2rem;
-    font-weight: bold;
+    top: 28px;
+    left: 28px;
     transition: transform 0.2s ease;
 }
 
@@ -48,106 +33,118 @@ html, body {
     transform: translateX(-4px);
 }
 
-.titulo-pagina {
-    font-size: 2rem;
-    font-weight: 700;
-    color: var(--bg-primary);
-    margin-bottom: 30px;
-}
-
-.resumo-perfil {
-    display: flex;
-    align-items: center;
-    gap: 20px;
-    position: relative;
-    width: 100%;
-    max-width: 600px;
-    justify-content: flex-start;
-}
-
-/* Avatar com fundo escuro */
-.avatar {
-    width: 90px;
-    height: 90px;
-    border-radius: 50%;
+/* Bloco centralizado do usuário no topo */
+.cartao-usuario {
+    max-width: 900px;
     background-color: var(--bg-primary);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+}
+
+/* Avatar Personagem */
+.avatar {
+    width: 70px;
+    height: 70px;
+    border-radius: 50%;
+    background-color: var(--bg-surface-2);
     position: relative;
     overflow: hidden;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.3);
-    flex-shrink: 0;
 }
 
 .avatar-cabeca {
-    width: 32px;
-    height: 32px;
+    width: 24px;
+    height: 24px;
     background-color: var(--brand-primary);
     border-radius: 50%;
     position: absolute;
-    top: 18px;
+    top: 14px;
+    left: 50%;
+    transform: translateX(-50%);
 }
 
 .avatar-corpo {
-    width: 58px;
-    height: 38px;
+    width: 44px;
+    height: 30px;
     background-color: var(--brand-primary);
     border-radius: 50% 50% 0 0;
     position: absolute;
     bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
 }
 
-.nome-usuario {
-    font-size: 1.5rem;
+.tag-nivel {
+    background-color: var(--bg-surface-2);
+    color: var(--accent-primary);
+    padding: 6px 12px;
+}
+
+.btn-editar {
+    background-color: var(--brand-primary);
+    color: #ffffff;
+    border-radius: 12px;
     font-weight: 600;
+    transition: background-color 0.2s ease;
+}
+
+.btn-editar:hover {
+    background-color: var(--brand-dark);
     color: #ffffff;
 }
 
-.link-editar {
-    position: absolute;
-    right: 0;
-    color: var(--bg-primary);
-    text-decoration: none;
-    font-size: 1.4rem;
-    transition: transform 0.2s ease;
-}
-
-.link-editar:hover {
-    transform: scale(1.15);
-}
-
-/* 2. LISTA DE OPÇÕES (FUNDO ESCURO INFERIOR) */
-.lista-configuracoes {
+/* 2. ÁREA INFERIOR DE BORDA A BORDA */
+.conteudo-perfil {
     width: 100%;
-    max-width: 600px;
-    margin: 0 auto;
-    padding: 40px 20px;
-    display: flex;
-    flex-direction: column;
-    flex-grow: 1;
+    background-color: var(--bg-primary);
 }
 
-.item-configuracao {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 20px 10px;
-    color: #ffffff;
-    text-decoration: none;
-    font-size: 1.2rem;
-    font-weight: 500;
-    border-bottom: 1px solid var(--bg-surface-2);
-    transition: background-color 0.2s ease, padding-left 0.2s ease;
+/* Container para alinhar o conteúdo interno no PC */
+.container-conteudo {
+    max-width: 1000px;
 }
 
-.item-configuracao:hover {
+/* Cards de Ação */
+.cartao-acao {
     background-color: var(--bg-surface-1);
-    padding-left: 16px;
-    border-radius: 8px;
+    border: 1px solid var(--bg-surface-2);
+    transition: transform 0.2s ease, border-color 0.2s ease;
 }
 
-.seta {
-    font-weight: bold;
+.cartao-acao:hover {
+    transform: translateY(-2px);
+    border-color: var(--brand-primary);
+}
+
+.icone-acao {
+    width: 46px;
+    height: 46px;
+}
+
+.icone-acao.roxo {
+    background-color: rgba(124, 77, 255, 0.15);
+    color: var(--brand-primary);
+}
+
+.icone-acao.verde {
+    background-color: rgba(0, 230, 118, 0.15);
+    color: var(--accent-primary);
+}
+
+/* Lista Secundária */
+.titulo-secao {
+    font-size: 0.85rem;
+    letter-spacing: 0.5px;
+}
+
+.item-lista-config {
+    background-color: var(--bg-surface-1);
+    transition: background-color 0.2s ease;
+}
+
+.item-lista-config:hover {
+    background-color: var(--bg-surface-2);
+}
+
+.icone-lista {
     color: var(--brand-secondary);
 }
+
