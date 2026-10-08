@@ -8,7 +8,7 @@
     <title>Duckfy - Login</title>
 
     <!-- conecta o CSS -->
-     <link rel="stylesheet" href="static/css/variables.css">
+    <link rel="stylesheet" href="static/css/variables.css">
     <link rel="stylesheet" href="static/css/login.css">
 </head>
 
@@ -28,17 +28,13 @@
         <!-- conteúdo do login -->
         <section class="login-conteudo">
 
-            <form>
+            <form action="/login/usuario">
 
                 <!-- campo de e-mail -->
                 <div class="campo">
                     <label for="email">E-mail:</label>
 
-                    <input
-                        type="email"
-                        id="email"
-                        placeholder="Digite seu e-mail"
-                    >
+                    <input type="email" id="email" placeholder="Digite seu e-mail">
                 </div>
 
 
@@ -49,11 +45,7 @@
                         <label for="senha">Senha:</label>
                     </div>
 
-                    <input
-                        type="password"
-                        id="senha"
-                        placeholder="Digite sua senha"
-                    >
+                    <input type="password" id="senha" placeholder="Digite sua senha">
                 </div>
 
 
@@ -63,6 +55,15 @@
                 </button>
 
             </form>
+
+
+            <div class="container__error">
+                {% with mensagens = get_flashed_messages()%}
+                {% for mensagem in mensagens %}
+                <p class="text-error">{{mensagem}}</p>
+                {%endfor%}
+                {%endwith%}
+            </div>
 
 
             <!-- separador -->
