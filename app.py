@@ -22,35 +22,58 @@ def logar():
 
     if usuario_logado:
         session["usuario"] = usuario_logado
-        flash(f"Bem vindo, {usuario_logado}!", "success")
         return redirect(url_for("dashboard"))
     else:
         flash("Usuario ou senha invalidos!", "error")
         return redirect('/login')
     
-
+@app.route("/logout")
+def logout():
+    session.pop("usuario", None)
+    flash("Você saiu da sua conta!", "success")
+    return redirect("/login")
     
 
 @app.get('/dashboard')
 def dashboard():
-    return render_template("dashboard.html")
+    if "usuario" in session:
+        return render_template("dashboard.html")
+    else:
+        flash("Você precisa estar logado para acessar o dashboard!", "error")
+        return redirect('/login')
 
 @app.get("/perfil")
 def perfil():
-    return render_template("perfil.html")
+    if "usuario" in session:
+        return render_template("perfil.html")
+    else:
+        flash("Você precisa estar logado para acessar o seu perfil!", "error")
+        return redirect('/login')
 
 
 @app.get("/editar-perfil")
 def editar_perfil():
-    return render_template("editar_perfil.html")
+    if "usuario" in session:
+        return render_template("editar_perfil.html")
+    else:
+        flash("Você precisa estar logado para editar o seu perfil!", "error")
+        return redirect('/login')
 
 @app.get("/extrato")
 def tela_extrato():
-    return render_template("extrato.html")
+    if "usuario" in session:
+        return render_template("extrato.html")
+    else:
+        flash("Você precisa estar logado para acessar o extrato!", "error")
+        return redirect('/login')
 
 @app.get("/lancamento")
 def lancamento():
-    return render_template("lancamentos.html")
+    if "usuario" in session:
+        return render_template("lancamentos.html")
+    else:
+        flash("Você precisa estar logado para realizar lançamentos!", "error")
+        return redirect('/login')
 
 @app.get("/cadastro")
 def cadastro():
