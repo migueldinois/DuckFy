@@ -30,6 +30,10 @@ def tela_extrato():
 def lancamento():
     return render_template("lancamentos.html")
 
+@app.get("/categorias")
+def categorias():
+    return render_template("categorias.html")
+
 
 
 if __name__ == "__main__":
