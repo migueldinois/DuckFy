@@ -1,4 +1,4 @@
-from flask import Flask, render_template
+from flask import Flask, render_template, request
 
 
 app = Flask(__name__)
@@ -13,7 +13,7 @@ def index():
 def dashboard():
     return render_template("dashboard.html")
 
-@app.get("/perfil")
+@app.route("/perfil", methods=["GET", "POST"])
 def perfil():
     usuario = {
         "nome": "Usuário",
@@ -21,6 +21,10 @@ def perfil():
         "dias_ofensiva": 0,
         "pontos_xp": 0,
     }
+
+    if request.method == "POST":
+        usuario["nome"] = request.form.get("nome", "").strip() or "Usuário"
+
     return render_template("perfil.html", usuario=usuario)
 
 

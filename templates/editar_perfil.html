@@ -6,8 +6,7 @@
     <title>DuckFy - Editar Perfil</title>
 
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-    
-    <form id="form-editar-perfil" class="tela-edicao flex-grow-1 w-100 d-flex flex-column" action="{{ url_for('perfil') }}" method="GET" novalidate>
+
     <link rel="stylesheet" href="{{ url_for('static', filename='css/variables.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/editar_perfil.css') }}">
 </head>
@@ -40,14 +39,14 @@
                 <div class="formulario-perfil w-100 d-flex flex-column gap-3">
                     
                     <div class="grupo-campo d-flex flex-column gap-1">
-                        <label for="nome" class="form-label text-white fw-semibold small">Nome</label>
+                        <label for="nome" class="form-label text-white fw-semibold small">Alterar Nome</label>
                         <input id="nome" name="nome" type="text" class="form-control campo-input p-3 text-white border-0" placeholder="Digite seu nome">
 
                         <span id="erro-nome" class="text-danger small mt-1 d-none">Por favor, insira um nome. </span>
                     </div>
 
                     <div class="grupo-campo d-flex flex-column gap-1">
-                        <label for="email" class="form-label text-white fw-semibold small">E-mail</label>
+                        <label for="email" class="form-label text-white fw-semibold small">Alterar E-mail</label>
                         <input id="email" name="email" type="email" class="form-control campo-input p-3 text-white border-0" placeholder="seuemail@exemplo.com">
 
                         <span id="erro-email" class="text-danger small mt-1 d-none">Por favor, insira um e-mail válido (ex: usuario@dominio.com).</span>
@@ -66,41 +65,51 @@
     </main>
 
     <script>
-        document.getElementById('form-editar-perfil').addEventListener('submit', function(event) {
-            const campoEmail = document.getElementById('email');
-            const mensagemErro = document.getElementById('erro-email');
-            const valorEmail = campoEmail.value.trim();
-            
-            // validar o formato de e-mail padrão
-            const regexEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        // Validação do formulário de edição de perfil
+        const formularioPerfil = document.getElementById('form-editar-perfil');
+        const campoNome = document.getElementById('nome');
+        const campoEmail = document.getElementById('email');
+        const mensagemErroNome = document.getElementById('erro-nome');
+        const mensagemErroEmail = document.getElementById('erro-email');
+        const regexEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
-            if (!regexEmail.test(valorEmail)) {
-                // Cancela a ação de salvar/redirecionar
-                event.preventDefault();
-                
-                // Exibe a mensagem de erro e adiciona borda vermelha no input
-                mensagemErro.classList.remove('d-none');
-                campoEmail.style.border = '2px solid #ff4d4d';
+        // Função para atualizar a exibição de erro e o estado do campo
+        function atualizarErro(campo, mensagem, invalido) {
+            mensagem.classList.toggle('d-none', !invalido);
+            campo.classList.toggle('invalido', invalido);
+        }
+
+        // Função para validar o formulário antes do envio
+        function validarFormulario() {
+            const nomeInvalido = campoNome.value.trim() === '';
+            const emailInvalido = !regexEmail.test(campoEmail.value.trim());
+
+            // Atualiza a exibição de erro para cada campo
+            atualizarErro(campoNome, mensagemErroNome, nomeInvalido);
+            atualizarErro(campoEmail, mensagemErroEmail, emailInvalido);
+
+            if (nomeInvalido) {
+                campoNome.focus();
+            } else if (emailInvalido) {
                 campoEmail.focus();
-            } else {
-                // esconde o erro caso o e-mail seja válido
-                mensagemErro.classList.add('d-none');
-                campoEmail.style.border = 'none';
+            }
+
+            // Retorna true se ambos os campos forem válidos, caso contrário, retorna false
+            return !nomeInvalido && !emailInvalido;
+        }
+
+        formularioPerfil.addEventListener('submit', function(event) {
+            if (!validarFormulario()) {
+                event.preventDefault();
             }
         });
-        document.getElementById('form-editar-perfil').addEventListener('input', function() {
-            const campoNome = document.getElementById('nome');
-            const mensagemErroNome = document.getElementById('erro-nome');
-            const valorNome = campoNome.value.trim();
 
-            
-
-            if (valorNome === '') {
-                mensagemErroNome.classList.remove('d-none');
-                campoNome.style.border = '2px solid #ff4d4d';
-            } else {
-                mensagemErroNome.classList.add('d-none');
-                campoNome.style.border = 'none';
+        // atualiza a validação em tempo real enquanto o usuário digita
+        formularioPerfil.addEventListener('input', function(event) {
+            if (event.target === campoNome) {
+                atualizarErro(campoNome, mensagemErroNome, campoNome.value.trim() === '');
+            } else if (event.target === campoEmail) {
+                atualizarErro(campoEmail, mensagemErroEmail, !regexEmail.test(campoEmail.value.trim()));
             }
         });
     </script>

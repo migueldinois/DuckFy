@@ -102,6 +102,11 @@ html, body, .bg-app {
     box-shadow: 0 0 0 3px rgba(124, 77, 255, 0.25);
 }
 
+.campo-input.invalido,
+.campo-input.invalido:focus {
+    border: 2px solid #ff4d4d !important;
+}
+
 .campo-input::placeholder {
     color: #6c6c80;
 }
