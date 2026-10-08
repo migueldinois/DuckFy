@@ -7,20 +7,24 @@
 
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     
+    <form id="form-editar-perfil" class="tela-edicao flex-grow-1 w-100 d-flex flex-column" action="{{ url_for('perfil') }}" method="GET" novalidate>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/variables.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/editar_perfil.css') }}">
 </head>
 <body class="bg-app">
 
     <main class="container-fluid px-0 min-vh-100 d-flex flex-column">
-        <div class="tela-edicao flex-grow-1 w-100 d-flex flex-column">
+        <!-- Envolvemos tudo em uma tag <form> para controlar o envio do Salvar -->
+        <form id="form-editar-perfil" class="tela-edicao flex-grow-1 w-100 d-flex flex-column" action="{{ url_for('perfil') }}" method="POST" novalidate>
             
+            <!-- TOPO ROXO -->
             <section class="cabecalho-perfil p-4 p-md-5 position-relative text-center">
                 <a class="link-voltar position-absolute text-white text-decoration-none fs-4" href="{{ url_for('perfil') }}" aria-label="Voltar para o perfil">&larr;</a>
                 
                 <h1 class="titulo-pagina text-white fs-3 fw-bold mb-0">Editar Perfil</h1>
                 
-                <a class="link-salvar position-absolute text-white text-decoration-none fs-5" href="{{ url_for('perfil') }}">Salvar</a>
+                <!-- Botão Salva-->
+                <button type="submit" class="link-salvar position-absolute text-white bg-transparent border-0 fs-5">Salvar</button>
 
                 <div class="resumo-perfil mt-4 d-flex flex-column align-items-center gap-2">
                     <div class="avatar avatar-grande d-flex align-items-center justify-content-center" aria-hidden="true">
@@ -31,8 +35,9 @@
                 </div>
             </section>
 
+            <!-- FORMULÁRIO INFERIOR -->
             <section class="conteudo-formulario flex-grow-1 p-4 p-md-5 d-flex justify-content-center">
-                <form class="formulario-perfil w-100 d-flex flex-column gap-3">
+                <div class="formulario-perfil w-100 d-flex flex-column gap-3">
                     
                     <div class="grupo-campo d-flex flex-column gap-1">
                         <label for="nome" class="form-label text-white fw-semibold small">Nome</label>
@@ -42,6 +47,8 @@
                     <div class="grupo-campo d-flex flex-column gap-1">
                         <label for="email" class="form-label text-white fw-semibold small">E-mail</label>
                         <input id="email" name="email" type="email" class="form-control campo-input p-3 text-white border-0" placeholder="seuemail@exemplo.com">
+
+                        <span id="erro-email" class="text-danger small mt-1 d-none">Por favor, insira um e-mail válido (ex: usuario@dominio.com).</span>
                     </div>
 
                     <div class="d-grid gap-2 mt-4">
@@ -50,11 +57,36 @@
                         <button class="btn btn-vermelho p-3 rounded-3 fw-semibold" type="button">Excluir conta</button>
                     </div>
 
-                </form>
+                </div>
             </section>
 
-        </div>
+        </form>
     </main>
+
+    <script>
+        document.getElementById('form-editar-perfil').addEventListener('submit', function(event) {
+            const campoEmail = document.getElementById('email');
+            const mensagemErro = document.getElementById('erro-email');
+            const valorEmail = campoEmail.value.trim();
+            
+            // validar o formato de e-mail padrão
+            const regexEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+            if (!regexEmail.test(valorEmail)) {
+                // Cancela a ação de salvar/redirecionar
+                event.preventDefault();
+                
+                // Exibe a mensagem de erro e adiciona borda vermelha no input
+                mensagemErro.classList.remove('d-none');
+                campoEmail.style.border = '2px solid #ff4d4d';
+                campoEmail.focus();
+            } else {
+                // esconde o erro caso o e-mail seja válido
+                mensagemErro.classList.add('d-none');
+                campoEmail.style.border = 'none';
+            }
+        });
+    </script>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
