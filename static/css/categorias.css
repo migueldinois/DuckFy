@@ -1,0 +1,156 @@
+/* configurações gerais */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    min-height: 100vh;
+    background-color: var(--bg-primary);
+    font-family: Arial, sans-serif;
+    color: #ffffff;
+}
+
+/* área principal */
+.categorias {
+    width: 100%;
+    max-width: 430px;
+    margin: 0 auto;
+    padding: 10px 8px 90px;
+}
+
+/* título principal */
+.categorias__titulo {
+    font-size: 18px;
+    font-weight: 700;
+    margin-bottom: 6px;
+}
+
+/* grupo de categorias */
+.categoria__grupo {
+    width: 100%;
+    background-color: var(--bg-surface-1);
+    border-radius: 10px;
+    padding: 8px 10px 5px;
+    margin-bottom: 7px;
+}
+
+/* título do grupo */
+.categoria__titulo {
+    font-size: 12px;
+    font-weight: 400;
+    margin-bottom: 4px;
+    color: #ffffff;
+}
+
+/* lista */
+.categoria__lista {
+    display: flex;
+    flex-direction: column;
+}
+
+/* categoria */
+.categoria {
+    position: relative;
+    display: flex;
+    align-items: center;
+    min-height: 53px;
+    padding: 5px 0;
+}
+
+/* círculo */
+.categoria__icone {
+    width: 33px;
+    height: 33px;
+    min-width: 33px;
+    border-radius: 50%;
+    background-color: var(--brand-primary);
+    margin-right: 6px;
+}
+
+/* informações */
+.categoria__info {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+/* nome */
+.categoria__info h3 {
+    font-size: 10px;
+    font-weight: 700;
+    line-height: 1.1;
+    color: #ffffff;
+}
+
+/* descrição */
+.categoria__info p {
+    font-size: 8px;
+    line-height: 1.2;
+    color: #ffffff;
+    opacity: 0.9;
+}
+
+/* seta */
+.categoria__seta {
+    position: absolute;
+    right: 2px;
+    bottom: 4px;
+
+    font-size: 13px;
+    color: var(--brand-primary);
+}
+
+/* menu inferior */
+.menu__inferior {
+    position: fixed;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+
+    width: calc(100% - 10px);
+    max-width: 420px;
+    height: 39px;
+
+    background-color: var(--brand-primary);
+    border-radius: 10px 10px 0 0;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+
+    padding: 4px;
+}
+
+/* itens do menu */
+.menu__item {
+    width: 32px;
+    height: 31px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    background-color: #292929;
+    color: #ffffff;
+
+    border-radius: 9px;
+
+    text-decoration: none;
+    font-size: 8px;
+
+    transition: 0.2s;
+}
+
+/* efeito ao passar */
+.menu__item:hover {
+    transform: translateY(-2px);
+}
+
+/* efeito ao clicar */
+.menu__item:active {
+    transform: scale(0.95);
+}
+
