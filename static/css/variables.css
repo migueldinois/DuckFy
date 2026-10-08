@@ -1,48 +1,40 @@
-/* ==========================================================
-   PALETA DE CORES (REGRAS DE 60%, 30%, 10%)
-   ========================================================== */
 :root {
-    /* 60% - Dominante / Fundo Escuro */
-    --bg-main: #0F0C1B;          /* Fundo geral da aplicação */
-    --bg-card: #19191B;          /* Fundo do card interno */
-    --bg-card-secondary: #181826;  /* Variação escura para botões/mídia */
+    --bg-main: #0F0C1B;          
+    --bg-card: #19191B;          
+    --bg-card-secondary: #181826;  
 
-    /* 30% - Secundária / Roxo & Púrpura */
-    --purple-primary: #7C4DFF;   /* Cor principal dos botões e destaques */
-    --purple-light: #B093FF;     /* Variação clara / hover */
-    --purple-dark: #4300FF;      /* Variação escura / ativa */
+    --purple-primary: #7C4DFF;   
+    --purple-light: #B093FF;     
+    --purple-dark: #4300FF;      
 
-    /* 10% - Destaque (Acento) / Verde */
-    --green-accent: #00E676;     /* Verde principal de contraste/rendimentos */
-    --green-light: #58E4A0;      /* Variação clara do verde */
-    --green-dark: #00E374;       /* Variação escura do verde */
+    --green-accent: #00E676;     
+    --green-light: #58E4A0;      
+    --green-dark: #00E374;       
 }
 
-/* ==========================================================
-   ESTILOS GERAIS DA APLICAÇÃO
-   ========================================================== */
+* {
+    box-sizing: border-box;
+}
+
 body {
     background-color: var(--bg-main);
     color: #ffffff;
     font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
     min-height: 100vh;
-    display: flex;
-    justify-content: center;
-    align-items: center;
     margin: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .app-container {
     width: 100%;
-    max-width: 420px; /* Tamanho padrão para mockup mobile */
+    max-width: 480px; 
     min-height: 100vh;
-    background-color: var(--bg-main);
     padding: 1.5rem 1rem;
+    transition: all 0.3s ease;
 }
 
-/* ==========================================================
-   INPUTS DE TEXTO E FORMULÁRIO
-   ========================================================== */
 .form-label {
     font-size: 0.85rem;
     margin-bottom: 0.4rem;
@@ -62,19 +54,14 @@ body {
     box-shadow: 0 0 0 3px var(--purple-light) !important;
 }
 
-/* ==========================================================
-   CARD PRINCIPAL (CONTEÚDO E MÉTRICAS)
-   ========================================================== */
 .card-cinza {
     background-color: var(--bg-card);
     border-radius: 24px;
-    padding: 1.25rem;
-    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+    padding: 1.5rem;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
+    border: 1px solid rgba(255, 255, 255, 0.05);
 }
 
-/* ==========================================================
-   BOTÕES DE PERÍODO E EDICÃO (30% Roxo)
-   ========================================================== */
 .btn-periodo {
     background-color: var(--purple-primary);
     color: #ffffff;
@@ -95,7 +82,7 @@ body {
 
 .btn-edit {
     background-color: var(--purple-primary);
-    color: #000000;
+    color: #ffffff;
     border: none;
     width: 38px;
     height: 38px;
@@ -110,24 +97,56 @@ body {
     background-color: var(--purple-light);
 }
 
-/* ==========================================================
-   MÉTRICAS E CORES DE DESTAQUE (10% Verde)
-   ========================================================== */
 .text-destaque-verde {
     color: var(--green-accent) !important;
 }
 
-/* ==========================================================
-   NAVEGAÇÃO INFERIOR (BOTTOM NAV BAR)
-   ========================================================== */
-.bottom-nav {
-    background-color: var(--purple-primary);
-    border-radius: 18px;
-    margin-top: 1rem;
+/* Área do Gráfico */
+.grafic-container {
+    background-color: var(--bg-card-secondary);
+    border-radius: 16px;
+    padding: 2rem 1rem;
+    min-height: 220px;
+    border: 1px dashed rgba(255, 255, 255, 0.1);
 }
 
+@media (min-width: 992px) {
+    .app-container {
+        max-width: 1050px; 
+        min-height: auto;
+        display: grid !important;
+        grid-template-columns: 360px 1fr;
+        gap: 2rem;
+        align-items: start;
+        padding: 2.5rem;
+    }
 
-.nav-item.active {
-    border-color: #ffffff;
-    background-color: #2b2b36;
+    .header {
+        background-color: var(--bg-card);
+        padding: 2rem;
+        border-radius: 24px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
+        border: 1px solid rgba(255, 255, 255, 0.05);
+    }
+
+    .header .row {
+        --bs-gutter-x: 0;
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+    }
+
+    .header .col-6 {
+        width: 100%;
+    }
+
+    .card-cinza {
+        margin-top: 0 !important;
+        height: 100%;
+        min-height: 480px;
+    }
+
+    .grafic-container {
+        min-height: 300px;
+    }
 }
