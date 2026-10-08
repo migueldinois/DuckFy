@@ -8,17 +8,34 @@ body#page-reserva {
   min-height: 100vh;
 }
 
-body#page-reserva .btn-acao-purple {
-  background-color: #8B5CF6;
-  color: #FFFFFF;
-  border: none;
-  border-radius: 12px;
+.btn-purple-action {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 48px; /* Altura aumentada de 42px para 48px */
+  background-color: var(--brand-primary, #7C4DFF);
+  color: #ffffff;
   font-weight: 600;
-  font-size: 15px;
-  padding: 14px 20px;
-  box-shadow: 0 8px 24px -2px rgba(139, 92, 246, 0.55);
-  transition: all 0.2s ease-in-out;
-  cursor: pointer;
+  font-size: 1rem; /* Texto maior (16px) */
+  border-radius: 12px;
+  text-decoration: none;
+  transition: all 0.2s ease;
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-top: 1px solid rgba(255, 255, 255, 0.35);
+  box-shadow: 0 8px 20px rgba(124, 77, 255, 0.35),
+              inset 0 1px 0 rgba(255, 255, 255, 0.2);
+}
+
+.btn-purple-action:hover {
+  color: #ffffff;
+  background-color: var(--brand-secondary, #B093FF);
+  opacity: 0.92;
+  transform: translateY(-2px);
+  box-shadow: 0 12px 25px rgba(124, 77, 255, 0.5),
+              inset 0 1px 0 rgba(255, 255, 255, 0.3);
 }
 
 body#page-reserva .style-reserva-container {
@@ -58,12 +75,6 @@ body#page-reserva .bar-progresso {
   background-color: var(--accent-primary);
   box-shadow: 0 0 8px rgba(0, 230, 118, 0.4);
   height: 100%;
-}
-
-body#page-reserva .btn-acao-purple:hover {
-  background-color: #7c3aed;
-  transform: translateY(-2px);
-  box-shadow: 0 6px 22px rgba(139, 92, 246, 0.4);
 }
 
 body#page-reserva .btn-acao-secondary {

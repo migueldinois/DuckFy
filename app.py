@@ -26,6 +26,10 @@ def editar_perfil():
 def login():
     return render_template("tela_login.html")
 
+@app.get("/reserva_emergencia")
+def reserva_emergencia():
+    return render_template("reserva_emergencia.html")
+
 
 
 if __name__ == "__main__":
