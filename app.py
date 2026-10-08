@@ -26,6 +26,10 @@ def editar_perfil():
 def login():
     return render_template("tela_login.html")
 
+@app.get("/termos")
+def termos():
+    return render_template("termos.html")
+
 
 
 if __name__ == "__main__":
