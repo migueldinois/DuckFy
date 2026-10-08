@@ -22,9 +22,17 @@ def perfil():
 def editar_perfil():
     return render_template("editar_perfil.html")
 
-@app.get("/login")
-def login():
-    return render_template("tela_login.html")
+@app.get("/extrato")
+def tela_extrato():
+    return render_template("extrato.html")
+
+@app.get("/lancamento")
+def lancamento():
+    return render_template("lancamentos.html")
+
+@app.get("/categorias")
+def categorias():
+    return render_template("categorias.html")
 
 
 
