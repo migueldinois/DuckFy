@@ -1,6 +1,7 @@
 from flask import Flask, render_template, request, redirect, session, flash, url_for
 from database.conexao import Conexao
 from model.usuarios import Usuario
+from model.extrato import Extrato
 
 app = Flask(__name__)
 app.secret_key = "duckfy999"
@@ -16,7 +17,6 @@ def index():
         return redirect("/admin")
     
     
-
     return render_template("tela_login.html")
 
 @app.get("/login/usuario")
@@ -51,6 +51,18 @@ def editar_perfil():
 
 @app.get("/extrato")
 def tela_extrato():
+
+    id_usuario = session.get('id_usuario', 1)
+
+    id_conta = request.args.get('id_conta', type=int)
+    data_inicio = request.args.get('data_inicio')
+    data_fim = request.args.get('data_fim')
+
+    lista_transacoes = Extrato.obter_extrato(id_usuario, id_conta, data_inicio, data_fim)
+
+    return render_template('extrato.html', transacoes=lista_transacoes)
+
+
     return render_template("extrato.html")
 
 @app.get("/lancamento")
