@@ -1,25 +1,74 @@
 @import url('../css/variables.css');
 
-/* Reset e Fundo */
-body#page-reserva {
-  background-color: var(--bg-primary);
-  color: var(--text-primary);
-  font-family: system-ui, -apple-system, sans-serif;
-  min-height: 100vh;
+/* Container principal com largura máxima para não esticar demais na tela */
+.style-reserva-container {
+  max-width: 1000px;
+  width: 100%;
+  margin: 0 auto;
 }
 
+/* Botão Voltar */
+.btn-voltar {
+  transition: opacity 0.2s ease, transform 0.2s ease;
+  cursor: pointer;
+}
+
+.btn-voltar:hover {
+  opacity: 0.8;
+  transform: translateX(-3px);
+}
+
+/* Cards em blocos */
+.reserva-block {
+  background-color: var(--bg-surface-2, #171721);
+  border: 1px solid var(--border-color, rgba(255, 255, 255, 0.1));
+}
+
+.reserva-inner-card {
+  background-color: rgba(0, 0, 0, 0.25);
+  border: 1px solid var(--border-color, rgba(255, 255, 255, 0.1));
+}
+
+/* Barra de Progresso - Usando !important para não ficar azul */
+.progress-reserva {
+  height: 14px;
+  background-color: rgba(255, 255, 255, 0.1) !important;
+  padding: 0;
+  overflow: hidden;
+  border-radius: 50rem;
+}
+
+.bar-progresso {
+  background-color: var(--accent-primary, #00E676) !important; /* Força o verde */
+  box-shadow: 0 0 8px rgba(0, 230, 118, 0.4);
+  height: 100%;
+  border-radius: 50rem;
+}
+
+/* Fix dos Ícones Circulares para não esticarem */
+.icon-circle {
+  width: 40px !important;
+  height: 40px !important;
+  min-width: 40px !important;  /* Impede esticar na largura */
+  min-height: 40px !important; /* Impede esticar na altura */
+  flex-shrink: 0 !important;   /* Impede o flexbox de achatar/esticar */
+  font-size: 18px;
+  border-radius: 50%;
+}
+
+/* Botões Roxos */
 .btn-purple-action {
   display: flex;
   align-items: center;
   justify-content: center;
   width: 100%;
-  height: 48px; /* Altura aumentada de 42px para 48px */
+  height: 48px;
   background-color: var(--brand-primary, #7C4DFF);
-  color: #ffffff;
+  color: #ffffff !important;
   font-weight: 600;
-  font-size: 1rem; /* Texto maior (16px) */
+  font-size: 1rem;
   border-radius: 12px;
-  text-decoration: none;
+  text-decoration: none !important;
   transition: all 0.2s ease;
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
@@ -30,7 +79,6 @@ body#page-reserva {
 }
 
 .btn-purple-action:hover {
-  color: #ffffff;
   background-color: var(--brand-secondary, #B093FF);
   opacity: 0.92;
   transform: translateY(-2px);
@@ -38,63 +86,6 @@ body#page-reserva {
               inset 0 1px 0 rgba(255, 255, 255, 0.3);
 }
 
-body#page-reserva .style-reserva-container {
-  max-width: 900px;
-  width: 100%;
-  margin: 0 auto;
-}
-
-body#page-reserva .btn-voltar {
-  transition: opacity 0.2s ease, transform 0.2s ease;
-  cursor: pointer;
-}
-
-body#page-reserva .btn-voltar:hover {
-  opacity: 0.8;
-  transform: translateX(-3px);
-}
-
-body#page-reserva .reserva-block {
-  background-color: var(--bg-surface-2);
-  border: 1px solid var(--border-color);
-}
-
-body#page-reserva .reserva-inner-card {
-  background-color: rgba(0, 0, 0, 0.25);
-  border: 1px solid var(--border-color);
-}
-
-body#page-reserva .progress-reserva {
-  height: 14px;
-  background-color: rgba(255, 255, 255, 0.1);
-  padding: 0;
-  overflow: hidden;
-}
-
-body#page-reserva .bar-progresso {
-  background-color: var(--accent-primary);
-  box-shadow: 0 0 8px rgba(0, 230, 118, 0.4);
-  height: 100%;
-}
-
-body#page-reserva .btn-acao-secondary {
-  background-color: rgba(255, 255, 255, 0.08);
-  border: 1px solid var(--border-color);
-  transition: all 0.2s ease;
-}
-
-body#page-reserva .btn-acao-secondary:hover {
-  background-color: rgba(255, 255, 255, 0.15);
-  border-color: #8b5cf6;
-  transform: translateY(-2px);
-}
-
-body#page-reserva .icon-circle {
-  width: 40px;
-  height: 40px;
-  font-size: 18px;
-}
-
-body#page-reserva .fs-7 {
+.fs-7 {
   font-size: 13px;
 }

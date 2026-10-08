@@ -1,27 +1,18 @@
-<!DOCTYPE html>
-<html lang="pt-BR">
+{% extends 'layout.html' %}
 
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Reserva de Emergência</title>
 
-  <!-- Bootstrap 5 CSS e Ícones -->
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" rel="stylesheet">
+{% block content %}
 
-  <!-- Estilos da aplicação -->
-  <link rel="stylesheet" href="/static/css/variables.css">
-  <link rel="stylesheet" href="/static/css/reserva_emergencia.css">
-</head>
+<link rel="stylesheet" href="{{ url_for('static', filename='css/reserva_emergencia.css') }}">
 
-<body id="page-reserva" class="py-4">
 
-  <main class="container style-reserva-container">
+
+<div id="page-reserva" class="py-3">
+  <div class="style-reserva-container">
 
     <!-- Header superior -->
     <header class="d-flex align-items-center mb-3">
-      <button type="button" class="btn-voltar border-0 bg-transparent text-white p-0 me-3 fs-4" aria-label="Voltar">
+      <button type="button" class="btn-voltar border-0 bg-transparent text-white p-0 me-3 fs-4" aria-label="Voltar" onclick="history.back()">
         <i class="bi bi-arrow-left"></i>
       </button>
       <h1 class="h4 mb-0 fw-semibold text-white">Reserva de Emergência</h1>
@@ -49,10 +40,14 @@
           </div>
         </div>
 
-        <!-- Barra de Progresso Proporcional -->
+        <!-- Barra de Progresso com Classe Ajustada -->
         <div class="progress progress-reserva rounded-pill mb-2">
-          <div class="progress-bar bar-progresso rounded-pill" role="progressbar" style="width: 77%;"
-            aria-valuenow="2309" aria-valuemin="0" aria-valuemax="3000">
+          <div class="progress-bar bar-progresso"
+               role="progressbar" 
+               style="width: 77%;" 
+               aria-valuenow="2309" 
+               aria-valuemin="0" 
+               aria-valuemax="3000">
           </div>
         </div>
 
@@ -64,6 +59,7 @@
       </div>
     </div>
 
+    <!-- Botões de Ação -->
     <div class="row g-3 mb-3">
       <div class="col-6">
         <a href="/" class="btn-purple-action">Guardar Dinheiro</a>
@@ -73,21 +69,18 @@
       </div>
     </div>
 
-
-    <!-- Card de Histórico da Reserva -->
+    <!-- Card de Histórico de Movimentações -->
     <div class="reserva-block p-4 rounded-4 shadow-lg">
       <div class="d-flex justify-content-between align-items-center mb-3">
         <h3 class="h5 text-white fw-bold mb-0">Histórico de Movimentações</h3>
-        <a href="#" class="text-white text-decoration-none fs-7 fw-semibold">Ver Extrato Completo <i
-            class="bi bi-arrow-right"></i></a>
+        <a href="/extrato" class="text-white text-decoration-none fs-7 fw-semibold">Ver Extrato Completo <i class="bi bi-arrow-right"></i></a>
       </div>
 
       <div class="d-flex flex-column gap-3">
         <!-- Item 1: Entrada -->
         <div class="d-flex justify-content-between align-items-center">
           <div class="d-flex align-items-center gap-3">
-            <div
-              class="icon-circle bg-success text-dark rounded-circle d-flex align-items-center justify-content-center fw-bold">
+            <div class="icon-circle bg-success text-dark d-flex align-items-center justify-content-center fw-bold">
               +
             </div>
             <div>
@@ -101,8 +94,7 @@
         <!-- Item 2: Saída -->
         <div class="d-flex justify-content-between align-items-center">
           <div class="d-flex align-items-center gap-3">
-            <div
-              class="icon-circle bg-danger text-white rounded-circle d-flex align-items-center justify-content-center fw-bold">
+            <div class="icon-circle bg-danger text-white d-flex align-items-center justify-content-center fw-bold">
               -
             </div>
             <div>
@@ -115,9 +107,6 @@
       </div>
     </div>
 
-  </main>
-
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
-</body>
-
-</html>
+  </div>
+</div>
+{% endblock %}
