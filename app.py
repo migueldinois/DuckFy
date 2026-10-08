@@ -19,11 +19,13 @@ def index():
 
     return render_template("tela_login.html")
 
+
 @app.post("/login/usuario")
 def logar():
     input_email = request.form.get("email", "").strip()
     input_senha = request.form.get("senha", "")
 
+    # Validação de campos vazios
     if not input_email or not input_senha:
         flash("Preencha e-mail e senha.", "error")
         return redirect(url_for("index"))
@@ -42,6 +44,7 @@ def logar():
 def dashboard():
     return render_template("dashboard.html")
 
+# Rota para exibir o perfil do usuário
 @app.route("/perfil", methods=["GET", "POST"])
 def perfil():
     usuario = {

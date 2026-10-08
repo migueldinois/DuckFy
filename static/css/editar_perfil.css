@@ -21,13 +21,13 @@ html, body, .bg-app {
 }
 
 .link-voltar {
-    top: 24px;
+    top: 28px;
     left: 28px;
     transition: transform 0.2s ease;
 }
 
 .link-voltar:hover {
-    transform: translateX(-4px);
+   transform: translateX(-4px);
 }
 
 .link-salvar {
