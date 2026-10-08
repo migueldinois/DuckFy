@@ -9,6 +9,9 @@ app = Flask(__name__)
 def index():
     return render_template("index.html")
 
+@app.get('/dashboard')
+def dashboard():
+    return render_template("dashboard.html")
 
 @app.get("/perfil")
 def perfil():
