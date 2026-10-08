@@ -15,7 +15,13 @@ def dashboard():
 
 @app.get("/perfil")
 def perfil():
-    return render_template("perfil.html")
+    usuario = {
+        "nome": "Usuário",
+        "foto_perfil": None,
+        "dias_ofensiva": 0,
+        "pontos_xp": 0,
+    }
+    return render_template("perfil.html", usuario=usuario)
 
 
 @app.get("/editar-perfil")
