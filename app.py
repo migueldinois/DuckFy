@@ -42,13 +42,20 @@ def dashboard():
         flash("Você precisa estar logado para acessar o dashboard!", "error")
         return redirect('/login')
 
-@app.get("/perfil")
+# Rota para exibir o perfil do usuário
+@app.route("/perfil", methods=["GET", "POST"])
 def perfil():
-    if "usuario" in session:
-        return render_template("perfil.html")
-    else:
-        flash("Você precisa estar logado para acessar o seu perfil!", "error")
-        return redirect('/login')
+    usuario = {
+        "nome": "Usuário",
+        "foto_perfil": None,
+        "dias_ofensiva": 0,
+        "pontos_xp": 0,
+    }
+
+    if request.method == "POST":
+        usuario["nome"] = request.form.get("nome", "").strip() or "Usuário"
+
+    return render_template("perfil.html", usuario=usuario)
 
 
 @app.get("/editar-perfil")
