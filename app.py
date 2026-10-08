@@ -26,9 +26,15 @@ def editar_perfil():
 def login():
     return render_template("tela_login.html")
 
+<<<<<<< HEAD
 @app.get("/privacidade")
 def privacidade():
     return render_template("privacidade.html")
+=======
+@app.get("/termos")
+def termos():
+    return render_template("termos.html")
+>>>>>>> 7aa4051e55bc11d7dc9999064625c07ecb9e8fbe
 
 
 
