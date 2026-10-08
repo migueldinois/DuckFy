@@ -10,7 +10,7 @@ body#page-reserva {
 /* Card Principal da Reserva */
 body#page-reserva .reserva-card {
   max-width: 420px;
-  background-color: var(--bg-surface-1);
+  background-color: var(--bg-primary);
   border: 1px solid var(--border-color);
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
 }
@@ -76,13 +76,13 @@ body#page-reserva .btn-acao {
 
 /* Botão Guardar */
 body#page-reserva .btn-guardar {
-  background-color: var(--brand-secondary);
+  background-color: var(--brand-primary);
   color: #ffffff;
   box-shadow: 0 4px 15px rgba(176, 147, 255, 0.25);
 }
 
 body#page-reserva .btn-guardar:hover {
-  background-color: var(--brand-primary);
+  background-color: var(--brand-secondary);
   color: #ffffff;
   transform: translateY(-2px);
 }
@@ -96,7 +96,7 @@ body#page-reserva .btn-retirar {
 
 body#page-reserva .btn-retirar:hover {
   background-color: rgba(255, 255, 255, 0.05);
-  border-color: var(--brand-secondary);
-  color: var(--brand-secondary);
+  border-color: var(--brand-primary);
+  color: var(--brand-primary);
   transform: translateY(-2px);
 }
