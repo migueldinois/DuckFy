@@ -1,150 +1,204 @@
-/* --- CONFIGURAÇÕES GLOBAIS (MOBILE-FIRST) --- */
-html, body {
-    min-height: 100vh;
-    background-color: #000000;
+/* ==========================================================
+   PALETA DE CORES (REGRAS DE 60%, 30%, 10%)
+   ========================================================== */
+:root {
+    /* 60% - Dominante / Fundo Escuro */
+    --bg-main: #0F0C1B;          /* Fundo geral da aplicação */
+    --bg-card: #19191B;          /* Card principal */
+    --bg-item: #181826;          /* Fundo dos itens da timeline */
+    --bg-item-hover: #222234;    /* Hover do item */
+
+    /* 30% - Secundária / Roxo */
+    --purple-primary: #7C4DFF;   
+    --purple-light: #B093FF;     
+    --purple-dark: #4300FF;      
+
+    /* 10% - Destaque / Verde e Vermelho para Transações */
+    --green-accent: #00E676;     /* Entradas/Positivo */
+    --red-accent: #FF5252;       /* Saídas/Negativo */
+}
+
+/* ==========================================================
+   ESTILOS GERAIS
+   ========================================================== */
+* {
+    box-sizing: border-box;
+}
+
+body {
+    background-color: var(--bg-main);
     color: #ffffff;
-    font-family: system-ui, -apple-system, sans-serif;
+    font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+    min-height: 100vh;
     margin: 0;
-    padding: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
-/* Container Fixo na Dimensão Mobile (430px) e Responsivo/Centralizado */
+/* Container Responsivo (Mobile Padrão) */
 .app-container {
-    max-width: 430px;
     width: 100%;
+    max-width: 480px;
     min-height: 100vh;
-    margin: 0 auto;
+    transition: all 0.3s ease;
 }
 
-/* --- TABS DE FILTRO (TUDO, SAÍDA, ENTRADA) --- */
-.filter-tabs .tab-btn {
-    background: none;
-    border: none;
-    color: #a0a0a0;
-    font-size: 0.9rem;
+/* ==========================================================
+   HEADER
+   ========================================================== */
+.header h1 {
+    font-size: 1.5rem;
+    letter-spacing: -0.5px;
+}
+
+/* ==========================================================
+   FILTROS (TUDO, SAÍDA, ENTRADA)
+   ========================================================== */
+.filter-tabs {
+    background-color: var(--bg-card);
+    padding: 6px;
+    border-radius: 16px;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    gap: 8px;
+}
+
+.tab-btn {
+    flex: 1;
+    text-align: center;
+    color: rgba(255, 255, 255, 0.6);
+    padding: 8px 12px;
+    border-radius: 12px;
     font-weight: 600;
-    letter-spacing: 0.5px;
-    padding-bottom: 6px;
-    cursor: pointer;
-    transition: color 0.2s ease, border-color 0.2s ease;
+    font-size: 0.8rem;
+    transition: all 0.2s ease;
 }
 
-.filter-tabs .tab-btn.active {
+.tab-btn:hover {
     color: #ffffff;
-    border-bottom: 2px solid #ffffff;
 }
 
-/* --- LINHA DO TEMPO (TIMELINE) --- */
+.tab-btn.active {
+    background-color: var(--purple-primary);
+    color: #ffffff;
+    box-shadow: 0 4px 12px rgba(124, 77, 255, 0.3);
+}
+
+/* ==========================================================
+   TIMELINE / LISTA DE EXTRATO
+   ========================================================== */
 .timeline-container {
-    position: relative;
-    padding-left: 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
 }
 
 .timeline-item {
-    position: relative;
+    background-color: var(--bg-card);
+    border-radius: 18px;
+    padding: 1rem;
     display: flex;
     align-items: center;
-    margin-bottom: 24px;
+    justify-content: space-between;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    transition: transform 0.2s ease, background-color 0.2s ease;
 }
 
-/* Linha vertical conectando as transações */
-.timeline-item::before {
-    content: '';
-    position: absolute;
-    left: 21px;
-    top: 42px;
-    width: 2px;
-    height: calc(100% - 18px);
-    background-color: var(--bg-surface-2);
-    z-index: 1;
+.timeline-item:hover {
+    background-color: var(--bg-item-hover);
+    transform: translateY(-2px);
 }
 
-.timeline-item.last-item::before {
-    display: none;
-}
-
-/* Bolinhas dos Ícones */
+/* Ícones dos Itens */
 .icon-box {
     width: 44px;
     height: 44px;
-    border-radius: 50%;
-    background-color: #ffffff;
+    border-radius: 14px;
+    background-color: var(--bg-item);
+    color: var(--purple-light);
     display: flex;
     align-items: center;
     justify-content: center;
     font-size: 1.2rem;
-    z-index: 2;
+    margin-right: 1rem;
     flex-shrink: 0;
 }
 
-/* Cores dos Ícones com Variáveis do Projeto */
-.icon-box.entrada i {
-    color: var(--accent-primary); /* Verde de Entrada */
-}
-
-.icon-box.salida i {
-    color: #ff4d4d; /* Vermelho de Saída */
-}
-
-/* Informações da Transação */
-.timeline-item .info {
-    margin-left: 16px;
+/* Informações de Data e Descrição */
+.info {
     flex-grow: 1;
 }
 
-.timeline-item .date-time {
-    font-size: 0.78rem;
-    color: #b0b0c0;
+.date-time {
+    font-size: 0.75rem;
+    color: rgba(255, 255, 255, 0.5);
+    margin-bottom: 2px;
 }
 
-.timeline-item .date-time .time {
-    font-weight: 700;
+.date-time .time {
+    margin-right: 6px;
+}
+
+.description {
+    font-weight: 600;
+    font-size: 0.95rem;
     color: #ffffff;
-    margin-right: 4px;
 }
 
-.timeline-item .description {
-    font-size: 0.88rem;
-    color: #d0d0e0;
-    margin-top: 1px;
-}
-
-/* Valores (+R$ / -R$) */
-.timeline-item .amount {
+/* Valores (Valores Positivos e Negativos) */
+.amount {
     font-weight: 700;
     font-size: 0.95rem;
-    white-space: nowrap;
+    text-align: right;
+    color: var(--green-accent); /* Padrão de entrada */
 }
 
-.timeline-item .amount.positive {
-    color: #ffffff;
+/* Ajuste automático para valores negativos contendo o caractere "-" */
+.amount:has(:first-child),
+.amount {
+    letter-spacing: -0.3px;
 }
 
-.timeline-item .amount.negative {
-    color: #ffffff;
-}
+/* ==========================================================
+   ADAPTAÇÃO DESKTOP MINIMALISTA (Para telas >= 992px)
+   ========================================================== */
+@media (min-width: 992px) {
+    .app-container {
+        max-width: 850px; /* Largura reduzida para visual minimalista */
+        min-height: auto;
+        padding: 3rem 2rem;
+    }
 
-/* --- BARRA DE NAVEGAÇÃO INFERIOR --- */
-.nav-bottom {
-    background-color: var(--brand-primary); /* Roxo da Marca */
-}
+    .header {
+        margin-bottom: 2rem !important;
+    }
 
-.nav-btn {
-    width: 48px;
-    height: 48px;
-    border-radius: 50%;
-    border: none;
-    background-color: var(--bg-surface-1); /* Superfície Escura */
-    color: #ffffff;
-    font-weight: bold;
-    font-size: 0.95rem;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    transition: all 0.2s ease;
-}
+    main {
+        background-color: var(--bg-card);
+        padding: 2rem;
+        border-radius: 28px;
+        box-shadow: 0 12px 40px rgba(0, 0, 0, 0.4);
+        border: 1px solid rgba(255, 255, 255, 0.05);
+    }
 
-.nav-btn.active {
-    border: 2px solid #ffffff;
+    /* Abas de filtro mais elegantes e centradas no Desktop */
+    .filter-tabs {
+        max-width: 400px;
+        margin-bottom: 2rem !important;
+        background-color: var(--bg-main);
+    }
+
+    /* Container de Timeline em Grade/Lista Espaçada no Desktop */
+    .timeline-container {
+        gap: 14px;
+    }
+
+    .timeline-item {
+        background-color: var(--bg-item);
+        padding: 1.1rem 1.5rem;
+    }
+
+    .timeline-item:hover {
+        background-color: #202030;
+    }
 }
