@@ -12,5 +12,17 @@
     <a href="/" class="nav-icon-btn" title="Perfil">
       <span><img src="{{ url_for('static', filename='img/icons/perfill.svg') }}" alt="Perfil"></span>
     </a>
+
+    <div class="nav-icon-btn dropdown-trigger" title="Configurações">
+      <span><img src="{{ url_for('static', filename='img/icons/mais.svg') }}" alt="Configurações"></span>
+      
+      <div class="dropdown-menu">
+        <a href="/lancamento">Lançamentos</a>
+        <a href="/reserva">Reserva de emergencia</a>
+        <a href="/categorias">Categorias</a>
+        <a href="/logout" class="logout-btn">Sair</a>
+      </div>
+    </div>
+    
   </div>
 </nav>
