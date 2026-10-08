@@ -1,103 +1,133 @@
-/* ==========================================
-   1. ESTILOS GERAIS DA APLICAÇÃO
-   ========================================== */
+/* ==========================================================
+   PALETA DE CORES (REGRAS DE 60%, 30%, 10%)
+   ========================================================== */
+:root {
+    /* 60% - Dominante / Fundo Escuro */
+    --bg-main: #0F0C1B;          /* Fundo geral da aplicação */
+    --bg-card: #19191B;          /* Fundo do card interno */
+    --bg-card-secondary: #181826;  /* Variação escura para botões/mídia */
+
+    /* 30% - Secundária / Roxo & Púrpura */
+    --purple-primary: #7C4DFF;   /* Cor principal dos botões e destaques */
+    --purple-light: #B093FF;     /* Variação clara / hover */
+    --purple-dark: #4300FF;      /* Variação escura / ativa */
+
+    /* 10% - Destaque (Acento) / Verde */
+    --green-accent: #00E676;     /* Verde principal de contraste/rendimentos */
+    --green-light: #58E4A0;      /* Variação clara do verde */
+    --green-dark: #00E374;       /* Variação escura do verde */
+}
+
+/* ==========================================================
+   ESTILOS GERAIS DA APLICAÇÃO
+   ========================================================== */
 body {
-    background-color: #000000;
+    background-color: var(--bg-main);
     color: #ffffff;
-    font-family: system-ui, -apple-system, sans-serif;
+    font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
     margin: 0;
-    padding: 0;
 }
 
-html, body {
-    height: 100%;
-    background-color: #000; /* Garante o fundo preto no desktop fora do app */
-}
-
-/* Garante o formato de tela de smartphone no computador */
 .app-container {
-    max-width: 430px; /* Largura padrão de smartphones grandes (ex: iPhone Pro Max) */
     width: 100%;
-    min-height: 100vh; /* Ocupa a altura total da tela */
-    margin: 0 auto; /* Centraliza na tela do computador */
+    max-width: 420px; /* Tamanho padrão para mockup mobile */
+    min-height: 100vh;
+    background-color: var(--bg-main);
+    padding: 1.5rem 1rem;
 }
 
-/* ==========================================
-   2. INPUTS DE APORTE (TOPO)
-   ========================================== */
+/* ==========================================================
+   INPUTS DE TEXTO E FORMULÁRIO
+   ========================================================== */
+.form-label {
+    font-size: 0.85rem;
+    margin-bottom: 0.4rem;
+}
+
 .custom-input {
-    background-color: #d9d9d9 !important;
+    background-color: #ffffff !important;
     border: none !important;
-    height: 48px;
-    border-radius: 4px;
-    font-weight: bold;
+    border-radius: 12px !important;
+    padding: 0.75rem 1rem !important;
+    font-weight: 600 !important;
     color: #000000 !important;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
 }
 
 .custom-input:focus {
-    box-shadow: 0 0 0 2px #ffffff !important;
+    box-shadow: 0 0 0 3px var(--purple-light) !important;
 }
 
-/* ==========================================
-   3. CARD CENTRAL CINZA CLARO
-   ========================================== */
+/* ==========================================================
+   CARD PRINCIPAL (CONTEÚDO E MÉTRICAS)
+   ========================================================== */
 .card-cinza {
-    background-color: #d9d9d9;
-    color: #000000;
+    background-color: var(--bg-card);
+    border-radius: 24px;
+    padding: 1.25rem;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
 }
 
-/* Botões de seleção de tempo (5 anos, 10 anos) */
+/* ==========================================================
+   BOTÕES DE PERÍODO E EDICÃO (30% Roxo)
+   ========================================================== */
 .btn-periodo {
-    background-color: #999999;
+    background-color: var(--purple-primary);
     color: #ffffff;
-    border-radius: 20px;
     border: none;
-    padding: 6px 18px;
-    font-size: 0.85rem;
-    font-weight: 500;
+    padding: 0.5rem 1.25rem;
+    border-radius: 10px;
+    font-weight: 600;
+    font-size: 0.9rem;
+    transition: all 0.2s ease-in-out;
 }
 
+.btn-periodo:hover, 
 .btn-periodo.active {
-    background-color: #777777;
-}
-
-/* Botão circular de edição (Lápis) */
-.btn-edit {
-    background-color: #999999;
-    color: #000000;
-    border-radius: 50%;
-    width: 36px;
-    height: 36px;
-    border: none;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-/* Conteúdo reservado ao Gráfico */
-.grafic-container {
-    min-height: 200px;
-}
-
-/* ==========================================
-   4. BARRA DE NAVEGAÇÃO INFERIOR
-   ========================================== */
-.nav-btn {
-    background-color: #404040;
+    background-color: var(--purple-light);
     color: #ffffff;
-    width: 52px;
-    height: 52px;
-    border-radius: 50%;
+    box-shadow: 0 0 12px rgba(124, 77, 255, 0.4);
+}
+
+.btn-edit {
+    background-color: var(--purple-primary);
+    color: #000000;
     border: none;
-    font-weight: bold;
-    font-size: 1.1rem;
+    width: 38px;
+    height: 38px;
+    border-radius: 10px;
     display: flex;
     align-items: center;
     justify-content: center;
-    transition: background-color 0.2s ease;
+    transition: background 0.2s;
 }
 
-/* Destaque visual do botão selecionado na barra */
-.nav-btn.active {
-    box-shadow: 0 0 0 4px #cccccc;
+.btn-edit:hover {
+    background-color: var(--purple-light);
+}
+
+/* ==========================================================
+   MÉTRICAS E CORES DE DESTAQUE (10% Verde)
+   ========================================================== */
+.text-destaque-verde {
+    color: var(--green-accent) !important;
+}
+
+/* ==========================================================
+   NAVEGAÇÃO INFERIOR (BOTTOM NAV BAR)
+   ========================================================== */
+.bottom-nav {
+    background-color: var(--purple-primary);
+    border-radius: 18px;
+    margin-top: 1rem;
+}
+
+
+.nav-item.active {
+    border-color: #ffffff;
+    background-color: #2b2b36;
 }

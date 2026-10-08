@@ -6,17 +6,13 @@ app = Flask(__name__)
 
 @app.get("/")
 def inicio():
-    return perfil()
+    return simulador_patrimonio()
 
 
-@app.get("/perfil")
-def perfil():
-    return render_template("perfil.html")
+@app.get("/simulador")
+def simulador_patrimonio():
+    return render_template("duckfy_simulador_patrimonio.html")
 
-
-@app.get("/editar-perfil")
-def editar_perfil():
-    return render_template("editar_perfil.html")
 
 
 if __name__ == "__main__":
