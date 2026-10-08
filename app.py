@@ -26,7 +26,7 @@ def editar_perfil():
 def login():
     return render_template("tela_login.html")
 
-@app.get("cadastro")
+@app.get("/cadastro")
 def cadastro():
     return render_template("cadastro.html")
 
