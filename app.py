@@ -67,6 +67,17 @@ def tela_extrato():
         flash("Você precisa estar logado para acessar o extrato!", "error")
         return redirect('/login')
 
+
+@app.get("/reserva_emergencia")
+def reserva_emergencia():
+    if "usuario" in session:
+        return render_template("reserva_emergencia.html")
+    else:
+        flash("Você precisa estar logado para realizar lançamentos!", "error")
+        return redirect('/login')
+    
+
+
 @app.get("/lancamento")
 def lancamento():
     if "usuario" in session:
@@ -74,6 +85,7 @@ def lancamento():
     else:
         flash("Você precisa estar logado para realizar lançamentos!", "error")
         return redirect('/login')
+
 
 @app.get("/cadastro")
 def cadastro():
