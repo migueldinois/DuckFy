@@ -1,10 +1,150 @@
-@import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&display=swap');
-
-
-
-@media (min-width: 600px) {
-	.phone-screen {
-		min-height: 646px;
-		margin: 18px auto;
-	}
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
 }
+
+html, body {
+    width: 100%;
+    min-height: 100vh;
+    background-color: var(--bg-primary);
+}
+
+/* Ocupar a tela inteira sem limites fixos de largura */
+.cartao-perfil-principal {
+    width: 100%;
+    min-height: 100vh;
+    background-color: var(--bg-primary);
+}
+
+/* 1. TOPO ROXO DE BORDA A BORDA */
+.cabecalho-perfil {
+    width: 100%;
+    background-color: var(--brand-primary);
+}
+
+.link-voltar {
+    top: 28px;
+    left: 28px;
+    transition: transform 0.2s ease;
+}
+
+.link-voltar:hover {
+    transform: translateX(-4px);
+}
+
+/* Bloco centralizado do usuário no topo */
+.cartao-usuario {
+    max-width: 900px;
+    background-color: var(--bg-primary);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+}
+
+/* Avatar Personagem */
+.avatar {
+    width: 70px;
+    height: 70px;
+    border-radius: 50%;
+    background-color: var(--bg-surface-2);
+    position: relative;
+    overflow: hidden;
+}
+
+.avatar-cabeca {
+    width: 24px;
+    height: 24px;
+    background-color: var(--brand-primary);
+    border-radius: 50%;
+    position: absolute;
+    top: 14px;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+.avatar-corpo {
+    width: 44px;
+    height: 30px;
+    background-color: var(--brand-primary);
+    border-radius: 50% 50% 0 0;
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+.tag-nivel {
+    background-color: var(--bg-surface-2);
+    color: var(--accent-primary);
+    padding: 6px 12px;
+}
+
+.btn-editar {
+    background-color: var(--brand-primary);
+    color: #ffffff;
+    border-radius: 12px;
+    font-weight: 600;
+    transition: background-color 0.2s ease;
+}
+
+.btn-editar:hover {
+    background-color: var(--brand-dark);
+    color: #ffffff;
+}
+
+/* 2. ÁREA INFERIOR DE BORDA A BORDA */
+.conteudo-perfil {
+    width: 100%;
+    background-color: var(--bg-primary);
+}
+
+/* Container para alinhar o conteúdo interno no PC */
+.container-conteudo {
+    max-width: 1000px;
+}
+
+/* Cards de Ação */
+.cartao-acao {
+    background-color: var(--bg-surface-1);
+    border: 1px solid var(--bg-surface-2);
+    transition: transform 0.2s ease, border-color 0.2s ease;
+}
+
+.cartao-acao:hover {
+    transform: translateY(-2px);
+    border-color: var(--brand-primary);
+}
+
+.icone-acao {
+    width: 46px;
+    height: 46px;
+}
+
+.icone-acao.roxo {
+    background-color: rgba(124, 77, 255, 0.15);
+    color: var(--brand-primary);
+}
+
+.icone-acao.verde {
+    background-color: rgba(0, 230, 118, 0.15);
+    color: var(--accent-primary);
+}
+
+/* Lista Secundária */
+.titulo-secao {
+    font-size: 0.85rem;
+    letter-spacing: 0.5px;
+}
+
+.item-lista-config {
+    background-color: var(--bg-surface-1);
+    transition: background-color 0.2s ease;
+}
+
+.item-lista-config:hover {
+    background-color: var(--bg-surface-2);
+}
+
+.icone-lista {
+    color: var(--brand-secondary);
+}
+

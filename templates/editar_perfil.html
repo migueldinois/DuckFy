@@ -4,35 +4,58 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>DuckFy - Editar Perfil</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}">
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/variables.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/editar_perfil.css') }}">
 </head>
-<body>
-    <main class="phone-screen edit-screen">
-        <section class="profile-header edit-header">
-            <a class="back-link" href="{{ url_for('perfil') }}" aria-label="Voltar">&larr;</a>
-            <span class="page-title">Editar Perfil</span>
-            <a class="save-link" href="{{ url_for('perfil') }}">Salvar</a>
+<body class="bg-app">
 
-            <div class="edit-profile-summary">
-                <div class="avatar large-avatar" aria-hidden="true">
-                    <span class="avatar-head"></span>
-                    <span class="avatar-body"></span>
+    <main class="container-fluid px-0 min-vh-100 d-flex flex-column">
+        <div class="tela-edicao flex-grow-1 w-100 d-flex flex-column">
+            
+            <section class="cabecalho-perfil p-4 p-md-5 position-relative text-center">
+                <a class="link-voltar position-absolute text-white text-decoration-none fs-4" href="{{ url_for('perfil') }}" aria-label="Voltar para o perfil">&larr;</a>
+                
+                <h1 class="titulo-pagina text-white fs-3 fw-bold mb-0">Editar Perfil</h1>
+                
+                <a class="link-salvar position-absolute text-white text-decoration-none fs-5" href="{{ url_for('perfil') }}">Salvar</a>
+
+                <div class="resumo-perfil mt-4 d-flex flex-column align-items-center gap-2">
+                    <div class="avatar avatar-grande d-flex align-items-center justify-content-center" aria-hidden="true">
+                        <span class="avatar-cabeca"></span>
+                        <span class="avatar-corpo"></span>
+                    </div>
+                    <a class="link-foto text-white text-decoration-none small fw-medium mt-1" href="#">Alterar foto</a>
                 </div>
-                <a class="photo-link" href="#">Alterar foto</a>
-            </div>
-        </section>
+            </section>
 
-        <form class="profile-form">
-            <label for="nome">Nome</label>
-            <input id="nome" name="nome" type="text" placeholder="Digite seu nome">
+            <section class="conteudo-formulario flex-grow-1 p-4 p-md-5 d-flex justify-content-center">
+                <form class="formulario-perfil w-100 d-flex flex-column gap-3">
+                    
+                    <div class="grupo-campo d-flex flex-column gap-1">
+                        <label for="nome" class="form-label text-white fw-semibold small">Nome</label>
+                        <input id="nome" name="nome" type="text" class="form-control campo-input p-3 text-white border-0" placeholder="Digite seu nome">
+                    </div>
 
-            <label for="email">E-mail</label>
-            <input id="email" name="email" type="email" placeholder="seuemail@exemplo.com">
+                    <div class="grupo-campo d-flex flex-column gap-1">
+                        <label for="email" class="form-label text-white fw-semibold small">E-mail</label>
+                        <input id="email" name="email" type="email" class="form-control campo-input p-3 text-white border-0" placeholder="seuemail@exemplo.com">
+                    </div>
 
-            <button type="button">Alterar senha</button>
-            <button type="button">Sair da conta</button>
-            <button type="button">Excluir conta</button>
-        </form>
+                    <div class="d-grid gap-2 mt-4">
+                        <button class="btn btn-roxo p-3 rounded-3 fw-semibold" type="button">Alterar senha</button>
+                        <button class="btn btn-escuro p-3 rounded-3 fw-semibold" type="button">Sair da conta</button>
+                        <button class="btn btn-vermelho p-3 rounded-3 fw-semibold" type="button">Excluir conta</button>
+                    </div>
+
+                </form>
+            </section>
+
+        </div>
     </main>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

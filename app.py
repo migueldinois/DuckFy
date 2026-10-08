@@ -4,10 +4,14 @@ from flask import Flask, render_template
 app = Flask(__name__)
 
 
-@app.get("/")
-def inicio():
-    return perfil()
 
+@app.get("/")
+def index():
+    return render_template("index.html")
+
+@app.get('/dashboard')
+def dashboard():
+    return render_template("dashboard.html")
 
 @app.get("/perfil")
 def perfil():
@@ -27,4 +31,3 @@ def tela_extrato():
 
 if __name__ == "__main__":
     app.run(debug=True)
-    
