@@ -12,7 +12,7 @@ app.secret_key = "duckfy999"
 def index():
 
     if "usuario" in session:
-        return redirect("/admin")
+        return redirect("/dashboard")
     
     
     return render_template("tela_login.html")
@@ -26,6 +26,7 @@ def logar():
 
     if usuario_logado:
         session["usuario"] = usuario_logado
+        session["email"] = input_email
         return redirect(url_for("dashboard"))
     else:
         flash("Usuario ou senha invalidos!", "error")
@@ -49,16 +50,22 @@ def dashboard():
 # Rota para exibir o perfil do usuário
 @app.route("/perfil", methods=["GET", "POST"])
 def perfil():
+
+
+    dados_usuario = Usuario.recuperar_dados_usuario(session["email"])
+
     usuario = {
-        "nome": "Usuário",
-        "foto_perfil": None,
-        "dias_ofensiva": 0,
-        "pontos_xp": 0,
+        "nome": dados_usuario["nome"],
+        "email": dados_usuario["email"],
+        "dias_ofensiva": dados_usuario["dias_ofensiva"],
+        "pontos_xp": dados_usuario["pontos_xp"],
+        "foto_perfil": dados_usuario["foto_perfil"],
     }
+
 
     if request.method == "POST":
         usuario["nome"] = request.form.get("nome", "").strip() or "Usuário"
-
+        
     return render_template("perfil.html", usuario=usuario)
 
 
