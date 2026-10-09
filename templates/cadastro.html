@@ -1,56 +1,111 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt-BR">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Duckfy - Cadastro</title>
 
+    <title>DuckFy - Cadastro</title>
+
+    <!-- bootstrap -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
-    
+
+    <!-- arquivos css -->
     <link rel="stylesheet" href="../static/css/variaveis.css">
     <link rel="stylesheet" href="../static/css/cadastro.css">
 </head>
+
 <body>
 
+    <main class="cadastro">
 
-    <h1><span class="duck">Faça seu cadastro!</span></h1>
+        <!-- conteúdo do cadastro -->
+        <section class="cadastro-conteudo">
 
-    <form method="POST" action="/cadastro/usuario">
+            <header class="cadastro-topo">
+                <h1>Crie sua conta!</h1>
+                <p>Faça seu cadastro e comece a organizar suas finanças com a DuckFy.</p>
+            </header>
 
-        <label for="email">Email</label>
-        <input type="email" id="email" name="email" required>
+            <form class="cadastro-form" method="POST" action="/cadastro/usuario">
 
-        <br><br>
+                <!-- email -->
+                <div class="campo">
+                    <label for="email">Email</label>
+                    <input
+                        type="email"
+                        id="email"
+                        name="email"
+                        placeholder="Digite seu email"
+                        autocomplete="email"
+                        required
+                    >
+                </div>
 
-        <label for="nome">Nome Completo</label>
-        <input type="text" id="nome" name="nome" required>
+                <!-- nome completo -->
+                <div class="campo">
+                    <label for="nome">Nome completo</label>
+                    <input
+                        type="text"
+                        id="nome"
+                        name="nome"
+                        placeholder="Digite seu nome completo"
+                        autocomplete="name"
+                        required
+                    >
+                </div>
 
-        <br><br>
+                <!-- senha -->
+                <div class="campo">
+                    <label for="senha">Senha</label>
+                    <input
+                        type="password"
+                        id="senha"
+                        name="senha"
+                        placeholder="Crie uma senha"
+                        autocomplete="new-password"
+                        required
+                    >
+                </div>
 
-        <label for="senha">Senha</label>
-        <input type="password" id="senha" name="senha" required>
+                <!-- confirmação da senha -->
+                <div class="campo">
+                    <label for="confirma_senha">Confirme sua senha</label>
+                    <input
+                        type="password"
+                        id="confirma_senha"
+                        name="confirma_senha"
+                        placeholder="Digite a senha novamente"
+                        autocomplete="new-password"
+                        required
+                    >
+                </div>
 
-        <br><br>
+                <!-- botões -->
+                <div class="botoes">
+                    <a href="/login" class="btn-cancelar">Cancelar</a>
+                    <button type="submit" class="btn-cadastrar">Cadastrar-se</button>
+                </div>
 
-        <label for="confirma_senha">Repita sua Senha</label>
-        <input type="password" id="confirma_senha" name="confirma_senha" required>
+                <!-- mensagens do flask -->
+                <div class="container__error">
+                    {% with mensagens = get_flashed_messages() %}
+                        {% for mensagem in mensagens %}
+                            <p class="text-error">{{ mensagem }}</p>
+                        {% endfor %}
+                    {% endwith %}
+                </div>
 
+                <p class="cadastro-login">
+                    Já possui uma conta?
+                    <a href="/login">Faça login</a>
+                </p>
 
-        <div class="botoes">
-            <button href="/login" type="button">Cancelar</button>
-            <button type="submit">Cadastrar-se</button>
-        </div>
+            </form>
 
-            <div class="container__error">
-                {% with mensagens = get_flashed_messages()%}
-                {% for mensagem in mensagens %}
-                <p class="text-error">{{mensagem}}</p>
-                {%endfor%}
-                {%endwith%}
-            </div>
-        
+        </section>
 
-    </form>
-    
+    </main>
+
 </body>
 </html>
