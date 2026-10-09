@@ -16,10 +16,9 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='css/dashboard.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/bottom-bar.css') }}">
 
-    <!-- CSS específico de cada página -->
+    <!-- CSS de cada página -->
     {% block styles %}{% endblock %}
     {% block extra_css %}{% endblock %}
-
 </head>
 
 <body class="app-body">
@@ -92,8 +91,7 @@
 
         <!-- Conteúdo da página -->
         <main class="main-content">
-            {% block content %}
-            {% endblock %}
+            {% block content %}{% endblock %}
         </main>
 
     </div>
