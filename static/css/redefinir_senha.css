@@ -6,79 +6,44 @@
 
 body {
     min-height: 100vh;
-    background: var(--bg-primary);
+    background-color: var(--bg-primary);
     color: var(--text-primary);
     font-family: Arial, Helvetica, sans-serif;
-}
-
-/* Tela inteira */
-.pagina {
-    min-height: 100vh;
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-}
-
-/* Lado da apresentação */
-.lateral {
     display: flex;
     flex-direction: column;
-    justify-content: center;
-    padding: 8%;
-    background: radial-gradient(circle at 10% 10%, rgba(124, 77, 255, 0.22), transparent 35%), var(--bg-primary);
-}
-
-.logo {
-    font-size: clamp(28px, 3vw, 42px);
-    font-weight: bold;
-    margin-bottom: 55px;
-    letter-spacing: -2px;
-}
-
-.logo span {
-    color: var(--brand-secondary);
-}
-
-.lateral h1 {
-    font-size: clamp(30px, 3.5vw, 48px);
-    line-height: 1.15;
-    margin-bottom: 20px;
-}
-
-.lateral h1 span {
-    color: var(--brand-secondary);
-}
-
-.lateral p {
-    max-width: 420px;
-    color: var(--text-muted);
-    font-size: 16px;
-    line-height: 1.8;
-}
-
-/* Lado do formulário */
-.area-formulario {
-    display: flex;
     align-items: center;
-    justify-content: center;
-    padding: 50px 8%;
-    background: var(--bg-surface-2);
 }
 
+/* Topo */
+.topo {
+    width: 100%;
+    height: 75px;
+    background-color: var(--text-primary);
+    border-radius: 0 0 50% 50%;
+}
+
+/* Conteúdo principal */
 .container {
     width: 100%;
-    max-width: 440px;
+    max-width: 480px;
+    padding: 45px 30px 40px;
 }
 
+/* Título */
 .titulo {
-    font-size: clamp(24px, 2.5vw, 32px);
+    color: var(--text-primary);
+    font-size: 32px;
+    font-weight: 700;
+    text-align: center;
     margin-bottom: 12px;
 }
 
 .subtitulo {
     color: var(--text-muted);
     font-size: 14px;
+    text-align: center;
     line-height: 1.7;
-    margin-bottom: 32px;
+    margin-bottom: 35px;
 }
 
 /* Campos */
@@ -90,120 +55,134 @@ body {
 
 .campo label {
     font-size: 14px;
-    margin-bottom: 10px;
+    font-weight: 600;
+    margin-bottom: 9px;
+    color: var(--text-primary);
 }
 
+/* Campo sempre visível */
 .campo input {
+    display: block;
     width: 100%;
     height: 48px;
     padding: 0 15px;
-    border: 1px solid var(--border-color);
-    border-radius: 10px;
-    background: var(--bg-surface-1);
+
+    background-color: var(--bg-surface-1);
     color: var(--text-primary);
-    font-size: 14px;
+
+    border: 1px solid #454052;
+    border-radius: 12px;
+
     outline: none;
-    transition: 0.2s;
+    box-shadow: none;
+    font-family: inherit;
+    font-size: 15px;
+
+    transition: border-color 0.2s, box-shadow 0.2s;
 }
 
-.campo input:focus {
-    border-color: var(--brand-primary);
-    box-shadow: 0 0 0 3px rgba(124, 77, 255, 0.18);
-}
-
+/* Texto de exemplo */
 .campo input::placeholder {
     color: var(--text-muted);
+    opacity: 0.8;
+}
+
+/* Quando o campo estiver selecionado */
+.campo input:focus {
+    border-color: var(--brand-primary);
+    box-shadow: 0 0 0 3px rgba(124, 77, 255, 0.15);
+}
+
+/* Evita aparência diferente no preenchimento automático */
+.campo input:-webkit-autofill {
+    -webkit-text-fill-color: var(--text-primary);
+    transition: background-color 5000s ease-in-out 0s;
 }
 
 /* Regras da senha */
 .regras {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-    margin: -8px 0 28px;
+    margin-top: 12px;
+    padding: 14px;
+    background-color: var(--bg-surface-2);
+    border: 1px solid #302b40;
+    border-radius: 10px;
 }
 
 .regras p {
     color: var(--text-muted);
     font-size: 12px;
-    line-height: 1.6;
+    line-height: 1.7;
+    margin-bottom: 6px;
 }
 
-.regras p::before {
-    content: "✓";
-    color: var(--brand-secondary);
-    font-weight: bold;
-    margin-right: 9px;
+.regras p:last-child {
+    margin-bottom: 0;
 }
 
 /* Botão */
 button {
+    display: block;
     width: 100%;
-    min-height: 49px;
-    border: none;
-    border-radius: 10px;
-    background: linear-gradient(110deg, var(--brand-primary), var(--brand-dark));
+    max-width: 210px;
+    min-height: 48px;
+    margin: 32px auto 0;
+
+    background-color: var(--brand-primary);
     color: var(--text-primary);
+
+    border: none;
+    border-radius: 12px;
+
     font-size: 14px;
-    font-weight: bold;
+    font-weight: 700;
+    letter-spacing: 0.4px;
+
     cursor: pointer;
-    transition: 0.2s;
+    box-shadow: 0 5px 18px rgba(124, 77, 255, 0.20);
+
+    transition: background-color 0.2s, transform 0.2s;
 }
 
 button:hover {
-    filter: brightness(1.15);
+    background-color: var(--brand-dark);
     transform: translateY(-2px);
 }
 
-/* Tablets e celulares */
-@media (max-width: 800px) {
-    .pagina {
-        grid-template-columns: 1fr;
-    }
+button:active {
+    transform: translateY(0);
+}
 
-    .lateral {
-        padding: 35px 7% 25px;
-    }
-
-    .logo {
-        margin-bottom: 25px;
-    }
-
-    .lateral h1 {
-        font-size: 30px;
-        margin-bottom: 12px;
-    }
-
-    .lateral p {
-        font-size: 14px;
-    }
-
-    .area-formulario {
-        padding: 35px 7% 50px;
-        align-items: flex-start;
+/* Celulares */
+@media (max-width: 600px) {
+    .topo {
+        height: 55px;
     }
 
     .container {
-        max-width: 500px;
-        margin: 0 auto;
-    }
-}
-
-/* Celulares pequenos */
-@media (max-width: 400px) {
-    .lateral {
-        padding-top: 28px;
-    }
-
-    .area-formulario {
-        padding-top: 25px;
+        max-width: 100%;
+        padding: 35px 24px;
     }
 
     .titulo {
-        font-size: 23px;
+        font-size: 27px;
     }
 
-    .campo input {
-        height: 45px;
+    .subtitulo {
+        margin-bottom: 30px;
+    }
+
+    .campo {
+        margin-bottom: 22px;
+    }
+
+    button {
+        max-width: 100%;
+    }
+}
+
+/* Telas maiores */
+@media (min-width: 768px) {
+    .container {
+        padding-top: 55px;
     }
 }
