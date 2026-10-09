@@ -71,8 +71,19 @@ def perfil():
 
 @app.get("/editar-perfil")
 def editar_perfil():
+
+    dados_usuario = Usuario.recuperar_dados_usuario(session["email"])
+
+    usuario = {
+        "nome": dados_usuario["nome"],
+        "email": dados_usuario["email"],
+        "dias_ofensiva": dados_usuario["dias_ofensiva"],
+        "pontos_xp": dados_usuario["pontos_xp"],
+        "foto_perfil": dados_usuario["foto_perfil"],
+    }
+
     if "usuario" in session:
-        return render_template("editar_perfil.html")
+        return render_template("editar_perfil.html", usuario=usuario)
     else:
         flash("Você precisa estar logado para editar o seu perfil!", "error")
         return redirect('/login')
