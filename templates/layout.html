@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="pt-br">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -13,9 +14,13 @@
   <link rel="stylesheet" href="{{ url_for('static', filename='css/layout.css') }}">
   <link rel="stylesheet" href="{{ url_for('static', filename='css/dashboard.css') }}">
   <link rel="stylesheet" href="{{ url_for('static', filename='css/bottom-bar.css') }}">
-  <link rel="stylesheet" href="{{ url_for('static', filename='css/reserva_emergencia.css') }}">
+
+
+  {% block extra_css %}
+  {% endblock %}
 
 </head>
+
 <body class="app-body">
 
   <div class="app-container">
@@ -47,7 +52,8 @@
         </li>
         <li>
           <a href="/lancamento" class="sidebar-link" title="Simulador de Patrimônio">
-            <img src="{{ url_for('static', filename='img/icons/simulador.svg') }}" alt="Simulador de Patrimônio" class="sidebar-icon">
+            <img src="{{ url_for('static', filename='img/icons/simulador.svg') }}" alt="Simulador de Patrimônio"
+              class="sidebar-icon">
             <span class="brand-text">Simulador</span>
           </a>
         </li>
@@ -93,4 +99,5 @@
   <!-- Bootstrap JS -->
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
+
 </html>
