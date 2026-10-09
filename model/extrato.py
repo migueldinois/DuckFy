@@ -1,18 +1,14 @@
 from database.conexao import Conexao
-from flask import Flask, render_template, request, redirect, session
-import bcrypt
 
 class Extrato:
     @staticmethod
-    def obter_extrato(id_usuario: int, id_conta: int = None, data_inicio: str = None, data_fim: str = None):
+    def obter_extrato(id_usuario: int, tipo: str = 'tudo', id_conta: int = None, data_inicio: str = None, data_fim: str = None):
         """
         Busca o extrato de transações de um usuário no banco de dados.
         """
         conexao, cursor = Conexao.conectar()
 
         try:
-            # Query ajustada de acordo com as colunas reais da imagem:
-            # t.id_transacao, cb.id_conta, cat.id_categoria
             query = """
                 SELECT 
                     t.id_transacao,
@@ -31,7 +27,11 @@ class Extrato:
             """
             params = [id_usuario]
 
-            # Filtro opcional por conta bancária
+            if tipo == 'entrada':
+                query += " AND (LOWER(t.tipo) = 'receita' OR LOWER(t.tipo) = 'entrada')"
+            elif tipo == 'saida':
+                query += " AND (LOWER(t.tipo) = 'despesa' OR LOWER(t.tipo) = 'saida')"
+
             if id_conta:
                 query += " AND t.id_conta = %s"
                 params.append(id_conta)
@@ -44,13 +44,22 @@ class Extrato:
 
             cursor.execute(query, params)
             resultados = cursor.fetchall()
+            
             transacoes = []
-            if cursor.description:
-                colunas = [col[0] for col in cursor.description]
-                for linha in resultados:
-                    transacoes.append(dict(zip(colunas, linha)))
-            else:
-                transacoes = resultados
+
+            for linha in resultados:
+                if isinstance(linha, dict):
+                    item = linha
+                else:
+                    colunas = [col[0] for col in cursor.description]
+                    item = dict(zip(colunas, linha))
+
+                try:
+                    item['valor'] = float(item['valor'])
+                except (ValueError, TypeError):
+                    item['valor'] = 0.0
+
+                transacoes.append(item)
 
             return transacoes
 
@@ -61,4 +70,3 @@ class Extrato:
         finally:
             cursor.close()
             conexao.close()
-                
