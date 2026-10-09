@@ -1,165 +1,188 @@
 * {
+    margin: 0;
+    padding: 0;
     box-sizing: border-box;
 }
 
 body {
-    margin: 0;
     min-height: 100vh;
-    background: radial-gradient(circle at 15% 15%, rgba(124, 77, 255, 0.12), transparent 32%), var(--bg-primary);
+    background-color: var(--bg-primary);
     color: var(--text-primary);
     font-family: Arial, Helvetica, sans-serif;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }
 
-/* Formulário */
+/* Topo */
+.topo {
+    width: 100%;
+    height: 75px;
+    background-color: var(--text-primary);
+    border-radius: 0 0 50% 50%;
+}
+
+/* Conteúdo principal */
 .container {
-    width: calc(100% - 40px);
-    max-width: 430px;
-    margin: 0 auto;
-    padding: 55px 0 45px;
+    width: 100%;
+    max-width: 480px;
+    padding: 45px 30px 40px;
 }
 
 /* Título */
-.logo {
-    margin: 0 0 36px;
-    font-size: 27px;
-    line-height: 1.3;
+.titulo {
+    color: var(--text-primary);
+    font-size: 32px;
     font-weight: 700;
-    letter-spacing: -0.6px;
+    text-align: center;
+    margin-bottom: 12px;
 }
 
-.logo span {
-    color: var(--text-primary);
-    border-left: 4px solid var(--brand-primary);
-    padding-left: 12px;
+.subtitulo {
+    color: var(--text-muted);
+    font-size: 14px;
+    text-align: center;
+    line-height: 1.7;
+    margin-bottom: 35px;
 }
 
 /* Campos */
 .campo {
     display: flex;
     flex-direction: column;
-    margin-bottom: 23px;
+    margin-bottom: 24px;
 }
 
 .campo label {
+    font-size: 14px;
+    font-weight: 600;
     margin-bottom: 9px;
     color: var(--text-primary);
-    font-size: 13px;
-    font-weight: 500;
 }
 
-/* Entrada de senha */
+/* Campo sempre visível */
 .campo input {
+    display: block;
     width: 100%;
-    height: 40px;
-    padding: 0 12px;
-    background: var(--bg-surface-1);
+    height: 48px;
+    padding: 0 15px;
+
+    background-color: var(--bg-surface-1);
     color: var(--text-primary);
-    border: 1px solid var(--border-color);
-    border-radius: 8px;
-    font-family: inherit;
-    font-size: 12px;
+
+    border: 1px solid #454052;
+    border-radius: 12px;
+
     outline: none;
+    box-shadow: none;
+    font-family: inherit;
+    font-size: 15px;
+
     transition: border-color 0.2s, box-shadow 0.2s;
 }
 
-.campo input:hover {
-    border-color: rgba(176, 147, 255, 0.65);
+/* Texto de exemplo */
+.campo input::placeholder {
+    color: var(--text-muted);
+    opacity: 0.8;
 }
 
+/* Quando o campo estiver selecionado */
 .campo input:focus {
     border-color: var(--brand-primary);
     box-shadow: 0 0 0 3px rgba(124, 77, 255, 0.15);
 }
 
+/* Evita aparência diferente no preenchimento automático */
+.campo input:-webkit-autofill {
+    -webkit-text-fill-color: var(--text-primary);
+    transition: background-color 5000s ease-in-out 0s;
+}
+
 /* Regras da senha */
 .regras {
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-    margin-top: 13px;
+    margin-top: 12px;
+    padding: 14px;
+    background-color: var(--bg-surface-2);
+    border: 1px solid #302b40;
+    border-radius: 10px;
 }
 
 .regras p {
-    margin: 0;
     color: var(--text-muted);
-    font-size: 11px;
-    line-height: 1.6;
+    font-size: 12px;
+    line-height: 1.7;
+    margin-bottom: 6px;
 }
 
-/* Confirmação */
-.campo-confirmacao {
-    margin-top: 27px;
-    margin-bottom: 28px;
+.regras p:last-child {
+    margin-bottom: 0;
 }
 
 /* Botão */
-form button {
+button {
     display: block;
     width: 100%;
-    min-height: 42px;
-    padding: 10px 16px;
-    background: linear-gradient(110deg, var(--brand-primary), var(--brand-dark));
+    max-width: 210px;
+    min-height: 48px;
+    margin: 32px auto 0;
+
+    background-color: var(--brand-primary);
     color: var(--text-primary);
+
     border: none;
-    border-radius: 8px;
-    font-family: inherit;
-    font-size: 12px;
+    border-radius: 12px;
+
+    font-size: 14px;
     font-weight: 700;
-    letter-spacing: 0.6px;
+    letter-spacing: 0.4px;
+
     cursor: pointer;
-    transition: transform 0.2s, box-shadow 0.2s, filter 0.2s;
+    box-shadow: 0 5px 18px rgba(124, 77, 255, 0.20);
+
+    transition: background-color 0.2s, transform 0.2s;
 }
 
-form button:hover {
-    filter: brightness(1.12);
-    box-shadow: 0 5px 18px rgba(124, 77, 255, 0.25);
-    transform: translateY(-1px);
+button:hover {
+    background-color: var(--brand-dark);
+    transform: translateY(-2px);
 }
 
-form button:active {
+button:active {
     transform: translateY(0);
 }
 
-form button:focus-visible {
-    outline: 2px solid var(--brand-secondary);
-    outline-offset: 3px;
-}
-
-/* Telas maiores */
-@media (min-width: 900px) {
-    .container {
-        max-width: 430px;
-        padding-top: 0;
-        padding-bottom: 0;
-        min-height: 100vh;
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-    }
-}
-
 /* Celulares */
-@media (max-width: 480px) {
-    .container {
-        width: calc(100% - 36px);
-        padding: 38px 0;
+@media (max-width: 600px) {
+    .topo {
+        height: 55px;
     }
 
-    .logo {
+    .container {
+        max-width: 100%;
+        padding: 35px 24px;
+    }
+
+    .titulo {
+        font-size: 27px;
+    }
+
+    .subtitulo {
         margin-bottom: 30px;
-        font-size: 24px;
     }
 
     .campo {
-        margin-bottom: 20px;
+        margin-bottom: 22px;
     }
 
-    .campo-confirmacao {
-        margin-top: 24px;
-        margin-bottom: 25px;
+    button {
+        max-width: 100%;
     }
+}
 
-    .campo input {
-        height: 42px;
+/* Telas maiores */
+@media (min-width: 768px) {
+    .container {
+        padding-top: 55px;
     }
 }
