@@ -14,7 +14,7 @@ body {
     align-items: center;
 }
 
-/* Parte branca arredondada do topo */
+/* Topo */
 .topo {
     width: 100%;
     height: 75px;
@@ -35,74 +35,111 @@ body {
     font-size: 32px;
     font-weight: 700;
     text-align: center;
-    margin-bottom: 10px;
+    margin-bottom: 12px;
 }
 
 .subtitulo {
     color: var(--text-muted);
     font-size: 14px;
     text-align: center;
-    line-height: 1.6;
-    margin-bottom: 40px;
+    line-height: 1.7;
+    margin-bottom: 35px;
 }
 
-/* Campos do formulário */
+/* Campos */
 .campo {
     display: flex;
     flex-direction: column;
-    margin-bottom: 28px;
+    margin-bottom: 24px;
 }
 
 .campo label {
-    font-size: 15px;
-    margin-bottom: 12px;
+    font-size: 14px;
+    font-weight: 600;
+    margin-bottom: 9px;
     color: var(--text-primary);
 }
 
+/* Campo sempre visível */
 .campo input {
+    display: block;
     width: 100%;
-    height: 46px;
-    padding: 0 14px;
+    height: 48px;
+    padding: 0 15px;
+
     background-color: var(--bg-surface-1);
     color: var(--text-primary);
-    border: 1px solid var(--border-color);
-    border-radius: 10px;
+
+    border: 1px solid #454052;
+    border-radius: 12px;
+
     outline: none;
+    box-shadow: none;
+    font-family: inherit;
     font-size: 15px;
+
     transition: border-color 0.2s, box-shadow 0.2s;
 }
 
-/* Destaque ao clicar no campo */
-.campo input:focus {
-    border-color: var(--brand-primary);
-    box-shadow: 0 0 0 3px rgba(124, 77, 255, 0.18);
+/* Texto de exemplo */
+.campo input::placeholder {
+    color: var(--text-muted);
+    opacity: 0.8;
 }
 
-/* Instruções da senha */
+/* Quando o campo estiver selecionado */
+.campo input:focus {
+    border-color: var(--brand-primary);
+    box-shadow: 0 0 0 3px rgba(124, 77, 255, 0.15);
+}
+
+/* Evita aparência diferente no preenchimento automático */
+.campo input:-webkit-autofill {
+    -webkit-text-fill-color: var(--text-primary);
+    transition: background-color 5000s ease-in-out 0s;
+}
+
+/* Regras da senha */
 .regras {
-    margin-top: 14px;
+    margin-top: 12px;
+    padding: 14px;
+    background-color: var(--bg-surface-2);
+    border: 1px solid #302b40;
+    border-radius: 10px;
 }
 
 .regras p {
     color: var(--text-muted);
     font-size: 12px;
-    line-height: 1.6;
-    margin-bottom: 8px;
+    line-height: 1.7;
+    margin-bottom: 6px;
 }
 
-/* Botão confirmar */
+.regras p:last-child {
+    margin-bottom: 0;
+}
+
+/* Botão */
 button {
     display: block;
-    width: 190px;
-    min-height: 46px;
-    margin: 35px auto 0;
+    width: 100%;
+    max-width: 210px;
+    min-height: 48px;
+    margin: 32px auto 0;
+
     background-color: var(--brand-primary);
     color: var(--text-primary);
+
     border: none;
-    border-radius: 10px;
-    font-size: 15px;
-    font-weight: 600;
+    border-radius: 12px;
+
+    font-size: 14px;
+    font-weight: 700;
+    letter-spacing: 0.4px;
+
     cursor: pointer;
+    box-shadow: 0 5px 18px rgba(124, 77, 255, 0.20);
+
     transition: background-color 0.2s, transform 0.2s;
 }
 
@@ -115,7 +152,7 @@ button:active {
     transform: translateY(0);
 }
 
-/* Responsividade  */
+/* Celulares */
 @media (max-width: 600px) {
     .topo {
         height: 55px;
@@ -131,22 +168,22 @@ button:active {
     }
 
     .subtitulo {
-        margin-bottom: 32px;
+        margin-bottom: 30px;
     }
 
     .campo {
-        margin-bottom: 24px;
+        margin-bottom: 22px;
     }
 
     button {
-        width: 100%;
-        max-width: 220px;
+        max-width: 100%;
     }
 }
 
-/* Ajustes p telas grandes */
+/* Telas maiores */
 @media (min-width: 768px) {
     .container {
         padding-top: 55px;
     }
 }
+
