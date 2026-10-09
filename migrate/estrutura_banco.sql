@@ -54,7 +54,7 @@ CREATE TABLE conquistas_badges (
     id_badge INT AUTO_INCREMENT PRIMARY KEY,
     nome VARCHAR(50) NOT NULL,
     descricao VARCHAR(50),
-    icone VARCHAR(50)
+    icone VARCHAR(255)
 );
 
 CREATE TABLE usuarios_badges (

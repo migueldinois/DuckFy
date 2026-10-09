@@ -1,101 +1,82 @@
-<!DOCTYPE html>
-<html lang="pt-br">
+{% extends 'layout.html' %}
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Extrato</title>
+{% block title %}Dashboard Financeiro - DuckFy{% endblock %}
 
-    <!-- Bootstrap 5 CSS -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
-    <!-- Bootstrap Icons -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+{% block content %}
 
-    <link rel="stylesheet" href="/static/css/extrato.css">
-</head>
+<div class="app-container d-flex flex-column justify-content-between">
 
-<body>
+    <!-- HEADER -->
+    <header class="header mb-4 pt-2">
+        <div class="d-flex align-items-center">
+            <a href="../" class="text-white text-decoration-none fs-4 me-3" aria-label="Voltar">
+                <i class="bi bi-arrow-left"></i>
+            </a>
+            <h1 class="h3 mb-0 fw-bold text-white">Extrato</h1>
+        </div>
+    </header>
 
-    <div class="app-container d-flex flex-column justify-content-between">
+    <main class="flex-grow-1 d-flex flex-column">
 
-        <!-- HEADER -->
-        <header class="header mb-4 pt-2">
-            <div class="d-flex align-items-center">
-                <a href="#" class="text-white text-decoration-none fs-4 me-3" aria-label="Voltar">
-                    <i class="bi bi-arrow-left"></i>
-                </a>
-                <h1 class="h3 mb-0 fw-bold text-white">Extrato</h1>
-            </div>
-        </header>
+        <!-- TABS DE FILTRO -->
+        <div class="filter-tabs d-flex justify-content-start gap-4 text-uppercase mb-4 px-2">
+            <a href="/extrato?tipo=tudo"
+                class="tab-btn text-decoration-none {% if not tipo_ativo or tipo_ativo == 'tudo' %}active{% endif %}">
+                TUDO
+            </a>
 
-        <main class="flex-grow-1 d-flex flex-column">
+            <a href="/extrato?tipo=saida"
+                class="tab-btn text-decoration-none {% if tipo_ativo == 'saida' %}active{% endif %}">
+                SAÍDA
+            </a>
 
-            <div class="filter-tabs d-flex justify-content-start gap-4 text-uppercase mb-4 px-2">
-                <a href="/extrato?tipo=tudo"
-                    class="tab-btn text-decoration-none {% if tipo_ativo == 'tudo' %}active{% endif %}">
-                    TUDO
-                </a>
+            <a href="/extrato?tipo=entrada"
+                class="tab-btn text-decoration-none {% if tipo_ativo == 'entrada' %}active{% endif %}">
+                ENTRADA
+            </a>
+        </div>
 
-                <a href="/extrato?tipo=saida"
-                    class="tab-btn text-decoration-none {% if tipo_ativo == 'saida' %}active{% endif %}">
-                    SAÍDA
-                </a>
+        <div class="timeline-container flex-grow-1 mb-3">
 
-                <a href="/extrato?tipo=entrada"
-                    class="tab-btn text-decoration-none {% if tipo_ativo == 'entrada' %}active{% endif %}">
-                    ENTRADA
-                </a>
-            </div>
+            {% if transacoes %}
+            {% for item in transacoes %}
+            <div class="timeline-item">
 
-            <div class="timeline-container flex-grow-1 mb-3">
-
-                <div class="timeline-item">
-                    <div class="icon-box entrada">
-                        <i class="bi bi-cart"></i>
-                    </div>
-                    <div class="info">
-                        <div class="date-time">
-                            <span class="time">09:10</span>
-                            <span class="date">10/12/2026</span>
-                        </div>
-                        <div class="description">Transferência</div>
-                    </div>
-                    <div class="amount positive">+R$ 199</div>
+                <div
+                    class="icon-box {% if item.tipo == 'Receita' or item.tipo == 'Entradas' or item.tipo == 'entrada' %}entrada{% else %}saida{% endif %}">
+                    <i class="bi bi-cart-fill"></i>
                 </div>
 
-                <div class="timeline-item">
-                    <div class="icon-box saida">
-                        <i class="bi bi-cart"></i>
+                <div class="info">
+                    <div class="date-time">
+                        <span class="date">{{ item.data_transacao }}</span>
                     </div>
-                    <div class="info">
-                        <div class="date-time">
-                            <span class="time">12:51</span>
-                            <span class="date">01/02/2026</span>
-                        </div>
-                        <div class="description">Transferência</div>
-                    </div>
-                    <div class="amount negative">-R$ 19,99</div>
+                    <div class="description fw-bold">{{ item.descricao }}</div>
+                    <small class="text-muted">{{ item.nome_categoria }} • {{ item.nome_conta }}</small>
                 </div>
 
-                <div class="timeline-item">
-                    <div class="icon-box saida">
-                        <i class="bi bi-cart"></i>
-                    </div>
-                    <div class="info">
-                        <div class="date-time">
-                            <span class="time">16:20</span>
-                            <span class="date">01/02/2026</span>
-                        </div>
-                        <div class="description">Transferência</div>
-                    </div>
-                    <div class="amount negative">-R$ 1.000</div>
+
+                <div class="amount {% if item.tipo == 'Receita' %}positive{% else %}negative{% endif %}">
+                    {% if item.tipo == 'Receita' %}
+                    +R$ {{ "%.2f"|format(item.valor|float) }}
+                    {% else %}
+                    -R$ {{ "%.2f"|format(item.valor|float) }}
+                    {% endif %}
                 </div>
 
             </div>
-        </main>
+            {% endfor %}
+            {% else %}
+            <!-- Caso não exista nenhuma transação para a busca -->
+            <div class="text-center text-white-50 py-5">
+                <i class="bi bi-inbox fs-1 d-block mb-2"></i>
+                <p>Nenhuma movimentação encontrada.</p>
+            </div>
+            {% endif %}
 
-    </div>
+        </div>
+    </main>
 
-</body>
+</div>
 
-</html>
+{% endblock %}
