@@ -1,26 +1,4 @@
-/* ==========================================================================
-   VARIÁVEIS PRINCIPAIS
-   ========================================================================== */
-:root {
-  /* Regra 60% */
-  --bg-primary: #0F0C1B;
-  --bg-surface-1: #19191B;
-  --bg-surface-2: #181826;
-
-  /* Regra 30% */
-  --brand-primary: #7C4DFF;
-  --brand-secondary: #B093FF;
-  --brand-dark: #4300FF;
-
-  /* Regra 10% */
-  --accent-primary: #00E676;
-  --accent-secondary: #58E4A0;
-  --accent-dark: #00E374;
-
-  /* Medidas da Sidebar */
-  --sidebar-w-expanded: 240px;
-  --sidebar-w-collapsed: 70px;
-}
+@import url('../css/variables.css');
 
 /* ==========================================================================
    ESTRUTURA GLOBAL
@@ -42,7 +20,7 @@ body.app-body {
    SIDEBAR (Sem bugs de sobreposição)
    ========================================================================== */
 .sidebar {
-  width: var(--sidebar-w-expanded);
+  width: 240px;
   background-color: #19191B;
   padding: 1.25rem 0.75rem;
   display: flex;
@@ -188,7 +166,7 @@ body.app-body {
 
 /* Quando a sidebar está aberta, empurra o main-content */
 .sidebar:not(.collapsed) ~ .main-content {
-  margin-left: var(--sidebar-w-expanded);
+  margin-left: 240px;
 }
 
 /* ==========================================================================
