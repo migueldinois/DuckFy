@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="pt-br">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -11,9 +12,12 @@
 
   <!-- Ficheiros CSS -->
   <link rel="stylesheet" href="{{ url_for('static', filename='css/layout.css') }}">
-  <link rel="stylesheet" href="{{ url_for('static', filename='css/dashboard.css') }}">
-  <link rel="stylesheet" href="{{ url_for('static', filename='css/bottom-bar.css') }}">
+  
+  
+  {% block extra_css %}
+  {% endblock %}
 </head>
+
 <body class="app-body">
 
   <div class="app-container">
@@ -44,15 +48,40 @@
           </a>
         </li>
         <li>
-          <a href="/lancamento" class="sidebar-link" title="Simulador de Patrimônio">
-            <img src="{{ url_for('static', filename='img/icons/simulador.svg') }}" alt="Simulador de Patrimônio" class="sidebar-icon">
+          <a href="/simulador" class="sidebar-link" title="Simulador de Patrimônio">
+            <img src="{{ url_for('static', filename='img/icons/simulador.svg') }}" alt="Simulador de Patrimônio"
+              class="sidebar-icon">
             <span class="brand-text">Simulador</span>
+          </a>
+        </li>
+        <li>
+          <a href="/lancamento" class="sidebar-link" title="Lançamentos">
+            <img src="{{ url_for('static', filename='img/icons/lancamento.svg') }}" alt="Lançamentos" class="sidebar-icon">
+            <span class="brand-text">Lançamentos</span>
+          </a>
+        </li>
+        <li>
+          <a href="/categorias" class="sidebar-link" title="Categorias">
+            <img src="{{ url_for('static', filename='img/icons/categoria.svg') }}" alt="Categorias" class="sidebar-icon">
+            <span class="brand-text">Categorias</span>
+          </a>
+        </li>
+        <li>
+          <a href="/reserva_emergencia" class="sidebar-link" title="Reserva de Emergência">
+            <img src="{{ url_for('static', filename='img/icons/reserva.svg') }}" alt="Reserva de Emergência" class="sidebar-icon">
+            <span class="brand-text">Reserva de Emergência</span>
           </a>
         </li>
         <li>
           <a href="/perfil" class="sidebar-link" title="Perfil">
             <img src="{{ url_for('static', filename='img/icons/perfill.svg') }}" alt="Perfil" class="sidebar-icon">
             <span class="brand-text">Perfil</span>
+          </a>
+        </li>
+        <li>
+          <a href="/sequencia" class="sidebar-link" title="Sequencia">
+            <img src="{{ url_for('static', filename='img/icons/sequencia.svg') }}" alt="Sequencia" class="sidebar-icon">
+            <span class="brand-text">Sequencia</span>
           </a>
         </li>
         <!-- colocando la em baixo -->
@@ -91,4 +120,5 @@
   <!-- Bootstrap JS -->
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
+
 </html>

@@ -1,3 +1,8 @@
+{% block extra_css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/bottom-bar.css') }}">
+{% endblock %}
+
+
 <nav class="bottom-bar">
   <div class="bottom-bar-container">
     <a href="/dashboard" class="nav-icon-btn active" title="Dashboard">
@@ -20,6 +25,7 @@
         <a href="/lancamento">Lançamentos</a>
         <a href="/reserva">Reserva de emergencia</a>
         <a href="/categorias">Categorias</a>
+        <a href="/sequencia">Sequencia</a>
         <a href="/logout" class="logout-btn">Sair</a>
       </div>
     </div>
