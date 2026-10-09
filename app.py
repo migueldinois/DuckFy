@@ -11,20 +11,12 @@ app.secret_key = "duckfy999"
 def index():
 
     if "usuario" in session:
-<<<<<<< HEAD
         return redirect("/admin")
     
     
     return render_template("tela_login.html")
 
 @app.post("/login/usuario")
-=======
-        return redirect("/dashboard")
-
-    return render_template("tela_login.html")
-
-@app.route("/login/usuario", methods=["POST"])
->>>>>>> 503f10faf2848d8182b03b4bf3504c1b373c4982
 def logar():
     
     input_email = request.form.get("email")
@@ -79,7 +71,6 @@ def editar_perfil():
 
 @app.get("/extrato")
 def tela_extrato():
-<<<<<<< HEAD
 
     id_usuario = session.get('id_usuario', 1)
 
@@ -90,23 +81,6 @@ def tela_extrato():
     lista_transacoes = Extrato.obter_extrato(id_usuario, id_conta, data_inicio, data_fim)
 
     return render_template("extrato.html", transacoes=lista_transacoes)      
-=======
-    if "usuario" in session:
-        return render_template("extrato.html")
-    else:
-        flash("Você precisa estar logado para acessar o extrato!", "error")
-        return redirect('/login')
-
-
-@app.get("/reserva_emergencia")
-def reserva_emergencia():
-    if "usuario" in session:
-        return render_template("reserva_emergencia.html")
-    else:
-        flash("Você precisa estar logado para realizar lançamentos!", "error")
-        return redirect('/login')
-    
->>>>>>> 503f10faf2848d8182b03b4bf3504c1b373c4982
 
 
 @app.get("/lancamento")
