@@ -1,0 +1,96 @@
+@import url('../css/variables.css');
+
+
+/* RESET & ESTILOS GERAIS */
+*,
+label,
+h1,
+span,
+p,
+input,
+select,
+textarea {
+  color: var(--text-primary) !important;
+}
+
+body {
+  background-color: var(--bg-primary);
+  min-height: 100vh;
+}
+
+/* Cartão Principal */
+.custom-card {
+  background-color: var(--bg-surface-2);
+  border: none;
+}
+
+/* Campos de Entrada (Inputs, Select e Textarea) */
+.custom-input {
+  background-color: var(--bg-surface-1);
+  border: 1px solid var(--border-color);
+}
+
+.custom-input:focus {
+  border-color: var(--brand-primary);
+  box-shadow: 0 0 0 0.25rem rgba(176, 147, 255, 0.25);
+}
+
+/* Alternador (Toggle Entrada / Saída) */
+.toggle-container {
+  background-color: var(--bg-surface-1);
+  border: 1px solid var(--border-color);
+}
+
+.btn-custom-toggle {
+  background-color: transparent;
+  color: var(--text-muted);
+  border: none;
+}
+
+.btn-check:checked+.btn-custom-toggle {
+  background-color: var(--brand-primary);
+  color: var(--text-primary);
+  box-shadow: 0 2px 8px rgba(176, 147, 255, 0.4);
+}
+
+/* Ícones de Categoria */
+.category-btn {
+  width: 40px;
+  height: 40px;
+  background-color: #D9D9D9;
+}
+
+.category-btn i {
+  color: var(--bg-primary);
+}
+
+.btn-check:checked+.category-btn {
+  background-color: var(--brand-primary);
+}
+
+.btn-check:checked+.category-btn i {
+  color: var(--text-primary);
+}
+
+/* Botão Principal "Lançar Entrada" */
+.btn-launch {
+  background-color: var(--brand-primary);
+  border: none;
+  color: var(--text-primary);
+}
+
+.btn-launch:hover {
+  background-color: var(--brand-primary);
+}
+
+
+.form-control:focus,
+.form-select:focus {
+  background-color: var(--bg-surface-1);
+  /* ou #000000, conforme preferir */
+  color: var(--text-primary);
+  border-color: var(--brand-secondary);
+  /* borda roxa ao focar */
+  box-shadow: 0 0 0 0.25rem rgba(176, 147, 255, 0.25);
+  /* brilho suave em volta */
+}
