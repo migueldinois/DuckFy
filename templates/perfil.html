@@ -57,7 +57,7 @@
 
                     <a class="btn btn-editar w-auto d-flex align-items-center justify-content-center gap-2 px-3"
                         href="{{ url_for('editar_perfil') }}">
-                        <i class="fa-solid fa-pen-to-square"></i>
+                        <img src="{{ url_for('static', filename='img/icons/pen.svg') }}" alt="Ícone de Edição" class="icone-editar">
                     </a>
                 </div>
             </section>
@@ -72,7 +72,7 @@
 
                         <a href="/termos" class="item-lista-config d-flex justify-content-between align-items-center p-3 rounded-3 text-decoration-none text-white">
                             <div class="d-flex align-items-center gap-3">
-                                <i class="fa-regular fa-file-lines icone-lista fs-5"></i>
+                                <img src="{{ url_for('static', filename='img/icons/termos.svg') }}" alt="Ícone de Termos e Condições" class="icone-lista">
                                 <span>Termos e Condições</span>
                             </div>
                             <i class="fa-solid fa-chevron-right seta small"></i>
@@ -80,7 +80,7 @@
 
                         <a href="/acessibilidade" class="item-lista-config d-flex justify-content-between align-items-center p-3 rounded-3 text-decoration-none text-white">
                             <div class="d-flex align-items-center gap-3">
-                                <i class="fa-solid fa-universal-access icone-lista fs-5"></i>
+                                <img src="{{ url_for('static', filename='img/icons/acessibilidade.svg') }}" alt="Ícone de Acessibilidade" class="icone-lista">
                                 <span>Acessibilidade</span>
                             </div>
                             <i class="fa-solid fa-chevron-right seta small"></i>
@@ -88,7 +88,7 @@
 
                         <a href="/logout" class="item-lista-config sair d-flex justify-content-between align-items-center p-3 rounded-3 text-decoration-none text-danger mt-2">
                             <div class="d-flex align-items-center gap-3">
-                                <i class="fa-solid fa-right-from-bracket icone-lista fs-5"></i>
+                                <img src="{{ url_for('static', filename='img/icons/logout.svg') }}" alt="Sair" class="sidebar-icon">
                                 <span>Sair da conta</span>
                             </div>
                         </a>
