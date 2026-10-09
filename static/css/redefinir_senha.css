@@ -4,288 +4,145 @@
     box-sizing: border-box;
 }
 
-html {
-    min-height: 100%;
-}
-
 body {
     min-height: 100vh;
-    padding: 30px 20px 50px;
-
+    background-color: var(--bg-primary);
+    color: var(--text-primary);
+    font-family: Arial, Helvetica, sans-serif;
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: center;
-
-    font-family: "Inter", "Segoe UI", Arial, sans-serif;
-    color: var(--text-primary);
-
-    background:
-        radial-gradient(
-            ellipse at 15% 15%,
-            rgba(124, 77, 255, 0.18),
-            transparent 40%
-        ),
-        radial-gradient(
-            ellipse at 85% 85%,
-            rgba(0, 230, 118, 0.07),
-            transparent 35%
-        ),
-        var(--bg-primary);
 }
 
-/* ===== TOPO ===== */
-
+/* Topo */
 .topo {
-    width: 64px;
-    height: 5px;
-    flex-shrink: 0;
-
-    margin-bottom: 28px;
-
-    background: linear-gradient(
-        90deg,
-        var(--brand-primary),
-        var(--brand-secondary)
-    );
-
-    border-radius: 50px;
-    box-shadow: 0 0 24px rgba(124, 77, 255, 0.45);
+    width: 100%;
+    height: 75px;
+    background-color: var(--text-primary);
+    border-radius: 0 0 50% 50%;
 }
 
-/* ===== CARD PRINCIPAL ===== */
-
+/* Conteúdo principal */
 .container {
     width: 100%;
-    max-width: 460px;
-
-    padding: 42px 38px;
-
-    background: linear-gradient(
-        145deg,
-        rgba(25, 25, 27, 0.96),
-        rgba(24, 24, 38, 0.96)
-    );
-
-    border: 1px solid var(--border-color);
-    border-radius: 24px;
-
-    box-shadow:
-        0 24px 70px rgba(0, 0, 0, 0.35),
-        inset 0 1px 0 rgba(255, 255, 255, 0.04);
-
-    position: relative;
-    overflow: hidden;
-
-    animation: aparecer 0.65s ease both;
+    max-width: 480px;
+    padding: 45px 30px 40px;
 }
 
-/* Detalhe luminoso no topo do card */
-
-.container::before {
-    content: "";
-    position: absolute;
-    top: 0;
-    left: 12%;
-
-    width: 76%;
-    height: 2px;
-
-    background: linear-gradient(
-        90deg,
-        transparent,
-        var(--brand-primary),
-        var(--brand-secondary),
-        transparent
-    );
-
-    opacity: 0.9;
-}
-
-/* ===== TÍTULO ===== */
-
+/* Título */
 .titulo {
-    font-size: clamp(27px, 5vw, 32px);
-    font-weight: 750;
-    letter-spacing: -1px;
-    line-height: 1.2;
-    text-align: center;
-
-    margin-bottom: 14px;
-
     color: var(--text-primary);
+    font-size: 32px;
+    font-weight: 700;
+    text-align: center;
+    margin-bottom: 12px;
 }
-
-/* ===== SUBTÍTULO ===== */
 
 .subtitulo {
-    max-width: 340px;
-    margin: 0 auto 34px;
-
     color: var(--text-muted);
     font-size: 14px;
-    line-height: 1.8;
     text-align: center;
+    line-height: 1.7;
+    margin-bottom: 35px;
 }
 
-/* ===== CAMPOS DO FORMULÁRIO ===== */
-
+/* Campos */
 .campo {
     display: flex;
     flex-direction: column;
-
     margin-bottom: 24px;
 }
 
 .campo label {
-    margin-bottom: 10px;
-
-    color: #E5E0F2;
-    font-size: 13px;
+    font-size: 14px;
     font-weight: 600;
-    letter-spacing: 0.2px;
+    margin-bottom: 9px;
+    color: var(--text-primary);
 }
 
+/* Campo  */
 .campo input {
+    display: block;
     width: 100%;
-    height: 52px;
+    height: 48px;
+    padding: 0 15px;
 
-    padding: 0 16px;
-
+    background-color: var(--bg-surface-1);
     color: var(--text-primary);
-    background-color: rgba(15, 12, 27, 0.75);
 
-    border: 1px solid var(--border-color);
+    border: 1px solid #454052;
     border-radius: 12px;
 
     outline: none;
+    box-shadow: none;
     font-family: inherit;
-    font-size: 14px;
+    font-size: 15px;
 
-    transition:
-        border-color 0.25s ease,
-        box-shadow 0.25s ease,
-        background-color 0.25s ease,
-        transform 0.25s ease;
+    transition: border-color 0.2s, box-shadow 0.2s;
 }
 
-/* Placeholder */
-
+/* Texto de exemplo */
 .campo input::placeholder {
-    color: #777487;
-    opacity: 1;
+    color: var(--text-muted);
+    opacity: 0.8;
 }
 
-/* Foco no campo */
-
+/* Quando o campo estiver selecionado */
 .campo input:focus {
-    background-color: rgba(124, 77, 255, 0.06);
-
     border-color: var(--brand-primary);
-
-    box-shadow:
-        0 0 0 3px rgba(124, 77, 255, 0.14),
-        0 0 18px rgba(124, 77, 255, 0.07);
+    box-shadow: 0 0 0 3px rgba(124, 77, 255, 0.15);
 }
 
-/* Campos preenchidos com dados inválidos */
-
-.campo input:invalid:not(:placeholder-shown) {
-    border-color: #FF6B81;
+/* Evita aparência diferente no preenchimento automático */
+.campo input:-webkit-autofill {
+    -webkit-text-fill-color: var(--text-primary);
+    transition: background-color 5000s ease-in-out 0s;
 }
 
-/* ===== REGRAS DA SENHA ===== */
-
+/* Regras da senha */
 .regras {
-    margin-top: -5px;
-    padding: 15px 16px;
-
-    background: rgba(124, 77, 255, 0.06);
-
-    border: 1px solid rgba(124, 77, 255, 0.16);
-    border-radius: 12px;
+    margin-top: 12px;
+    padding: 14px;
+    background-color: var(--bg-surface-2);
 }
 
 .regras p {
-    position: relative;
-
-    margin-bottom: 8px;
-    padding-left: 19px;
-
     color: var(--text-muted);
     font-size: 12px;
-    line-height: 1.6;
-}
-
-/* Marcador de cada regra */
-
-.regras p::before {
-    content: "";
-    position: absolute;
-
-    top: 6px;
-    left: 0;
-
-    width: 7px;
-    height: 7px;
-
-    background-color: var(--brand-secondary);
-    border-radius: 50%;
-    box-shadow: 0 0 8px rgba(176, 147, 255, 0.3);
+    line-height: 1.7;
+    margin-bottom: 6px;
 }
 
 .regras p:last-child {
     margin-bottom: 0;
 }
 
-/* ===== BOTÃO CONFIRMAR ===== */
-
+/* Botão */
 button {
     display: block;
     width: 100%;
-    min-height: 52px;
+    max-width: 210px;
+    min-height: 48px;
+    margin: 32px auto 0;
 
-    margin: 30px auto 0;
-    padding: 14px 20px;
+    background-color: var(--brand-primary);
+    color: var(--text-primary);
 
-    color: #FFFFFF;
-
-    background: linear-gradient(
-        110deg,
-        var(--brand-primary),
-        #956CFF
-    );
-
-    border: 1px solid rgba(255, 255, 255, 0.12);
+    border: none;
     border-radius: 12px;
 
-    font-family: inherit;
     font-size: 14px;
     font-weight: 700;
-    letter-spacing: 0.3px;
+    letter-spacing: 0.4px;
 
     cursor: pointer;
+    box-shadow: 0 5px 18px rgba(124, 77, 255, 0.20);
 
-    box-shadow:
-        0 8px 24px rgba(124, 77, 255, 0.22),
-        inset 0 1px 0 rgba(255, 255, 255, 0.12);
-
-    transition:
-        background 0.25s ease,
-        box-shadow 0.25s ease,
-        transform 0.25s ease;
+    transition: background-color 0.2s, transform 0.2s;
 }
 
 button:hover {
-    background: linear-gradient(
-        110deg,
-        var(--brand-dark),
-        var(--brand-primary)
-    );
-
-    box-shadow:
-        0 10px 30px rgba(124, 77, 255, 0.35);
-
+    background-color: var(--brand-dark);
     transform: translateY(-2px);
 }
 
@@ -293,53 +150,15 @@ button:active {
     transform: translateY(0);
 }
 
-button:focus-visible {
-    outline: 2px solid var(--accent-primary);
-    outline-offset: 4px;
-}
-
-/* ===== LINKS, CASO EXISTAM ===== */
-
-a {
-    color: var(--brand-secondary);
-    text-decoration: none;
-
-    transition: color 0.2s ease;
-}
-
-a:hover {
-    color: var(--accent-secondary);
-}
-
-/* ===== ANIMAÇÃO ===== */
-
-@keyframes aparecer {
-    from {
-        opacity: 0;
-        transform: translateY(18px);
-    }
-
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
-}
-
-/* ===== RESPONSIVIDADE ===== */
-
+/* celular */
 @media (max-width: 600px) {
-    body {
-        padding: 24px 16px 36px;
-    }
-
     .topo {
-        margin-bottom: 22px;
+        height: 55px;
     }
 
     .container {
         max-width: 100%;
-        padding: 32px 23px;
-        border-radius: 20px;
+        padding: 35px 24px;
     }
 
     .titulo {
@@ -347,33 +166,22 @@ a:hover {
     }
 
     .subtitulo {
-        margin-bottom: 29px;
-        font-size: 13px;
+        margin-bottom: 30px;
     }
 
     .campo {
-        margin-bottom: 21px;
-    }
-
-    .campo input {
-        height: 50px;
+        margin-bottom: 22px;
     }
 
     button {
-        min-height: 50px;
-        margin-top: 25px;
+        max-width: 100%;
     }
 }
 
-/* ===== ACESSIBILIDADE ===== */
-
-@media (prefers-reduced-motion: reduce) {
-    *,
-    *::before,
-    *::after {
-        animation-duration: 0.01ms !important;
-        animation-iteration-count: 1 !important;
-        transition-duration: 0.01ms !important;
-        scroll-behavior: auto !important;
+/* Telas maiores */
+@media (min-width: 768px) {
+    .container {
+        padding-top: 55px;
     }
 }
+
