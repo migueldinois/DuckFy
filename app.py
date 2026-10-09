@@ -126,6 +126,10 @@ def lancamento():
         flash("Você precisa estar logado para realizar lançamentos!", "error")
         return redirect('/login')
 
+@app.get("/categorias")
+def categorias():
+    return render_template("categorias.html")
+
 
 @app.get("/cadastro")
 def cadastro():
