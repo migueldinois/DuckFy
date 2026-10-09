@@ -78,11 +78,7 @@ def tela_extrato():
 
 @app.get("/reserva_emergencia")
 def reserva_emergencia():
-    if "usuario" in session:
-        return render_template("reserva_emergencia.html")
-    else:
-        flash("Você precisa estar logado para realizar lançamentos!", "error")
-        return redirect('/login')
+    return render_template("reserva_emergencia.html")
     
 
 
