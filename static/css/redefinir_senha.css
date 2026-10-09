@@ -4,110 +4,288 @@
     box-sizing: border-box;
 }
 
+html {
+    min-height: 100%;
+}
+
 body {
     min-height: 100vh;
-    background-color: var(--bg-primary);
-    color: var(--text-primary);
-    font-family: Arial, Helvetica, sans-serif;
+    padding: 30px 20px 50px;
+
     display: flex;
     flex-direction: column;
     align-items: center;
+    justify-content: center;
+
+    font-family: "Inter", "Segoe UI", Arial, sans-serif;
+    color: var(--text-primary);
+
+    background:
+        radial-gradient(
+            ellipse at 15% 15%,
+            rgba(124, 77, 255, 0.18),
+            transparent 40%
+        ),
+        radial-gradient(
+            ellipse at 85% 85%,
+            rgba(0, 230, 118, 0.07),
+            transparent 35%
+        ),
+        var(--bg-primary);
 }
 
-/* Parte branca arredondada do topo */
+/* ===== TOPO ===== */
+
 .topo {
-    width: 100%;
-    height: 75px;
-    background-color: var(--text-primary);
-    border-radius: 0 0 50% 50%;
+    width: 64px;
+    height: 5px;
+    flex-shrink: 0;
+
+    margin-bottom: 28px;
+
+    background: linear-gradient(
+        90deg,
+        var(--brand-primary),
+        var(--brand-secondary)
+    );
+
+    border-radius: 50px;
+    box-shadow: 0 0 24px rgba(124, 77, 255, 0.45);
 }
 
-/* Conteúdo principal */
+/* ===== CARD PRINCIPAL ===== */
+
 .container {
     width: 100%;
-    max-width: 480px;
-    padding: 45px 30px 40px;
+    max-width: 460px;
+
+    padding: 42px 38px;
+
+    background: linear-gradient(
+        145deg,
+        rgba(25, 25, 27, 0.96),
+        rgba(24, 24, 38, 0.96)
+    );
+
+    border: 1px solid var(--border-color);
+    border-radius: 24px;
+
+    box-shadow:
+        0 24px 70px rgba(0, 0, 0, 0.35),
+        inset 0 1px 0 rgba(255, 255, 255, 0.04);
+
+    position: relative;
+    overflow: hidden;
+
+    animation: aparecer 0.65s ease both;
 }
 
-/* Título */
-.titulo {
-    color: var(--text-primary);
-    font-size: 32px;
-    font-weight: 700;
-    text-align: center;
-    margin-bottom: 10px;
+/* Detalhe luminoso no topo do card */
+
+.container::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 12%;
+
+    width: 76%;
+    height: 2px;
+
+    background: linear-gradient(
+        90deg,
+        transparent,
+        var(--brand-primary),
+        var(--brand-secondary),
+        transparent
+    );
+
+    opacity: 0.9;
 }
+
+/* ===== TÍTULO ===== */
+
+.titulo {
+    font-size: clamp(27px, 5vw, 32px);
+    font-weight: 750;
+    letter-spacing: -1px;
+    line-height: 1.2;
+    text-align: center;
+
+    margin-bottom: 14px;
+
+    color: var(--text-primary);
+}
+
+/* ===== SUBTÍTULO ===== */
 
 .subtitulo {
+    max-width: 340px;
+    margin: 0 auto 34px;
+
     color: var(--text-muted);
     font-size: 14px;
+    line-height: 1.8;
     text-align: center;
-    line-height: 1.6;
-    margin-bottom: 40px;
 }
 
-/* Campos do formulário */
+/* ===== CAMPOS DO FORMULÁRIO ===== */
+
 .campo {
     display: flex;
     flex-direction: column;
-    margin-bottom: 28px;
+
+    margin-bottom: 24px;
 }
 
 .campo label {
-    font-size: 15px;
-    margin-bottom: 12px;
-    color: var(--text-primary);
+    margin-bottom: 10px;
+
+    color: #E5E0F2;
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 0.2px;
 }
 
 .campo input {
     width: 100%;
-    height: 46px;
-    padding: 0 14px;
-    background-color: var(--bg-surface-1);
+    height: 52px;
+
+    padding: 0 16px;
+
     color: var(--text-primary);
+    background-color: rgba(15, 12, 27, 0.75);
+
     border: 1px solid var(--border-color);
-    border-radius: 10px;
+    border-radius: 12px;
+
     outline: none;
-    font-size: 15px;
-    transition: border-color 0.2s, box-shadow 0.2s;
+    font-family: inherit;
+    font-size: 14px;
+
+    transition:
+        border-color 0.25s ease,
+        box-shadow 0.25s ease,
+        background-color 0.25s ease,
+        transform 0.25s ease;
 }
 
-/* Destaque ao clicar no campo */
+/* Placeholder */
+
+.campo input::placeholder {
+    color: #777487;
+    opacity: 1;
+}
+
+/* Foco no campo */
+
 .campo input:focus {
+    background-color: rgba(124, 77, 255, 0.06);
+
     border-color: var(--brand-primary);
-    box-shadow: 0 0 0 3px rgba(124, 77, 255, 0.18);
+
+    box-shadow:
+        0 0 0 3px rgba(124, 77, 255, 0.14),
+        0 0 18px rgba(124, 77, 255, 0.07);
 }
 
-/* Instruções da senha */
+/* Campos preenchidos com dados inválidos */
+
+.campo input:invalid:not(:placeholder-shown) {
+    border-color: #FF6B81;
+}
+
+/* ===== REGRAS DA SENHA ===== */
+
 .regras {
-    margin-top: 14px;
+    margin-top: -5px;
+    padding: 15px 16px;
+
+    background: rgba(124, 77, 255, 0.06);
+
+    border: 1px solid rgba(124, 77, 255, 0.16);
+    border-radius: 12px;
 }
 
 .regras p {
+    position: relative;
+
+    margin-bottom: 8px;
+    padding-left: 19px;
+
     color: var(--text-muted);
     font-size: 12px;
     line-height: 1.6;
-    margin-bottom: 8px;
 }
 
-/* Botão confirmar */
+/* Marcador de cada regra */
+
+.regras p::before {
+    content: "";
+    position: absolute;
+
+    top: 6px;
+    left: 0;
+
+    width: 7px;
+    height: 7px;
+
+    background-color: var(--brand-secondary);
+    border-radius: 50%;
+    box-shadow: 0 0 8px rgba(176, 147, 255, 0.3);
+}
+
+.regras p:last-child {
+    margin-bottom: 0;
+}
+
+/* ===== BOTÃO CONFIRMAR ===== */
+
 button {
     display: block;
-    width: 190px;
-    min-height: 46px;
-    margin: 35px auto 0;
-    background-color: var(--brand-primary);
-    color: var(--text-primary);
-    border: none;
-    border-radius: 10px;
-    font-size: 15px;
-    font-weight: 600;
+    width: 100%;
+    min-height: 52px;
+
+    margin: 30px auto 0;
+    padding: 14px 20px;
+
+    color: #FFFFFF;
+
+    background: linear-gradient(
+        110deg,
+        var(--brand-primary),
+        #956CFF
+    );
+
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    border-radius: 12px;
+
+    font-family: inherit;
+    font-size: 14px;
+    font-weight: 700;
+    letter-spacing: 0.3px;
+
     cursor: pointer;
-    transition: background-color 0.2s, transform 0.2s;
+
+    box-shadow:
+        0 8px 24px rgba(124, 77, 255, 0.22),
+        inset 0 1px 0 rgba(255, 255, 255, 0.12);
+
+    transition:
+        background 0.25s ease,
+        box-shadow 0.25s ease,
+        transform 0.25s ease;
 }
 
 button:hover {
-    background-color: var(--brand-dark);
+    background: linear-gradient(
+        110deg,
+        var(--brand-dark),
+        var(--brand-primary)
+    );
+
+    box-shadow:
+        0 10px 30px rgba(124, 77, 255, 0.35);
+
     transform: translateY(-2px);
 }
 
@@ -115,15 +293,53 @@ button:active {
     transform: translateY(0);
 }
 
-/* Responsividade  */
+button:focus-visible {
+    outline: 2px solid var(--accent-primary);
+    outline-offset: 4px;
+}
+
+/* ===== LINKS, CASO EXISTAM ===== */
+
+a {
+    color: var(--brand-secondary);
+    text-decoration: none;
+
+    transition: color 0.2s ease;
+}
+
+a:hover {
+    color: var(--accent-secondary);
+}
+
+/* ===== ANIMAÇÃO ===== */
+
+@keyframes aparecer {
+    from {
+        opacity: 0;
+        transform: translateY(18px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* ===== RESPONSIVIDADE ===== */
+
 @media (max-width: 600px) {
+    body {
+        padding: 24px 16px 36px;
+    }
+
     .topo {
-        height: 55px;
+        margin-bottom: 22px;
     }
 
     .container {
         max-width: 100%;
-        padding: 35px 24px;
+        padding: 32px 23px;
+        border-radius: 20px;
     }
 
     .titulo {
@@ -131,22 +347,33 @@ button:active {
     }
 
     .subtitulo {
-        margin-bottom: 32px;
+        margin-bottom: 29px;
+        font-size: 13px;
     }
 
     .campo {
-        margin-bottom: 24px;
+        margin-bottom: 21px;
+    }
+
+    .campo input {
+        height: 50px;
     }
 
     button {
-        width: 100%;
-        max-width: 220px;
+        min-height: 50px;
+        margin-top: 25px;
     }
 }
 
-/* Ajustes p telas grandes */
-@media (min-width: 768px) {
-    .container {
-        padding-top: 55px;
+/* ===== ACESSIBILIDADE ===== */
+
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
     }
 }
