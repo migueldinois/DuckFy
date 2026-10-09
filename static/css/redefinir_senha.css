@@ -6,7 +6,7 @@
 
 body {
     min-height: 100vh;
-    background: var(--bg-primary);
+    background-color: var(--bg-primary);
     color: var(--text-primary);
     font-family: Arial, Helvetica, sans-serif;
     display: flex;
@@ -17,134 +17,160 @@ body {
 /* Topo */
 .topo {
     width: 100%;
-    height: 64px;
-    background: var(--bg-primary);
-    border-bottom: 1px solid var(--border-color);
+    height: 75px;
+    background-color: var(--text-primary);
+    border-radius: 0 0 50% 50%;
 }
 
-/* Formulário */
 .container {
-    width: calc(100% - 40px);
-    max-width: 380px;
-    margin: auto;
-    padding: 42px 0;
-    background: transparent;
+    width: 100%;
+    max-width: 480px;
+    padding: 45px 30px 40px;
     border: none;
     box-shadow: none;
 }
 
 /* Título */
 .titulo {
-    font-size: 28px;
+    color: var(--text-primary);
+    font-size: 32px;
     font-weight: 700;
-    letter-spacing: -0.7px;
-    text-align: left;
+    text-align: center;
     margin-bottom: 12px;
 }
 
 .subtitulo {
-    max-width: 340px;
     color: var(--text-muted);
-    font-size: 13px;
-    line-height: 1.8;
-    margin-bottom: 32px;
+    font-size: 14px;
+    text-align: center;
+    line-height: 1.7;
+    margin-bottom: 35px;
 }
 
-/* Campo */
+/* Campos */
 .campo {
     display: flex;
     flex-direction: column;
-    margin-bottom: 22px;
+    margin-bottom: 24px;
 }
 
 .campo label {
-    font-size: 13px;
+    font-size: 14px;
     font-weight: 600;
     margin-bottom: 9px;
+    color: var(--text-primary);
 }
 
+/* Campo sempre visível */
 .campo input {
+    display: block;
     width: 100%;
-    height: 43px;
-    padding: 0 13px;
-    background: var(--bg-surface-1);
+    height: 48px;
+    padding: 0 15px;
+    background-color: var(--bg-surface-1);
     color: var(--text-primary);
-    border: 1px solid var(--border-color);
-    border-radius: 8px;
+    border: 1px solid #454052;
+    border-radius: 12px;
     outline: none;
-    font: inherit;
-    font-size: 13px;
+    box-shadow: none;
+    font-family: inherit;
+    font-size: 15px;
     transition: border-color 0.2s, box-shadow 0.2s;
 }
 
+/* Texto de exemplo */
 .campo input::placeholder {
     color: var(--text-muted);
-    opacity: 0.85;
+    opacity: 0.8;
 }
 
-.campo input:hover {
-    border-color: var(--brand-secondary);
-}
-
+/* Quando o campo estiver selecionado */
 .campo input:focus {
     border-color: var(--brand-primary);
-    box-shadow: 0 0 0 3px rgba(124, 77, 255, 0.12);
+    box-shadow: 0 0 0 3px rgba(124, 77, 255, 0.15);
+}
+
+/* Evita aparência diferente no preenchimento automático */
+.campo input {
+    transition: background-color 5000s ease-in-out 0s;
+}
+
+/* Regras da senha */
+.regras {
+    margin-top: 12px;
+    padding: 14px;
+}
+
+.regras p {
+    color: var(--text-muted);
+    font-size: 12px;
+    line-height: 1.7;
+    margin-bottom: 6px;
+}
+
+.regras p:last-child {
+    margin-bottom: 0;
 }
 
 /* Botão */
 button {
     display: block;
     width: 100%;
-    height: 44px;
-    margin-top: 26px;
-    background: var(--brand-primary);
+    max-width: 210px;
+    min-height: 48px;
+    margin: 32px auto 0;
+    background-color: var(--brand-primary);
     color: var(--text-primary);
     border: none;
-    border-radius: 8px;
-    font-size: 13px;
-    font-weight: 600;
+    border-radius: 12px;
+    font-size: 14px;
+    font-weight: 700;
+    letter-spacing: 0.4px;
     cursor: pointer;
-    transition: background 0.2s, transform 0.2s;
+    box-shadow: 0 5px 18px rgba(124, 77, 255, 0.20);
+    transition: background-color 0.2s, transform 0.2s;
 }
 
 button:hover {
-    background: var(--brand-dark);
-    transform: translateY(-1px);
+    background-color: var(--brand-dark);
+    transform: translateY(-2px);
 }
 
-/* Voltar ao login */
-.voltar {
-    display: block;
-    margin-top: 25px;
-    color: var(--brand-secondary);
-    font-size: 13px;
-    text-align: center;
-    text-decoration: none;
+button:active {
+    transform: translateY(0);
 }
 
-.voltar:hover {
-    color: var(--text-primary);
-}
-
-/* Celular */
+/* Celulares */
 @media (max-width: 600px) {
     .topo {
-        height: 56px;
+        height: 55px;
     }
 
     .container {
-        max-width: 380px;
-        padding: 35px 0;
+        max-width: 100%;
+        padding: 35px 24px;
     }
 
     .titulo {
-        font-size: 25px;
+        font-size: 27px;
     }
 
     .subtitulo {
-        margin-bottom: 28px;
+        margin-bottom: 30px;
+    }
+
+    .campo {
+        margin-bottom: 22px;
+    }
+
+    button {
+        max-width: 100%;
     }
 }
 
-
-
+/* Telas maiores */
+@media (min-width: 768px) {
+    .container {
+        padding-top: 55px;
+    }
+}
