@@ -37,7 +37,15 @@ def logout():
     session.pop("usuario", None)
     flash("Você saiu da sua conta!", "success")
     return redirect("/login")
-    
+
+@app.get("/termos")
+def termos():
+    return render_template("termos.html")
+
+@app.route('/privacidade')
+def privacidade():
+    return render_template("privacidade.html")
+
 
 @app.get('/dashboard')
 def dashboard():
