@@ -141,7 +141,10 @@ def cadastrar():
     
 @app.get("/redefinir")
 def redefinir():
-    return render_template("redefinir_senha.html")
+    if "usuario" in session:
+        return redirect('/dashboard')
+    else:
+        return render_template("redefinir_senha.html")
 
 if __name__ == "__main__":
     app.run(debug=True)
