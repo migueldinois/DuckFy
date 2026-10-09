@@ -34,11 +34,10 @@
         <div class="category-list d-flex flex-column gap-2">
 
             {% for despesa in categorias_despesa %}
-            <!-- Exemplo 1: Alimentação -->
             <article class="category-item d-flex align-items-center justify-content-between">
                 <div class="d-flex align-items-center gap-3">
                     <div class="cat-icon-circle" style="background-color: {{ despesa.cor }};">
-                        <span>{{ despesa.emoji }}</span>
+                        <span class="emoji-ios">{{ despesa.emoji }}</span>
                     </div>
                     <div>
                         <h3 class="cat-name m-0">{{ despesa.nome }}</h3>
@@ -57,11 +56,10 @@
     <section id="listaEntradas" class="dash-card d-none">
         <div class="category-list d-flex flex-column gap-2">
             {% for receita in categorias_receita %}
-            <!-- Exemplo 1: Salário -->
             <article class="category-item d-flex align-items-center justify-content-between">
                 <div class="d-flex align-items-center gap-3">
                     <div class="cat-icon-circle" style="background-color: {{ receita.cor }};">
-                        <span>{{ receita.emoji }}</span>
+                        <span class="emoji-ios">{{ receita.emoji }}</span>
                     </div>
                     <div>
                         <h3 class="cat-name m-0">{{ receita.nome }}</h3>
@@ -98,5 +96,24 @@
             listaSaidas.classList.add('d-none');
         }
     }
+
+    // Função para converter o emoji texto para imagem iOS (Apple)
+    function carregarEmojisIOS() {
+        document.querySelectorAll('.emoji-ios').forEach(el => {
+            const emojiTexto = el.textContent.trim();
+            if (!emojiTexto) return;
+
+            const unicodeHex = [...emojiTexto]
+                .map(char => char.codePointAt(0).toString(16))
+                .filter(hex => hex !== 'fe0f')
+                .join('-');
+
+            const urlImg = `https://cdn.jsdelivr.net/npm/emoji-datasource-apple/img/apple/64/${unicodeHex}.png`;
+
+            el.innerHTML = `<img src="${urlImg}" alt="${emojiTexto}" style="width: 24px; height: 24px; object-fit: contain;">`;
+        });
+    }
+
+    document.addEventListener('DOMContentLoaded', carregarEmojisIOS);
 </script>
 {% endblock %}
