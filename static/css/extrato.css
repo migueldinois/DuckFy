@@ -3,19 +3,25 @@
    ========================================================== */
 :root {
     /* 60% - Dominante / Fundo Escuro */
-    --bg-main: #0F0C1B;          /* Fundo geral da aplicação */
-    --bg-card: #19191B;          /* Card principal */
-    --bg-item: #181826;          /* Fundo dos itens da timeline */
-    --bg-item-hover: #222234;    /* Hover do item */
+    --bg-main: #0F0C1B;
+    /* Fundo geral da aplicação */
+    --bg-card: #19191B;
+    /* Card principal */
+    --bg-item: #181826;
+    /* Fundo dos itens da timeline */
+    --bg-item-hover: #222234;
+    /* Hover do item */
 
     /* 30% - Secundária / Roxo */
-    --purple-primary: #7C4DFF;   
-    --purple-light: #B093FF;     
-    --purple-dark: #4300FF;      
+    --purple-primary: #7C4DFF;
+    --purple-light: #B093FF;
+    --purple-dark: #4300FF;
 
     /* 10% - Destaque / Verde e Vermelho para Transações */
-    --green-accent: #00E676;     /* Entradas/Positivo */
-    --red-accent: #FF5252;       /* Saídas/Negativo */
+    --green-accent: #00E676;
+    /* Entradas/Positivo */
+    --red-accent: #FF5252;
+    /* Saídas/Negativo */
 }
 
 /* ==========================================================
@@ -150,7 +156,8 @@ body {
     font-weight: 700;
     font-size: 0.95rem;
     text-align: right;
-    color: var(--green-accent); /* Padrão de entrada */
+    color: var(--green-accent);
+    /* Padrão de entrada */
 }
 
 /* Ajuste automático para valores negativos contendo o caractere "-" */
@@ -164,7 +171,8 @@ body {
    ========================================================== */
 @media (min-width: 992px) {
     .app-container {
-        max-width: 850px; /* Largura reduzida para visual minimalista */
+        max-width: 850px;
+        /* Largura reduzida para visual minimalista */
         min-height: auto;
         padding: 3rem 2rem;
     }
@@ -200,5 +208,27 @@ body {
 
     .timeline-item:hover {
         background-color: #202030;
+    }
+
+    .icon-box {
+        width: 44px;
+        height: 44px;
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.25rem;
+        flex-shrink: 0;
+        margin-right: 16px;
+    }
+
+    .icon-box.entrada {
+        background-color: rgba(0, 230, 118, 0.15);
+        color: #00E676;
+    }
+
+    .icon-box.saida {
+        background-color: rgba(255, 82, 82, 0.15);
+        color: #FF5252;
     }
 }

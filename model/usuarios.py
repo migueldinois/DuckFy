@@ -81,3 +81,13 @@ class Usuario():
             cursor.close()
             conexao.close()
 
+    def recuperar_dados_usuario(email):
+        conexao, cursor = Conexao.conectar()
+
+        cursor.execute("SELECT nome, email, dias_ofensiva, pontos_xp, foto_perfil FROM usuarios WHERE email = %s", [email])
+        dados_usuario = cursor.fetchone() 
+        
+        conexao.close()
+        cursor.close()
+
+        return dados_usuario
