@@ -47,6 +47,14 @@ def dashboard():
         flash("Você precisa estar logado para acessar o dashboard!", "error")
         return redirect('/login')
 
+@app.get("/sequencia")
+def sequencia():
+    if "usuario" in session:
+        return render_template("sequencia.html")
+    else:
+        flash("Você precisa estar logado para acessar a sequência!", "error")
+        return redirect('/login')
+
 # Rota para exibir o perfil do usuário
 @app.route("/perfil", methods=["GET", "POST"])
 def perfil():
