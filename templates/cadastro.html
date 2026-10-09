@@ -15,7 +15,7 @@
 
     <h1><span class="duck">Faça seu cadastro!</span></h1>
 
-    <form method="POST" action="/cadastro">
+    <form method="POST" action="/cadastro/usuario">
 
         <label for="email">Email</label>
         <input type="email" id="email" name="email" required>
@@ -37,10 +37,17 @@
 
 
         <div class="botoes">
-            <button type="button">CANCELAR</button>
-            <button type="submit">CADASTRAR-SE</button>
+            <button href="/login" type="button">Cancelar</button>
+            <button type="submit">Cadastrar-se</button>
         </div>
 
+            <div class="container__error">
+                {% with mensagens = get_flashed_messages()%}
+                {% for mensagem in mensagens %}
+                <p class="text-error">{{mensagem}}</p>
+                {%endfor%}
+                {%endwith%}
+            </div>
         
 
     </form>
