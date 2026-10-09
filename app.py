@@ -106,13 +106,21 @@ def tela_extrato():
     return
 @app.get("/reserva_emergencia")
 def reserva_emergencia():
-    return render_template("reserva_emergencia.html")
+    if "usuario" in session:
+            return render_template("reserva_emergencia.html")
+    else:
+        flash("Você precisa estar logado para editar o seu perfil!", "error")
+        return redirect('/login')
     
 
 
 @app.get("/lancamento")
 def lancamento():
-    return render_template("lancamentos.html")
+    if "usuario" in session:
+                return render_template("lancamentos.html")
+    else:
+        flash("Você precisa estar logado para editar o seu perfil!", "error")
+        return redirect('/login')
 
 
 @app.get("/cadastro")
