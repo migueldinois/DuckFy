@@ -4,10 +4,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>DuckFy - Perfil</title>
+    <title>DuckFy - Perfil de {{ usuario.nome }}</title>
 
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
     <link rel="stylesheet" href="{{ url_for('static', filename='css/variables.css') }}">
@@ -19,35 +18,51 @@
     <main class="container-fluid px-0 min-vh-100 d-flex flex-column">
         <div class="cartao-perfil-principal flex-grow-1 w-100 d-flex flex-column">
 
+            <!-- TOPO ROXO -->
             <section class="cabecalho-perfil p-4 p-md-5 position-relative">
-                <a class="link-voltar position-absolute text-white text-decoration-none fs-4" href="../"
-                    aria-label="Voltar">
+                <a class="link-voltar position-absolute text-white text-decoration-none fs-4" href="{{ url_for('dashboard') }}" aria-label="Voltar">
                     <i class="fa-solid fa-arrow-left"></i>
                 </a>
 
                 <h1 class="titulo-pagina text-center text-white fs-3 fw-bold mb-4">Configuração</h1>
 
-                <div
-                    class="cartao-usuario mx-auto p-3 p-md-4 rounded-4 d-flex flex-column flex-sm-row align-items-center gap-3">
+                <div class="cartao-usuario mx-auto p-3 p-md-4 rounded-4 d-flex flex-column flex-sm-row align-items-center gap-3">
+                    
+                    <!-- avatar -->
                     <div class="avatar-container flex-shrink-0">
-                        <div class="avatar" aria-hidden="true">
-                            <span class="avatar-cabeca"></span>
-                            <span class="avatar-corpo"></span>
+                        {% if usuario.foto_perfil %}
+                            <img src="{{ url_for('static', filename='img/' + usuario.foto_perfil) }}" alt="Foto de {{ usuario.nome }}" class="avatar rounded-circle object-fit-cover" width="70" height="70">
+                        {% else %}
+                            <div class="avatar" aria-hidden="true">
+                                <span class="avatar-cabeca"></span>
+                                <span class="avatar-corpo"></span>
+                            </div>
+                        {% endif %}
+                    </div>
+
+                    <!-- dados usuario -->
+                    <div class="detalhes-usuario text-center text-sm-start flex-grow-1">
+                        <h2 class="nome-usuario fs-4 fw-bold text-white mb-1">Olá, {{ usuario.nome }}!</h2>
+                        
+                        <!-- ofensiva e xp -->
+                        <div class="d-flex align-items-center justify-content-center justify-content-sm-start gap-2 mt-2">
+                            <span class="badge bg-warning text-dark d-inline-flex align-items-center gap-1">
+                                <i class="fa-solid fa-fire"></i> {{ usuario.dias_ofensiva | default(0) }} dias
+                            </span>
+                            <span class="badge bg-info text-dark d-inline-flex align-items-center gap-1">
+                                <i class="fa-solid fa-star"></i> {{ usuario.pontos_xp | default(0) }} XP
+                            </span>
                         </div>
                     </div>
 
-                    <div class="detalhes-usuario text-center text-sm-start flex-grow-1">
-                        <h2 class="nome-usuario fs-4 fw-bold text-white mb-1">Olá, Fulano!</h2>
-                        </span>
-                    </div>
-
-                    <a class="btn btn-editar w-20 w-sm-auto d-flex align-items-center justify-content-center gap-2"
+                    <a class="btn btn-editar w-auto d-flex align-items-center justify-content-center gap-2 px-3"
                         href="{{ url_for('editar_perfil') }}">
                         <i class="fa-solid fa-pen-to-square"></i>
                     </a>
                 </div>
             </section>
 
+            <!-- SEÇÃO INFERIOR -->
             <section class="conteudo-perfil flex-grow-1 p-4 p-md-5 d-flex flex-column gap-4">
 
                 <div class="container-conteudo mx-auto w-100">
@@ -55,8 +70,7 @@
                     <nav class="secao-lista-config d-flex flex-column gap-2" aria-label="Configurações Adicionais">
                         <h3 class="titulo-secao text-uppercase text-secondary fw-semibold mb-2">Outras opções</h3>
 
-                        <a href="#"
-                            class="item-lista-config d-flex justify-content-between align-items-center p-3 rounded-3 text-decoration-none text-white">
+                        <a href="#" class="item-lista-config d-flex justify-content-between align-items-center p-3 rounded-3 text-decoration-none text-white">
                             <div class="d-flex align-items-center gap-3">
                                 <i class="fa-regular fa-file-lines icone-lista fs-5"></i>
                                 <span>Termos e Condições</span>
@@ -64,17 +78,22 @@
                             <i class="fa-solid fa-chevron-right seta small"></i>
                         </a>
 
-                        <a href="#"
-                            class="item-lista-config d-flex justify-content-between align-items-center p-3 rounded-3 text-decoration-none text-white">
+                        <a href="#" class="item-lista-config d-flex justify-content-between align-items-center p-3 rounded-3 text-decoration-none text-white">
                             <div class="d-flex align-items-center gap-3">
-                                <i class="fa-solid fa-headset icone-lista fs-5"></i>
+                                <i class="fa-solid fa-universal-access icone-lista fs-5"></i>
                                 <span>Acessibilidade</span>
                             </div>
                             <i class="fa-solid fa-chevron-right seta small"></i>
                         </a>
 
-                    
+                        <a href="#" class="item-lista-config sair d-flex justify-content-between align-items-center p-3 rounded-3 text-decoration-none text-danger mt-2">
+                            <div class="d-flex align-items-center gap-3">
+                                <i class="fa-solid fa-right-from-bracket icone-lista fs-5"></i>
+                                <span>Sair da conta</span>
+                            </div>
+                        </a>
                     </nav>
+
                 </div>
 
             </section>
