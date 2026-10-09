@@ -105,11 +105,7 @@ def reserva_emergencia():
 
 @app.get("/lancamento")
 def lancamento():
-    if "usuario" in session:
-        return render_template("lancamentos.html")
-    else:
-        flash("Você precisa estar logado para realizar lançamentos!", "error")
-        return redirect('/login')
+    return render_template("lancamentos.html")
 
 
 @app.get("/cadastro")

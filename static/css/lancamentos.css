@@ -1,3 +1,4 @@
+@import url('../css/variables.css');
 
 body#page-lancamento, body {
   background-color: #0b0b12;
@@ -26,7 +27,7 @@ body#page-lancamento, body {
 
 /* Card Principal Escuro */
 .lancamento-block {
-  background-color: #171721;
+  background-color: var(--bg-surface-2);
   border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
@@ -37,7 +38,7 @@ body#page-lancamento, body {
 }
 
 .btn-tipo-switch {
-  color: #a0a0b0;
+  color: var(--text-muted);
   border: none;
   font-weight: 600;
   font-size: 14px;
@@ -45,8 +46,8 @@ body#page-lancamento, body {
 }
 
 .btn-check:checked + .btn-tipo-switch {
-  background-color: #7C4DFF;
-  color: #ffffff;
+  background-color: var(--brand-primary);
+  color: var(--text-primary);
   box-shadow: 0 4px 12px rgba(124, 77, 255, 0.4);
 }
 
@@ -54,13 +55,13 @@ body#page-lancamento, body {
 .form-control-custom {
   background-color: rgba(0, 0, 0, 0.4);
   border: 1px solid rgba(255, 255, 255, 0.15);
-  color: #ffffff;
+  color: var(--text-primary);
   padding: 12px 16px;
   font-size: 15px;
 }
 
 .form-control-custom:focus {
-  border-color: #7C4DFF;
+  border-color: var(--brand-primary);
   box-shadow: 0 0 0 0.25rem rgba(124, 77, 255, 0.25);
 }
 
@@ -80,9 +81,9 @@ body#page-lancamento, body {
 }
 
 .btn-check:checked + .btn-categoria-icon {
-  background-color: #7C4DFF;
-  color: #ffffff;
-  border-color: #7C4DFF;
+  background-color: var(--brand-primary);
+  color: var(--text-primary);
+  border-color: var(--brand-primary);
   box-shadow: 0 0 12px rgba(124, 77, 255, 0.4);
 }
 
@@ -93,8 +94,8 @@ body#page-lancamento, body {
   justify-content: center;
   width: 100%;
   height: 48px;
-  background-color: #7C4DFF;
-  color: #ffffff;
+  background-color: var(--brand-primary);
+  color: var(--text-primary);
   font-weight: 600;
   font-size: 1rem;
   border-radius: 12px;
@@ -102,17 +103,17 @@ body#page-lancamento, body {
   border: 1px solid rgba(255, 255, 255, 0.2);
   border-top: 1px solid rgba(255, 255, 255, 0.35);
   box-shadow: 0 8px 20px rgba(124, 77, 255, 0.35),
-              inset 0 1px 0 rgba(255, 255, 255, 0.2);
+  inset 0 1px 0 rgba(255, 255, 255, 0.2);
   transition: all 0.2s ease;
   cursor: pointer;
 }
 
 .btn-purple-action:hover {
-  background-color: #B093FF;
+  background-color: var(--brand-secondary);
   opacity: 0.92;
   transform: translateY(-2px);
   box-shadow: 0 12px 25px rgba(124, 77, 255, 0.5),
-              inset 0 1px 0 rgba(255, 255, 255, 0.3);
+  inset 0 1px 0 rgba(255, 255, 255, 0.3);
 }
 
 .fs-7 {
