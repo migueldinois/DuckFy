@@ -1,0 +1,117 @@
+{% extends 'layout.html' %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/sequencia.css') }}">
+{% endblock %}
+
+{% block content %}
+<div class="container-fluid sequencia-container">
+
+    <!-- Header de Destaque / Sequência Principal -->
+    <div class="row justify-content-center text-center my-4">
+        <div class="col-12 col-md-8 col-lg-6">
+            <div class="streak-card">
+                <h5 class="streak-title">DIAS DE SEQUÊNCIA</h5>
+
+                <!-- Círculo do Foguinho Glow -->
+                <div class="streak-circle-wrapper">
+                    <div class="streak-circle">
+                        <i class="bi bi-fire streak-fire-icon"></i>
+                        <span class="streak-count">{{ usuario.dias_ofensiva|default(0) }}</span>
+                    </div>
+                </div>
+
+                <p class="streak-subtitle">
+                    {% if usuario.dias_ofensiva > 0 %}
+                    Incrível! Mantém o ritmo para desbloquear mais recompensas.
+                    {% else %}
+                    Faz um lançamento hoje para iniciar a tua sequência!
+                    {% endif %}
+                </p>
+
+                <!-- Barra de Progresso do Nível -->
+                <div class="level-progress-wrapper mt-4">
+                    <div class="d-flex justify-content-between text-white-50 mb-1 fw-bold small">
+                        <span>Nível Atual: {{ usuario.nivel|default('Prata') }}</span>
+                        <span>{{ usuario.pontos_xp|default(0) }} / 1000 XP</span>
+                    </div>
+                    <div class="progress custom-progress">
+                        <div class="progress-bar custom-progress-bar" role="progressbar"
+                            style="width: {{ usuario.progresso_xp|default(45) ~ '%' }}"
+                            aria-valuenow="{{ usuario.progresso_xp|default(45) }}" aria-valuemin="0"
+                            aria-valuemax="100">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Secção de Conquistas -->
+    <div class="row justify-content-center my-5">
+        <div class="col-12 col-md-10 col-lg-8">
+            <h4 class="section-title text-center mb-4">
+                <i class="bi bi-trophy-fill text-warning me-2"></i> Conquistas
+            </h4>
+
+            <div class="row g-4 justify-content-center">
+                {% if conquistas %}
+                {% for conquista in conquistas %}
+                <div class="col-6 col-sm-4 col-md-3 text-center">
+                    <div class="badge-card {% if conquista.desbloqueada %}unlocked{% else %}locked{% endif %}">
+                        <div class="badge-icon-wrapper">
+                            <i class="bi {{ conquista.icone|default('bi-star-fill') }}"></i>
+                        </div>
+                        <h6 class="badge-name mt-3">{{ conquista.nome }}</h6>
+                        <p class="badge-desc text-muted small">{{ conquista.descricao }}</p>
+                    </div>
+                </div>
+                {% endfor %}
+                {% else %}
+                <!-- Conquistas de Exemplo se não houver dados no banco ainda -->
+                <div class="col-6 col-sm-4 col-md-3 text-center">
+                    <div class="badge-card unlocked">
+                        <div class="badge-icon-wrapper">
+                            <i class="bi bi-rocket-takeoff-fill"></i>
+                        </div>
+                        <h6 class="badge-name mt-3">Primeiros Passos</h6>
+                        <p class="badge-desc text-muted small">Criaste a tua conta no DuckFy</p>
+                    </div>
+                </div>
+
+                <div class="col-6 col-sm-4 col-md-3 text-center">
+                    <div class="badge-card unlocked">
+                        <div class="badge-icon-wrapper">
+                            <i class="bi bi-piggy-bank-fill"></i>
+                        </div>
+                        <h6 class="badge-name mt-3">Poupador</h6>
+                        <p class="badge-desc text-muted small">Guardaste a primeira reserva</p>
+                    </div>
+                </div>
+
+                <div class="col-6 col-sm-4 col-md-3 text-center">
+                    <div class="badge-card locked">
+                        <div class="badge-icon-wrapper">
+                            <i class="bi bi-fire"></i>
+                        </div>
+                        <h6 class="badge-name mt-3">Em Chamas</h6>
+                        <p class="badge-desc text-muted small">Alcança 7 dias seguidos</p>
+                    </div>
+                </div>
+
+                <div class="col-6 col-sm-4 col-md-3 text-center">
+                    <div class="badge-card locked">
+                        <div class="badge-icon-wrapper">
+                            <i class="bi bi-award-fill"></i>
+                        </div>
+                        <h6 class="badge-name mt-3">Mestre das Finanças</h6>
+                        <p class="badge-desc text-muted small">Regista mais de 50 transações</p>
+                    </div>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+</div>
+{% endblock %}
