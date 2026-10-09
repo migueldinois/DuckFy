@@ -45,6 +45,10 @@ def dashboard():
 # Rota para exibir o perfil do usuário
 @app.route("/perfil", methods=["GET", "POST"])
 def perfil():
+    if "usuario" not in session:
+        flash("Você precisa estar logado para acessar o perfil!", "error")
+        return redirect("/login")
+
     usuario = {
         "nome": "Usuário",
         "foto_perfil": None,
