@@ -1,0 +1,204 @@
+/* ==========================================================
+   PALETA DE CORES (REGRAS DE 60%, 30%, 10%)
+   ========================================================== */
+:root {
+    /* 60% - Dominante / Fundo Escuro */
+    --bg-main: #0F0C1B;          /* Fundo geral da aplicação */
+    --bg-card: #19191B;          /* Card principal */
+    --bg-item: #181826;          /* Fundo dos itens da timeline */
+    --bg-item-hover: #222234;    /* Hover do item */
+
+    /* 30% - Secundária / Roxo */
+    --purple-primary: #7C4DFF;   
+    --purple-light: #B093FF;     
+    --purple-dark: #4300FF;      
+
+    /* 10% - Destaque / Verde e Vermelho para Transações */
+    --green-accent: #00E676;     /* Entradas/Positivo */
+    --red-accent: #FF5252;       /* Saídas/Negativo */
+}
+
+/* ==========================================================
+   ESTILOS GERAIS
+   ========================================================== */
+* {
+    box-sizing: border-box;
+}
+
+body {
+    background-color: var(--bg-main);
+    color: #ffffff;
+    font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+    min-height: 100vh;
+    margin: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* Container Responsivo (Mobile Padrão) */
+.app-container {
+    width: 100%;
+    max-width: 480px;
+    min-height: 100vh;
+    transition: all 0.3s ease;
+}
+
+/* ==========================================================
+   HEADER
+   ========================================================== */
+.header h1 {
+    font-size: 1.5rem;
+    letter-spacing: -0.5px;
+}
+
+/* ==========================================================
+   FILTROS (TUDO, SAÍDA, ENTRADA)
+   ========================================================== */
+.filter-tabs {
+    background-color: var(--bg-card);
+    padding: 6px;
+    border-radius: 16px;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    gap: 8px;
+}
+
+.tab-btn {
+    flex: 1;
+    text-align: center;
+    color: rgba(255, 255, 255, 0.6);
+    padding: 8px 12px;
+    border-radius: 12px;
+    font-weight: 600;
+    font-size: 0.8rem;
+    transition: all 0.2s ease;
+}
+
+.tab-btn:hover {
+    color: #ffffff;
+}
+
+.tab-btn.active {
+    background-color: var(--purple-primary);
+    color: #ffffff;
+    box-shadow: 0 4px 12px rgba(124, 77, 255, 0.3);
+}
+
+/* ==========================================================
+   TIMELINE / LISTA DE EXTRATO
+   ========================================================== */
+.timeline-container {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.timeline-item {
+    background-color: var(--bg-card);
+    border-radius: 18px;
+    padding: 1rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    transition: transform 0.2s ease, background-color 0.2s ease;
+}
+
+.timeline-item:hover {
+    background-color: var(--bg-item-hover);
+    transform: translateY(-2px);
+}
+
+/* Ícones dos Itens */
+.icon-box {
+    width: 44px;
+    height: 44px;
+    border-radius: 14px;
+    background-color: var(--bg-item);
+    color: var(--purple-light);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.2rem;
+    margin-right: 1rem;
+    flex-shrink: 0;
+}
+
+/* Informações de Data e Descrição */
+.info {
+    flex-grow: 1;
+}
+
+.date-time {
+    font-size: 0.75rem;
+    color: rgba(255, 255, 255, 0.5);
+    margin-bottom: 2px;
+}
+
+.date-time .time {
+    margin-right: 6px;
+}
+
+.description {
+    font-weight: 600;
+    font-size: 0.95rem;
+    color: #ffffff;
+}
+
+/* Valores (Valores Positivos e Negativos) */
+.amount {
+    font-weight: 700;
+    font-size: 0.95rem;
+    text-align: right;
+    color: var(--green-accent); /* Padrão de entrada */
+}
+
+/* Ajuste automático para valores negativos contendo o caractere "-" */
+.amount:has(:first-child),
+.amount {
+    letter-spacing: -0.3px;
+}
+
+/* ==========================================================
+   ADAPTAÇÃO DESKTOP MINIMALISTA (Para telas >= 992px)
+   ========================================================== */
+@media (min-width: 992px) {
+    .app-container {
+        max-width: 850px; /* Largura reduzida para visual minimalista */
+        min-height: auto;
+        padding: 3rem 2rem;
+    }
+
+    .header {
+        margin-bottom: 2rem !important;
+    }
+
+    main {
+        background-color: var(--bg-card);
+        padding: 2rem;
+        border-radius: 28px;
+        box-shadow: 0 12px 40px rgba(0, 0, 0, 0.4);
+        border: 1px solid rgba(255, 255, 255, 0.05);
+    }
+
+    /* Abas de filtro mais elegantes e centradas no Desktop */
+    .filter-tabs {
+        max-width: 400px;
+        margin-bottom: 2rem !important;
+        background-color: var(--bg-main);
+    }
+
+    /* Container de Timeline em Grade/Lista Espaçada no Desktop */
+    .timeline-container {
+        gap: 14px;
+    }
+
+    .timeline-item {
+        background-color: var(--bg-item);
+        padding: 1.1rem 1.5rem;
+    }
+
+    .timeline-item:hover {
+        background-color: #202030;
+    }
+}
