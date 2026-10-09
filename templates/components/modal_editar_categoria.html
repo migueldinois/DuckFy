@@ -1,0 +1,69 @@
+{% block extra_css %}
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/duckfy-modal.css') }}">
+{% endblock %}
+
+<div id="modalEditarCategoria" class="duckfy-modal">
+  <div class="dash-card modal-content">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+      <h3 class="card-section-title m-0">Editar Categoria</h3>
+      <button type="button" class="btn-close-custom" data-close-modal>&times;</button>
+    </div>
+
+    <form id="formEditarCategoria" action="/categorias/atualizar" method="POST">
+      <input type="hidden" name="id_categoria" id="edit_id_categoria">
+
+      <div class="mb-3">
+        <label for="edit_nome" class="card-subtitle d-block mb-1">Nome</label>
+        <div class="input-icon-wrapper">
+          <img src="{{ url_for('static', filename='img/icons/nome.svg') }}" class="input-icon" alt="Nome">
+          <input type="text" name="nome" id="edit_nome" class="search-input input-with-icon" required>
+        </div>
+      </div>
+
+      <div class="mb-3">
+        <label for="edit_tipo" class="card-subtitle d-block mb-1">Tipo</label>
+        <div class="input-icon-wrapper">
+          <img src="{{ url_for('static', filename='img/icons/tipo.svg') }}" class="input-icon" alt="Tipo">
+          <select name="tipo" id="edit_tipo" class="search-input input-with-icon" required>
+            <option value="SAIDA">Saída</option>
+            <option value="ENTRADA">Entrada</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="mb-3">
+        <label for="edit_emoji" class="card-subtitle d-block mb-1">Emoji</label>
+        <div class="input-icon-wrapper">
+          <img src="{{ url_for('static', filename='img/icons/emoji.svg') }}" class="input-icon" alt="Emoji">
+          <input type="text" name="emoji" id="edit_emoji" class="search-input input-with-icon" required oninput="validarApenasUmEmoji(this)">
+        </div>
+      </div>
+
+      <div class="mb-3">
+        <label for="edit_cor" class="card-subtitle d-block mb-1">Cor</label>
+        <div class="color-picker-wrapper">
+          <input type="color" name="cor" id="edit_cor" class="color-input-hidden" oninput="atualizarCorPreviewEdit(this.value)">
+
+            <span id="editColorBox" class="color-picker-custom"></span>
+
+        </div>
+      </div>
+
+      <a id="btnIrSubcategorias" href="#" class="btn-secondary-action w-100 mb-2 text-center text-decoration-none d-block">
+        Ver Subcategorias
+      </a>
+
+      <div class="d-flex gap-2 mt-3">
+        <button type="button" class="btn-danger-action w-50" id="btnExcluirCategoria">Excluir</button>
+        <button type="submit" class="btn-purple-action w-50">Salvar Alterações</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<script>
+  function atualizarCorPreviewEdit(corHex) {
+    const box = document.getElementById('editColorBox');
+    if (box) box.style.backgroundColor = corHex;
+  }
+</script>

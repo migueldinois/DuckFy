@@ -214,3 +214,37 @@ select.search-input option {
   background-color: currentColor;
   border: 1px solid rgba(255, 255, 255, 0.2);
 }
+
+/* Botão de Subcategorias (Ação Secundária) */
+.btn-secondary-action {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
+  color: #ffffff;
+  padding: 10px;
+  font-size: 0.9rem;
+  font-weight: 500;
+  transition: background 0.2s ease;
+}
+
+.btn-secondary-action:hover {
+  background: rgba(255, 255, 255, 0.1);
+  color: #ffffff;
+}
+
+/* Botão de Exclusão */
+.btn-danger-action {
+  background: rgba(255, 77, 77, 0.15);
+  border: 1px solid rgba(255, 77, 77, 0.3);
+  border-radius: 12px;
+  color: #ff4d4d;
+  padding: 12px;
+  font-weight: 600;
+  font-size: 0.95rem;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.btn-danger-action:hover {
+  background: rgba(255, 77, 77, 0.25);
+}
