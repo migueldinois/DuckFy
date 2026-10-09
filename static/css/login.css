@@ -145,7 +145,12 @@ body {
 .btn-entrar:hover {
     background-color: var(--brand-secondary);
 }
-
+/* text-error */
+.text-error {
+    margin-top: 15px;
+    text-align: center;
+    color: red;
+}
 /* depois de clicar */
 .btn-entrar.verde {
     background-color: var(--accent-primary);
@@ -214,3 +219,5 @@ body {
         padding: 45px 25px;
     }
 }
+
+/*  */
