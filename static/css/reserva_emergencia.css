@@ -1,6 +1,6 @@
 @import url('../css/variables.css');
 
-/* Container principal com largura máxima para não esticar demais na tela */
+
 .style-reserva-container {
   max-width: 1000px;
   width: 100%;
@@ -32,26 +32,25 @@
 /* Barra de Progresso - Usando !important para não ficar azul */
 .progress-reserva {
   height: 14px;
-  background-color: rgba(255, 255, 255, 0.1) !important;
+  background-color: rgba(255, 255, 255, 0.1);
   padding: 0;
   overflow: hidden;
   border-radius: 50rem;
 }
 
 .bar-progresso {
-  background-color: var(--accent-primary, #00E676) !important; /* Força o verde */
-  box-shadow: 0 0 8px rgba(0, 230, 118, 0.4);
+  background-color: var(--accent-primary, #00E676);
   height: 100%;
   border-radius: 50rem;
 }
 
 /* Fix dos Ícones Circulares para não esticarem */
 .icon-circle {
-  width: 40px !important;
-  height: 40px !important;
-  min-width: 40px !important;  /* Impede esticar na largura */
-  min-height: 40px !important; /* Impede esticar na altura */
-  flex-shrink: 0 !important;   /* Impede o flexbox de achatar/esticar */
+  width: 40px;
+  height: 40px;
+  min-width: 40px; 
+  min-height: 40px; 
+  flex-shrink: 0;  
   font-size: 18px;
   border-radius: 50%;
 }
@@ -64,11 +63,11 @@
   width: 100%;
   height: 48px;
   background-color: var(--brand-primary, #7C4DFF);
-  color: #ffffff !important;
+  color: #ffffff;
   font-weight: 600;
   font-size: 1rem;
   border-radius: 12px;
-  text-decoration: none !important;
+  text-decoration: none;
   transition: all 0.2s ease;
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
