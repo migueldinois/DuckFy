@@ -1,0 +1,152 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html, body, .bg-app {
+    width: 100%;
+    min-height: 100vh;
+    background-color: var(--bg-primary);
+}
+
+.tela-edicao {
+    background-color: var(--bg-primary);
+}
+
+/* 1. TOPO ROXO */
+.cabecalho-perfil {
+    width: 100%;
+    background-color: var(--brand-primary);
+}
+
+.link-voltar {
+    top: 28px;
+    left: 28px;
+    transition: transform 0.2s ease;
+}
+
+.link-voltar:hover {
+   transform: translateX(-4px);
+}
+
+.link-salvar {
+    top: 24px;
+    right: 28px;
+    transition: opacity 0.2s ease;
+}
+
+.link-salvar:hover {
+    opacity: 0.8;
+}
+
+/* Estilo do Avatar */
+.avatar-grande {
+    width: 90px;
+    height: 90px;
+    border-radius: 50%;
+    background-color: var(--bg-primary);
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.3);
+}
+
+.avatar-cabeca {
+    width: 32px;
+    height: 32px;
+    background-color: var(--brand-primary);
+    border-radius: 50%;
+    position: absolute;
+    top: 18px;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+.avatar-corpo {
+    width: 58px;
+    height: 38px;
+    background-color: var(--brand-primary);
+    border-radius: 50% 50% 0 0;
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+.link-foto:hover {
+    text-decoration: underline !important;
+}
+
+/* 2. FORMULÁRIO INFERIOR */
+.conteudo-formulario {
+    width: 100%;
+    background-color: var(--bg-primary);
+}
+
+.formulario-perfil {
+    max-width: 550px; /* Largura ideal e confortável para desktop */
+}
+
+/* Customização dos Inputs */
+.campo-input {
+    background-color: var(--bg-surface-1);
+    color: #ffffff;
+    border: 1px solid var(--bg-surface-2) !important;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.campo-input:focus {
+    background-color: var(--bg-surface-1);
+    color: #ffffff;
+    border-color: var(--brand-primary) !important;
+    box-shadow: 0 0 0 3px rgba(124, 77, 255, 0.25);
+}
+
+.campo-input.invalido,
+.campo-input.invalido:focus {
+    border: 2px solid #ff4d4d !important;
+}
+
+.campo-input::placeholder {
+    color: #6c6c80;
+}
+
+/* Estilização dos Botões */
+.btn-roxo {
+    background-color: var(--brand-primary);
+    color: #ffffff;
+    border: none;
+    transition: filter 0.2s ease, transform 0.1s ease;
+}
+
+.btn-roxo:hover {
+    filter: brightness(1.1);
+    color: #ffffff;
+    transform: translateY(-1px);
+}
+
+.btn-escuro {
+    background-color: var(--bg-surface-1);
+    color: #ffffff;
+    border: 1px solid var(--bg-surface-2);
+    transition: background-color 0.2s ease, transform 0.1s ease;
+}
+
+.btn-escuro:hover {
+    background-color: var(--bg-surface-2);
+    color: #ffffff;
+    transform: translateY(-1px);
+}
+
+.btn-vermelho {
+    background-color: rgba(255, 77, 77, 0.15);
+    color: #ff4d4d;
+    border: 1px solid rgba(255, 77, 77, 0.2);
+    transition: background-color 0.2s ease, transform 0.1s ease;
+}
+
+.btn-vermelho:hover {
+    background-color: rgba(255, 77, 77, 0.25);
+    color: #ff4d4d;
+    transform: translateY(-1px);
+}
