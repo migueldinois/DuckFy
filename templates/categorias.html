@@ -9,140 +9,94 @@
 {% block content %}
 <div class="categorias-container">
 
-  <!-- Cabeçalho -->
-  <header class="d-flex justify-content-between align-items-center mb-3">
-    <h1 class="page-title m-0">Categorias</h1>
-    <a href="#" class="btn-icon-add" aria-label="Nova Categoria">
-      <i class="bi bi-plus-lg"></i>
-    </a>
-  </header>
-
-  <!-- Campo de Pesquisa -->
-  <div class="search-box mb-3">
-    <i class="bi bi-search search-icon"></i>
-    <input type="text" id="inputBusca" class="form-control search-input" placeholder="Buscar categoria...">
-  </div>
-
-  <!-- Alternador de Abas -->
-  <div class="type-switcher mb-3">
-    <button type="button" class="tab-btn active" id="btnSaidas" onclick="alternarAba('SAIDA')">Saídas</button>
-    <button type="button" class="tab-btn" id="btnEntradas" onclick="alternarAba('ENTRADA')">Entradas</button>
-  </div>
-
-  <!-- Lista de Saídas (Despesas) -->
-  <section id="listaSaidas" class="dash-card">
-    <div class="category-list d-flex flex-column gap-2">
-      
-      <!-- Exemplo 1: Alimentação -->
-      <article class="category-item d-flex align-items-center justify-content-between">
-        <div class="d-flex align-items-center gap-3">
-          <div class="cat-icon-circle" style="background-color: #FF6B6B;">
-            <span>🍔</span>
-          </div>
-          <div>
-            <h3 class="cat-name m-0">Alimentação</h3>
-            <p class="cat-subs m-0">Restaurantes, Mercado, Delivery</p>
-          </div>
-        </div>
-        <a href="#" class="arrow-link" aria-label="Ver detalhes">
-          <i class="bi bi-chevron-right"></i>
+    <!-- Cabeçalho -->
+    <header class="d-flex justify-content-between align-items-center mb-3">
+        <h1 class="page-title m-0">Categorias</h1>
+        <a href="#" class="btn-icon-add" aria-label="Nova Categoria">
+            <i class="bi bi-plus-lg"></i>
         </a>
-      </article>
+    </header>
 
-      <!-- Exemplo 2: Lazer -->
-      <article class="category-item d-flex align-items-center justify-content-between">
-        <div class="d-flex align-items-center gap-3">
-          <div class="cat-icon-circle" style="background-color: #B093FF;">
-            <span>🎬</span>
-          </div>
-          <div>
-            <h3 class="cat-name m-0">Lazer</h3>
-            <p class="cat-subs m-0">Cinema, Shows, Festas</p>
-          </div>
-        </div>
-        <a href="#" class="arrow-link" aria-label="Ver detalhes">
-          <i class="bi bi-chevron-right"></i>
-        </a>
-      </article>
-
-      <!-- Exemplo 3: Transporte -->
-      <article class="category-item d-flex align-items-center justify-content-between">
-        <div class="d-flex align-items-center gap-3">
-          <div class="cat-icon-circle" style="background-color: #FFD740;">
-            <span>🚗</span>
-          </div>
-          <div>
-            <h3 class="cat-name m-0">Transporte</h3>
-            <p class="cat-subs m-0">Combustível, Uber, Ônibus</p>
-          </div>
-        </div>
-        <a href="#" class="arrow-link" aria-label="Ver detalhes">
-          <i class="bi bi-chevron-right"></i>
-        </a>
-      </article>
-
+    <!-- Campo de Pesquisa -->
+    <div class="search-box mb-3">
+        <i class="bi bi-search search-icon"></i>
+        <input type="text" id="inputBusca" class="form-control search-input" placeholder="Buscar categoria...">
     </div>
-  </section>
 
-  <!-- Lista de Entradas (Receitas) -->
-  <section id="listaEntradas" class="dash-card d-none">
-    <div class="category-list d-flex flex-column gap-2">
-      
-      <!-- Exemplo 1: Salário -->
-      <article class="category-item d-flex align-items-center justify-content-between">
-        <div class="d-flex align-items-center gap-3">
-          <div class="cat-icon-circle" style="background-color: #00E676;">
-            <span>💼</span>
-          </div>
-          <div>
-            <h3 class="cat-name m-0">Salário</h3>
-            <p class="cat-subs m-0">Pagamento mensal, Bônus</p>
-          </div>
-        </div>
-        <a href="#" class="arrow-link" aria-label="Ver detalhes">
-          <i class="bi bi-chevron-right"></i>
-        </a>
-      </article>
-
-      <!-- Exemplo 2: Renda Extra -->
-      <article class="category-item d-flex align-items-center justify-content-between">
-        <div class="d-flex align-items-center gap-3">
-          <div class="cat-icon-circle" style="background-color: #00E5FF;">
-            <span>🚀</span>
-          </div>
-          <div>
-            <h3 class="cat-name m-0">Renda Extra</h3>
-            <p class="cat-subs m-0">Freelas, Vendas ocasionais</p>
-          </div>
-        </div>
-        <a href="#" class="arrow-link" aria-label="Ver detalhes">
-          <i class="bi bi-chevron-right"></i>
-        </a>
-      </article>
-
+    <!-- Alternador de Abas -->
+    <div class="type-switcher mb-3">
+        <button type="button" class="tab-btn active" id="btnSaidas" onclick="alternarAba('SAIDA')">Saídas</button>
+        <button type="button" class="tab-btn" id="btnEntradas" onclick="alternarAba('ENTRADA')">Entradas</button>
     </div>
-  </section>
+
+    <!-- Lista de Saídas (Despesas) -->
+    <section id="listaSaidas" class="dash-card">
+        <div class="category-list d-flex flex-column gap-2">
+
+            {% for despesa in categorias_despesa %}
+            <!-- Exemplo 1: Alimentação -->
+            <article class="category-item d-flex align-items-center justify-content-between">
+                <div class="d-flex align-items-center gap-3">
+                    <div class="cat-icon-circle" style="background-color: {{ despesa.cor }};">
+                        <span>{{ despesa.emoji }}</span>
+                    </div>
+                    <div>
+                        <h3 class="cat-name m-0">{{ despesa.nome }}</h3>
+                        <p class="cat-subs m-0">{{ despesa.descricao }}</p>
+                    </div>
+                </div>
+                <a href="#" class="arrow-link" aria-label="Ver detalhes">
+                    <i class="bi bi-chevron-right"></i>
+                </a>
+            </article>
+            {% endfor %}
+        </div>
+    </section>
+
+    <!-- Lista de Entradas (Receitas) -->
+    <section id="listaEntradas" class="dash-card d-none">
+        <div class="category-list d-flex flex-column gap-2">
+            {% for receita in categorias_receita %}
+            <!-- Exemplo 1: Salário -->
+            <article class="category-item d-flex align-items-center justify-content-between">
+                <div class="d-flex align-items-center gap-3">
+                    <div class="cat-icon-circle" style="background-color: {{ receita.cor }};">
+                        <span>{{ receita.emoji }}</span>
+                    </div>
+                    <div>
+                        <h3 class="cat-name m-0">{{ receita.nome }}</h3>
+                        <p class="cat-subs m-0">{{ receita.descricao }}</p>
+                    </div>
+                </div>
+                <a href="#" class="arrow-link" aria-label="Ver detalhes">
+                    <i class="bi bi-chevron-right"></i>
+                </a>
+            </article>
+            {% endfor %}
+
+        </div>
+    </section>
 
 </div>
 
 <script>
-  function alternarAba(tipo) {
-    const btnSaidas = document.getElementById('btnSaidas');
-    const btnEntradas = document.getElementById('btnEntradas');
-    const listaSaidas = document.getElementById('listaSaidas');
-    const listaEntradas = document.getElementById('listaEntradas');
+    function alternarAba(tipo) {
+        const btnSaidas = document.getElementById('btnSaidas');
+        const btnEntradas = document.getElementById('btnEntradas');
+        const listaSaidas = document.getElementById('listaSaidas');
+        const listaEntradas = document.getElementById('listaEntradas');
 
-    if (tipo === 'SAIDA') {
-      btnSaidas.classList.add('active');
-      btnEntradas.classList.remove('active');
-      listaSaidas.classList.remove('d-none');
-      listaEntradas.classList.add('d-none');
-    } else {
-      btnEntradas.classList.add('active');
-      btnSaidas.classList.remove('active');
-      listaEntradas.classList.remove('d-none');
-      listaSaidas.classList.add('d-none');
+        if (tipo === 'SAIDA') {
+            btnSaidas.classList.add('active');
+            btnEntradas.classList.remove('active');
+            listaSaidas.classList.remove('d-none');
+            listaEntradas.classList.add('d-none');
+        } else {
+            btnEntradas.classList.add('active');
+            btnSaidas.classList.remove('active');
+            listaEntradas.classList.remove('d-none');
+            listaSaidas.classList.add('d-none');
+        }
     }
-  }
 </script>
 {% endblock %}

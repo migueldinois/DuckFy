@@ -1,5 +1,6 @@
 from flask import Flask, render_template, request, redirect, session, flash, url_for
 from database.conexao import Conexao
+from model.categorias import Categoria
 from model.usuarios import Usuario
 from model.extrato import Extrato
 
@@ -27,6 +28,7 @@ def logar():
     if usuario_logado:
         session["usuario"] = usuario_logado
         session["email"] = input_email
+        session["id_usuario"] = Usuario.buscar_id_por_email(input_email)
         return redirect(url_for("dashboard"))
     else:
         flash("Usuario ou senha invalidos!", "error")
@@ -120,7 +122,14 @@ def lancamento():
 
 @app.get("/categorias")
 def categorias():
-    return render_template("categorias.html")
+    if "usuario" in session:
+        categorias_despesa = Categoria.recuperar_categorias_por_tipo(session["id_usuario"], "Despesa")
+        categorias_receita = Categoria.recuperar_categorias_por_tipo(session["id_usuario"], "Receita")
+
+        return render_template("categorias.html", categorias_despesa=categorias_despesa, categorias_receita=categorias_receita)
+    else:
+        flash("Você precisa estar logado para acessar as categorias!", "error")
+        return redirect('/login')
 
 
 @app.get("/cadastro")
