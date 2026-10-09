@@ -2,89 +2,147 @@
 
 {% block title %}Categorias - DuckFy{% endblock %}
 
+{% block extra_css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/categorias.css') }}">
+{% endblock %}
+
 {% block content %}
+<div class="categorias-container">
 
-<main class="categorias">
+  <!-- Cabeçalho -->
+  <header class="d-flex justify-content-between align-items-center mb-3">
+    <h1 class="page-title m-0">Categorias</h1>
+    <a href="#" class="btn-icon-add" aria-label="Nova Categoria">
+      <i class="bi bi-plus-lg"></i>
+    </a>
+  </header>
 
-    <!-- título da página -->
-    <h1 class="categorias__titulo">Categorias</h1>
+  <!-- Campo de Pesquisa -->
+  <div class="search-box mb-3">
+    <i class="bi bi-search search-icon"></i>
+    <input type="text" id="inputBusca" class="form-control search-input" placeholder="Buscar categoria...">
+  </div>
 
-    <!-- categorias de saídas -->
-    <section class="categoria__grupo">
+  <!-- Alternador de Abas -->
+  <div class="type-switcher mb-3">
+    <button type="button" class="tab-btn active" id="btnSaidas" onclick="alternarAba('SAIDA')">Saídas</button>
+    <button type="button" class="tab-btn" id="btnEntradas" onclick="alternarAba('ENTRADA')">Entradas</button>
+  </div>
 
-        <h2 class="categoria__titulo">Categorias de Saídas</h2>
-
-        <div class="categoria__lista">
-
-            <!-- alimentação -->
-            <article class="categoria">
-                <div class="categoria__icone"></div>
-
-                <div class="categoria__info">
-                    <h3>Alimentação</h3>
-                    <p>Restaurantes,<br>Mercados, Lanches</p>
-                </div>
-            </article>
-
-            <!-- transporte -->
-            <article class="categoria">
-                <div class="categoria__icone"></div>
-
-                <div class="categoria__info">
-                    <h3>Transporte</h3>
-                    <p>Combustível, Uber,<br>Ônibus</p>
-                </div>
-            </article>
-
-            <!-- lazer -->
-            <article class="categoria">
-                <div class="categoria__icone"></div>
-
-                <div class="categoria__info">
-                    <h3>Lazer</h3>
-                    <p>Cinema, Shows,<br>Festas</p>
-                </div>
-
-                <span class="categoria__seta">></span>
-            </article>
-
+  <!-- Lista de Saídas (Despesas) -->
+  <section id="listaSaidas" class="dash-card">
+    <div class="category-list d-flex flex-column gap-2">
+      
+      <!-- Exemplo 1: Alimentação -->
+      <article class="category-item d-flex align-items-center justify-content-between">
+        <div class="d-flex align-items-center gap-3">
+          <div class="cat-icon-circle" style="background-color: #FF6B6B;">
+            <span>🍔</span>
+          </div>
+          <div>
+            <h3 class="cat-name m-0">Alimentação</h3>
+            <p class="cat-subs m-0">Restaurantes, Mercado, Delivery</p>
+          </div>
         </div>
+        <a href="#" class="arrow-link" aria-label="Ver detalhes">
+          <i class="bi bi-chevron-right"></i>
+        </a>
+      </article>
 
-    </section>
-
-    <!-- categorias de entradas -->
-    <section class="categoria__grupo">
-
-        <h2 class="categoria__titulo">Categorias de Entradas</h2>
-
-        <div class="categoria__lista">
-
-            <!-- salário -->
-            <article class="categoria">
-                <div class="categoria__icone"></div>
-
-                <div class="categoria__info">
-                    <h3>Salário</h3>
-                    <p>Emprego 1, Emprego 2,<br>Empreendimento...</p>
-                </div>
-            </article>
-
-            <!-- renda extra -->
-            <article class="categoria">
-                <div class="categoria__icone"></div>
-
-                <div class="categoria__info">
-                    <h3>Renda Extra</h3>
-                    <p>Pequenos serviços</p>
-                </div>
-
-                <span class="categoria__seta">></span>
-            </article>
-
+      <!-- Exemplo 2: Lazer -->
+      <article class="category-item d-flex align-items-center justify-content-between">
+        <div class="d-flex align-items-center gap-3">
+          <div class="cat-icon-circle" style="background-color: #B093FF;">
+            <span>🎬</span>
+          </div>
+          <div>
+            <h3 class="cat-name m-0">Lazer</h3>
+            <p class="cat-subs m-0">Cinema, Shows, Festas</p>
+          </div>
         </div>
+        <a href="#" class="arrow-link" aria-label="Ver detalhes">
+          <i class="bi bi-chevron-right"></i>
+        </a>
+      </article>
 
-    </section>
+      <!-- Exemplo 3: Transporte -->
+      <article class="category-item d-flex align-items-center justify-content-between">
+        <div class="d-flex align-items-center gap-3">
+          <div class="cat-icon-circle" style="background-color: #FFD740;">
+            <span>🚗</span>
+          </div>
+          <div>
+            <h3 class="cat-name m-0">Transporte</h3>
+            <p class="cat-subs m-0">Combustível, Uber, Ônibus</p>
+          </div>
+        </div>
+        <a href="#" class="arrow-link" aria-label="Ver detalhes">
+          <i class="bi bi-chevron-right"></i>
+        </a>
+      </article>
 
-</main>
+    </div>
+  </section>
 
+  <!-- Lista de Entradas (Receitas) -->
+  <section id="listaEntradas" class="dash-card d-none">
+    <div class="category-list d-flex flex-column gap-2">
+      
+      <!-- Exemplo 1: Salário -->
+      <article class="category-item d-flex align-items-center justify-content-between">
+        <div class="d-flex align-items-center gap-3">
+          <div class="cat-icon-circle" style="background-color: #00E676;">
+            <span>💼</span>
+          </div>
+          <div>
+            <h3 class="cat-name m-0">Salário</h3>
+            <p class="cat-subs m-0">Pagamento mensal, Bônus</p>
+          </div>
+        </div>
+        <a href="#" class="arrow-link" aria-label="Ver detalhes">
+          <i class="bi bi-chevron-right"></i>
+        </a>
+      </article>
+
+      <!-- Exemplo 2: Renda Extra -->
+      <article class="category-item d-flex align-items-center justify-content-between">
+        <div class="d-flex align-items-center gap-3">
+          <div class="cat-icon-circle" style="background-color: #00E5FF;">
+            <span>🚀</span>
+          </div>
+          <div>
+            <h3 class="cat-name m-0">Renda Extra</h3>
+            <p class="cat-subs m-0">Freelas, Vendas ocasionais</p>
+          </div>
+        </div>
+        <a href="#" class="arrow-link" aria-label="Ver detalhes">
+          <i class="bi bi-chevron-right"></i>
+        </a>
+      </article>
+
+    </div>
+  </section>
+
+</div>
+
+<script>
+  function alternarAba(tipo) {
+    const btnSaidas = document.getElementById('btnSaidas');
+    const btnEntradas = document.getElementById('btnEntradas');
+    const listaSaidas = document.getElementById('listaSaidas');
+    const listaEntradas = document.getElementById('listaEntradas');
+
+    if (tipo === 'SAIDA') {
+      btnSaidas.classList.add('active');
+      btnEntradas.classList.remove('active');
+      listaSaidas.classList.remove('d-none');
+      listaEntradas.classList.add('d-none');
+    } else {
+      btnEntradas.classList.add('active');
+      btnSaidas.classList.remove('active');
+      listaEntradas.classList.remove('d-none');
+      listaSaidas.classList.add('d-none');
+    }
+  }
+</script>
 {% endblock %}
