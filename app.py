@@ -97,9 +97,6 @@ def lancamento():
 
 @app.get("/cadastro")
 def cadastro():
-<<<<<<< HEAD
-    return render_template("cadastro.html")
-=======
     if "usuario" in session:
         return redirect('/dashboard')
     else:
@@ -124,7 +121,5 @@ def cadastrar():
     else:
         flash("Erro ao cadastrar usuário. Tente novamente.", "error")
         return redirect('/cadastro')
->>>>>>> b3fbe51b2dd9545e398793a3533a58b81e980a46
-
 if __name__ == "__main__":
     app.run(debug=True)
