@@ -72,23 +72,18 @@ def editar_perfil():
 
 @app.get("/extrato")
 def tela_extrato():
-    id_usuario = session.get('id_usuario', 1)
+    if "usuario" in session:
+        return render_template("extrato.html")
+    else:
+        flash("Você precisa estar logado para acessar o extrato!", "error")
+        return redirect('/login')
 
-    tipo_ativo = request.args.get('tipo', 'tudo')
-    id_conta = request.args.get('id_conta', type=int)
-    data_inicio = request.args.get('data_inicio')
-    data_fim = request.args.get('data_fim')
 
-    lista_transacoes = Extrato.obter_extrato(
-        id_usuario=id_usuario,
-        tipo=tipo_ativo,
-        id_conta=id_conta,
-        data_inicio=data_inicio,
-        data_fim=data_fim
-    )
+@app.get("/reserva_emergencia")
+def reserva_emergencia():
+    return render_template("reserva_emergencia.html")
+    
 
-    # 3. Envia o tipo_ativo para o Jinja2 destacar a aba selecionada
-    return render_template('extrato.html', transacoes=lista_transacoes, tipo_ativo=tipo_ativo)
 
 @app.get("/lancamento")
 def lancamento():
