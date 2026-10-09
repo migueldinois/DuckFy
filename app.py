@@ -96,7 +96,7 @@ def lancamento():
 
 @app.get("/cadastro")
 def cadastro():
-    return render_template("tela_cadastro.html")
+    return render_template("cadastro.html")
 
 if __name__ == "__main__":
     app.run(debug=True)
