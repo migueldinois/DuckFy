@@ -10,7 +10,7 @@ html, body {
     background-color: var(--bg-primary);
 }
 
-/* Ocupar a tela inteira sem limites fixos de largura */
+/* a tela inteira */
 .cartao-perfil-principal {
     width: 100%;
     min-height: 100vh;
