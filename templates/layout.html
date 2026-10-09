@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="pt-br">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -13,7 +14,13 @@
   <link rel="stylesheet" href="{{ url_for('static', filename='css/layout.css') }}">
   <link rel="stylesheet" href="{{ url_for('static', filename='css/dashboard.css') }}">
   <link rel="stylesheet" href="{{ url_for('static', filename='css/bottom-bar.css') }}">
+
+
+  {% block extra_css %}
+  {% endblock %}
+
 </head>
+
 <body class="app-body">
 
   <div class="app-container">
@@ -24,7 +31,7 @@
         <i class="bi bi-chevron-right" id="toggleIcon"></i>
       </button>
 
-      <a href="/" class="sidebar-brand">
+      <a href="/dashboard" class="sidebar-brand">
         <span class="brand-text">DuckFy</span>
       </a>
 
@@ -32,27 +39,35 @@
 
       <ul class="sidebar-menu list-unstyled">
         <li>
-          <a href="/" class="sidebar-link active" title="Dashboard">
+          <a href="/dashboard" class="sidebar-link active" title="Dashboard">
             <img src="{{ url_for('static', filename='img/icons/dashboard.svg') }}" alt="Dashboard" class="sidebar-icon">
             <span class="brand-text">Dashboard</span>
           </a>
         </li>
         <li>
-          <a href="/" class="sidebar-link" title="Extrato">
+          <a href="/extrato" class="sidebar-link" title="Extrato">
             <img src="{{ url_for('static', filename='img/icons/extrato.svg') }}" alt="Extrato" class="sidebar-icon">
             <span class="brand-text">Extrato</span>
           </a>
         </li>
         <li>
-          <a href="/" class="sidebar-link" title="Simulador de Patrimônio">
-            <img src="{{ url_for('static', filename='img/icons/simulador.svg') }}" alt="Simulador de Patrimônio" class="sidebar-icon">
+          <a href="/lancamento" class="sidebar-link" title="Simulador de Patrimônio">
+            <img src="{{ url_for('static', filename='img/icons/simulador.svg') }}" alt="Simulador de Patrimônio"
+              class="sidebar-icon">
             <span class="brand-text">Simulador</span>
           </a>
         </li>
         <li>
-          <a href="/" class="sidebar-link" title="Perfil">
+          <a href="/perfil" class="sidebar-link" title="Perfil">
             <img src="{{ url_for('static', filename='img/icons/perfill.svg') }}" alt="Perfil" class="sidebar-icon">
             <span class="brand-text">Perfil</span>
+          </a>
+        </li>
+        <!-- colocando la em baixo -->
+        <li class="mt-auto">
+          <a href="/logout" class="sidebar-logout" title="Sair">
+            <img src="{{ url_for('static', filename='img/icons/logout.svg') }}" alt="Sair" class="sidebar-icon">
+            <span class="brand-text">Sair</span>
           </a>
         </li>
       </ul>
@@ -84,4 +99,5 @@
   <!-- Bootstrap JS -->
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
+
 </html>
