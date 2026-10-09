@@ -1,0 +1,216 @@
+/* Container Overlay */
+.duckfy-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(10, 9, 14, 0.75);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  visibility: hidden; 
+  pointer-events: none;
+  transition: opacity 0.25s ease-in-out, visibility 0.25s ease-in-out;
+  z-index: 9999;
+}
+
+.duckfy-modal.active {
+  opacity: 1;
+  visibility: visible; 
+  pointer-events: all;
+}
+/* Card do Modal */
+.duckfy-modal .modal-content {
+  width: 100%;
+  max-width: 420px;
+  background: var(--bg-surface-1, #181720);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 20px;
+  padding: 24px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+  transform: translateY(15px);
+  transition: transform 0.25s ease-in-out;
+}
+
+.duckfy-modal.active .modal-content {
+  transform: translateY(0);
+}
+
+/* Cabeçalho */
+.card-section-title {
+  color: #ffffff;
+  font-size: 1.25rem;
+  font-weight: 600;
+}
+
+.btn-close-custom {
+  background: transparent;
+  border: none;
+  color: #a0a0b5;
+  font-size: 1.4rem;
+  line-height: 1;
+  cursor: pointer;
+  transition: color 0.2s ease;
+}
+
+.btn-close-custom:hover {
+  color: #ffffff;
+}
+
+/* Rótulos */
+.card-subtitle {
+  color: #a0a0b5;
+  font-size: 0.85rem;
+  font-weight: 500;
+}
+
+/* Entradas de Texto, Select e Inputs */
+.search-input {
+  width: 100%;
+  background: var(--bg-surface-2, #21202e);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
+  padding: 10px 14px;
+  color: #ffffff;
+  font-size: 0.9rem;
+  outline: none;
+  transition: border-color 0.2s ease;
+}
+
+.search-input:focus {
+  border-color: var(--brand-primary);
+  background: var(--bg-surface-2, #21202e);
+  color: #ffffff;
+}
+
+/* Estilização do Select */
+select.search-input {
+  appearance: none;
+  -webkit-appearance: none;
+  background-image: url("data:image/svg+xml;utf8,<svg fill='%23a0a0b5' height='24' viewBox='0 0 24 24' width='24' xmlns='http://www.w3.org/2000/svg'><path d='M7 10l5 5 5-5z'/></svg>");
+  background-repeat: no-repeat;
+  background-position: right 10px center;
+  padding-right: 36px;
+}
+
+select.search-input option {
+  background-color: #21202e;
+  color: #ffffff;
+}
+
+/* Input Seletor de Cor */
+.form-control-color-custom {
+  width: 100%;
+  height: 42px;
+  padding: 4px;
+  background: #ff0000;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
+  cursor: pointer;
+}
+
+.form-control-color-custom::-webkit-color-swatch-wrapper {
+  padding: 0;
+}
+
+.form-control-color-custom::-webkit-color-swatch {
+  border: none;
+  border-radius: 8px;
+}
+
+/* Botão de Ação */
+.btn-purple-action {
+  display: block;
+  width: 50%;
+  padding: 8px;
+  background: var(--brand-primary);
+  border: none;
+  border-radius: 12px;
+  color: #ffffff;
+  font-weight: 600;
+  font-size: 0.95rem;
+  text-align: center;
+  text-decoration: none;
+  cursor: pointer;
+  transition: background-color 0.2s ease, transform 0.1s ease;
+}
+
+.btn-purple-action:hover {
+  background: #6c3fff;
+}
+
+.btn-purple-action:active {
+  transform: scale(0.98);
+}
+/* Container relativo para posicionamento do ícone */
+.input-icon-wrapper {
+  position: relative;
+  width: 100%;
+  display: flex;
+  align-items: center;
+}
+
+/* Ícone posicionado no lado esquerdo */
+.input-icon {
+  position: absolute;
+  left: 14px;
+  width: 18px;
+  height: 18px;
+  pointer-events: none;
+  opacity: 0.6;
+}
+
+/* Espaçamento interno para evitar sobreposição do texto ao ícone */
+.input-with-icon {
+  padding-left: 42px !important;
+}
+
+/* Estrutura do Seletor de Cor Customizado */
+.color-picker-wrapper {
+  position: relative;
+  width: 100%;
+}
+
+.color-input-hidden {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  cursor: pointer;
+  z-index: 3;
+}
+
+.color-picker-custom {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  width: 100%;
+  height: 44px;
+  padding: 0 14px;
+  background: var(--bg-surface-2, #21202e);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
+}
+
+.color-preview-box {
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  transition: transform 0.2s ease, background-color 0.1s ease;
+}
+
+.color-picker-custom::after {
+  content: '';
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background-color: currentColor;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}

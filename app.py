@@ -5,6 +5,7 @@ from model.usuarios import Usuario
 from model.extrato import Extrato
 
 
+
 app = Flask(__name__)
 app.secret_key = "duckfy999"
 
@@ -129,6 +130,35 @@ def categorias():
         return render_template("categorias.html", categorias_despesa=categorias_despesa, categorias_receita=categorias_receita)
     else:
         flash("Você precisa estar logado para acessar as categorias!", "error")
+        return redirect('/login')
+
+@app.route("/categorias/criar", methods=["POST"])
+def adicionar_categoria():
+    if "usuario" in session:
+        nome = request.form.get("nome")
+        tipo = request.form.get("tipo")
+
+        if tipo == "SAIDA":
+            tipo = "Despesa"
+        elif tipo == "ENTRADA":
+            tipo = "Receita"
+        emoji = request.form.get("emoji")
+        cor = request.form.get("cor")
+
+        if not nome or not tipo or not emoji or not cor:
+            flash("Todos os campos são obrigatórios!", "error")
+            return redirect('/categorias')
+
+        categoria_criada = Categoria.criar_categoria(session["id_usuario"], nome, tipo, emoji, cor)
+
+        if categoria_criada:
+            flash("Categoria criada com sucesso!", "success")
+        else:
+            flash("Erro ao criar categoria. Tente novamente.", "error")
+
+        return redirect('/categorias')
+    else:
+        flash("Você precisa estar logado para adicionar categorias!", "error")
         return redirect('/login')
 
 

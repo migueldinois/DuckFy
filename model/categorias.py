@@ -22,3 +22,22 @@ class Categoria():
         conexao.close()
 
         return dados_categorias
+    def criar_categoria(id_usuario, nome, tipo, emoji, cor):
+        """Função para criar uma nova categoria"""
+        conexao, cursor = Conexao.conectar()
+
+        sql = """
+            INSERT INTO categorias (id_usuario, nome, tipo, emoji, cor) 
+            VALUES (%s, %s, %s, %s, %s)
+        """
+        
+        try:
+            cursor.execute(sql, (id_usuario, nome, tipo, emoji, cor))
+            conexao.commit()
+            return True
+        except Exception as erro:
+            print(f"Erro ao criar categoria: {erro}")
+            return False
+        finally:
+            cursor.close()
+            conexao.close()
