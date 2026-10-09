@@ -138,6 +138,10 @@ def cadastrar():
     else:
         flash("Erro ao cadastrar usuário. Tente novamente.", "error")
         return redirect('/cadastro')
+    
+@app.get("/redefinir")
+def redefinir():
+    return render_template("redefinir_senha.html")
 
 if __name__ == "__main__":
     app.run(debug=True)
