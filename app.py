@@ -2,6 +2,7 @@ from flask import Flask, render_template, request, redirect, session, flash, url
 from database.conexao import Conexao
 from model.usuarios import Usuario
 
+
 app = Flask(__name__)
 app.secret_key = "duckfy999"
 
@@ -42,13 +43,20 @@ def dashboard():
         flash("Você precisa estar logado para acessar o dashboard!", "error")
         return redirect('/login')
 
-@app.get("/perfil")
+# Rota para exibir o perfil do usuário
+@app.route("/perfil", methods=["GET", "POST"])
 def perfil():
-    if "usuario" in session:
-        return render_template("perfil.html")
-    else:
-        flash("Você precisa estar logado para acessar o seu perfil!", "error")
-        return redirect('/login')
+    usuario = {
+        "nome": "Usuário",
+        "foto_perfil": None,
+        "dias_ofensiva": 0,
+        "pontos_xp": 0,
+    }
+
+    if request.method == "POST":
+        usuario["nome"] = request.form.get("nome", "").strip() or "Usuário"
+
+    return render_template("perfil.html", usuario=usuario)
 
 
 @app.get("/editar-perfil")
@@ -85,7 +93,30 @@ def lancamento():
 
 @app.get("/cadastro")
 def cadastro():
-    return render_template("tela_cadastro.html")
+    if "usuario" in session:
+        return redirect('/dashboard')
+    else:
+        return render_template("cadastro.html")
+
+@app.route("/cadastro/usuario", methods=["POST"])
+def cadastrar():
+    nome = request.form.get("nome")
+    email = request.form.get("email")
+    senha = request.form.get("senha")
+    confirmar_senha = request.form.get("confirma_senha")
+    foto_perfil = request.form.get("foto_perfil") or "https://placehold.co/400x400"
+
+    if not nome or not email or not senha:
+        flash("Todos os campos são obrigatórios!", "error")
+        return redirect('/cadastro')
+
+    usuario_criado = Usuario.criar_usuario(nome, email, senha, foto_perfil)
+
+    if usuario_criado:
+        return redirect('/login')
+    else:
+        flash("Erro ao cadastrar usuário. Tente novamente.", "error")
+        return redirect('/cadastro')
 
 if __name__ == "__main__":
     app.run(debug=True)
