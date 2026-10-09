@@ -42,9 +42,9 @@
             {% for item in transacoes %}
             <div class="timeline-item">
 
-                <div class="icon-box {% if item.tipo == 'Receita' %}entrada{% else %}saida{% endif %}" {% if item.cor
-                    %}style="background-color: {{ item.cor }};" {% endif %}>
-                    <span>{{ item.emoji }}</span>
+                <div
+                    class="icon-box {% if item.tipo == 'Receita' or item.tipo == 'Entradas' or item.tipo == 'entrada' %}entrada{% else %}saida{% endif %}">
+                    <i class="bi bi-cart-fill"></i>
                 </div>
 
                 <div class="info">
