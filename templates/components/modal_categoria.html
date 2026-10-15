@@ -58,30 +58,3 @@
         </form>
     </div>
 </div>
-
-<script>
-    function validarApenasUmEmoji(input) {
-        // nao deixa por texto, números e caracteres especiais para garantir q vai ser um emoji
-        const regexEmojiUnico = /^(\p{Extended_Pictographic}|\p{Emoji_Presentation})$/u;
-
-        // Extrai os clusters de caracteres (evita quebrar emojis complexos)
-        const segmenter = new Intl.Segmenter('pt', { granularity: 'grapheme' });
-        const segmentos = Array.from(segmenter.segment(input.value));
-
-        // Se houver mais de 1 caractere/emoji digitado, mantem apenas o primeiro
-        if (segmentos.length > 1) {
-            input.value = segmentos[0].segment;
-        }
-
-        // Valida se o caractere inserido e um emoji valido
-        if (input.value && !regexEmojiUnico.test(input.value)) {
-            input.value = '';
-            input.setCustomValidity('Insira apenas 1 emoji valido.');
-        } else {
-            input.setCustomValidity('');
-        }
-    }
-    function atualizarCorPreview(corHex) {
-        document.getElementById('colorBox').style.backgroundColor = corHex;
-    }
-</script>

@@ -41,3 +41,40 @@ class Categoria():
         finally:
             cursor.close()
             conexao.close()
+    def deletar_categoria(id_categoria):
+        """Função para deletar uma categoria"""
+        conexao, cursor = Conexao.conectar()
+
+        sql = "DELETE FROM categorias WHERE id_categoria = %s"
+        
+        try:
+            cursor.execute(sql, (id_categoria,))
+            conexao.commit()
+            return True
+        except Exception as erro:
+            print(f"Erro ao deletar categoria: {erro}")
+            return False
+        finally:
+            cursor.close()
+            conexao.close()
+
+    def atualizar_categoria(id_categoria, nome, tipo, emoji, cor):
+        """Função para atualizar uma categoria existente"""
+        conexao, cursor = Conexao.conectar()
+
+        sql = """
+            UPDATE categorias 
+            SET nome = %s, tipo = %s, emoji = %s, cor = %s 
+            WHERE id_categoria = %s
+        """
+        
+        try:
+            cursor.execute(sql, (nome, tipo, emoji, cor, id_categoria))
+            conexao.commit()
+            return True
+        except Exception as erro:
+            print(f"Erro ao atualizar categoria: {erro}")
+            return False
+        finally:
+            cursor.close()
+            conexao.close()

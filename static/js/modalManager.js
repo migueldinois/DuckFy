@@ -22,6 +22,7 @@ const ModalManager = {
         e.preventDefault();
         const idModal = btnAbrir.getAttribute('data-open-modal');
         ModalManager.abrir(idModal);
+        return;
       }
 
       const btnFechar = e.target.closest('[data-close-modal]');
@@ -29,13 +30,20 @@ const ModalManager = {
         e.preventDefault();
         const modal = btnFechar.closest('.duckfy-modal');
         if (modal) ModalManager.fechar(modal.id);
+        return;
       }
 
-      if (e.target && e.target.id === 'btnExcluirCategoria') {
+      const btnExcluir = e.target.closest('#btnExcluirCategoria');
+      if (btnExcluir) {
         e.preventDefault();
         const id = document.getElementById('edit_id_categoria')?.value;
+
         if (id && confirm('Deseja realmente excluir esta categoria?')) {
-          window.location.href = `/categorias/deletar/${id}`;
+          const formDeletar = document.getElementById('formDeletarCategoria');
+          if (formDeletar) {
+            formDeletar.action = `/categorias/deletar/${id}`;
+            formDeletar.submit();
+          }
         }
       }
     });
@@ -68,7 +76,7 @@ function abrirModalEditarCategoria(dados) {
 }
 
 function validarApenasUmEmoji(input) {
-  const regexEmojiUnico = /^(\p{Extended_Pictographic}|\p{Emoji_Presentation})\$/u;
+  const regexEmoji = /[\p{Extended_Pictographic}\p{Emoji_Presentation}\p{Regional_Indicator}\u20E3]/u;
   const segmenter = new Intl.Segmenter('pt', { granularity: 'grapheme' });
   const segmentos = Array.from(segmenter.segment(input.value));
 
@@ -76,9 +84,9 @@ function validarApenasUmEmoji(input) {
     input.value = segmentos[0].segment;
   }
 
-  if (input.value && !regexEmojiUnico.test(input.value)) {
+  if (input.value && !regexEmoji.test(input.value)) {
     input.value = '';
-    input.setCustomValidity('Insira apenas 1 emoji valido.');
+    input.setCustomValidity('Insira apenas 1 emoji válido.');
   } else {
     input.setCustomValidity('');
   }
@@ -93,7 +101,8 @@ function atualizarCorPreviewEdit(corHex) {
   const box = document.getElementById('editColorBox');
   if (box) box.style.backgroundColor = corHex;
 }
-function preencherEAbrirModalEdit(elemento) {
+
+function preencherEAbrirModalEdit(event, elemento) {
   event.preventDefault();
   const dados = {
     id: elemento.getAttribute('data-id'),

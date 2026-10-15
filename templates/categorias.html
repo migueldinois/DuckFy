@@ -40,7 +40,7 @@
         <button type="button" class="tab-btn" id="btnEntradas" onclick="alternarAba('ENTRADA')">Entradas</button>
     </div>
 
-    <!-- Lista de Saídas (Despesas) -->
+    <!-- Lista de Despesas -->
     <section id="listaSaidas" class="dash-card">
         <div class="category-list d-flex flex-column gap-2">
 
@@ -55,12 +55,12 @@
                         <p class="cat-subs m-0">{{ despesa.descricao }}</p>
                     </div>
                 </div>
-                <a href="#" class="arrow-link" aria-label="Ver detalhes" data-id="{{ categorias_despesa.id }}"
-                    data-nome="{{ categorias_despesa.nome }}" data-tipo="{{ categorias_despesa.tipo }}"
-                    data-emoji="{{ categorias_despesa.emoji }}" data-cor="{{ categorias_despesa.cor }}"
-                    onclick="preencherEAbrirModalEdit(this)">
+                <a href="#" class="arrow-link" aria-label="Ver detalhes" data-id="{{ despesa.id_categoria }}"
+                    data-nome="{{ despesa.nome }}" data-tipo="SAIDA" data-emoji="{{ despesa.emoji }}"
+                    data-cor="{{ despesa.cor }}" onclick="preencherEAbrirModalEdit(event, this); return false;">
                     <i class="bi bi-chevron-right"></i>
                 </a>
+
             </article>
             {% endfor %}
         </div>
@@ -80,12 +80,12 @@
                         <p class="cat-subs m-0">{{ receita.descricao }}</p>
                     </div>
                 </div>
-                <a href="#" class="arrow-link" aria-label="Ver detalhes" data-id="{{ categorias_receita.id }}"
-                    data-nome="{{ categorias_receita.nome }}" data-tipo="{{ categorias_receita.tipo }}"
-                    data-emoji="{{ categorias_receita.emoji }}" data-cor="{{ categorias_receita.cor }}"
-                    onclick="preencherEAbrirModalEdit(this)">
+                <a href="#" class="arrow-link" aria-label="Ver detalhes" data-id="{{ receita.id_categoria }}"
+                    data-nome="{{ receita.nome }}" data-tipo="ENTRADA" data-emoji="{{ receita.emoji }}"
+                    data-cor="{{ receita.cor }}" onclick="preencherEAbrirModalEdit(event, this); return false;">
                     <i class="bi bi-chevron-right"></i>
                 </a>
+
             </article>
             {% endfor %}
 

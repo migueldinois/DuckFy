@@ -1,5 +1,5 @@
 {% block extra_css %}
-  <link rel="stylesheet" href="{{ url_for('static', filename='css/duckfy-modal.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/duckfy-modal.css') }}">
 {% endblock %}
 
 <div id="modalEditarCategoria" class="duckfy-modal">
@@ -9,7 +9,7 @@
       <button type="button" class="btn-close-custom" data-close-modal>&times;</button>
     </div>
 
-    <form id="formEditarCategoria" action="/categorias/atualizar" method="POST">
+    <form id="formEditarCategoria" action="/categorias/atualizar/" method="POST">
       <input type="hidden" name="id_categoria" id="edit_id_categoria">
 
       <div class="mb-3">
@@ -43,9 +43,7 @@
         <label for="edit_cor" class="card-subtitle d-block mb-1">Cor</label>
         <div class="color-picker-wrapper">
           <input type="color" name="cor" id="edit_cor" class="color-input-hidden" oninput="atualizarCorPreviewEdit(this.value)">
-
-            <span id="editColorBox" class="color-picker-custom"></span>
-
+          <span id="editColorBox" class="color-picker-custom"></span>
         </div>
       </div>
 
@@ -54,10 +52,13 @@
       </a>
 
       <div class="d-flex gap-2 mt-3">
-        <button type="button" class="btn-danger-action w-50" id="btnExcluirCategoria">Excluir</button>
         <button type="submit" class="btn-purple-action w-50">Salvar Alterações</button>
+        <button type="button" class="btn-danger-action w-50" id="btnExcluirCategoria">Excluir</button>
       </div>
     </form>
+
+    <form id="formDeletarCategoria" method="POST" class="d-none"></form>
+
   </div>
 </div>
 

@@ -160,7 +160,50 @@ def adicionar_categoria():
     else:
         flash("Você precisa estar logado para adicionar categorias!", "error")
         return redirect('/login')
+@app.route("/categorias/deletar/<int:id_categoria>", methods=["POST"])
+def deletar_categoria(id_categoria):
+    if "usuario" in session:
+        categoria_deletada = Categoria.deletar_categoria(id_categoria)
 
+        if categoria_deletada:
+            flash("Categoria deletada com sucesso!", "success")
+        else:
+            flash("Erro ao deletar categoria. Tente novamente.", "error")
+
+        return redirect('/categorias')
+    else:
+        flash("Você precisa estar logado para deletar categorias!", "error")
+        return redirect('/login')
+
+@app.route("/categorias/atualizar/", methods=["POST"])
+def atualizar_categoria():
+    if "usuario" in session:
+        id_categoria = request.form.get("id_categoria")
+        nome = request.form.get("nome")
+        tipo = request.form.get("tipo")
+        emoji = request.form.get("emoji")
+        cor = request.form.get("cor")
+
+        if tipo == "SAIDA":
+            tipo = "Despesa"
+        elif tipo == "ENTRADA":
+            tipo = "Receita"
+
+        if not id_categoria or not nome or not tipo or not emoji or not cor:
+            flash("Todos os campos são obrigatórios!", "error")
+            return redirect('/categorias')
+
+        categoria_atualizada = Categoria.atualizar_categoria(id_categoria, nome, tipo, emoji, cor)
+
+        if categoria_atualizada:
+            flash("Categoria atualizada com sucesso!", "success")
+        else:
+            flash("Erro ao atualizar categoria. Tente novamente.", "error")
+
+        return redirect('/categorias')
+    else:
+        flash("Você precisa estar logado para atualizar categorias!", "error")
+        return redirect('/login')
 
 @app.get("/cadastro")
 def cadastro():
