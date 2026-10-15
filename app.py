@@ -3,6 +3,8 @@ from database.conexao import Conexao
 from model.categorias import Categoria
 from model.usuarios import Usuario
 from model.extrato import Extrato
+from model.contas_bancarias import ContaBancaria
+from model.reserva_emergencia import ReservaEmergencia
 
 
 
@@ -50,10 +52,31 @@ def privacidade():
     return render_template("privacidade.html")
 
 
-@app.route("/contas")
+
+@app.route('/contas')
 def contas():
-    
-    return render_template("contas.html")
+    # 1. Pega o ID do utilizador logado (se não houver login ativo, usa o ID 1)
+    id_usuario = session.get('usuario_id', 1)
+
+    # 2. Procura todas as contas do utilizador na BD
+    lista_contas = ContaBancaria.query.filter_by(id_usuario=id_usuario).all()
+
+    # 3. Soma o saldo de todas as contas encontradas
+    total_contas = 0.0
+    for conta in lista_contas:
+        total_contas += conta.saldo_atual
+
+    # 4. Procura o registro da reserva de emergência
+    reserva = ReservaEmergencia.query.filter_by(id_usuario=id_usuario).first()
+    total_reserva = reserva.valor_atual if reserva else 0.0
+
+    # 5. Envia as variáveis para o HTML
+    return render_template(
+        'contas.html',
+        contas_bancarias=lista_contas,
+        patrimonio_total=total_contas,
+        reserva_total=total_reserva
+    )
 
 @app.get('/dashboard')
 def dashboard():
