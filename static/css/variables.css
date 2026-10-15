@@ -2,6 +2,9 @@
 /* tema escuro */
 :root {
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> 0c3ca719d7ddbc4b13ef13b32aec8c01b6cf7dc2
 
     /* cores dominantes */
     --bg-primary: #0F0C1B;
@@ -48,6 +51,7 @@ body.tema-claro {
     --border-color: rgba(50, 35, 80, 0.15);
 }
 
+<<<<<<< HEAD
 =======
     --bg-main: #0F0C1B;          
     --bg-card: #19191B;          
@@ -201,3 +205,5 @@ body {
     }
 }
 >>>>>>> 932eb2cd210369962e0813e830cbdae092ac0d42
+=======
+>>>>>>> 0c3ca719d7ddbc4b13ef13b32aec8c01b6cf7dc2
