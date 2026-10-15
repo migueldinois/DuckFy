@@ -1,207 +1,402 @@
+
 /* ==========================================================================
    VARIÁVEIS PRINCIPAIS
    ========================================================================== */
+
 :root {
-  /* Regra 60% */
+  color-scheme: dark;
+
   --bg-primary: #0F0C1B;
   --bg-surface-1: #19191B;
   --bg-surface-2: #181826;
 
-  /* Regra 30% */
   --brand-primary: #7C4DFF;
   --brand-secondary: #B093FF;
   --brand-dark: #4300FF;
 
-  /* Regra 10% */
   --accent-primary: #00E676;
   --accent-secondary: #58E4A0;
   --accent-dark: #00E374;
 
-  /* Medidas da Sidebar */
+  --text-primary: #FFFFFF;
+  --text-muted: #A0A0B5;
+  --border-color: #2A2A38;
+  --shadow-color: rgba(0, 0, 0, 0.5);
+
   --sidebar-w-expanded: 240px;
   --sidebar-w-collapsed: 70px;
 }
 
 /* ==========================================================================
+   TEMA CLARO
+   ========================================================================== */
+
+html.tema-claro,
+body.tema-claro {
+  color-scheme: light;
+
+  --bg-primary: #F3F1F8;
+  --bg-surface-1: #FFFFFF;
+  --bg-surface-2: #F7F5FC;
+
+  --brand-primary: #7040E8;
+  --brand-secondary: #7C4DCC;
+  --brand-dark: #4300FF;
+
+  --accent-primary: #00A85A;
+  --accent-secondary: #168A59;
+  --accent-dark: #008F4C;
+
+  --text-primary: #252033;
+  --text-muted: #706A80;
+  --border-color: rgba(50, 35, 80, 0.15);
+  --shadow-color: rgba(50, 35, 80, 0.10);
+}
+
+/* ==========================================================================
    ESTRUTURA GLOBAL
    ========================================================================== */
+
+html {
+  min-height: 100%;
+  background-color: var(--bg-primary);
+}
+
 body.app-body {
-  background-color: #0F0C1B;
-  color: #ffffff;
   margin: 0;
   min-height: 100vh;
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
+  transition: background-color 0.25s ease, color 0.25s ease;
 }
 
 .app-container {
   display: flex;
   min-height: 100vh;
   width: 100%;
+  background-color: var(--bg-primary);
 }
 
 /* ==========================================================================
-   SIDEBAR (Sem bugs de sobreposição)
+   SIDEBAR
    ========================================================================== */
+
 .sidebar {
+  box-sizing: border-box;
   width: var(--sidebar-w-expanded);
-  background-color: #19191B;
-  padding: 1.25rem 0.75rem;
-  display: flex;
-  flex-direction: column;
+  height: 100vh;
+  height: 100dvh;
+  overflow-x: hidden;
+  overflow-y: auto;
+
   position: fixed;
   top: 0;
-  bottom: 0;
   left: 0;
+  bottom: 0;
   z-index: 100;
-  border-right: 1px solid #2a2a38;
-  transition: width 0.25s ease-in-out;
+
+  display: flex;
+  flex-direction: column;
+
+  padding: 1.25rem 0.75rem;
+
+  background-color: var(--bg-surface-1);
+  color: var(--text-primary);
+  border-right: 1px solid var(--border-color);
+
+  transition:
+    width 0.25s ease-in-out,
+    background-color 0.25s ease,
+    border-color 0.25s ease;
 }
 
-/* Sidebar Fechada (Padrão) */
-.sidebar.collapsed {
+/* Sidebar recolhida: permanece recolhida mesmo com hover */
+
+.sidebar.collapsed,
+.sidebar.collapsed:hover {
   width: var(--sidebar-w-collapsed);
 }
 
-.sidebar.collapsed:hover {
-  width: var(--sidebar-w-expanded);
-}
+/* Botão de expandir/recolher */
 
-/* Botão de Toggle na Borda */
 .sidebar-toggle-btn {
   position: absolute;
   top: 22px;
   right: -13px;
+
   width: 26px;
   height: 26px;
-  background-color: #7C4DFF;
-  color: #ffffff;
+
+  background-color: var(--brand-primary);
+  color: #FFFFFF;
+
   border: none;
   border-radius: 50%;
+
   align-items: center;
   justify-content: center;
+
   cursor: pointer;
   z-index: 101;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.5);
+
+  box-shadow: 0 2px 6px var(--shadow-color);
 }
 
 .sidebar-toggle-btn:hover {
-  background-color: #4300FF;
+  background-color: var(--brand-dark);
 }
 
-/* Brand/Logo */
+/* Logo */
+
 .sidebar-brand {
   display: flex;
   align-items: center;
   gap: 0.75rem;
-  color: #ffffff;
+
+  height: 32px;
+
+  color: var(--text-primary);
   font-size: 1.2rem;
   font-weight: 700;
   text-decoration: none;
   white-space: nowrap;
   overflow: hidden;
-  height: 32px;
 }
 
 .brand-icon {
-  color: #7C4DFF;
+  color: var(--brand-secondary);
   font-size: 1.4rem;
   min-width: 32px;
   text-align: center;
 }
 
 .sidebar-divider {
-  border-top: 1px solid #2a2a38;
+  border: 0;
+  border-top: 1px solid var(--border-color);
   margin: 1rem 0;
 }
 
-/* Links do Menu */
+/* ==========================================================================
+   LINKS DO MENU
+   ========================================================================== */
+
 .sidebar-menu {
   display: flex;
   flex-direction: column;
   gap: 0.4rem;
+
+  flex: 1;
   padding: 0;
+  margin: 0;
 }
 
 .sidebar-link {
+  position: relative;
+
   display: flex;
   align-items: center;
   gap: 0.85rem;
+
   padding: 0.65rem;
-  color: #a0a0b5;
+
+  color: var(--text-muted);
   text-decoration: none;
-  border-radius: 0.5rem;
   font-weight: 500;
   white-space: nowrap;
   overflow: hidden;
-  transition: background 0.2s, color 0.2s;
-}
-.sidebar-logout {
-  display: flex;
-  align-items: end;
-  gap: 0.85rem;
-  padding: 0.65rem;
-  color: #ff0000;
-  text-decoration: none;
+
+  border: 1px solid transparent;
   border-radius: 0.5rem;
-  font-weight: 500;
-  white-space: nowrap;
-  overflow: hidden;
-  transition: background 0.2s, color 0.2s;
+
+  background-color: transparent;
+  font-family: inherit;
+  font-size: inherit;
+  cursor: pointer;
+
+  transition:
+    background-color 0.2s ease,
+    color 0.2s ease,
+    border-color 0.2s ease;
 }
 
-.sidebar-link i {
-  font-size: 1.2rem;
+.sidebar-link i,
+.sidebar-link .sidebar-icon {
+  flex-shrink: 0;
+  width: 32px;
   min-width: 32px;
+  font-size: 1.2rem;
   text-align: center;
 }
 
 .sidebar-link:hover {
-  color: #ffffff;
-  background-color: #181826;
+  color: var(--text-primary);
+  background-color: var(--bg-surface-2);
 }
 
-.sidebar-link.active {
-  color: #ffffff;
-  background-color: #7C4DFF;
+/* Item selecionado */
+
+.sidebar .sidebar-link.active {
+  color: var(--text-primary);
+  background-color: rgba(124, 77, 255, 0.18);
+  border-color: rgba(124, 77, 255, 0.35);
 }
 
-/* Esconde o texto quando a sidebar está recolhida */
+/* Indicador do item selecionado */
+
+.sidebar .sidebar-link.active::before {
+  content: "";
+
+  position: absolute;
+  left: 0;
+  top: 20%;
+
+  width: 3px;
+  height: 60%;
+
+  border-radius: 0 4px 4px 0;
+  background-color: var(--brand-primary);
+}
+
+/* Mantém o destaque no hover */
+
+.sidebar .sidebar-link.active:hover {
+  background-color: rgba(124, 77, 255, 0.25);
+}
+
+/* Ícones SVG mantêm suas cores originais */
+
+/* ==========================================================================
+   TEXTO DA SIDEBAR
+   ========================================================================== */
+
+/* Recolhida: texto oculto */
+
 .sidebar.collapsed .brand-text {
-  opacity: 0;
   display: none;
 }
 
-.sidebar.collapsed:hover .brand-text {
+/* Expandida por clique: texto visível */
+
+.sidebar:not(.collapsed) .brand-text {
   display: inline;
-  opacity: 1;
 }
 
 /* ==========================================================================
-   CONTEÚDO PRINCIPAL (Main Content ajusta margem sem quebrar)
+   SAIR DA CONTA
    ========================================================================== */
-.main-content {
-  flex: 1;
-  margin-left: var(--sidebar-w-collapsed);
-  padding: 1.5rem;
-  min-width: 0; /* Previne estouro de layout/flex */
-  transition: margin-left 0.25s ease-in-out;
+
+.sidebar-logout {
+  display: flex;
+  align-items: center;
+  gap: 0.85rem;
+
+  padding: 0.65rem;
+
+  color: #FF5252;
+  text-decoration: none;
+  font-weight: 500;
+  white-space: nowrap;
+  overflow: hidden;
+
+  border-radius: 0.5rem;
+
+  transition: background-color 0.2s ease;
 }
 
-/* Quando a sidebar está aberta, empurra o main-content */
-.sidebar:not(.collapsed) ~ .main-content {
+.sidebar-logout .sidebar-icon {
+  flex-shrink: 0;
+  width: 32px;
+  min-width: 32px;
+}
+
+.sidebar-logout:hover {
+  background-color: var(--bg-surface-2);
+  color: #FF5252;
+}
+
+/* ==========================================================================
+   CONTEÚDO PRINCIPAL
+   ========================================================================== */
+
+.main-content {
+  box-sizing: border-box;
+
+  flex: 1;
+  min-width: 0;
+  min-height: 100vh;
+
+  margin-left: var(--sidebar-w-collapsed);
+  padding: 1.5rem;
+
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
+
+  transition:
+    margin-left 0.25s ease-in-out,
+    background-color 0.25s ease,
+    color 0.25s ease;
+}
+
+/* Conteúdo deslocado somente quando a sidebar estiver expandida */
+
+.app-container:has(.sidebar:not(.collapsed)) .main-content {
   margin-left: var(--sidebar-w-expanded);
 }
 
 /* ==========================================================================
-   RESPONSIVIDADE (Mobile)
+   ELEMENTOS GERAIS
    ========================================================================== */
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+p,
+label {
+  color: inherit;
+}
+
+input,
+select,
+textarea {
+  background-color: var(--bg-surface-2);
+  color: var(--text-primary);
+  border-color: var(--border-color);
+}
+
+input::placeholder,
+textarea::placeholder {
+  color: var(--text-muted);
+}
+
+hr {
+  border-color: var(--border-color);
+}
+
+.card,
+.modal-content,
+.dropdown-menu {
+  background-color: var(--bg-surface-1);
+  color: var(--text-primary);
+  border-color: var(--border-color);
+}
+
+/* ==========================================================================
+   RESPONSIVIDADE
+   ========================================================================== */
+
 @media (max-width: 768px) {
   .sidebar {
-    display: none; /* Esconde sidebar no mobile */
+    display: none;
   }
 
-  .main-content {
-    margin-left: 0 !important;
+  .main-content,
+  .app-container:has(.sidebar:not(.collapsed)) .main-content {
+    width: 100%;
+    margin-left: 0;
     padding: 1rem;
-    padding-bottom: 80px; /* Esspaço para a bottom bar */
+    padding-bottom: 80px;
   }
 }

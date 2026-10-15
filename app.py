@@ -4,8 +4,6 @@ from model.categorias import Categoria
 from model.usuarios import Usuario
 from model.extrato import Extrato
 
-
-
 app = Flask(__name__)
 app.secret_key = "duckfy999"
 
