@@ -62,8 +62,47 @@
 
         </form>
 
+        <div class="aviso-sucesso" id="aviso-sucesso">
+
+        <h2>Senha alterada!</h2>
+
+        <p>Sua senha foi alterada com sucesso.</p>
+
+        <button type="button" class="btn-continuar">
+            CONTINUAR
+        </button>
+
+    </div>
+
     </main>
 
 </body>
-
 </html>
+
+<script>
+    const formulario = document.querySelector("form");
+    const aviso = document.getElementById("aviso-sucesso");
+    const botaoContinuar = document.querySelector(".btn-continuar");
+
+    formulario.addEventListener("submit", function(event) {
+        event.preventDefault();
+
+        const senha = document.getElementById("senha").value;
+        const confirmarSenha = document.getElementById("confirmar_senha").value;
+
+        if (senha !== confirmarSenha) {
+            alert("As senhas não são iguais!");
+            return;
+        }
+
+        formulario.style.display = "none";
+        document.querySelector("").style.display = "none";
+
+        aviso.style.display = "flex";
+    });
+
+    botaoContinuar.addEventListener("click", function() {
+        window.location.href = "/login";
+    });
+    
+</script>
