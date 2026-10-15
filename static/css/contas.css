@@ -1,0 +1,157 @@
+/* RESET E TELA CHEIA DARK */
+body, html {
+  background-color: #0F0C1B !important;
+  color: #FFFFFF !important;
+}
+
+.pagina-patrimonio {
+  width: 100% !important;
+  max-width: 600px; /* Mantém uma proporção centralizada e limpa como na imagem */
+  margin: 0 auto !important;
+  padding: 24px 20px 80px 20px !important;
+  box-sizing: border-box;
+}
+
+/* CABEÇALHO COM SETA */
+.cabecalho-pagina {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.btn-voltar {
+  color: #FFFFFF;
+  font-size: 1.5rem;
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: opacity 0.2s;
+}
+
+.btn-voltar:hover {
+  opacity: 0.7;
+  color: #FFFFFF;
+}
+
+.titulo-pagina {
+  font-size: 1.75rem;
+  font-weight: 700;
+  color: #FFFFFF;
+}
+
+/* CARDS DE SALDO E RESERVA */
+.card-patrimonio {
+  background-color: #181622;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  border-radius: 20px;
+  padding: 24px 28px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+}
+
+.card-rotulo {
+  display: block;
+  font-size: 0.95rem;
+  color: rgba(255, 255, 255, 0.7);
+  margin-bottom: 8px;
+  font-weight: 500;
+}
+
+.card-valor {
+  font-size: 2.2rem;
+  font-weight: 800;
+  color: #FFFFFF;
+  margin: 0;
+  letter-spacing: -0.5px;
+}
+
+/* BOTÃO ADICIONAR BANCO (ROXO NEON) */
+.btn-adicionar-banco {
+  background: #7C4DFF;
+  color: #FFFFFF;
+  border: none;
+  border-radius: 16px;
+  padding: 16px;
+  font-size: 1.1rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  box-shadow: 0 4px 20px rgba(124, 77, 255, 0.35);
+}
+
+.btn-adicionar-banco:hover {
+  background: #6A38FF;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 25px rgba(124, 77, 255, 0.5);
+}
+
+/* LISTA DE BANCOS DENTRO DO CARD UNIFICADO */
+.card-lista-contas {
+  background-color: #181622;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  border-radius: 20px;
+  padding: 8px 0;
+  overflow: hidden;
+}
+
+.item-conta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 18px 24px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+  transition: background 0.2s;
+}
+
+.item-conta:last-child {
+  border-bottom: none;
+}
+
+.item-conta:hover {
+  background: rgba(255, 255, 255, 0.02);
+}
+
+/* BOTÃO EDITAR E ÍCONES DO BANCO */
+.btn-editar-conta {
+  background: transparent;
+  border: none;
+  color: rgba(255, 255, 255, 0.3);
+  font-size: 1.1rem;
+  cursor: pointer;
+  padding: 0;
+  transition: color 0.2s;
+}
+
+.btn-editar-conta:hover {
+  color: #7C4DFF;
+}
+
+.avatar-banco {
+  width: 44px;
+  height: 44px;
+  background-color: #FFFFFF;
+  color: #0F0C1B;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.25rem;
+  font-weight: bold;
+}
+
+.info-banco .nome-banco {
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: #FFFFFF;
+}
+
+.info-banco .tipo-banco {
+  font-size: 0.85rem;
+  color: rgba(255, 255, 255, 0.5);
+}
+
+.saldo-banco {
+  font-size: 1rem;
+  font-weight: 700;
+  color: #FFFFFF;
+}
