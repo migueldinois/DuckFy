@@ -1,214 +1,234 @@
 * {
-    box-sizing: border-box;
     margin: 0;
     padding: 0;
+    box-sizing: border-box;
 }
 
 body {
     min-height: 100vh;
-    background-color: #0d0a18;
+
+    background-color: #0F0C1B;
+
     font-family: Arial, Helvetica, sans-serif;
-    color: white;
+}
+/* text-error */
+.text-error {
+    margin-top: 15px;
+    text-align: center;
+    color: red;
+}
+
+/* LOGO */
+
+h1 {
+    width: 100%;
+    height: 150px;
+
+    background-color: #7C4DFF;
 
     display: flex;
-    flex-direction: column;
+    justify-content: center;
     align-items: center;
 
-    padding: 45px 15px;
-}
+    color: #ffffff;
 
-/* TÍTULO */
-h1 {
-    text-align: center;
-    font-size: 32px;
+    font-size: 34px;
     font-weight: 400;
-    line-height: 1;
-    margin-bottom: 35px;
-    letter-spacing: 0;
-    width: 100%;
+
+    letter-spacing: 1px;
+
+    box-shadow: 0 5px 18px rgba(0, 0, 0, 0.20);
 }
 
-/* DUCKFY */
-h1:first-letter {
-    background-color: #9147ff;
-}
+
+/* DUCK */
 
 .duck {
-    background-color: #9147ff;
-    color: #0d0a18;
-    padding: 2px 6px;
-    border-radius: 3px;
+    color: #ffffff;
 }
+
+
+/* FY */
 
 .fy {
-    color: white;
-    background-color: transparent;
+    color: #EDE7FF;
 }
 
+
+/* FORMULÁRIO */
 
 form {
-    width: 430px;
-    max-width: 100%;
-    background-color: #12101d;
-    border: 1px solid #302b3d;
-    border-radius: 14px;
-    padding: 35px 40px 30px;
+    width: 100%;
+    max-width: 600px;
 
-    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.35);
+    margin: 0 auto;
+
+    padding: 40px 35px;
 }
 
+
+/* LABELS */
 
 label {
     display: block;
-    color: #eeeeee;
-    font-size: 13px;
+
+    color: #ffffff;
+
+    font-size: 15px;
+    font-weight: 500;
+
     margin-bottom: 7px;
 }
 
 
-input[type="email"],
-input[type="text"],
-input[type="password"] {
-    display: block;
+/* CAMPOS */
+
+input {
     width: 100%;
-    height: 42px;
-    background-color: #0d0a15;
-    border: 1px solid #40394d;
-    border-radius: 7px;
-    color: white;
-    padding: 0 12px;
-    font-size: 14px;
+    height: 48px;
+
+    background-color: #19191B;
+
+    color: #ffffff;
+
+    border: 1px solid #292631;
+    border-radius: 11px;
+
+    padding: 12px 16px;
+
+    font-size: 15px;
+
     outline: none;
-    margin-bottom: 22px;
-    transition: 0.2s;
+
+    transition: 0.2s ease;
 }
 
 
-input[type="email"]:focus,
-input[type="text"]:focus,
-input[type="password"]:focus {
-    border-color: #9147ff;
-    box-shadow: 0 0 0 3px rgba(145, 71, 255, 0.12);
+/* CAMPO SELECIONADO */
+
+input:focus {
+    border-color: #7C4DFF;
+
+    box-shadow: 0 0 0 3px rgba(124, 77, 255, 0.18);
 }
 
+
+/* REMOVE OS BR */
 
 form br {
     display: none;
 }
 
 
-label:has(input[type="checkbox"]) {
-    width: 230px;
-    height: 56px;
-    background-color: white;
-    color: #333;
-    border-radius: 7px;
+/* BOTÕES */
 
+.botoes {
     display: flex;
-    align-items: center;
-    gap: 12px;
 
-    padding: 7px 12px;
-    margin: 25px auto 0;
-    font-size: 11px;
-}
+    gap: 15px;
 
-
-input[type="checkbox"] {
-    appearance: none;
-    width: 38px;
-    height: 38px;
-    flex-shrink: 0;
-    background-color: #b18aff;
-    border-radius: 5px;
-    margin: 0;
-    cursor: pointer;
-}
-
-
-input[type="checkbox"]:checked {
-    background-color: #9147ff;
-}
-
-input[type="checkbox"]:checked::after {
-    content: "✓";
-    display: flex;
-    align-items: center;
-    justify-content: center;
     width: 100%;
-    height: 100%;
-    color: white;
-    font-size: 20px;
+
+    margin-top: 25px;
 }
 
 
-/* botoes */
-form {
-    display: flex;
-    flex-direction: column;
-}
+.botoes button {
+    flex: 1;
 
-/* organizaçâo dos botoes  */
-form button {
-    height: 44px;
+    height: 48px;
+
     border: none;
-    border-radius: 8px;
-    font-size: 11px;
-    font-weight: 500;
-    color: white;
+    border-radius: 11px;
+
+    color: #ffffff;
+
+    font-size: 14px;
+    font-weight: 600;
+
     cursor: pointer;
-    transition: 0.2s;
-}
 
-/* cancelar */
-button[type="button"] {
-    width: 48%;
-    background-color: #29243a;
-    margin: 20px 0 0 0;
-}
-
-/* cadastrar */
-button[type="submit"] {
-    width: 48%;
-    background-color: #9147ff;
-    margin: 20px 0 0 0;
+    transition: 0.2s ease;
 }
 
 
-button[type="button"]:hover {
-    background-color: #383149;
+/* BOTÃO CANCELAR */
+
+.botoes button:first-child {
+    background-color: #181826;
+
+    border: 1px solid #292631;
 }
 
-button[type="submit"]:hover {
-    background-color: #a15cff;
-    transform: translateY(-1px);
-    box-shadow: 0 7px 18px rgba(145, 71, 255, 0.25);
+
+.botoes button:first-child:hover {
+    background-color: #242333;
+
+    transform: translateY(-2px);
 }
 
 
-/* responsivo */
-@media (max-width: 600px) {
-    body {
-        padding: 30px 15px;
-    }
+/* BOTÃO CADASTRAR */
+
+.botoes button:last-child {
+    background-color: #7C4DFF;
+}
+
+
+.botoes button:last-child:hover {
+    background-color: #B093FF;
+
+    transform: translateY(-2px);
+}
+
+
+/* CLIQUE */
+
+.botoes button:active {
+    transform: translateY(0);
+}
+
+
+/* CELULAR */
+
+@media (max-width: 700px) {
 
     h1 {
-        font-size: 27px;
-        margin-bottom: 25px;
+        height: 130px;
+
+        font-size: 30px;
     }
+
 
     form {
-        width: 100%;
-        padding: 30px 25px;
+        max-width: 100%;
+
+        padding: 35px 25px;
     }
 
-    form button {
-        display: block;
-        width: 100%;
-        margin-left: 0;
+
+    label {
+        font-size: 14px;
     }
 
-    button[type="submit"] {
-        margin-top: 10px;
+
+    input {
+        height: 46px;
+
+        font-size: 14px;
+    }
+
+
+    .botoes {
+        gap: 10px;
+
+        margin-top: 22px;
+    }
+
+
+    .botoes button {
+        height: 46px;
+
+        font-size: 13px;
     }
 }

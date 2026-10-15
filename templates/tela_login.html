@@ -7,79 +7,117 @@
 
     <title>Duckfy - Login</title>
 
-    <!-- conecta o CSS -->
-    <link rel="stylesheet" href="static/css/variables.css">
-    <link rel="stylesheet" href="static/css/login.css">
+    <!-- conecta os estilos -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/variables.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/login.css') }}">
 </head>
 
 <body>
 
-    <!-- classe de login -->
+    <!-- tela de login -->
     <main class="login">
 
-        <!-- topo da tela -->
-        <section class="login-topo">
-            <h1>Bem Vindo(a) de Volta!</h1>
+        <!-- cabeçalho -->
+        <header class="login-cabecalho">
 
-            <p>Faça login na sua conta da Duckfy</p>
-        </section>
+            <!-- logo -->
+            <a href="/" class="login-logo" aria-label="Duckfy - Página inicial">
+                <span class="logo-duck">DUCK</span><span class="logo-fy">FY</span>
+            </a>
 
+            <!-- opções do cabeçalho -->
+            <nav class="login-opcoes">
 
-        <!-- conteúdo do login -->
-        <section class="login-conteudo">
+                <a href="/termos" aria-label="Termos de uso">
+                    Termos
+                </a>
 
-            <form action="/login/usuario">
-
-                <!-- campo de e-mail -->
-                <div class="campo">
-                    <label for="email">E-mail:</label>
-
-                    <input type="email" id="email" placeholder="Digite seu e-mail">
-                </div>
-
-
-                <!-- campo de senha -->
-                <div class="campo">
-
-                    <div class="senha-label">
-                        <label for="senha">Senha:</label>
-                    </div>
-
-                    <input type="password" id="senha" placeholder="Digite sua senha">
-                </div>
-
-
-                <!-- botão de entrar -->
-                <button type="submit" class="btn-entrar">
-                    Entrar
+                <button type="button" id="btn-tema">
+                    Tema claro
                 </button>
 
-            </form>
+            </nav>
 
+        </header>
 
-            <div class="container__error">
-                {% with mensagens = get_flashed_messages()%}
-                {% for mensagem in mensagens %}
-                <p class="text-error">{{mensagem}}</p>
-                {%endfor%}
-                {%endwith%}
-            </div>
+        <!-- cartão de login -->
+        <section class="login-conteudo">
 
+            <!-- formulário -->
+            <div class="login-formulario">
 
-            <!-- separador -->
-            <div class="separador">
-                <span>ou</span>
-            </div>
+                <!-- título -->
+                <section class="login-topo">
+                    <h1>Bem-vindo(a) de volta!</h1>
+                    <p>Faça login na sua conta da Duckfy</p>
+                </section>
 
+                <!-- formulário de acesso -->
+                <form action="/login/usuario" method="POST">
 
-            <!-- cadastro -->
-            <div class="cadastro">
+                    <!-- campo de e-mail -->
+                    <div class="campo">
+                        <label for="email">E-mail:</label>
 
-                <div>
-                    <a href="#">Não tem uma conta?</a>
+                        <input
+                            type="email"
+                            id="email"
+                            name="email"
+                            placeholder="Digite seu e-mail"
+                            autocomplete="email"
+                            required
+                        >
+                    </div>
+
+                    <!-- campo de senha -->
+                    <div class="campo">
+
+                        <div class="senha-label">
+                            <label for="senha">Senha:</label>
+                        </div>
+
+                        <input
+                            type="password"
+                            id="senha"
+                            name="senha"
+                            placeholder="Digite sua senha"
+                            autocomplete="current-password"
+                            required
+                        >
+
+                    </div>
+
+                    <!-- botão de entrar -->
+                    <button type="submit" class="btn-entrar">
+                        Entrar
+                    </button>
+
+                </form>
+
+                <!-- mensagens do flask -->
+                <div class="container__error">
+                    {% with mensagens = get_flashed_messages() %}
+                        {% for mensagem in mensagens %}
+                            <p class="text-error">{{ mensagem }}</p>
+                        {% endfor %}
+                    {% endwith %}
                 </div>
 
-                <a href="#">Esqueci Minha Senha</a>
+                <!-- separador -->
+                <div class="separador">
+                    <span>ou</span>
+                </div>
+
+                <!-- cadastro -->
+                <div class="cadastro">
+                    <span>Não tem uma conta?</span>
+                    <a href="/cadastro">Criar conta</a>
+                </div>
+
+                <!-- recuperação de senha -->
+                <a href="#" class="login-link-acesso">
+                    Esqueci minha senha
+                </a>
 
             </div>
 
@@ -87,6 +125,27 @@
 
     </main>
 
+    <!-- alterna o tema -->
+    <script>
+        const botaoTema = document.getElementById("btn-tema");
+
+        botaoTema.addEventListener("click", function () {
+            document.body.classList.toggle("tema-claro");
+
+            const temaClaro = document.body.classList.contains("tema-claro");
+
+            botaoTema.textContent = temaClaro
+                ? "Tema escuro"
+                : "Tema claro";
+
+            botaoTema.setAttribute(
+                "aria-label",
+                temaClaro ? "Ativar tema escuro" : "Ativar tema claro"
+            );
+        });
+    </script>
+
 </body>
 
 </html>
+```
