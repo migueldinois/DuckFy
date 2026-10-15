@@ -88,6 +88,7 @@ def editar_perfil():
         flash("Você precisa estar logado para editar o seu perfil!", "error")
         return redirect('/login')
 
+<<<<<<< HEAD
 @app.get("/extrato")
 def tela_extrato():
     try:
@@ -239,6 +240,12 @@ def cadastrar():
     else:
         flash("Erro ao cadastrar usuário. Tente novamente.", "error")
         return redirect('/cadastro')
+=======
+@app.get("/cadastro")
+def cadastro():
+    return render_template("cadastro.html")
+
+>>>>>>> 4a1d330d08800ec1c3a201b83206ab4a7a2baabd
 
 if __name__ == "__main__":
     app.run(debug=True)
