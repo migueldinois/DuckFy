@@ -46,3 +46,32 @@
 
     </main>
 
+</body>
+</html>
+
+<script>
+    const formulario = document.querySelector("form");
+    const aviso = document.getElementById("aviso-sucesso");
+    const botaoContinuar = document.querySelector(".btn-continuar");
+
+    formulario.addEventListener("submit", function(event) {
+        event.preventDefault();
+
+        const senha = document.getElementById("senha").value;
+        const confirmarSenha = document.getElementById("confirmar_senha").value;
+
+        if (senha !== confirmarSenha) {
+            alert("As senhas não são iguais!");
+            return;
+        }
+
+        formulario.style.display = "none";
+        document.querySelector(".logo").style.display = "none";
+
+        aviso.style.display = "flex";
+    });
+
+    botaoContinuar.addEventListener("click", function() {
+        window.location.href = "/login";
+    });
+</script>
