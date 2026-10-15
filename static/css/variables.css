@@ -1,152 +1,171 @@
-:root {
-    --bg-main: #0F0C1B;          
-    --bg-card: #19191B;          
-    --bg-card-secondary: #181826;  
+/* ==========================================================================
+   ESTILOS DO SIMULADOR DE PATRIMÔNIO (MANTENDO AS CLASSES DO TEU HTML)
+   ========================================================================== */
 
-    --purple-primary: #7C4DFF;   
-    --purple-light: #B093FF;     
-    --purple-dark: #4300FF;      
-
-    --green-accent: #00E676;     
-    --green-light: #58E4A0;      
-    --green-dark: #00E374;       
-}
-
-* {
-    box-sizing: border-box;
-}
-
-body {
-    background-color: var(--bg-main);
-    color: #ffffff;
-    font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
-    min-height: 100vh;
-    margin: 0;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
+/* Container Principal Esticado */
 .app-container {
     width: 100%;
-    max-width: 480px; 
-    min-height: 100vh;
-    padding: 1.5rem 1rem;
-    transition: all 0.3s ease;
+    min-height: calc(100vh - 40px);
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
 }
 
-.form-label {
-    font-size: 0.85rem;
-    margin-bottom: 0.4rem;
-}
-
-.custom-input {
-    background-color: #ffffff !important;
-    border: none !important;
-    border-radius: 12px !important;
-    padding: 0.75rem 1rem !important;
-    font-weight: 600 !important;
-    color: #000000 !important;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
-}
-
-.custom-input:focus {
-    box-shadow: 0 0 0 3px var(--purple-light) !important;
-}
-
-.card-cinza {
-    background-color: var(--bg-card);
-    border-radius: 24px;
-    padding: 1.5rem;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
+/* Header / Painel de Inputs */
+.header {
+    background-color: #16151e;
     border: 1px solid rgba(255, 255, 255, 0.05);
+    border-radius: 24px;
+    padding: 24px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
 }
 
-.btn-periodo {
-    background-color: var(--purple-primary);
-    color: #ffffff;
-    border: none;
-    padding: 0.5rem 1.25rem;
-    border-radius: 10px;
-    font-weight: 600;
-    font-size: 0.9rem;
+/* Cartão Cinza Principal (Painel do Gráfico e Métricas) */
+.card-cinza {
+    background-color: #16151e;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    border-radius: 24px;
+    padding: 24px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
+    width: 100%;
+}
+
+/* Inputs Personalizados (custom-input) */
+.custom-input {
+    background-color: #12111a !important;
+    border: 1px solid #2d2b3d !important;
+    border-radius: 12px !important;
+    padding: 12px 16px !important;
+    color: #ffffff !important;
+    font-weight: 500;
+    font-size: 0.95rem;
     transition: all 0.2s ease-in-out;
 }
 
-.btn-periodo:hover, 
-.btn-periodo.active {
-    background-color: var(--purple-light);
-    color: #ffffff;
-    box-shadow: 0 0 12px rgba(124, 77, 255, 0.4);
+.custom-input:focus {
+    border-color: #8257e5 !important;
+    box-shadow: 0 0 12px rgba(130, 87, 229, 0.35) !important;
+    background-color: #151420 !important;
 }
 
+.custom-input::placeholder {
+    color: #5c5a70;
+}
+
+/* Botões de Seleção de Período (btn-periodo) */
+.btn-periodo {
+    background-color: #1c1b26;
+    border: 1px solid #2d2b3d;
+    color: #a09cb0;
+    padding: 8px 20px;
+    border-radius: 12px;
+    font-size: 0.88rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.btn-periodo:hover {
+    color: #ffffff;
+    border-color: #8257e5;
+}
+
+.btn-periodo.active {
+    background-color: #8257e5;
+    border-color: #8257e5;
+    color: #ffffff;
+    box-shadow: 0 0 12px rgba(130, 87, 229, 0.4);
+}
+
+/* Botão de Editar (btn-edit) */
 .btn-edit {
-    background-color: var(--purple-primary);
+    background-color: #8257e5;
     color: #ffffff;
     border: none;
     width: 38px;
     height: 38px;
-    border-radius: 10px;
+    border-radius: 50%;
     display: flex;
     align-items: center;
     justify-content: center;
-    transition: background 0.2s;
+    box-shadow: 0 4px 12px rgba(130, 87, 229, 0.3);
+    transition: all 0.2s ease;
 }
 
 .btn-edit:hover {
-    background-color: var(--purple-light);
+    background-color: #9164fa;
+    transform: scale(1.05);
+}
+
+/* Caixas de Métricas (metric-box) */
+.metric-box {
+    background-color: #1c1b26;
+    border-radius: 16px;
+    padding: 16px;
+    border: 1px solid rgba(255, 255, 255, 0.03);
 }
 
 .text-destaque-verde {
-    color: var(--green-accent) !important;
+    color: #00e676 !important;
 }
 
-/* Área do Gráfico */
+/* Container do Gráfico Canvas (grafic-container) */
 .grafic-container {
-    background-color: var(--bg-card-secondary);
-    border-radius: 16px;
-    padding: 2rem 1rem;
-    min-height: 220px;
-    border: 1px dashed rgba(255, 255, 255, 0.1);
+    background-color: #12111a;
+    border-radius: 18px;
+    padding: 20px;
+    border: 1px solid #23222e;
+    position: relative;
+    width: 100%;
+    min-height: 320px;
+    flex-grow: 1;
 }
+
+/* Botão Submeter/Simular */
+.btn-purple {
+    background: linear-gradient(135deg, #8257e5 0%, #6f42c1 100%);
+    color: #ffffff;
+    border: none;
+    border-radius: 12px;
+    padding: 12px;
+    font-weight: 600;
+    box-shadow: 0 4px 15px rgba(130, 87, 229, 0.3);
+    transition: all 0.2s ease;
+}
+
+.btn-purple:hover {
+    background: linear-gradient(135deg, #9164fa 0%, #7c4dff 100%);
+    color: #ffffff;
+}
+
 
 @media (min-width: 992px) {
     .app-container {
-        max-width: 1050px; 
-        min-height: auto;
-        display: grid !important;
-        grid-template-columns: 360px 1fr;
-        gap: 2rem;
-        align-items: start;
-        padding: 2.5rem;
+        flex-direction: row !important;
+        align-items: stretch;
     }
 
     .header {
-        background-color: var(--bg-card);
-        padding: 2rem;
-        border-radius: 24px;
-        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
-        border: 1px solid rgba(255, 255, 255, 0.05);
-    }
-
-    .header .row {
-        --bs-gutter-x: 0;
-        display: flex;
-        flex-direction: column;
-        gap: 1rem;
-    }
-
-    .header .col-6 {
-        width: 100%;
+        width: 35%;
+        max-width: 400px;
+        margin-bottom: 0 !important;
     }
 
     .card-cinza {
+        width: 65%;
+        flex-grow: 1;
         margin-top: 0 !important;
-        height: 100%;
-        min-height: 480px;
+        margin-bottom: 0 !important;
+    }
+}
+
+@media (max-width: 991.98px) {
+    .header, .card-cinza {
+        padding: 18px;
+        border-radius: 18px;
     }
 
     .grafic-container {
-        min-height: 300px;
+        min-height: 260px;
     }
 }
