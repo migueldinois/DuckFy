@@ -1,0 +1,25 @@
+{% extends 'layout.html' %}
+
+
+{% block extra_css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/contas.css') }}">
+{% endblock %}
+
+
+{% block content %}
+    <main>
+        <h1>Patrimônio Total</h1>
+        {% for saldo_atual in contas_bancarias %}
+        <div class="card">
+            <div class="card-body">
+                <h2>{{ saldo_atual }}</h2>
+                <p>Saldo total das suas contas</p>
+            </div>
+            <div class="card-footer">
+                <a href="#" class="btn btn-primary">Adicionar Banco</a>
+            </div>
+        {% endfor %}
+        
+        
+    </main>
+{% endblock %}

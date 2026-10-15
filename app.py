@@ -40,7 +40,11 @@ def logout():
     session.pop("usuario", None)
     flash("Você saiu da sua conta!", "success")
     return redirect("/login")
+
+@app.route("/contas")
+def contas():
     
+    return render_template("contas.html")
 
 @app.get('/dashboard')
 def dashboard():
@@ -231,6 +235,8 @@ def cadastrar():
     else:
         flash("Erro ao cadastrar usuário. Tente novamente.", "error")
         return redirect('/cadastro')
+
+
 
 if __name__ == "__main__":
     app.run(debug=True)
