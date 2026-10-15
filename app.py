@@ -4,8 +4,57 @@ from model.usuarios import Usuario
 from model.extrato import Extrato
 
 
+
 app = Flask(__name__)
 app.secret_key = "duckfy999"
+
+
+def obter_estado_fogo(dias_ofensiva):
+    dias = int(dias_ofensiva or 0)
+
+    if dias <= 0:
+        return {
+            "estado": "apagado",
+            "cor_principal": "#6C757D",
+            "glow": "rgba(108, 117, 125, 0.15)",
+            "tamanho_px": 100,
+            "icone": "bi-fire",
+            "titulo": "Começa a tua sequência hoje!",
+            "mensagem": "Registre a tua atividade diária para acender a chama.",
+        }
+
+    if dias < 7:
+        estado = "inicial"
+        cor = "#B388FF"
+        glow = "rgba(179, 136, 255, 0.2)"
+        tamanho = 120
+    elif dias < 30:
+        estado = "media"
+        cor = "#FF9800"
+        glow = "rgba(255, 152, 0, 0.25)"
+        tamanho = 140
+    elif dias < 100:
+        estado = "alta"
+        cor = "#FFC107"
+        glow = "rgba(255, 193, 7, 0.3)"
+        tamanho = 160
+    else:
+        estado = "lendaria"
+        cor = "#00E5FF"
+        glow = "rgba(0, 229, 255, 0.3)"
+        tamanho = 180
+
+    unidade = "dia" if dias == 1 else "dias"
+    return {
+        "estado": estado,
+        "cor_principal": cor,
+        "glow": glow,
+        "tamanho_px": tamanho,
+        "icone": "bi-fire",
+        "titulo": f"Sequência ativa há {dias} {unidade}!",
+        "mensagem": "Continua a registar a tua atividade diária para manter a chama acesa.",
+    }
+
 
 @app.get("/")
 @app.get("/login")
@@ -50,7 +99,9 @@ def dashboard():
 @app.get("/sequencia")
 def sequencia():
     if "usuario" in session:
-        return render_template("sequencia.html")
+        usuario = Usuario.recuperar_dados_usuario(session["email"])
+        info_fogo = obter_estado_fogo(usuario["dias_ofensiva"])
+        return render_template("sequencia.html", usuario=usuario, info_fogo=info_fogo)
     else:
         flash("Você precisa estar logado para acessar a sequência!", "error")
         return redirect('/login')
