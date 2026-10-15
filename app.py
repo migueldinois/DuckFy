@@ -1,5 +1,6 @@
+import math
+
 from flask import Flask, render_template, request, redirect, session, flash, url_for
-from database.conexao import Conexao
 from model.categorias import Categoria
 from model.usuarios import Usuario
 from model.extrato import Extrato
@@ -51,32 +52,103 @@ def termos():
 def privacidade():
     return render_template("privacidade.html")
 
-
-
 @app.route('/contas')
 def contas():
-    # 1. Pega o ID do utilizador logado (se não houver login ativo, usa o ID 1)
-    id_usuario = session.get('usuario_id', 1)
+    if "usuario" not in session:
+        flash("Você precisa estar logado para acessar as contas!", "error")
+        return redirect('/login')
 
-    # 2. Procura todas as contas do utilizador na BD
-    lista_contas = ContaBancaria.query.filter_by(id_usuario=id_usuario).all()
+    id_usuario = session.get('id_usuario', 1)
 
-    # 3. Soma o saldo de todas as contas encontradas
-    total_contas = 0.0
-    for conta in lista_contas:
-        total_contas += conta.saldo_atual
+    # 1. Busca todas as contas usando a model
+    lista_contas = ContaBancaria.buscar_todas_por_usuario(id_usuario)
 
-    # 4. Procura o registro da reserva de emergência
-    reserva = ReservaEmergencia.query.filter_by(id_usuario=id_usuario).first()
-    total_reserva = reserva.valor_atual if reserva else 0.0
+    # 2. Calcula o património total das contas
+    total_contas = ContaBancaria.calcular_patrimonio_total(id_usuario)
 
-    # 5. Envia as variáveis para o HTML
+    # 3. Busca a reserva de emergência usando a model de reservas
+    reserva = ReservaEmergencia.buscar_por_usuario(id_usuario)
+    total_reserva = float(reserva['valor_atual']) if reserva else 0.0
+
+    # 4. Formata os valores monetários para o padrão brasileiro (R$ 0,00)
+    patrimonio_fmt = f"{total_contas:,.2f}".replace(',', 'X').replace('.', ',').replace('X', '.')
+    reserva_fmt = f"{total_reserva:,.2f}".replace(',', 'X').replace('.', ',').replace('X', '.')
+
     return render_template(
         'contas.html',
         contas_bancarias=lista_contas,
-        patrimonio_total=total_contas,
-        reserva_total=total_reserva
+        patrimonio_total=patrimonio_fmt,
+        reserva_total=reserva_fmt
     )
+
+
+@app.post("/contas/<int:id_conta>/editar")
+def editar_conta(id_conta):
+    if "usuario" not in session or "id_usuario" not in session:
+        flash("Você precisa estar logado para editar uma conta!", "error")
+        return redirect('/login')
+
+    id_usuario = session["id_usuario"]
+    conta = ContaBancaria.buscar_por_id(id_conta, id_usuario)
+    if not conta:
+        flash("Conta bancária não encontrada.", "error")
+        return redirect('/contas')
+
+    nome_conta = request.form.get("nome_conta", "").strip()
+    tipo_conta = request.form.get("tipo_conta", "").strip()
+    saldo_texto = request.form.get("saldo_atual", "").strip()
+
+    try:
+        saldo_atual = float(saldo_texto)
+    except ValueError:
+        flash("Informe um saldo válido.", "error")
+        return redirect('/contas')
+    if not math.isfinite(saldo_atual):
+        flash("Informe um saldo válido.", "error")
+        return redirect('/contas')
+
+    if not nome_conta or len(nome_conta) > 50:
+        flash("O nome da conta é obrigatório e deve ter até 50 caracteres.", "error")
+        return redirect('/contas')
+    if not tipo_conta or len(tipo_conta) > 40:
+        flash("O tipo da conta é obrigatório e deve ter até 40 caracteres.", "error")
+        return redirect('/contas')
+
+    if ContaBancaria.atualizar_conta(id_conta, id_usuario, nome_conta, tipo_conta, saldo_atual):
+        flash("Conta atualizada com sucesso!", "success")
+    else:
+        flash("Erro ao atualizar a conta. Tente novamente.", "error")
+
+    return redirect('/contas')
+
+
+@app.get("/reserva_emergencia")
+def reserva_emergencia():
+    if "usuario" not in session:
+        flash("Você precisa estar logado para acessar a reserva de emergência!", "error")
+        return redirect('/login')
+
+    id_usuario = session.get('id_usuario', 1)
+    
+    # Procura os dados da reserva do utilizador logado
+    reserva = ReservaEmergencia.buscar_por_usuario(id_usuario)
+
+    valor_atual = float(reserva['valor_atual']) if reserva else 0.0
+    meta_valor = float(reserva['meta_valor']) if reserva else 0.0
+
+    # Calcula a percentagem de progresso para preencher a barra no HTML (máximo 100%)
+    progresso_percentual = 0
+    if meta_valor > 0:
+        progresso_percentual = min(round((valor_atual / meta_valor) * 100, 1), 100)
+
+    return render_template(
+        "reserva_emergencia.html",
+        reserva=reserva,
+        valor_atual=valor_atual,
+        meta_valor=meta_valor,
+        progresso=progresso_percentual
+    )
+
 
 @app.get('/dashboard')
 def dashboard():
@@ -141,13 +213,6 @@ def tela_extrato():
         print(f"Erro na rota /extrato: {e}")
         # Retorno de segurança em caso de exceção para não quebrar o Flask
         return render_template('extrato.html', transacoes=[], tipo_ativo='tudo')
-
-    return
-@app.get("/reserva_emergencia")
-def reserva_emergencia():
-    return render_template("reserva_emergencia.html")
-    
-
 
 @app.get("/lancamento")
 def lancamento():

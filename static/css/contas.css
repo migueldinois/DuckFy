@@ -114,16 +114,19 @@ body, html {
 /* BOTÃO EDITAR E ÍCONES DO BANCO */
 .btn-editar-conta {
   background: transparent;
-  border: none;
-  color: rgba(255, 255, 255, 0.3);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 10px;
+  color: rgba(255, 255, 255, 0.65);
   font-size: 1.1rem;
   cursor: pointer;
-  padding: 0;
-  transition: color 0.2s;
+  padding: 7px 9px;
+  transition: color 0.2s, background 0.2s, border-color 0.2s;
 }
 
 .btn-editar-conta:hover {
   color: #7C4DFF;
+  background: rgba(124, 77, 255, 0.12);
+  border-color: rgba(124, 77, 255, 0.45);
 }
 
 .avatar-banco {
@@ -154,4 +157,28 @@ body, html {
   font-size: 1rem;
   font-weight: 700;
   color: #FFFFFF;
+}
+
+.previa-conta {
+  background-color: rgba(24, 22, 34, 0.55);
+  border: 1px dashed rgba(255, 255, 255, 0.18);
+  border-radius: 20px;
+  padding: 8px 0;
+}
+
+.rotulo-previa,
+.nota-previa {
+  display: block;
+  padding: 8px 24px;
+  color: rgba(255, 255, 255, 0.55);
+  font-size: 0.8rem;
+}
+
+.avatar-banco-exemplo {
+  background-color: #7C4DFF;
+  color: #FFFFFF;
+}
+
+.nota-previa {
+  padding-top: 0;
 }
