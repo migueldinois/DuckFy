@@ -7,19 +7,10 @@ from model.extrato import Extrato
 app = Flask(__name__)
 app.secret_key = "duckfy999"
 
-@app.get("/")
-def inicio():
-    return simulador_patrimonio()
-
-    if "usuario" in session:
-        return redirect("/admin")
-    
-    
-    return render_template("tela_login.html")
 
 @app.get("/simulador")
 def simulador_patrimonio():
-    return render_template("duckfy_simulador_patrimonio.html")
+    return render_template("simulador.html")
 
 
 
