@@ -1,0 +1,60 @@
+{% block extra_css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/duckfy-modal.css') }}">
+{% endblock %}
+
+<div id="modalNovaCategoria" class="duckfy-modal">
+    <div class="dash-card modal-content">
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <h3 class="card-section-title m-0">Nova Categoria</h3>
+            <button type="button" class="btn-close-custom" data-close-modal>&times;</button>
+        </div>
+
+        <form action="/categorias/criar" method="POST">
+            <!-- Campo Nome -->
+            <div class="mb-3">
+                <label for="nome" class="card-subtitle d-block mb-1">Nome</label>
+                <div class="input-icon-wrapper">
+                    <img src="{{ url_for('static', filename='img/icons/nome.svg') }}" class="input-icon" alt="Nome">
+                    <input type="text" name="nome" id="nome" class="search-input input-with-icon"
+                        placeholder="Ex: Alimentação" required>
+                </div>
+            </div>
+
+            <!-- Campo Tipo -->
+            <div class="mb-3">
+                <label for="tipo" class="card-subtitle d-block mb-1">Tipo</label>
+                <div class="input-icon-wrapper">
+                    <img src="{{ url_for('static', filename='img/icons/tipo.svg') }}" class="input-icon" alt="Tipo">
+                    <select name="tipo" id="tipo" class="search-input input-with-icon" required>
+                        <option value="SAIDA">Saída</option>
+                        <option value="ENTRADA">Entrada</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- Campo Emoji -->
+            <div class="mb-3">
+                <label for="emoji" class="card-subtitle d-block mb-1">Emoji</label>
+                <div class="input-icon-wrapper">
+                    <img src="{{ url_for('static', filename='img/icons/emoji.svg') }}" class="input-icon" alt="Emoji">
+                    <input type="text" name="emoji" id="emoji" class="search-input input-with-icon" placeholder="Ex: 🍔"
+                        required oninput="validarApenasUmEmoji(this)">
+                </div>
+            </div>
+
+            <!-- Campo Cor -->
+            <div class="mb-3">
+                <label for="cor" class="card-subtitle d-block mb-1">Cor</label>
+                <div class="color-picker-wrapper">
+                    <input type="color" name="cor" id="cor" class="color-input-hidden" value="#7C4DFF"
+                        oninput="atualizarCorPreview(this.value)">
+
+                    <span id="colorBox" class="color-picker-custom" style="background-color: #7C4DFF;"></span>
+
+                </div>
+            </div>
+
+            <button type="submit" class="btn-purple-action w-100 mt-2">Criar Categoria</button>
+        </form>
+    </div>
+</div>
