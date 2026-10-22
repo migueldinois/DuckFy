@@ -239,6 +239,8 @@ def cadastrar():
     else:
         flash("Erro ao cadastrar usuário. Tente novamente.", "error")
         return redirect('/cadastro')
+    
+    
 
 if __name__ == "__main__":
     app.run(debug=True)
