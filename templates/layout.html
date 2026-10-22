@@ -8,43 +8,38 @@
 
   <title>{% block title %}DuckFy{% endblock %}</title>
 
-  <!-- Bootstrap -->
+  <!-- bootstrap -->
   <link
-    href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
     rel="stylesheet"
+    href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
   >
 
-  <!-- Ícones do Bootstrap -->
+  <!-- icones -->
   <link
     rel="stylesheet"
     href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css"
   >
 
-  <!-- Ficheiros CSS -->
-  <link rel="stylesheet" href="{{ url_for('static', filename='css/layout.css') }}">
-
-  <link rel="stylesheet" href="/static/css/extrato.css">
-  <link rel="stylesheet" href="/static/css/redefinir_senha.css">
-  
-  
-  {% block extra_css %}
-  {% endblock %}
-  <link rel="stylesheet" href="{{ url_for('static', filename='css/dashboard.css') }}">
-  <link rel="stylesheet" href="{{ url_for('static', filename='css/bottom-bar.css') }}">
-  <link rel="stylesheet" href="/static/css/">
-
-  <!-- Estilos globais -->
+  <!-- variaveis globais -->
   <link
     rel="stylesheet"
     href="{{ url_for('static', filename='css/variables.css') }}"
   >
 
+  <!-- estilos do layout -->
   <link
     rel="stylesheet"
     href="{{ url_for('static', filename='css/layout.css') }}"
   >
 
-  <!-- Estilos específicos das páginas -->
+  <!-- barra inferior -->
+  <link
+    rel="stylesheet"
+    href="{{ url_for('static', filename='css/bottom-bar.css') }}"
+  >
+
+  <!-- estilos especificos da pagina -->
+  {% block extra_css %}{% endblock %}
   {% block styles %}{% endblock %}
 </head>
 
@@ -52,21 +47,19 @@
 
   <div class="app-container">
 
-    <!-- Sidebar -->
+    <!-- sidebar -->
     <aside class="sidebar collapsed" id="sidebar">
 
-
-      <!-- Logo -->
+      <!-- logo -->
       <a href="/dashboard" class="sidebar-brand">
         <span class="brand-text">DuckFy</span>
       </a>
 
       <hr class="sidebar-divider">
 
-      <!-- Navegação -->
+      <!-- navegacao -->
       <ul class="sidebar-menu list-unstyled">
 
-        <!-- Dashboard -->
         <li>
           <a
             href="/dashboard"
@@ -83,7 +76,6 @@
           </a>
         </li>
 
-        <!-- Extrato -->
         <li>
           <a
             href="/extrato"
@@ -100,7 +92,6 @@
           </a>
         </li>
 
-        <!-- Simulador -->
         <li>
           <a
             href="/simulador"
@@ -117,7 +108,6 @@
           </a>
         </li>
 
-        <!-- Lançamentos -->
         <li>
           <a
             href="/lancamento"
@@ -134,7 +124,6 @@
           </a>
         </li>
 
-        <!-- Categorias -->
         <li>
           <a
             href="/categorias"
@@ -151,7 +140,6 @@
           </a>
         </li>
 
-        <!-- Reserva de Emergência -->
         <li>
           <a
             href="/reserva_emergencia"
@@ -168,7 +156,6 @@
           </a>
         </li>
 
-        <!-- Perfil -->
         <li>
           <a
             href="/perfil"
@@ -185,7 +172,6 @@
           </a>
         </li>
 
-        <!-- Sequência -->
         <li>
           <a
             href="/sequencia"
@@ -202,7 +188,7 @@
           </a>
         </li>
 
-        <!-- Sair da conta -->
+        <!-- sair -->
         <li class="mt-auto">
           <a
             href="/logout"
@@ -221,39 +207,39 @@
       </ul>
     </aside>
 
-    <!-- Conteúdo principal -->
+    <!-- conteudo principal -->
     <main class="main-content">
       {% block content %}{% endblock %}
     </main>
 
   </div>
 
-  <!-- Barra inferior para dispositivos móveis -->
+  <!-- barra inferior para dispositivos moveis -->
   {% include 'components/bottom_bar.html' %}
 
-  <!-- Bootstrap JavaScript -->
+  <!-- bootstrap javascript -->
   <script
     src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
   ></script>
 
-  <!-- Alternância de tema -->
+  <!-- tema -->
   <script
     src="{{ url_for('static', filename='js/tema.js') }}"
     defer
   ></script>
 
-  <!-- Gerenciador de modais -->
+  <!-- gerenciamento de modais -->
   <script
     src="{{ url_for('static', filename='js/modalManager.js') }}"
   ></script>
-  <!-- js layout -->
+
+  <!-- comportamento do layout -->
   <script
     src="{{ url_for('static', filename='js/layout.js') }}"
   ></script>
 
-  <!-- Scripts específicos das páginas -->
+  <!-- scripts especificos da pagina -->
   {% block extra_js %}{% endblock %}
-
 
 </body>
 </html>

@@ -1,248 +1,577 @@
-/* ===================================================
-   1. RESET E INTEGRAÇÃO DE TELA CHEIA DUCKFY
-   =================================================== */
-body, html {
-  background-color: #0F0C1B !important;
-  margin: 0 !important;
-  padding: 0 !important;
+
+/* estrutura principal */
+
+.sequencia-page {
+    width: 100%;
+    max-width: 1500px;
+    min-width: 0;
+    margin: 0 auto;
+    padding: 32px clamp(20px, 3vw, 42px);
+    box-sizing: border-box;
+    color: var(--text-primary, #ffffff);
 }
 
-.pagina-sequencia-full {
-  width: 100% !important;
-  max-width: 1400px !important; /* Limite elegante para não achatar em monitores grandes */
-  margin: 0 auto !important;
-  padding: 24px 32px 60px 32px !important;
-  background-color: #0F0C1B !important;
-  box-sizing: border-box !important;
-  display: flex !important;
-  flex-direction: row !important;
-  align-items: stretch !important;
-  gap: 24px !important;
+.sequencia-page *,
+.sequencia-page *::before,
+.sequencia-page *::after {
+    box-sizing: border-box;
 }
 
-/* ===================================================
-   2. COLUNA DA ESQUERDA: PAINEL DA SEQUÊNCIA (FOGO)
-   =================================================== */
-.cartao-sequencia {
-  flex: 0 0 380px !important; /* Largura fixa ideal para o painel de fogo */
-  width: 380px !important;
-  max-width: 380px !important;
-  background: radial-gradient(circle at top, var(--glow-fogo, rgba(124, 77, 255, 0.15)) 0%, rgba(18, 14, 33, 0.95) 100%) !important;
-  border: 1px solid rgba(124, 77, 255, 0.2) !important;
-  border-radius: 20px !important;
-  padding: 32px 24px !important;
-  margin: 0 !important;
-  display: flex !important;
-  flex-direction: column !important;
-  align-items: center !important;
-  justify-content: space-between !important;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4) !important;
+.sequencia-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 20px;
+    margin-bottom: 30px;
 }
 
-.badge-chama {
-  display: inline-block !important;
-  background: rgba(255, 255, 255, 0.04) !important;
-  color: var(--cor-fogo, #B388FF) !important;
-  border: 1px solid var(--cor-fogo, #B388FF) !important;
-  font-size: 0.72rem !important;
-  font-weight: 700 !important;
-  padding: 5px 14px !important;
-  border-radius: 50px !important;
-  letter-spacing: 1px !important;
+.sequencia-header h1 {
+    margin: 0 0 10px;
+    font-size: clamp(26px, 2.4vw, 36px);
+    font-weight: 800;
+    line-height: 1.2;
+    letter-spacing: -1px;
 }
 
-/* Círculo do Foguinho */
-.fogo-container {
-  display: flex !important;
-  justify-content: center !important;
-  align-items: center !important;
-  margin: 15px 0 !important;
+.sequencia-header p {
+    margin: 0;
+    color: var(--text-muted, #a0a0b5);
+    font-size: 14px;
+    line-height: 1.7;
 }
 
-.fogo-circulo {
-  border-radius: 50% !important;
-  background: radial-gradient(circle, var(--cor-fogo, #7C4DFF) 0%, #150C2A 100%) !important;
-  border: 3px solid var(--cor-fogo, #7C4DFF) !important;
-  box-shadow: 0 0 30px var(--glow-fogo), inset 0 0 15px rgba(0, 0, 0, 0.5) !important;
-  display: flex !important;
-  flex-direction: column !important;
-  align-items: center !important;
-  justify-content: center !important;
-  transition: all 0.3s ease !important;
+.sequencia-tag {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 9px;
+    padding: 12px 16px;
+    border: 1px solid rgba(124, 77, 255, .3);
+    border-radius: 12px;
+    background: rgba(124, 77, 255, .1);
+    color: #b093ff;
+    font-size: 12px;
+    font-weight: 700;
+    white-space: nowrap;
 }
 
-.fogo-circulo.estado-apagado {
-  background: radial-gradient(circle, #2A2735 0%, #12101A 100%) !important;
-  border-color: #52525B !important;
-  box-shadow: none !important;
-  filter: grayscale(90%) !important;
+/* distribuição dos painéis */
+
+.sequencia-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1.35fr) minmax(300px, .85fr);
+    align-items: stretch;
+    gap: 24px;
 }
 
-.icone-fogo {
-  font-size: 2.2rem !important;
-  color: var(--cor-fogo, #FFC107) !important;
-  filter: drop-shadow(0 0 10px var(--cor-fogo, #FFC107)) !important;
+.sequencia-card {
+    min-width: 0;
+    padding: clamp(22px, 2.2vw, 32px);
+    border: 1px solid var(--border-color, #2a2a38);
+    border-radius: 22px;
+    background: var(--bg-surface-1, #19191b);
+    box-shadow: 0 12px 35px rgba(0, 0, 0, .12);
 }
 
-.numero-dias {
-  font-size: 2.6rem !important;
-  font-weight: 900 !important;
-  color: #FFFFFF !important;
-  line-height: 1 !important;
+.sequencia-principal {
+    position: relative;
+    overflow: hidden;
+    background:
+        radial-gradient(
+            ellipse at 100% 0%,
+            rgba(124, 77, 255, .15),
+            transparent 48%
+        ),
+        var(--bg-surface-1, #19191b);
 }
 
-.texto-dias {
-  font-size: 0.65rem !important;
-  font-weight: 800 !important;
-  color: rgba(255, 255, 255, 0.6) !important;
-  letter-spacing: 2px !important;
+.sequencia-status {
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    margin-bottom: 24px;
+    color: #b093ff;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: .5px;
 }
 
-/* Caixa de XP */
-.caixa-xp {
-  width: 100% !important;
-  background: rgba(255, 255, 255, 0.03) !important;
-  border: 1px solid rgba(255, 255, 255, 0.07) !important;
-  border-radius: 14px !important;
-  padding: 14px 16px !important;
+.sequencia-numero {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    margin-bottom: 24px;
 }
 
-.trilho-progresso {
-  width: 100% !important;
-  height: 10px !important;
-  background-color: rgba(255, 255, 255, 0.08) !important;
-  border-radius: 20px !important;
-  overflow: hidden !important;
+.sequencia-chama {
+    display: grid;
+    width: 82px;
+    height: 82px;
+    flex-shrink: 0;
+    place-items: center;
+    border: 1px solid rgba(255, 174, 66, .3);
+    border-radius: 23px;
+    background: rgba(255, 174, 66, .1);
+    color: #ffb347;
+    font-size: 38px;
 }
 
-.barra-progresso {
-  height: 100% !important;
-  background: linear-gradient(90deg, #7C4DFF 0%, #FFC107 100%) !important;
-  border-radius: 20px !important;
-  box-shadow: 0 0 8px rgba(124, 77, 255, 0.5) !important;
+.sequencia-numero strong {
+    display: block;
+    font-size: clamp(46px, 4vw, 64px);
+    font-weight: 850;
+    line-height: 1;
+    letter-spacing: -2px;
 }
 
-/* ===================================================
-   3. COLUNA DA DIREITA: PAINEL DE CONQUISTAS (PROPORCIONAL)
-   =================================================== */
-.seccao-conquistas {
-  flex: 1 1 auto !important;
-  background: rgba(255, 255, 255, 0.015) !important;
-  border: 1px solid rgba(255, 255, 255, 0.05) !important;
-  border-radius: 20px !important;
-  padding: 28px 24px !important;
-  display: flex !important;
-  flex-direction: column !important;
+.sequencia-numero span {
+    display: block;
+    margin-top: 10px;
+    color: var(--text-muted, #a0a0b5);
+    font-size: 14px;
 }
 
-.seccao-conquistas h4 {
-  font-size: 1.25rem !important;
-  margin-bottom: 20px !important;
+.sequencia-mensagem {
+    margin: 0 0 30px;
+    padding: 20px;
+    border: 1px solid rgba(124, 77, 255, .14);
+    border-radius: 16px;
+    background: rgba(124, 77, 255, .07);
+    font-size: 14px;
+    line-height: 1.8;
 }
 
-/* Grelha de Conquistas em Tamanho Proporcional */
-.grelha-conquistas {
-  display: grid !important;
-  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)) !important; /* Cartões com tamanho fixo ideal */
-  gap: 16px !important;
-  width: 100% !important;
+.sequencia-mensagem strong {
+    display: block;
+    margin-bottom: 6px;
+    color: var(--text-primary, #ffffff);
+    font-size: 14px;
 }
 
-.cartao-conquista {
-  background: rgba(255, 255, 255, 0.025) !important;
-  border: 1px solid rgba(255, 255, 255, 0.07) !important;
-  border-radius: 16px !important;
-  padding: 20px 16px !important;
-  text-align: center !important;
-  display: flex !important;
-  flex-direction: column !important;
-  align-items: center !important;
-  justify-content: center !important;
-  transition: all 0.25s ease !important;
-  height: 170px !important; /* Altura fixa proporcional */
+.sequencia-mensagem p {
+    margin: 0;
+    color: var(--text-muted, #a0a0b5);
 }
 
-.cartao-conquista.desbloqueada {
-  background: linear-gradient(180deg, rgba(124, 77, 255, 0.12) 0%, rgba(18, 14, 33, 0.6) 100%) !important;
-  border-color: rgba(124, 77, 255, 0.35) !important;
+.card-titulo {
+    margin: 0 0 9px;
+    font-size: 19px;
+    font-weight: 750;
+    line-height: 1.4;
 }
 
-.cartao-conquista.desbloqueada:hover {
-  transform: translateY(-3px) !important;
-  border-color: #7C4DFF !important;
-  box-shadow: 0 6px 20px rgba(124, 77, 255, 0.2) !important;
+.card-descricao {
+    margin: 0 0 24px;
+    color: var(--text-muted, #a0a0b5);
+    font-size: 13px;
+    line-height: 1.7;
 }
 
-.cartao-conquista.desbloqueada .icone-conquista {
-  width: 50px !important;
-  height: 50px !important;
-  border-radius: 50% !important;
-  background: linear-gradient(135deg, #7C4DFF 0%, #512DA8 100%) !important;
-  display: flex !important;
-  align-items: center !important;
-  justify-content: center !important;
-  font-size: 1.4rem !important;
-  color: #FFC107 !important;
-  margin-bottom: 10px !important;
-  box-shadow: 0 0 12px rgba(124, 77, 255, 0.3) !important;
+/* calendário semanal */
+
+.semana-grid {
+    display: grid;
+    grid-template-columns: repeat(7, minmax(0, 1fr));
+    gap: 10px;
 }
 
-.cartao-conquista.desbloqueada .titulo-conquista {
-  color: #FFFFFF !important;
-  font-weight: 700 !important;
-  font-size: 0.92rem !important;
-  margin-bottom: 4px !important;
+.semana-dia {
+    display: flex;
+    min-width: 0;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+    color: var(--text-muted, #a0a0b5);
+    font-size: 12px;
+    font-weight: 600;
 }
 
-.cartao-conquista.desbloqueada .desc-conquista {
-  color: #A09DB0 !important;
-  font-size: 0.78rem !important;
-  margin: 0 !important;
-  line-height: 1.3 !important;
+.semana-circulo {
+    display: grid;
+    width: min(100%, 48px);
+    aspect-ratio: 1;
+    place-items: center;
+    border: 1px solid var(--border-color, #2a2a38);
+    border-radius: 14px;
+    background: var(--bg-surface-2, #181826);
+    color: var(--text-muted, #a0a0b5);
+    font-size: 16px;
 }
 
-.cartao-conquista.bloqueada {
-  opacity: 0.35 !important;
-  filter: grayscale(100%) !important;
+.semana-legenda {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 16px;
+    margin-top: 24px;
+    color: var(--text-muted, #a0a0b5);
+    font-size: 12px;
 }
 
-.cartao-conquista.bloqueada .icone-conquista {
-  width: 50px !important;
-  height: 50px !important;
-  border-radius: 50% !important;
-  background: rgba(255, 255, 255, 0.06) !important;
-  display: flex !important;
-  align-items: center !important;
-  justify-content: center !important;
-  font-size: 1.4rem !important;
-  color: #6C757D !important;
-  margin-bottom: 10px !important;
+.semana-legenda span {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
 }
 
-.cartao-conquista.bloqueada .titulo-conquista {
-  color: #71717A !important;
-  font-weight: 700 !important;
-  font-size: 0.92rem !important;
-  margin-bottom: 4px !important;
+.legenda-ponto {
+    display: inline-block;
+    width: 9px;
+    height: 9px;
+    flex-shrink: 0;
+    border-radius: 50%;
 }
 
-.cartao-conquista.bloqueada .desc-conquista {
-  color: #52525B !important;
-  font-size: 0.78rem !important;
-  margin: 0 !important;
-  line-height: 1.3 !important;
+.legenda-ponto.concluido {
+    background: #00e676;
 }
 
-/* ===================================================
-   4. RESPONSIVIDADE (ECRÃS PEQUENOS)
-   =================================================== */
-@media (max-width: 992px) {
-  .pagina-sequencia-full {
-    flex-direction: column !important;
-  }
-  .cartao-sequencia {
-    width: 100% !important;
-    max-width: 100% !important;
-    flex: 1 1 100% !important;
-  }
+.legenda-ponto.atual {
+    background: #7c4dff;
+}
+
+/* dica financeira */
+
+.sequencia-dica {
+    display: flex;
+    align-items: flex-start;
+    gap: 15px;
+    margin-top: 30px;
+    padding: 20px;
+    border: 1px solid rgba(0, 230, 118, .2);
+    border-radius: 16px;
+    background: rgba(0, 230, 118, .045);
+}
+
+.sequencia-dica > i {
+    flex-shrink: 0;
+    margin-top: 2px;
+    color: #00e676;
+    font-size: 22px;
+}
+
+.sequencia-dica strong {
+    display: block;
+    margin-bottom: 7px;
+    font-size: 14px;
+}
+
+.sequencia-dica p {
+    margin: 0;
+    color: var(--text-muted, #a0a0b5);
+    font-size: 12px;
+    line-height: 1.8;
+}
+
+/* estatísticas */
+
+.estatisticas-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 14px;
+    margin-top: 26px;
+}
+
+.estatistica {
+    min-width: 0;
+    padding: 20px 16px;
+    border: 1px solid var(--border-color, #2a2a38);
+    border-radius: 16px;
+    background: var(--bg-surface-2, #181826);
+    transition: border-color .2s ease, transform .2s ease;
+}
+
+.estatistica:hover {
+    transform: translateY(-2px);
+    border-color: rgba(124, 77, 255, .45);
+}
+
+.estatistica-icone {
+    display: grid;
+    width: 42px;
+    height: 42px;
+    margin-bottom: 18px;
+    place-items: center;
+    border-radius: 13px;
+    background: rgba(124, 77, 255, .13);
+    color: #b093ff;
+    font-size: 19px;
+}
+
+.estatistica strong {
+    display: block;
+    overflow-wrap: anywhere;
+    font-size: 28px;
+    font-weight: 800;
+    line-height: 1.2;
+}
+
+.estatistica span {
+    display: block;
+    margin-top: 8px;
+    color: var(--text-muted, #a0a0b5);
+    font-size: 12px;
+    line-height: 1.6;
+}
+
+/* nível e experiência */
+
+.xp-card {
+    margin-top: 30px;
+    padding-top: 24px;
+    border-top: 1px solid var(--border-color, #2a2a38);
+}
+
+.xp-cabecalho {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-bottom: 14px;
+    font-size: 13px;
+}
+
+.xp-cabecalho strong {
+    font-weight: 700;
+}
+
+.xp-cabecalho span {
+    color: #b093ff;
+    font-weight: 700;
+}
+
+.xp-barra {
+    width: 100%;
+    height: 10px;
+    overflow: hidden;
+    border-radius: 20px;
+    background: var(--bg-surface-2, #181826);
+}
+
+.xp-progresso {
+    height: 100%;
+    border-radius: inherit;
+    background: linear-gradient(90deg, #7040e8, #b093ff);
+    transition: width .4s ease;
+}
+
+.xp-legenda {
+    margin: 13px 0 0;
+    color: var(--text-muted, #a0a0b5);
+    font-size: 12px;
+    line-height: 1.7;
+}
+
+/* conquistas */
+
+.conquistas-card {
+    grid-column: 1 / -1;
+}
+
+.conquistas-cabecalho {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 16px;
+    margin-bottom: 26px;
+}
+
+.conquistas-cabecalho .card-descricao {
+    margin-bottom: 0;
+}
+
+.conquistas-contador {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 10px 14px;
+    border: 1px solid rgba(124, 77, 255, .2);
+    border-radius: 12px;
+    background: rgba(124, 77, 255, .1);
+    color: #b093ff;
+    font-size: 12px;
+    font-weight: 700;
+    white-space: nowrap;
+}
+
+.conquistas-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 16px;
+}
+
+.conquista {
+    display: flex;
+    align-items: flex-start;
+    gap: 16px;
+    min-width: 0;
+    padding: 22px;
+    border: 1px solid var(--border-color, #2a2a38);
+    border-radius: 17px;
+    background: var(--bg-surface-2, #181826);
+    transition: border-color .2s ease, transform .2s ease;
+}
+
+.conquista:hover {
+    transform: translateY(-2px);
+    border-color: rgba(124, 77, 255, .4);
+}
+
+.conquista.desbloqueada {
+    border-color: rgba(0, 230, 118, .25);
+}
+
+.conquista-icone {
+    display: grid;
+    width: 52px;
+    height: 52px;
+    flex-shrink: 0;
+    place-items: center;
+    border-radius: 15px;
+    background: rgba(124, 77, 255, .13);
+    color: #b093ff;
+    font-size: 23px;
+}
+
+.conquista.desbloqueada .conquista-icone {
+    background: rgba(0, 230, 118, .1);
+    color: #00e676;
+}
+
+.conquista.bloqueada .conquista-icone {
+    background: var(--bg-surface-1, #19191b);
+    color: var(--text-muted, #a0a0b5);
+}
+
+.conquista-info {
+    flex: 1;
+    min-width: 0;
+}
+
+.conquista-info strong {
+    display: block;
+    margin-bottom: 8px;
+    overflow-wrap: break-word;
+    color: var(--text-primary, #ffffff);
+    font-size: 14px;
+    font-weight: 700;
+    line-height: 1.5;
+}
+
+.conquista-info p {
+    margin: 0;
+    color: var(--text-muted, #a0a0b5);
+    font-size: 12px;
+    line-height: 1.7;
+}
+
+.conquista-status {
+    display: inline-flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-top: 14px;
+    color: #00e676;
+    font-size: 11px;
+    font-weight: 700;
+}
+
+.conquista.bloqueada .conquista-status {
+    color: var(--text-muted, #a0a0b5);
+}
+
+/* telas médias */
+
+@media (max-width: 1100px) {
+    .sequencia-grid {
+        grid-template-columns: minmax(0, 1fr);
+    }
+
+    .conquistas-card {
+        grid-column: auto;
+    }
+
+    .conquistas-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}
+
+/* telas pequenas */
+
+@media (max-width: 600px) {
+    .sequencia-page {
+        padding: 22px 14px;
+    }
+
+    .sequencia-header {
+        align-items: flex-start;
+        flex-direction: column;
+        margin-bottom: 22px;
+    }
+
+    .sequencia-tag {
+        white-space: normal;
+    }
+
+    .sequencia-card {
+        padding: 20px 16px;
+        border-radius: 18px;
+    }
+
+    .sequencia-numero {
+        gap: 15px;
+    }
+
+    .sequencia-chama {
+        width: 64px;
+        height: 64px;
+        border-radius: 18px;
+        font-size: 30px;
+    }
+
+    .sequencia-mensagem {
+        padding: 16px;
+    }
+
+    .semana-grid {
+        gap: 5px;
+    }
+
+    .semana-dia {
+        gap: 9px;
+        font-size: 10px;
+    }
+
+    .semana-circulo {
+        border-radius: 10px;
+        font-size: 13px;
+    }
+
+    .estatisticas-grid {
+        gap: 10px;
+    }
+
+    .estatistica {
+        padding: 16px 12px;
+    }
+
+    .estatistica strong {
+        font-size: 24px;
+    }
+
+    .conquistas-grid {
+        grid-template-columns: minmax(0, 1fr);
+    }
+
+    .conquistas-cabecalho {
+        align-items: flex-start;
+        flex-direction: column;
+    }
+
+    .conquista {
+        padding: 17px;
+    }
 }
