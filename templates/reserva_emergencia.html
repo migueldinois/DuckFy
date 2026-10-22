@@ -12,7 +12,7 @@
     {% set messages = get_flashed_messages(with_categories=true) %}
     {% if messages %}
       {% for category, message in messages %}
-        <div class="alert alert-success alert-dismissible fade show bg-success text-white border-0 mb-3" role="alert">
+        <div class="alert alert-{{ 'success' if category == 'success' else 'danger' }} alert-dismissible fade show text-white border-0 mb-3" role="alert">
           {{ message }}
           <button type="button" class="btn-close btn-close-white" data-bs-dismiss="alert" aria-label="Close"></button>
         </div>
@@ -68,17 +68,16 @@
     </div>
 
     <!-- Botões de Ação -->
-    <div class="row g-3 mb-3">
-      <div class="col-6">
-        <button type="button" class="btn-purple-action border-0 w-100" data-bs-toggle="modal" data-bs-target="#modalGuardarDinheiro">
-          Guardar Dinheiro
-        </button>
-      </div>
-      <div class="col-6">
-        <button type="button" class="btn-purple-action border-0 w-100" data-bs-toggle="modal" data-bs-target="#modalAlterarMeta">
-          Alterar meta
-        </button>
-      </div>
+    <div class="reserva-actions mb-3">
+      <button type="button" class="btn-purple-action border-0" data-bs-toggle="modal" data-bs-target="#modalGuardarDinheiro">
+        Guardar
+      </button>
+      <button type="button" class="btn-purple-action border-0" data-bs-toggle="modal" data-bs-target="#modalRetirarDinheiro">
+        Retirar
+      </button>
+      <button type="button" class="btn-purple-action border-0" data-bs-toggle="modal" data-bs-target="#modalAlterarMeta">
+        Alterar meta
+      </button>
     </div>
 
     <!-- Card de Histórico de Movimentações -->
@@ -160,6 +159,53 @@
         </div>
       </form>
 
+    </div>
+  </div>
+</div>
+
+<!-- MODAL RETIRAR DINHEIRO -->
+<div class="modal fade" id="modalRetirarDinheiro" tabindex="-1" aria-labelledby="modalRetirarLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content reserva-block border-0 text-white p-2 rounded-4 shadow-lg">
+      <div class="modal-header border-0 pb-0">
+        <h5 class="modal-title fw-bold" id="modalRetirarLabel">Retirar da Reserva</h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Fechar"></button>
+      </div>
+
+      <form action="{{ url_for('retirar_reserva') }}" method="POST">
+        <div class="modal-body">
+          <div class="mb-3">
+            <label for="conta_destino_retirada" class="form-label text-white-50 fs-7 fw-medium mb-1">Conta de destino</label>
+            <select class="form-select bg-black bg-opacity-40 border-secondary border-opacity-25 text-white" id="conta_destino_retirada" name="id_conta" required {% if not contas_usuario %}disabled{% endif %}>
+              <option value="" selected disabled>Selecione uma conta</option>
+              {% for conta in contas_usuario %}
+                <option value="{{ conta.id_conta }}">{{ conta.nome_conta }}</option>
+              {% endfor %}
+            </select>
+            {% if not contas_usuario %}
+              <small class="text-warning d-block mt-2">Cadastre uma conta bancária para receber a retirada.</small>
+            {% endif %}
+          </div>
+
+          <div class="mb-3">
+            <label for="valor_retirada" class="form-label text-white-50 fs-7 fw-medium mb-1">Valor a retirar (disponível: R$ {{ '%.2f'|format(total_guardado)|replace('.', ',') }})</label>
+            <div class="input-group">
+              <span class="input-group-text bg-black bg-opacity-40 border-secondary border-opacity-25 text-white-50">R$</span>
+              <input type="number" step="0.01" min="0.01" max="{{ '%.2f'|format(total_guardado) }}" class="form-control bg-black bg-opacity-40 border-secondary border-opacity-25 text-white" id="valor_retirada" name="valor" placeholder="0,00" required {% if total_guardado <= 0 %}disabled{% endif %}>
+            </div>
+          </div>
+
+          <div class="mb-3">
+            <label for="descricao_retirada" class="form-label text-white-50 fs-7 fw-medium mb-1">Descrição</label>
+            <input type="text" class="form-control bg-black bg-opacity-40 border-secondary border-opacity-25 text-white" id="descricao_retirada" name="descricao" placeholder="Retirada da reserva" maxlength="100">
+          </div>
+        </div>
+
+        <div class="modal-footer border-0 pt-0">
+          <button type="button" class="btn btn-outline-light rounded-3 px-3" data-bs-dismiss="modal">Cancelar</button>
+          <button type="submit" class="btn-purple-action style-btn-sm px-4" {% if not contas_usuario or total_guardado <= 0 %}disabled{% endif %}>Retirar</button>
+        </div>
+      </form>
     </div>
   </div>
 </div>

@@ -229,6 +229,32 @@ def guardar_reserva():
     return redirect(url_for('reserva_emergencia'))
 
 
+@app.route('/retirar_reserva', methods=['POST'])
+def retirar_reserva():
+    if "usuario" not in session or not session.get("id_usuario"):
+        flash("Sessão expirada. Faça login novamente.", "error")
+        return redirect('/login')
+
+    try:
+        valor_retirar = Decimal(request.form.get('valor', '').replace(',', '.'))
+        id_conta = int(request.form.get('id_conta', ''))
+    except (InvalidOperation, ValueError, AttributeError):
+        valor_retirar = Decimal('0')
+        id_conta = None
+
+    if not valor_retirar.is_finite() or valor_retirar <= 0 or id_conta is None:
+        flash("Informe uma conta e um valor válido maior que zero.", "error")
+        return redirect(url_for('reserva_emergencia'))
+
+    descricao = request.form.get('descricao', '').strip() or 'Retirada da reserva'
+    if not Reserva.retirar_dinheiro(session['id_usuario'], id_conta, valor_retirar, descricao):
+        flash("Não foi possível retirar: confira o saldo da reserva e a conta selecionada.", "error")
+        return redirect(url_for('reserva_emergencia'))
+
+    flash(f'R$ {valor_retirar:.2f} retirados da reserva com sucesso!', 'success')
+    return redirect(url_for('reserva_emergencia'))
+
+
 @app.route('/alterar_meta_reserva', methods=['POST'])
 def alterar_meta_reserva():
     if "usuario" not in session or not session.get("id_usuario"):

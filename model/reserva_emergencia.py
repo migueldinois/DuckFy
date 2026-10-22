@@ -141,6 +141,57 @@ class Reserva:
             conexao.close()
 
     @staticmethod
+    def retirar_dinheiro(id_usuario: int, id_conta: int, valor_retirar, descricao: str):
+        '''Transfere um valor da reserva para uma conta do usuário e registra no extrato'''
+        conexao, cursor = Conexao.conectar()
+
+        try:
+            cursor.execute(
+                'SELECT id_conta FROM contas_bancarias WHERE id_conta = %s AND id_usuario = %s FOR UPDATE',
+                [id_conta, id_usuario]
+            )
+            conta = cursor.fetchone()
+            if not conta:
+                conexao.rollback()
+                return False
+
+            cursor.execute(
+                'SELECT id_reserva, valor_atual FROM reserva_emergencia WHERE id_usuario = %s LIMIT 1 FOR UPDATE',
+                [id_usuario]
+            )
+            reserva = cursor.fetchone()
+            if not reserva or float(reserva['valor_atual']) < float(valor_retirar):
+                conexao.rollback()
+                return False
+
+            id_reserva = reserva['id_reserva']
+            cursor.execute(
+                'UPDATE reserva_emergencia SET valor_atual = valor_atual - %s WHERE id_reserva = %s',
+                [valor_retirar, id_reserva]
+            )
+            cursor.execute(
+                'UPDATE contas_bancarias SET saldo_atual = saldo_atual + %s WHERE id_conta = %s AND id_usuario = %s',
+                [valor_retirar, id_conta, id_usuario]
+            )
+            cursor.execute(
+                '''
+                INSERT INTO transacoes
+                    (id_usuario, id_conta, descricao, valor, tipo, data_transacao, id_reserva)
+                VALUES (%s, %s, %s, %s, 'Retirada', CURDATE(), %s)
+                ''',
+                [id_usuario, id_conta, descricao, valor_retirar, id_reserva]
+            )
+
+            conexao.commit()
+            return True
+        except Exception:
+            conexao.rollback()
+            raise
+        finally:
+            cursor.close()
+            conexao.close()
+
+    @staticmethod
     def atualizar_meta(id_usuario: int, nova_meta):
         '''Atualiza a meta da reserva ou cria uma reserva para o usuário'''
         conexao, cursor = Conexao.conectar()
