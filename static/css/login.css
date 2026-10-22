@@ -1,3 +1,4 @@
+
 /* configura a página */
 * {
     margin: 0;
@@ -31,8 +32,10 @@ body {
 .login {
     width: 100%;
     min-height: 100vh;
+
     display: flex;
     flex-direction: column;
+
     padding: 0 24px 35px;
 }
 
@@ -119,6 +122,128 @@ body {
     border-color: var(--brand-secondary, #B093FF);
 }
 
+.login-opcoes a:focus-visible,
+.login-opcoes button:focus-visible {
+    outline: 2px solid var(--brand-secondary, #B093FF);
+    outline-offset: 3px;
+}
+
+/* aviso dos termos */
+.aviso-termos {
+    position: relative;
+
+    width: min(100%, 500px);
+    margin: 12px auto 0;
+    padding: 16px;
+
+    display: flex;
+    align-items: center;
+    gap: 12px;
+
+    color: #ffffff;
+    background: #191323;
+
+    border: 1px solid rgba(124, 77, 255, 0.7);
+    border-radius: 14px;
+
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+
+    animation: aparecer-aviso 0.25s ease;
+}
+
+/* esconde o aviso quando necessário */
+.aviso-termos[hidden] {
+    display: none;
+}
+
+/* ícone do aviso */
+.aviso-icone {
+    width: 30px;
+    height: 30px;
+    flex-shrink: 0;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    color: #ffffff;
+    background: #7C4DFF;
+
+    border-radius: 50%;
+
+    font-size: 1rem;
+    font-weight: bold;
+}
+
+/* texto do aviso */
+.aviso-texto {
+    flex: 1;
+    min-width: 0;
+}
+
+.aviso-texto strong {
+    display: block;
+    margin-bottom: 4px;
+
+    font-size: 0.9rem;
+    font-weight: 600;
+}
+
+.aviso-texto p {
+    margin: 0;
+
+    color: #c4bfd2;
+    font-size: 0.82rem;
+    line-height: 1.5;
+}
+
+/* botão fechar aviso */
+.fechar-aviso {
+    width: 30px;
+    height: 30px;
+    flex-shrink: 0;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    color: #c4bfd2;
+    background: transparent;
+
+    border: none;
+    border-radius: 8px;
+
+    font-family: inherit;
+    font-size: 1.5rem;
+    line-height: 1;
+
+    cursor: pointer;
+    transition: background 0.2s ease, color 0.2s ease;
+}
+
+.fechar-aviso:hover {
+    color: #ffffff;
+    background: rgba(255, 255, 255, 0.1);
+}
+
+.fechar-aviso:focus-visible {
+    outline: 2px solid var(--brand-secondary, #B093FF);
+    outline-offset: 2px;
+}
+
+/* animação do aviso */
+@keyframes aparecer-aviso {
+    from {
+        opacity: 0;
+        transform: translateY(-8px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
 /* cartão de login */
 .login-conteudo {
     width: 100%;
@@ -158,7 +283,7 @@ body {
     justify-content: center;
 }
 
-/* título */
+/* título e descrição */
 .login-topo {
     width: 100%;
     min-height: auto;
@@ -167,19 +292,21 @@ body {
 
     display: flex;
     flex-direction: column;
-    align-items: flex-start;
+    align-items: center;
 
     background: transparent;
-    text-align: left;
+    text-align: center;
 }
 
 .login-topo h1 {
-    margin-bottom: 8px;
+    margin: 0 0 8px;
 
     color: #ffffff;
     font-size: 1.55rem;
-    font-weight: 500;
+    font-weight: 600;
+    line-height: 1.3;
     letter-spacing: -0.5px;
+    text-align: center;
 }
 
 .login-topo p {
@@ -188,6 +315,7 @@ body {
     color: #a0a0b5;
     font-size: 0.88rem;
     line-height: 1.5;
+    text-align: center;
 }
 
 /* formulário */
@@ -424,6 +552,12 @@ body.tema-claro .login-opcoes button {
     border-color: rgba(50, 35, 80, 0.15);
 }
 
+body.tema-claro .login-opcoes a:hover,
+body.tema-claro .login-opcoes button:hover {
+    color: #302744;
+    background: rgba(124, 77, 255, 0.1);
+}
+
 body.tema-claro .login .campo input {
     color: #252033;
     background: #ffffff;
@@ -451,6 +585,27 @@ body.tema-claro .login-link-acesso {
     color: #302744;
 }
 
+/* aviso no tema claro */
+body.tema-claro .aviso-termos {
+    color: #302744;
+    background: #ffffff;
+    border-color: rgba(124, 77, 255, 0.35);
+    box-shadow: 0 10px 25px rgba(40, 25, 70, 0.1);
+}
+
+body.tema-claro .aviso-texto p {
+    color: #706a80;
+}
+
+body.tema-claro .fechar-aviso {
+    color: #706a80;
+}
+
+body.tema-claro .fechar-aviso:hover {
+    color: #302744;
+    background: rgba(124, 77, 255, 0.1);
+}
+
 /* logo no tema claro */
 body.tema-claro .logo-fy {
     color: #252033;
@@ -471,7 +626,6 @@ body.tema-claro .logo-fy {
     .login-formulario {
         padding: 38px 34px;
     }
-
 }
 
 /* celular */
@@ -501,6 +655,20 @@ body.tema-claro .logo-fy {
         font-size: 0.7rem;
     }
 
+    .aviso-termos {
+        margin-top: 8px;
+        padding: 12px;
+        gap: 8px;
+    }
+
+    .aviso-texto strong {
+        font-size: 0.82rem;
+    }
+
+    .aviso-texto p {
+        font-size: 0.76rem;
+    }
+
     .login-conteudo {
         width: 100%;
         border-radius: 17px;
@@ -516,6 +684,7 @@ body.tema-claro .logo-fy {
 
     .login-topo h1 {
         font-size: 1.35rem;
+        font-weight: 600;
     }
 
     .login-topo p {
@@ -527,3 +696,14 @@ body.tema-claro .logo-fy {
     }
 }
 
+/* reduz animações se o usuário preferir */
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        scroll-behavior: auto !important;
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+    }
+}
