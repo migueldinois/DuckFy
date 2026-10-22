@@ -1,5 +1,6 @@
 from flask import Flask, render_template, request, redirect, session, flash, url_for
 from database.conexao import Conexao
+from model.categorias import Categoria
 from model.usuarios import Usuario
 from model.extrato import Extrato
 from model.reserva_emergencia import Reserva
@@ -28,6 +29,7 @@ def logar():
     if usuario_logado:
         session["usuario"] = usuario_logado
         session["email"] = input_email
+        session["id_usuario"] = Usuario.buscar_id_por_email(input_email)
         return redirect(url_for("dashboard"))
     else:
         flash("Usuario ou senha invalidos!", "error")
@@ -38,7 +40,15 @@ def logout():
     session.pop("usuario", None)
     flash("Você saiu da sua conta!", "success")
     return redirect("/login")
-    
+
+@app.get("/termos")
+def termos():
+    return render_template("termos.html")
+
+@app.route('/privacidade')
+def privacidade():
+    return render_template("privacidade.html")
+
 
 @app.get('/dashboard')
 def dashboard():
@@ -172,15 +182,94 @@ def guardar_reserva():
 @app.get("/lancamento")
 def lancamento():
     if "usuario" in session:
-        return render_template("lancamentos.html")
+                return render_template("lancamentos.html")
     else:
-        flash("Você precisa estar logado para realizar lançamentos!", "error")
+        flash("Você precisa estar logado para editar o seu perfil!", "error")
         return redirect('/login')
 
 @app.get("/categorias")
 def categorias():
-    return render_template("categorias.html")
+    if "usuario" in session:
+        categorias_despesa = Categoria.recuperar_categorias_por_tipo(session["id_usuario"], "Despesa")
+        categorias_receita = Categoria.recuperar_categorias_por_tipo(session["id_usuario"], "Receita")
 
+        return render_template("categorias.html", categorias_despesa=categorias_despesa, categorias_receita=categorias_receita)
+    else:
+        flash("Você precisa estar logado para acessar as categorias!", "error")
+        return redirect('/login')
+
+@app.route("/categorias/criar", methods=["POST"])
+def adicionar_categoria():
+    if "usuario" in session:
+        nome = request.form.get("nome")
+        tipo = request.form.get("tipo")
+
+        if tipo == "SAIDA":
+            tipo = "Despesa"
+        elif tipo == "ENTRADA":
+            tipo = "Receita"
+        emoji = request.form.get("emoji")
+        cor = request.form.get("cor")
+
+        if not nome or not tipo or not emoji or not cor:
+            flash("Todos os campos são obrigatórios!", "error")
+            return redirect('/categorias')
+
+        categoria_criada = Categoria.criar_categoria(session["id_usuario"], nome, tipo, emoji, cor)
+
+        if categoria_criada:
+            flash("Categoria criada com sucesso!", "success")
+        else:
+            flash("Erro ao criar categoria. Tente novamente.", "error")
+
+        return redirect('/categorias')
+    else:
+        flash("Você precisa estar logado para adicionar categorias!", "error")
+        return redirect('/login')
+@app.route("/categorias/deletar/<int:id_categoria>", methods=["POST"])
+def deletar_categoria(id_categoria):
+    if "usuario" in session:
+        categoria_deletada = Categoria.deletar_categoria(id_categoria)
+
+        if categoria_deletada:
+            flash("Categoria deletada com sucesso!", "success")
+        else:
+            flash("Erro ao deletar categoria. Tente novamente.", "error")
+
+        return redirect('/categorias')
+    else:
+        flash("Você precisa estar logado para deletar categorias!", "error")
+        return redirect('/login')
+
+@app.route("/categorias/atualizar/", methods=["POST"])
+def atualizar_categoria():
+    if "usuario" in session:
+        id_categoria = request.form.get("id_categoria")
+        nome = request.form.get("nome")
+        tipo = request.form.get("tipo")
+        emoji = request.form.get("emoji")
+        cor = request.form.get("cor")
+
+        if tipo == "SAIDA":
+            tipo = "Despesa"
+        elif tipo == "ENTRADA":
+            tipo = "Receita"
+
+        if not id_categoria or not nome or not tipo or not emoji or not cor:
+            flash("Todos os campos são obrigatórios!", "error")
+            return redirect('/categorias')
+
+        categoria_atualizada = Categoria.atualizar_categoria(id_categoria, nome, tipo, emoji, cor)
+
+        if categoria_atualizada:
+            flash("Categoria atualizada com sucesso!", "success")
+        else:
+            flash("Erro ao atualizar categoria. Tente novamente.", "error")
+
+        return redirect('/categorias')
+    else:
+        flash("Você precisa estar logado para atualizar categorias!", "error")
+        return redirect('/login')
 
 @app.get("/cadastro")
 def cadastro():
