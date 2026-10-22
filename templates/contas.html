@@ -1,0 +1,74 @@
+{% extends 'layout.html' %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/contas.css') }}">
+{% endblock %}
+
+{% block content %}
+<div class="pagina-patrimonio">
+
+  <!-- Cabeçalho com Botão Voltar -->
+  <div class="cabecalho-pagina mb-4">
+    <a href="{{ url_for('dashboard') }}" class="btn-voltar">
+      <i class="bi bi-arrow-left"></i>
+    </a>
+    <h1 class="titulo-pagina m-0">Patrimônio Total</h1>
+  </div>
+
+  <!-- Card: Saldo Total das Contas -->
+  <div class="card-patrimonio mb-3">
+    <span class="card-rotulo">Saldo Da Conta</span>
+    <h2 class="card-valor">
+      R$ {{ patrimonio_total|default('0,00') }}
+    </h2>
+  </div>
+
+  <!-- Card: Reserva de Emergência -->
+  <div class="card-patrimonio mb-4">
+    <span class="card-rotulo">Reserva de Emergência</span>
+    <h2 class="card-valor">
+      R$ {{ reserva_total|default('0,00') }}
+    </h2>
+  </div>
+
+  <!-- Botão Roxo: Adicionar Banco -->
+  <button type="button" class="btn-adicionar-banco w-100 mb-4" data-bs-toggle="modal" data-bs-target="#modalNovoBanco">
+    Adicionar Banco
+  </button>
+
+  <!-- Lista de Contas Bancárias (Card Dark Unificado) -->
+  <div class="card-lista-contas mb-4">
+    {% if contas_bancarias %}
+      {% for conta in contas_bancarias %}
+        <div class="item-conta">
+          <!-- Ações e Ícone do Banco -->
+          <div class="d-flex align-items-center gap-3">
+            <button class="btn-editar-conta" title="Editar">
+              <i class="bi bi-pencil-square"></i>
+            </button>
+            
+            <div class="avatar-banco">
+              <i class="bi bi-bank"></i>
+            </div>
+
+            <div class="info-banco">
+              <h6 class="nome-banco m-0">{{ conta.nome_conta }}</h6>
+              <span class="tipo-banco">{{ conta.tipo_conta }}</span>
+            </div>
+          </div>
+
+          <!-- Valor Saldo Individual -->
+          <div class="saldo-banco text-end">
+            <span>R$ {{ "%.2f"|format(conta.saldo_atual)|replace('.', ',') }}</span>
+          </div>
+        </div>
+      {% endfor %}
+    {% else %}
+      <div class="p-4 text-center text-white-50">
+        Nenhuma conta bancária cadastrada.
+      </div>
+    {% endif %}
+  </div>
+
+</div>
+{% endblock %}
