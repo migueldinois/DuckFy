@@ -1,0 +1,248 @@
+/* ===================================================
+   1. RESET E INTEGRAÇÃO DE TELA CHEIA DUCKFY
+   =================================================== */
+body, html {
+  background-color: #0F0C1B !important;
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
+.pagina-sequencia-full {
+  width: 100% !important;
+  max-width: 1400px !important; /* Limite elegante para não achatar em monitores grandes */
+  margin: 0 auto !important;
+  padding: 24px 32px 60px 32px !important;
+  background-color: #0F0C1B !important;
+  box-sizing: border-box !important;
+  display: flex !important;
+  flex-direction: row !important;
+  align-items: stretch !important;
+  gap: 24px !important;
+}
+
+/* ===================================================
+   2. COLUNA DA ESQUERDA: PAINEL DA SEQUÊNCIA (FOGO)
+   =================================================== */
+.cartao-sequencia {
+  flex: 0 0 380px !important; /* Largura fixa ideal para o painel de fogo */
+  width: 380px !important;
+  max-width: 380px !important;
+  background: radial-gradient(circle at top, var(--glow-fogo, rgba(124, 77, 255, 0.15)) 0%, rgba(18, 14, 33, 0.95) 100%) !important;
+  border: 1px solid rgba(124, 77, 255, 0.2) !important;
+  border-radius: 20px !important;
+  padding: 32px 24px !important;
+  margin: 0 !important;
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4) !important;
+}
+
+.badge-chama {
+  display: inline-block !important;
+  background: rgba(255, 255, 255, 0.04) !important;
+  color: var(--cor-fogo, #B388FF) !important;
+  border: 1px solid var(--cor-fogo, #B388FF) !important;
+  font-size: 0.72rem !important;
+  font-weight: 700 !important;
+  padding: 5px 14px !important;
+  border-radius: 50px !important;
+  letter-spacing: 1px !important;
+}
+
+/* Círculo do Foguinho */
+.fogo-container {
+  display: flex !important;
+  justify-content: center !important;
+  align-items: center !important;
+  margin: 15px 0 !important;
+}
+
+.fogo-circulo {
+  border-radius: 50% !important;
+  background: radial-gradient(circle, var(--cor-fogo, #7C4DFF) 0%, #150C2A 100%) !important;
+  border: 3px solid var(--cor-fogo, #7C4DFF) !important;
+  box-shadow: 0 0 30px var(--glow-fogo), inset 0 0 15px rgba(0, 0, 0, 0.5) !important;
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  justify-content: center !important;
+  transition: all 0.3s ease !important;
+}
+
+.fogo-circulo.estado-apagado {
+  background: radial-gradient(circle, #2A2735 0%, #12101A 100%) !important;
+  border-color: #52525B !important;
+  box-shadow: none !important;
+  filter: grayscale(90%) !important;
+}
+
+.icone-fogo {
+  font-size: 2.2rem !important;
+  color: var(--cor-fogo, #FFC107) !important;
+  filter: drop-shadow(0 0 10px var(--cor-fogo, #FFC107)) !important;
+}
+
+.numero-dias {
+  font-size: 2.6rem !important;
+  font-weight: 900 !important;
+  color: #FFFFFF !important;
+  line-height: 1 !important;
+}
+
+.texto-dias {
+  font-size: 0.65rem !important;
+  font-weight: 800 !important;
+  color: rgba(255, 255, 255, 0.6) !important;
+  letter-spacing: 2px !important;
+}
+
+/* Caixa de XP */
+.caixa-xp {
+  width: 100% !important;
+  background: rgba(255, 255, 255, 0.03) !important;
+  border: 1px solid rgba(255, 255, 255, 0.07) !important;
+  border-radius: 14px !important;
+  padding: 14px 16px !important;
+}
+
+.trilho-progresso {
+  width: 100% !important;
+  height: 10px !important;
+  background-color: rgba(255, 255, 255, 0.08) !important;
+  border-radius: 20px !important;
+  overflow: hidden !important;
+}
+
+.barra-progresso {
+  height: 100% !important;
+  background: linear-gradient(90deg, #7C4DFF 0%, #FFC107 100%) !important;
+  border-radius: 20px !important;
+  box-shadow: 0 0 8px rgba(124, 77, 255, 0.5) !important;
+}
+
+/* ===================================================
+   3. COLUNA DA DIREITA: PAINEL DE CONQUISTAS (PROPORCIONAL)
+   =================================================== */
+.seccao-conquistas {
+  flex: 1 1 auto !important;
+  background: rgba(255, 255, 255, 0.015) !important;
+  border: 1px solid rgba(255, 255, 255, 0.05) !important;
+  border-radius: 20px !important;
+  padding: 28px 24px !important;
+  display: flex !important;
+  flex-direction: column !important;
+}
+
+.seccao-conquistas h4 {
+  font-size: 1.25rem !important;
+  margin-bottom: 20px !important;
+}
+
+/* Grelha de Conquistas em Tamanho Proporcional */
+.grelha-conquistas {
+  display: grid !important;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)) !important; /* Cartões com tamanho fixo ideal */
+  gap: 16px !important;
+  width: 100% !important;
+}
+
+.cartao-conquista {
+  background: rgba(255, 255, 255, 0.025) !important;
+  border: 1px solid rgba(255, 255, 255, 0.07) !important;
+  border-radius: 16px !important;
+  padding: 20px 16px !important;
+  text-align: center !important;
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  justify-content: center !important;
+  transition: all 0.25s ease !important;
+  height: 170px !important; /* Altura fixa proporcional */
+}
+
+.cartao-conquista.desbloqueada {
+  background: linear-gradient(180deg, rgba(124, 77, 255, 0.12) 0%, rgba(18, 14, 33, 0.6) 100%) !important;
+  border-color: rgba(124, 77, 255, 0.35) !important;
+}
+
+.cartao-conquista.desbloqueada:hover {
+  transform: translateY(-3px) !important;
+  border-color: #7C4DFF !important;
+  box-shadow: 0 6px 20px rgba(124, 77, 255, 0.2) !important;
+}
+
+.cartao-conquista.desbloqueada .icone-conquista {
+  width: 50px !important;
+  height: 50px !important;
+  border-radius: 50% !important;
+  background: linear-gradient(135deg, #7C4DFF 0%, #512DA8 100%) !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  font-size: 1.4rem !important;
+  color: #FFC107 !important;
+  margin-bottom: 10px !important;
+  box-shadow: 0 0 12px rgba(124, 77, 255, 0.3) !important;
+}
+
+.cartao-conquista.desbloqueada .titulo-conquista {
+  color: #FFFFFF !important;
+  font-weight: 700 !important;
+  font-size: 0.92rem !important;
+  margin-bottom: 4px !important;
+}
+
+.cartao-conquista.desbloqueada .desc-conquista {
+  color: #A09DB0 !important;
+  font-size: 0.78rem !important;
+  margin: 0 !important;
+  line-height: 1.3 !important;
+}
+
+.cartao-conquista.bloqueada {
+  opacity: 0.35 !important;
+  filter: grayscale(100%) !important;
+}
+
+.cartao-conquista.bloqueada .icone-conquista {
+  width: 50px !important;
+  height: 50px !important;
+  border-radius: 50% !important;
+  background: rgba(255, 255, 255, 0.06) !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  font-size: 1.4rem !important;
+  color: #6C757D !important;
+  margin-bottom: 10px !important;
+}
+
+.cartao-conquista.bloqueada .titulo-conquista {
+  color: #71717A !important;
+  font-weight: 700 !important;
+  font-size: 0.92rem !important;
+  margin-bottom: 4px !important;
+}
+
+.cartao-conquista.bloqueada .desc-conquista {
+  color: #52525B !important;
+  font-size: 0.78rem !important;
+  margin: 0 !important;
+  line-height: 1.3 !important;
+}
+
+/* ===================================================
+   4. RESPONSIVIDADE (ECRÃS PEQUENOS)
+   =================================================== */
+@media (max-width: 992px) {
+  .pagina-sequencia-full {
+    flex-direction: column !important;
+  }
+  .cartao-sequencia {
+    width: 100% !important;
+    max-width: 100% !important;
+    flex: 1 1 100% !important;
+  }
+}
