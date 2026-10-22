@@ -1,4 +1,5 @@
 from flask import Flask, render_template, request, redirect, session, flash, url_for
+from decimal import Decimal, InvalidOperation
 from database.conexao import Conexao
 from model.categorias import Categoria
 from model.usuarios import Usuario
@@ -6,8 +7,57 @@ from model.extrato import Extrato
 from model.reserva_emergencia import Reserva
 
 
+
 app = Flask(__name__)
 app.secret_key = "duckfy999"
+
+
+def obter_estado_fogo(dias_ofensiva):
+    dias = int(dias_ofensiva or 0)
+
+    if dias <= 0:
+        return {
+            "estado": "apagado",
+            "cor_principal": "#6C757D",
+            "glow": "rgba(108, 117, 125, 0.15)",
+            "tamanho_px": 100,
+            "icone": "bi-fire",
+            "titulo": "Começa a tua sequência hoje!",
+            "mensagem": "Registre a tua atividade diária para acender a chama.",
+        }
+
+    if dias < 7:
+        estado = "inicial"
+        cor = "#B388FF"
+        glow = "rgba(179, 136, 255, 0.2)"
+        tamanho = 120
+    elif dias < 30:
+        estado = "media"
+        cor = "#FF9800"
+        glow = "rgba(255, 152, 0, 0.25)"
+        tamanho = 140
+    elif dias < 100:
+        estado = "alta"
+        cor = "#FFC107"
+        glow = "rgba(255, 193, 7, 0.3)"
+        tamanho = 160
+    else:
+        estado = "lendaria"
+        cor = "#00E5FF"
+        glow = "rgba(0, 229, 255, 0.3)"
+        tamanho = 180
+
+    unidade = "dia" if dias == 1 else "dias"
+    return {
+        "estado": estado,
+        "cor_principal": cor,
+        "glow": glow,
+        "tamanho_px": tamanho,
+        "icone": "bi-fire",
+        "titulo": f"Sequência ativa há {dias} {unidade}!",
+        "mensagem": "Continua a registar a tua atividade diária para manter a chama acesa.",
+    }
+
 
 @app.get("/")
 @app.get("/login")
@@ -50,12 +100,27 @@ def privacidade():
     return render_template("privacidade.html")
 
 
+@app.route("/contas")
+def contas():
+    
+    return render_template("contas.html")
+
 @app.get('/dashboard')
 def dashboard():
     if "usuario" in session:
         return render_template("dashboard.html")
     else:
         flash("Você precisa estar logado para acessar o dashboard!", "error")
+        return redirect('/login')
+
+@app.get("/sequencia")
+def sequencia():
+    if "usuario" in session:
+        usuario = Usuario.recuperar_dados_usuario(session["email"])
+        info_fogo = obter_estado_fogo(usuario["dias_ofensiva"])
+        return render_template("sequencia.html", usuario=usuario, info_fogo=info_fogo)
+    else:
+        flash("Você precisa estar logado para acessar a sequência!", "error")
         return redirect('/login')
 
 # Rota para exibir o perfil do usuário
@@ -175,6 +240,26 @@ def guardar_reserva():
     Reserva.guardar_dinheiro(id_usuario, valor_guardar, descricao)
 
     flash(f'R$ {valor_guardar:.2f} guardados na reserva com sucesso!', 'success')
+    return redirect(url_for('reserva_emergencia'))
+
+
+@app.route('/alterar_meta_reserva', methods=['POST'])
+def alterar_meta_reserva():
+    if "usuario" not in session or not session.get("id_usuario"):
+        flash("Sessão expirada. Faça login novamente.", "error")
+        return redirect('/login')
+
+    try:
+        nova_meta = Decimal(request.form.get('meta_valor', '').replace(',', '.'))
+    except (InvalidOperation, AttributeError):
+        nova_meta = Decimal('0')
+
+    if not nova_meta.is_finite() or nova_meta <= 0 or nova_meta > Decimal('99999999.99'):
+        flash("Informe uma meta válida maior que zero.", "error")
+        return redirect(url_for('reserva_emergencia'))
+
+    Reserva.atualizar_meta(session['id_usuario'], nova_meta)
+    flash("Meta da reserva atualizada com sucesso!", "success")
     return redirect(url_for('reserva_emergencia'))
     
 
@@ -297,6 +382,15 @@ def cadastrar():
     else:
         flash("Erro ao cadastrar usuário. Tente novamente.", "error")
         return redirect('/cadastro')
+    
+@app.get("/redefinir")
+def redefinir():
+    if "usuario" in session:
+        return redirect('/dashboard')
+    else:
+        return render_template("redefinir_senha.html")
+
+
 
 if __name__ == "__main__":
     app.run(debug=True)

@@ -65,3 +65,31 @@ class Reserva:
         conexao.close()
 
         return True
+
+    @staticmethod
+    def atualizar_meta(id_usuario: int, nova_meta):
+        '''Atualiza a meta da reserva ou cria uma reserva para o usuário'''
+        conexao, cursor = Conexao.conectar()
+
+        cursor.execute(
+            'SELECT id_reserva FROM reserva_emergencia WHERE id_usuario = %s LIMIT 1',
+            [id_usuario]
+        )
+        reserva = cursor.fetchone()
+
+        if reserva:
+            cursor.execute(
+                'UPDATE reserva_emergencia SET meta_valor = %s WHERE id_usuario = %s',
+                [nova_meta, id_usuario]
+            )
+        else:
+            cursor.execute(
+                'INSERT INTO reserva_emergencia (id_usuario, valor_atual, meta_valor) VALUES (%s, %s, %s)',
+                [id_usuario, 0, nova_meta]
+            )
+
+        conexao.commit()
+        cursor.close()
+        conexao.close()
+
+        return True

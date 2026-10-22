@@ -10,9 +10,51 @@
     <!-- conecta os estilos -->
     <link rel="stylesheet" href="{{ url_for('static', filename='css/variables.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/login.css') }}">
+
+    <!-- conecta os ícones flaticon -->
+    <link
+        rel="stylesheet"
+        href="https://cdn-uicons.flaticon.com/3.0.0/uicons-solid-rounded/css/uicons-solid-rounded.css"
+    >
+
+    <style>
+        /* deixa as partículas no fundo */
+        #particulas-fundo {
+            position: fixed;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        /* mantém o login na frente das partículas */
+        .login {
+            position: relative;
+            z-index: 1;
+        }
+
+        /* organiza o botão de tema com o ícone */
+        #btn-tema {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            cursor: pointer;
+        }
+
+        /* ajusta o tamanho do ícone */
+        #btn-tema i {
+            font-size: 20px;
+            line-height: 1;
+        }
+    </style>
 </head>
 
 <body>
+
+    <!-- fundo animado -->
+    <canvas id="particulas-fundo" aria-hidden="true"></canvas>
 
     <!-- tela de login -->
     <main class="login">
@@ -28,17 +70,44 @@
             <!-- opções do cabeçalho -->
             <nav class="login-opcoes">
 
-                <a href="/termos" aria-label="Termos de uso">
-                    Termos
-                </a>
-
-                <button type="button" id="btn-tema">
-                    Tema claro
+                <!-- botão de tema -->
+                <button
+                    type="button"
+                    id="btn-tema"
+                    aria-label="ativar tema claro"
+                    title="alternar tema"
+                >
+                    <i class="fi fi-sr-contrast" aria-hidden="true"></i>
                 </button>
 
             </nav>
 
         </header>
+
+        <!-- aviso de acesso aos termos -->
+        <div
+            class="aviso-termos"
+            id="aviso-termos"
+            role="status"
+            aria-live="polite"
+            hidden
+        >
+            <span class="aviso-icone">!</span>
+
+            <div class="aviso-texto">
+                <strong>Faça login primeiro!</strong>
+                <p>Entre na sua conta para acessar os Termos de Uso.</p>
+            </div>
+
+            <button
+                type="button"
+                class="fechar-aviso"
+                id="fechar-aviso"
+                aria-label="fechar aviso"
+            >
+                &times;
+            </button>
+        </div>
 
         <!-- cartão de login -->
         <section class="login-conteudo">
@@ -115,7 +184,7 @@
                 </div>
 
                 <!-- recuperação de senha -->
-                <a href="#" class="login-link-acesso">
+                <a href="/redefinir" class="login-link-acesso">
                     Esqueci minha senha
                 </a>
 
@@ -125,27 +194,172 @@
 
     </main>
 
-    <!-- alterna o tema -->
+    <!-- scripts da página -->
     <script>
+        // cria as partículas do fundo
+        const canvas = document.getElementById("particulas-fundo");
+        const ctx = canvas.getContext("2d");
+
+        let particulas = [];
+        let largura = 0;
+        let altura = 0;
+        let animacaoAtiva = true;
+
+        // reduz a animação para quem prefere menos movimento
+        const movimentoReduzido = window.matchMedia(
+            "(prefers-reduced-motion: reduce)"
+        ).matches;
+
+        // ajusta o fundo ao tamanho da tela
+        function ajustarCanvas() {
+            const proporcao = Math.min(window.devicePixelRatio || 1, 2);
+
+            largura = window.innerWidth;
+            altura = window.innerHeight;
+
+            canvas.width = largura * proporcao;
+            canvas.height = altura * proporcao;
+
+            ctx.setTransform(proporcao, 0, 0, proporcao, 0, 0);
+
+            criarParticulas();
+        }
+
+        // cria partículas roxas e verdes
+        function criarParticulas() {
+            const quantidade = Math.min(
+                100,
+                Math.max(35, Math.floor((largura * altura) / 14000))
+            );
+
+            particulas = [];
+
+            for (let i = 0; i < quantidade; i++) {
+                particulas.push({
+                    x: Math.random() * largura,
+                    y: Math.random() * altura,
+                    tamanho: Math.random() * 2 + 0.6,
+                    velocidadeX: (Math.random() - 0.5) * 0.35,
+                    velocidadeY: (Math.random() - 0.5) * 0.35,
+                    opacidade: Math.random() * 0.6 + 0.2,
+                    fase: Math.random() * Math.PI * 2,
+                    cor: Math.random() > 0.5
+                        ? "124, 77, 255"
+                        : "0, 230, 118"
+                });
+            }
+        }
+
+        // desenha e movimenta as partículas
+        function desenharParticulas() {
+            ctx.clearRect(0, 0, largura, altura);
+
+            const tempo = performance.now() * 0.001;
+
+            particulas.forEach(function (p) {
+                if (!movimentoReduzido) {
+                    p.x += p.velocidadeX;
+                    p.y += p.velocidadeY;
+
+                    // reaparece do outro lado da tela
+                    if (p.x < -5) p.x = largura + 5;
+                    if (p.x > largura + 5) p.x = -5;
+                    if (p.y < -5) p.y = altura + 5;
+                    if (p.y > altura + 5) p.y = -5;
+                }
+
+                // faz a luz variar suavemente
+                const brilho = movimentoReduzido
+                    ? p.opacidade
+                    : p.opacidade * (
+                        0.7 + Math.sin(tempo + p.fase) * 0.3
+                    );
+
+                // cria o brilho da partícula
+                ctx.save();
+
+                ctx.globalAlpha = brilho;
+                ctx.fillStyle = `rgb(${p.cor})`;
+                ctx.shadowColor = `rgb(${p.cor})`;
+                ctx.shadowBlur = p.tamanho * 7;
+
+                ctx.beginPath();
+                ctx.arc(p.x, p.y, p.tamanho, 0, Math.PI * 2);
+                ctx.fill();
+
+                ctx.restore();
+            });
+
+            if (animacaoAtiva && !movimentoReduzido) {
+                requestAnimationFrame(desenharParticulas);
+            }
+        }
+
+        // prepara a animação
+        ajustarCanvas();
+        desenharParticulas();
+
+        window.addEventListener("resize", ajustarCanvas);
+
+        // pausa a animação quando a aba não está visível
+        document.addEventListener("visibilitychange", function () {
+            if (document.hidden) {
+                animacaoAtiva = false;
+            } else if (!movimentoReduzido && !animacaoAtiva) {
+                animacaoAtiva = true;
+                desenharParticulas();
+            }
+        });
+
+        // alterna o tema sem remover o ícone
         const botaoTema = document.getElementById("btn-tema");
 
-        botaoTema.addEventListener("click", function () {
-            document.body.classList.toggle("tema-claro");
-
-            const temaClaro = document.body.classList.contains("tema-claro");
-
-            botaoTema.textContent = temaClaro
-                ? "Tema escuro"
-                : "Tema claro";
+        // atualiza o texto acessível do botão
+        function atualizarAcessibilidadeTema() {
+            const temaClaro = document.documentElement.classList.contains("tema-claro");
 
             botaoTema.setAttribute(
                 "aria-label",
-                temaClaro ? "Ativar tema escuro" : "Ativar tema claro"
+                temaClaro ? "ativar tema escuro" : "ativar tema claro"
             );
-        });
+
+            botaoTema.setAttribute(
+                "title",
+                temaClaro ? "ativar tema escuro" : "ativar tema claro"
+            );
+        }
+
+        // configura o botão de tema
+        if (botaoTema) {
+            atualizarAcessibilidadeTema();
+
+            botaoTema.addEventListener("click", function () {
+                document.documentElement.classList.toggle("tema-claro");
+                document.body.classList.toggle("tema-claro");
+
+                atualizarAcessibilidadeTema();
+            });
+        }
+
+        // mostra o aviso dos termos
+        const botaoTermos = document.getElementById("btn-termos-bloqueado");
+        const avisoTermos = document.getElementById("aviso-termos");
+        const fecharAviso = document.getElementById("fechar-aviso");
+
+        if (botaoTermos && avisoTermos) {
+            botaoTermos.addEventListener("click", function () {
+                avisoTermos.hidden = false;
+            });
+        }
+
+        // fecha o aviso
+        if (fecharAviso && avisoTermos) {
+            fecharAviso.addEventListener("click", function () {
+                avisoTermos.hidden = true;
+            });
+        }
     </script>
 
 </body>
 
 </html>
-```
