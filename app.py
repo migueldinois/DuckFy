@@ -1,13 +1,66 @@
+import math
+
 from flask import Flask, render_template, request, redirect, session, flash, url_for
+from decimal import Decimal, InvalidOperation
 from database.conexao import Conexao
 from model.categorias import Categoria
 from model.usuarios import Usuario
 from model.extrato import Extrato
+from model.contas_bancarias import ContaBancaria
 from model.reserva_emergencia import Reserva
+
 
 
 app = Flask(__name__)
 app.secret_key = "duckfy999"
+
+
+def obter_estado_fogo(dias_ofensiva):
+    dias = int(dias_ofensiva or 0)
+
+    if dias <= 0:
+        return {
+            "estado": "apagado",
+            "cor_principal": "#6C757D",
+            "glow": "rgba(108, 117, 125, 0.15)",
+            "tamanho_px": 100,
+            "icone": "bi-fire",
+            "titulo": "Começa a tua sequência hoje!",
+            "mensagem": "Registre a tua atividade diária para acender a chama.",
+        }
+
+    if dias < 7:
+        estado = "inicial"
+        cor = "#B388FF"
+        glow = "rgba(179, 136, 255, 0.2)"
+        tamanho = 120
+    elif dias < 30:
+        estado = "media"
+        cor = "#FF9800"
+        glow = "rgba(255, 152, 0, 0.25)"
+        tamanho = 140
+    elif dias < 100:
+        estado = "alta"
+        cor = "#FFC107"
+        glow = "rgba(255, 193, 7, 0.3)"
+        tamanho = 160
+    else:
+        estado = "lendaria"
+        cor = "#00E5FF"
+        glow = "rgba(0, 229, 255, 0.3)"
+        tamanho = 180
+
+    unidade = "dia" if dias == 1 else "dias"
+    return {
+        "estado": estado,
+        "cor_principal": cor,
+        "glow": glow,
+        "tamanho_px": tamanho,
+        "icone": "bi-fire",
+        "titulo": f"Sequência ativa há {dias} {unidade}!",
+        "mensagem": "Continua a registar a tua atividade diária para manter a chama acesa.",
+    }
+
 
 @app.get("/")
 @app.get("/login")
@@ -53,74 +106,63 @@ def privacidade():
 
 @app.route("/contas")
 def contas():
-    
-    return render_template("contas.html")
-
-@app.get('/dashboard')
-def dashboard():
-    if "usuario" in session:
-        return render_template("dashboard.html")
-    else:
-        flash("Você precisa estar logado para acessar o dashboard!", "error")
+    if "usuario" not in session:
+        flash("Você precisa estar logado para acessar as contas!", "error")
         return redirect('/login')
 
-# Rota para exibir o perfil do usuário
-@app.route("/perfil", methods=["GET", "POST"])
-def perfil():
+    id_usuario = session.get('id_usuario')
 
+    lista_contas = ContaBancaria.buscar_todas_por_usuario(id_usuario)
+    total_contas = ContaBancaria.calcular_patrimonio_total(id_usuario)
 
-    dados_usuario = Usuario.recuperar_dados_usuario(session["email"])
+    patrimonio_fmt = f"{total_contas:,.2f}".replace(',', 'X').replace('.', ',').replace('X', '.')
 
-    usuario = {
-        "nome": dados_usuario["nome"],
-        "email": dados_usuario["email"],
-        "dias_ofensiva": dados_usuario["dias_ofensiva"],
-        "pontos_xp": dados_usuario["pontos_xp"],
-        "foto_perfil": dados_usuario["foto_perfil"],
-    }
+    return render_template(
+        'contas.html',
+        contas_bancarias=lista_contas,
+        patrimonio_total=patrimonio_fmt
+    )
 
-
-    if request.method == "POST":
-        usuario["nome"] = request.form.get("nome", "").strip() or "Usuário"
-        
-    return render_template("perfil.html", usuario=usuario)
-
-
-@app.get("/editar-perfil")
-def editar_perfil():
-    if "usuario" in session:
-        return render_template("editar_perfil.html")
-    else:
-        flash("Você precisa estar logado para editar o seu perfil!", "error")
+@app.post("/contas/<int:id_conta>/editar")
+def editar_conta(id_conta):
+    if "usuario" not in session or "id_usuario" not in session:
+        flash("Você precisa estar logado para editar uma conta!", "error")
         return redirect('/login')
 
-@app.get("/extrato")
-def tela_extrato():
+    id_usuario = session["id_usuario"]
+    conta = ContaBancaria.buscar_por_id(id_conta, id_usuario)
+    if not conta:
+        flash("Conta bancária não encontrada.", "error")
+        return redirect('/contas')
+
+    nome_conta = request.form.get("nome_conta", "").strip()
+    tipo_conta = request.form.get("tipo_conta", "").strip()
+    saldo_texto = request.form.get("saldo_atual", "").strip()
+
     try:
-        # Pega o ID da sessão do usuário logado (ou usa 1 como fallback)
-        id_usuario = session.get('id_usuario', 1)
+        saldo_atual = float(saldo_texto)
+    except ValueError:
+        flash("Informe um saldo válido.", "error")
+        return redirect('/contas')
+    if not math.isfinite(saldo_atual):
+        flash("Informe um saldo válido.", "error")
+        return redirect('/contas')
 
-        tipo_ativo = request.args.get('tipo', 'tudo')
-        id_conta = request.args.get('id_conta', type=int)
-        data_inicio = request.args.get('data_inicio')
-        data_fim = request.args.get('data_fim')
+    if not nome_conta or len(nome_conta) > 50:
+        flash("O nome da conta é obrigatório e deve ter até 50 caracteres.", "error")
+        return redirect('/contas')
+    if not tipo_conta or len(tipo_conta) > 40:
+        flash("O tipo da conta é obrigatório e deve ter até 40 caracteres.", "error")
+        return redirect('/contas')
 
-        lista_transacoes = Extrato.obter_extrato(
-            id_usuario=id_usuario,
-            tipo=tipo_ativo,
-            id_conta=id_conta,
-            data_inicio=data_inicio,
-            data_fim=data_fim
-        )
+    if ContaBancaria.atualizar_conta(id_conta, id_usuario, nome_conta, tipo_conta, saldo_atual):
+        flash("Conta atualizada com sucesso!", "success")
+    else:
+        flash("Erro ao atualizar a conta. Tente novamente.", "error")
 
-        return render_template('extrato.html', transacoes=lista_transacoes, tipo_ativo=tipo_ativo)
+    return redirect('/contas')
 
-    except Exception as e:
-        print(f"Erro na rota /extrato: {e}")
-        # Retorno de segurança em caso de exceção para não quebrar o Flask
-        return render_template('extrato.html', transacoes=[], tipo_ativo='tudo')
 
-    
 @app.route('/reserva_emergencia')
 def reserva_emergencia():
     if "usuario" not in session:
@@ -182,6 +224,103 @@ def guardar_reserva():
 
     flash(f'R$ {valor_guardar:.2f} guardados na reserva com sucesso!', 'success')
     return redirect(url_for('reserva_emergencia'))
+
+
+@app.route('/alterar_meta_reserva', methods=['POST'])
+def alterar_meta_reserva():
+    if "usuario" not in session or not session.get("id_usuario"):
+        flash("Sessão expirada. Faça login novamente.", "error")
+        return redirect('/login')
+
+    try:
+        nova_meta = Decimal(request.form.get('meta_valor', '').replace(',', '.'))
+    except (InvalidOperation, AttributeError):
+        nova_meta = Decimal('0')
+
+    if not nova_meta.is_finite() or nova_meta <= 0 or nova_meta > Decimal('99999999.99'):
+        flash("Informe uma meta válida maior que zero.", "error")
+        return redirect(url_for('reserva_emergencia'))
+
+    Reserva.atualizar_meta(session['id_usuario'], nova_meta)
+    flash("Meta da reserva atualizada com sucesso!", "success")
+    return redirect(url_for('reserva_emergencia'))
+    
+
+@app.get('/dashboard')
+def dashboard():
+    if "usuario" in session:
+        return render_template("dashboard.html")
+    else:
+        flash("Você precisa estar logado para acessar o dashboard!", "error")
+        return redirect('/login')
+
+@app.get("/sequencia")
+def sequencia():
+    if "usuario" in session:
+        usuario = Usuario.recuperar_dados_usuario(session["email"])
+        info_fogo = obter_estado_fogo(usuario["dias_ofensiva"])
+        return render_template("sequencia.html", usuario=usuario, info_fogo=info_fogo)
+    else:
+        flash("Você precisa estar logado para acessar a sequência!", "error")
+        return redirect('/login')
+
+# Rota para exibir o perfil do usuário
+@app.route("/perfil", methods=["GET", "POST"])
+def perfil():
+
+
+    dados_usuario = Usuario.recuperar_dados_usuario(session["email"])
+
+    usuario = {
+        "nome": dados_usuario["nome"],
+        "email": dados_usuario["email"],
+        "dias_ofensiva": dados_usuario["dias_ofensiva"],
+        "pontos_xp": dados_usuario["pontos_xp"],
+        "foto_perfil": dados_usuario["foto_perfil"],
+    }
+
+
+    if request.method == "POST":
+        usuario["nome"] = request.form.get("nome", "").strip() or "Usuário"
+        
+    return render_template("perfil.html", usuario=usuario)
+
+
+@app.get("/editar-perfil")
+def editar_perfil():
+    if "usuario" in session:
+        return render_template("editar_perfil.html")
+    else:
+        flash("Você precisa estar logado para editar o seu perfil!", "error")
+        return redirect('/login')
+
+@app.get("/extrato")
+def tela_extrato():
+    try:
+        # Pega o ID da sessão do usuário logado (ou usa 1 como fallback)
+        id_usuario = session.get('id_usuario', 1)
+
+        tipo_ativo = request.args.get('tipo', 'tudo')
+        id_conta = request.args.get('id_conta', type=int)
+        data_inicio = request.args.get('data_inicio')
+        data_fim = request.args.get('data_fim')
+
+        lista_transacoes = Extrato.obter_extrato(
+            id_usuario=id_usuario,
+            tipo=tipo_ativo,
+            id_conta=id_conta,
+            data_inicio=data_inicio,
+            data_fim=data_fim
+        )
+
+        return render_template('extrato.html', transacoes=lista_transacoes, tipo_ativo=tipo_ativo)
+
+    except Exception as e:
+        print(f"Erro na rota /extrato: {e}")
+        # Retorno de segurança em caso de exceção para não quebrar o Flask
+        return render_template('extrato.html', transacoes=[], tipo_ativo='tudo')
+
+    
     
 
 
