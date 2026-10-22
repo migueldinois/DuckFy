@@ -1,9 +1,22 @@
 
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Duckfy - Recuperação de Senha</title>
+
+    <link rel="stylesheet" href="static/css/redefinir_senha.css">
+</head>
+
+<body>
 
     <main class="container">
 
         <h1 class="logo">
-            <span>Recuperação de senha</span>
+            Recuperação de senha
         </h1>
 
         <form action="/redefinir-senha" method="POST">
@@ -11,27 +24,43 @@
             <div class="campo">
                 <label for="senha">Digite sua nova senha</label>
 
-                <input type="password" id="senha" name="senha" required>
+                <input
+                    type="password"
+                    id="senha"
+                    name="senha"
+                    minlength="8"
+                    autocomplete="new-password"
+                    required
+                >
 
                 <div class="regras">
-                    <p>Tamanho mínimo: Pelo menos 8 caracteres.</p>
+                    <p>Tamanho mínimo: pelo menos 8 caracteres.</p>
 
-                    <p>Letras maiúsculas: No mínimo 1 letra maiúscula (A-Z).</p>
+                    <p>Letras maiúsculas: no mínimo 1 letra maiúscula (A-Z).</p>
 
-                    <p>Caracteres especiais: No mínimo 1 caractere especial (ex: ! @ # $ % ^ & * _ - + = ?).</p>
+                    <p>
+                        Caracteres especiais: no mínimo 1 caractere especial
+                        (ex: ! @ # $ % ^ &amp; * _ - + = ?).
+                    </p>
                 </div>
             </div>
 
             <div class="campo campo-confirmacao">
-                <label for="confirmar_senha">Digite novamente</label>
+                <label for="confirmar_senha">Digite novamente sua senha</label>
 
-                <input type="password" id="confirmar_senha" name="confirmar_senha" required>
+                <input
+                    type="password"
+                    id="confirmar_senha"
+                    name="confirmar_senha"
+                    minlength="8"
+                    autocomplete="new-password"
+                    required
+                >
             </div>
 
             <button type="submit">CONFIRMAR</button>
 
         </form>
-
 
     </main>
 
