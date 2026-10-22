@@ -1,0 +1,230 @@
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+html,
+body {
+    width: 100%;
+    min-height: 100%;
+}
+
+body {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+
+    color: var(--text-primary, #FFFFFF);
+    background:
+        radial-gradient(
+            circle at 15% 20%,
+            rgba(124, 77, 255, 0.12),
+            transparent 35%
+        ),
+        var(--bg-primary, #0F0C1B);
+}
+
+/* cartão de recuperação */
+.container {
+    width: 100%;
+    max-width: 480px;
+    padding: 38px;
+
+    background: var(--bg-surface-1, #19191B);
+    border: 1px solid var(--border-color, rgba(255, 255, 255, 0.12));
+    border-radius: 20px;
+
+    box-shadow:
+        0 20px 40px rgba(0, 0, 0, 0.4),
+        inset 0 1px 0 rgba(255, 255, 255, 0.08);
+}
+
+/* título */
+.logo {
+    margin-bottom: 28px;
+    color: var(--text-primary, #FFFFFF);
+    font-size: 1.65rem;
+    font-weight: 600;
+    line-height: 1.3;
+    letter-spacing: -0.5px;
+    text-align: center;
+}
+
+/* campos */
+.campo {
+    width: 100%;
+    margin-bottom: 20px;
+}
+
+.campo label {
+    display: block;
+    margin-bottom: 8px;
+
+    color: var(--text-primary, #FFFFFF);
+    font-size: 0.85rem;
+    font-weight: 500;
+}
+
+.campo input {
+    display: block;
+    width: 100%;
+    height: 48px;
+    padding: 0 14px;
+
+    color: var(--text-primary, #FFFFFF);
+    background: var(--bg-surface-2, #181826);
+    border: 1px solid var(--border-color, rgba(255, 255, 255, 0.13));
+    border-radius: 12px;
+    outline: none;
+
+    font-size: 0.85rem;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.campo input:focus {
+    border-color: var(--brand-primary, #7C4DFF);
+    box-shadow: 0 0 0 3px rgba(124, 77, 255, 0.18);
+}
+
+/* regras da senha */
+.regras {
+    margin-top: 12px;
+    padding: 14px;
+
+
+}
+
+.regras p {
+    margin-bottom: 7px;
+    color: var(--text-muted, #A0A0B0);
+    font-size: 0.78rem;
+    line-height: 1.5;
+}
+
+.regras p:last-child {
+    margin-bottom: 0;
+}
+
+.regras p::before {
+    content: "• ";
+    color: var(--brand-secondary, #B093FF);
+}
+
+/* botão confirmar */
+button[type="submit"] {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    width: 100%;
+    min-height: 50px;
+    padding: 12px 18px;
+
+    color: #FFFFFF;
+    background: var(--brand-primary, #7C4DFF);
+    border: 1px solid rgba(255, 255, 255, 0.22);
+    border-radius: 13px;
+
+    font-size: 0.92rem;
+    font-weight: 600;
+    cursor: pointer;
+
+    box-shadow: 0 8px 20px rgba(124, 77, 255, 0.25);
+    transition: all 0.2s ease;
+}
+
+button[type="submit"]:hover {
+    background: var(--brand-secondary, #B093FF);
+    transform: translateY(-2px);
+}
+
+button[type="submit"]:active {
+    transform: translateY(0);
+}
+
+button[type="submit"]:focus-visible {
+    outline: 2px solid var(--brand-secondary, #B093FF);
+    outline-offset: 3px;
+}
+
+/* celular */
+@media (max-width: 500px) {
+    body {
+        padding: 16px;
+    }
+
+    .container {
+        padding: 28px 22px;
+        border-radius: 17px;
+    }
+
+    .logo {
+        font-size: 1.4rem;
+        margin-bottom: 24px;
+    }
+
+    .regras p {
+        font-size: 0.75rem;
+    }
+}
+
+/* acessibilidade: reduzir animações */
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        animation: none !important;
+        transition: none !important;
+    }
+}
+
+.aviso-sucesso {
+display: none;
+flex-direction: column;
+align-items: center;
+gap: 18px;
+
+width: 100%;
+padding: 30px 24px;
+
+color: #19191B;
+background: #D6D6D6;
+border-radius: 20px;
+
+text-align: center;
+
+}
+
+.aviso-sucesso h2 {
+font-size: 1.3rem;
+font-weight: 600;
+}
+
+.aviso-sucesso p {
+font-size: 0.9rem;
+line-height: 1.5;
+}
+
+.btn-continuar {
+width: 150px;
+padding: 12px;
+
+color: #FFFFFF;
+background: #0F0C1B;
+border: none;
+border-radius: 9px;
+
+font-size: 0.85rem;
+font-weight: 600;
+cursor: pointer;
+
+}
+
+.btn-continuar {
+background: #7C4DFF;
+}
