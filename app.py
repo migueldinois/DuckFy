@@ -3,17 +3,12 @@ from database.conexao import Conexao
 from model.categorias import Categoria
 from model.usuarios import Usuario
 from model.extrato import Extrato
-<<<<<<< HEAD
 from model.simulador import SimuladorPatrimonio
-=======
-from model.reserva_emergencia import Reserva
->>>>>>> c0b52dc415ecb1518f4ea626c201262a5e5ce462
 
 
 app = Flask(__name__)
 app.secret_key = "duckfy999"
 
-<<<<<<< HEAD
 @app.route("/simulador", methods=["GET", "POST"])
 def tela_simulador():
     aporte_inicial = 0.0
@@ -44,47 +39,6 @@ def tela_simulador():
     )
 
     return render_template("simulador.html")
-=======
-@app.get("/")
-@app.get("/login")
-def index():
-
-    if "usuario" in session:
-        return redirect("/dashboard")
-    
-    
-    return render_template("tela_login.html")
-
-@app.post("/login/usuario")
-def logar():
-    
-    input_email = request.form.get("email")
-    input_senha = request.form.get("senha")
-    usuario_logado = Usuario.validar_usuario(input_email, input_senha)
-
-    if usuario_logado:
-        session["usuario"] = usuario_logado
-        session["email"] = input_email
-        session["id_usuario"] = Usuario.buscar_id_por_email(input_email)
-        return redirect(url_for("dashboard"))
-    else:
-        flash("Usuario ou senha invalidos!", "error")
-        return redirect('/login')
-    
-@app.route("/logout")
-def logout():
-    session.pop("usuario", None)
-    flash("Você saiu da sua conta!", "success")
-    return redirect("/login")
-
-@app.get("/termos")
-def termos():
-    return render_template("termos.html")
-
-@app.route('/privacidade')
-def privacidade():
-    return render_template("privacidade.html")
->>>>>>> c0b52dc415ecb1518f4ea626c201262a5e5ce462
 
 
 @app.get('/dashboard')

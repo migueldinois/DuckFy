@@ -1,8 +1,4 @@
 Flask
 mysql-connector-python
 bcrypt
-<<<<<<< HEAD
 requests
-=======
-dotenv
->>>>>>> c0b52dc415ecb1518f4ea626c201262a5e5ce462
