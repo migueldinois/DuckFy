@@ -6,101 +6,42 @@ from database.conexao import Conexao
 from model.categorias import Categoria
 from model.usuarios import Usuario
 from model.extrato import Extrato
-from model.contas_bancarias import ContaBancaria
-from model.reserva_emergencia import Reserva
-
+from model.simulador import SimuladorPatrimonio
 
 
 app = Flask(__name__)
 app.secret_key = "duckfy999"
 
+@app.route("/simulador", methods=["GET", "POST"])
+def tela_simulador():
+    aporte_inicial = 0.0
+    aporte_mensal = 0.0
+    anos = 5
 
-def obter_estado_fogo(dias_ofensiva):
-    dias = int(dias_ofensiva or 0)
+    if request.method == "POST":
+        try:
+            aporte_inicial = float(request.form.get("aporte_inicial", 0.0) or 0.0)
+            aporte_mensal = float(request.form.get("aporte_mensal", 0.0) or 0.0)
+            anos = int(request.form.get("anos", 5))
+        except ValueError:
+            pass
 
-    if dias <= 0:
-        return {
-            "estado": "apagado",
-            "cor_principal": "#6C757D",
-            "glow": "rgba(108, 117, 125, 0.15)",
-            "tamanho_px": 100,
-            "icone": "bi-fire",
-            "titulo": "Começa a tua sequência hoje!",
-            "mensagem": "Registre a tua atividade diária para acender a chama.",
-        }
+    # A função irá buscar automaticamente a Selic no BCB se taxa_anual for None
+    resultado = SimuladorPatrimonio.calcular_simulacao(
+        aporte_inicial=aporte_inicial,
+        aporte_mensal=aporte_mensal,
+        anos=anos
+    )
 
-    if dias < 7:
-        estado = "inicial"
-        cor = "#B388FF"
-        glow = "rgba(179, 136, 255, 0.2)"
-        tamanho = 120
-    elif dias < 30:
-        estado = "media"
-        cor = "#FF9800"
-        glow = "rgba(255, 152, 0, 0.25)"
-        tamanho = 140
-    elif dias < 100:
-        estado = "alta"
-        cor = "#FFC107"
-        glow = "rgba(255, 193, 7, 0.3)"
-        tamanho = 160
-    else:
-        estado = "lendaria"
-        cor = "#00E5FF"
-        glow = "rgba(0, 229, 255, 0.3)"
-        tamanho = 180
+    return render_template(
+        "simulador.html",
+        resultado=resultado,
+        aporte_inicial=aporte_inicial,
+        aporte_mensal=aporte_mensal,
+        anos=anos
+    )
 
-    unidade = "dia" if dias == 1 else "dias"
-    return {
-        "estado": estado,
-        "cor_principal": cor,
-        "glow": glow,
-        "tamanho_px": tamanho,
-        "icone": "bi-fire",
-        "titulo": f"Sequência ativa há {dias} {unidade}!",
-        "mensagem": "Continua a registar a tua atividade diária para manter a chama acesa.",
-    }
-
-
-@app.get("/")
-@app.get("/login")
-def index():
-
-    if "usuario" in session:
-        return redirect("/dashboard")
-    
-    
-    return render_template("tela_login.html")
-
-@app.post("/login/usuario")
-def logar():
-    
-    input_email = request.form.get("email")
-    input_senha = request.form.get("senha")
-    usuario_logado = Usuario.validar_usuario(input_email, input_senha)
-
-    if usuario_logado:
-        session["usuario"] = usuario_logado
-        session["email"] = input_email
-        session["id_usuario"] = Usuario.buscar_id_por_email(input_email)
-        return redirect(url_for("dashboard"))
-    else:
-        flash("Usuario ou senha invalidos!", "error")
-        return redirect('/login')
-    
-@app.route("/logout")
-def logout():
-    session.pop("usuario", None)
-    flash("Você saiu da sua conta!", "success")
-    return redirect("/login")
-
-@app.get("/termos")
-def termos():
-    return render_template("termos.html")
-
-@app.route('/privacidade')
-def privacidade():
-    return render_template("privacidade.html")
+    return render_template("simulador.html")
 
 @app.route('/contas')
 def contas():
@@ -447,6 +388,7 @@ def redefinir():
         return redirect('/dashboard')
     else:
         return render_template("redefinir_senha.html")
+
 
 
 
