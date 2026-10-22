@@ -15,8 +15,8 @@
     <!-- topo da página -->
     <header class="termos-topo">
 
-        <a href="{{ url_for('perfil') if usuario_logado else url_for('index') }}" class="btn-voltar" aria-label="Voltar">
-            Voltar
+        <a class="link-voltar position-absolute text-white text-decoration-none fs-4"href="{{ url_for('perfil') if usuario_logado else url_for('index') }}" class="btn-voltar" aria-label="Voltar">
+            <i class="fa-solid fa-arrow-left"></i>
         </a>
 
         <h1>Política de Privacidade</h1>

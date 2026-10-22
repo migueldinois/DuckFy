@@ -2,6 +2,10 @@
 
 {% block title %}Dashboard Financeiro - DuckFy{% endblock %}
 
+{% block styles %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/extrato.css') }}">
+{% endblock %}
+
 {% block content %}
 
 <div class="app-container d-flex flex-column justify-content-between">

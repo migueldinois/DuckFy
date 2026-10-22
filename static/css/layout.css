@@ -28,11 +28,11 @@ body.app-body {
   min-height: 100vh;
 }
 
-.app-container {
+/* .app-container {
   display: flex;
   min-height: 100vh;
   width: 100%;
-}
+} */
 
 /* ==========================================================================
    SIDEBAR (Ícones com cores originais e DuckFy alinhado à esquerda)
