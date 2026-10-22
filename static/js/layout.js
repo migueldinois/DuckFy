@@ -1,17 +1,27 @@
-document.addEventListener('DOMContentLoaded', () => {
-  const trigger = document.querySelector('.dropdown-trigger');
-  
-  if (trigger) {
-    trigger.addEventListener('click', (e) => {
-      if (e.target.closest('.dropdown-menu')) return;
-      
-      trigger.classList.toggle('show');
+document.addEventListener("DOMContentLoaded", () => {
+  const sidebar = document.getElementById("sidebar");
+
+  if (sidebar) {
+    sidebar.addEventListener("mouseenter", () => {
+      sidebar.classList.remove("collapsed");
     });
 
-    document.addEventListener('click', (e) => {
-      if (!trigger.contains(e.target)) {
-        trigger.classList.remove('show');
-      }
+    sidebar.addEventListener("mouseleave", () => {
+      sidebar.classList.add("collapsed");
+    });
+  }
+
+  const dropdownTrigger = document.querySelector(".dropdown-trigger");
+  const dropdownMenu = document.querySelector(".dropdown-trigger .dropdown-menu");
+
+  if (dropdownTrigger && dropdownMenu) {
+    dropdownTrigger.addEventListener("click", (e) => {
+      e.stopPropagation();
+      dropdownMenu.classList.toggle("show");
+    });
+
+    document.addEventListener("click", () => {
+      dropdownMenu.classList.remove("show");
     });
   }
 });

@@ -1,0 +1,41 @@
+# Byte-compiled / Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+env/
+venv/
+ENV/
+env.bak/
+venv.bak/
+
+# Configuracoes de Ambiente e Seguranca
+.env
+.env.local
+.env.*.local
+
+# Node.js / React Frontend
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+build/
+dist/
+
+# Banco de Dados Local e Logs
+*.sqlite3
+*.db
+*.log
+
+# IDEs e Editores de Codigo
+.vscode/
+.idea/
+*.swp
+*.swo
+.DS_Store
+
+# Cobertura de Testes
+.coverage
+htmlcov/
+.pytest_cache/

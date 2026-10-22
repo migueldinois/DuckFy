@@ -1,7 +1,9 @@
 from flask import Flask, render_template, request, redirect, session, flash, url_for
 from database.conexao import Conexao
+from model.categorias import Categoria
 from model.usuarios import Usuario
 from model.extrato import Extrato
+from model.reserva_emergencia import Reserva
 
 
 app = Flask(__name__)
@@ -27,6 +29,7 @@ def logar():
     if usuario_logado:
         session["usuario"] = usuario_logado
         session["email"] = input_email
+        session["id_usuario"] = Usuario.buscar_id_por_email(input_email)
         return redirect(url_for("dashboard"))
     else:
         flash("Usuario ou senha invalidos!", "error")
@@ -37,7 +40,20 @@ def logout():
     session.pop("usuario", None)
     flash("Você saiu da sua conta!", "success")
     return redirect("/login")
+
+@app.get("/termos")
+def termos():
+    return render_template("termos.html")
+
+@app.route('/privacidade')
+def privacidade():
+    return render_template("privacidade.html")
+
+
+@app.route("/contas")
+def contas():
     
+    return render_template("contas.html")
 
 @app.get('/dashboard')
 def dashboard():
@@ -103,21 +119,162 @@ def tela_extrato():
         # Retorno de segurança em caso de exceção para não quebrar o Flask
         return render_template('extrato.html', transacoes=[], tipo_ativo='tudo')
 
-    return
-@app.get("/reserva_emergencia")
+    
+@app.route('/reserva_emergencia')
 def reserva_emergencia():
-    return render_template("reserva_emergencia.html")
+    if "usuario" not in session:
+        flash("Você precisa estar logado para acessar a reserva!", "error")
+        return redirect('/login')
+
+    # Busca o ID do usuário através do email da sessão
+    email_usuario = session.get("email")
+    id_usuario = Reserva.obter_id_por_email(email_usuario)
+
+    # Busca os dados no banco
+    reserva = Reserva.obter_reserva(id_usuario)
+    historico_movimentacoes = Reserva.obter_historico(id_usuario)
+
+    if reserva:
+        total_guardado = float(reserva['valor_atual'])
+        meta_total = float(reserva['meta_valor'])
+    else:
+        total_guardado = 0.00
+        meta_total = 3000.00
+
+    faltam_para_meta = max(0.0, meta_total - total_guardado)
+    progresso_porcentagem = round((total_guardado / meta_total) * 100) if meta_total > 0 else 0
+    progresso_barra = min(100, progresso_porcentagem)
+
+    return render_template(
+        'reserva_emergencia.html',
+        meta_total=meta_total,
+        total_guardado=total_guardado,
+        faltam_para_meta=faltam_para_meta,
+        progresso_porcentagem=progresso_porcentagem,
+        progresso_barra=progresso_barra,
+        historico_movimentacoes=historico_movimentacoes
+    )
+
+
+@app.route('/guardar_reserva', methods=['POST'])
+def guardar_reserva():
+    if "usuario" not in session:
+        flash("Sessão expirada. Faça login novamente.", "error")
+        return redirect('/login')
+
+    email_usuario = session.get("email")
+    id_usuario = Reserva.obter_id_por_email(email_usuario)
+
+    try:
+        valor_guardar = float(request.form.get('valor', 0))
+    except ValueError:
+        valor_guardar = 0.0
+
+    descricao = request.form.get('descricao', 'Depósito na Reserva')
+
+    if valor_guardar <= 0:
+        flash("Informe um valor válido maior que zero!", "error")
+        return redirect(url_for('reserva_emergencia'))
+
+    # Salva no Banco de Dados para o id_usuario correto
+    Reserva.guardar_dinheiro(id_usuario, valor_guardar, descricao)
+
+    flash(f'R$ {valor_guardar:.2f} guardados na reserva com sucesso!', 'success')
+    return redirect(url_for('reserva_emergencia'))
     
 
 
 @app.get("/lancamento")
 def lancamento():
     if "usuario" in session:
-        return render_template("lancamentos.html")
+                return render_template("lancamentos.html")
     else:
-        flash("Você precisa estar logado para realizar lançamentos!", "error")
+        flash("Você precisa estar logado para editar o seu perfil!", "error")
         return redirect('/login')
 
+@app.get("/categorias")
+def categorias():
+    if "usuario" in session:
+        categorias_despesa = Categoria.recuperar_categorias_por_tipo(session["id_usuario"], "Despesa")
+        categorias_receita = Categoria.recuperar_categorias_por_tipo(session["id_usuario"], "Receita")
+
+        return render_template("categorias.html", categorias_despesa=categorias_despesa, categorias_receita=categorias_receita)
+    else:
+        flash("Você precisa estar logado para acessar as categorias!", "error")
+        return redirect('/login')
+
+@app.route("/categorias/criar", methods=["POST"])
+def adicionar_categoria():
+    if "usuario" in session:
+        nome = request.form.get("nome")
+        tipo = request.form.get("tipo")
+
+        if tipo == "SAIDA":
+            tipo = "Despesa"
+        elif tipo == "ENTRADA":
+            tipo = "Receita"
+        emoji = request.form.get("emoji")
+        cor = request.form.get("cor")
+
+        if not nome or not tipo or not emoji or not cor:
+            flash("Todos os campos são obrigatórios!", "error")
+            return redirect('/categorias')
+
+        categoria_criada = Categoria.criar_categoria(session["id_usuario"], nome, tipo, emoji, cor)
+
+        if categoria_criada:
+            flash("Categoria criada com sucesso!", "success")
+        else:
+            flash("Erro ao criar categoria. Tente novamente.", "error")
+
+        return redirect('/categorias')
+    else:
+        flash("Você precisa estar logado para adicionar categorias!", "error")
+        return redirect('/login')
+@app.route("/categorias/deletar/<int:id_categoria>", methods=["POST"])
+def deletar_categoria(id_categoria):
+    if "usuario" in session:
+        categoria_deletada = Categoria.deletar_categoria(id_categoria)
+
+        if categoria_deletada:
+            flash("Categoria deletada com sucesso!", "success")
+        else:
+            flash("Erro ao deletar categoria. Tente novamente.", "error")
+
+        return redirect('/categorias')
+    else:
+        flash("Você precisa estar logado para deletar categorias!", "error")
+        return redirect('/login')
+
+@app.route("/categorias/atualizar/", methods=["POST"])
+def atualizar_categoria():
+    if "usuario" in session:
+        id_categoria = request.form.get("id_categoria")
+        nome = request.form.get("nome")
+        tipo = request.form.get("tipo")
+        emoji = request.form.get("emoji")
+        cor = request.form.get("cor")
+
+        if tipo == "SAIDA":
+            tipo = "Despesa"
+        elif tipo == "ENTRADA":
+            tipo = "Receita"
+
+        if not id_categoria or not nome or not tipo or not emoji or not cor:
+            flash("Todos os campos são obrigatórios!", "error")
+            return redirect('/categorias')
+
+        categoria_atualizada = Categoria.atualizar_categoria(id_categoria, nome, tipo, emoji, cor)
+
+        if categoria_atualizada:
+            flash("Categoria atualizada com sucesso!", "success")
+        else:
+            flash("Erro ao atualizar categoria. Tente novamente.", "error")
+
+        return redirect('/categorias')
+    else:
+        flash("Você precisa estar logado para atualizar categorias!", "error")
+        return redirect('/login')
 
 @app.get("/cadastro")
 def cadastro():
@@ -145,6 +302,8 @@ def cadastrar():
     else:
         flash("Erro ao cadastrar usuário. Tente novamente.", "error")
         return redirect('/cadastro')
+
+
 
 if __name__ == "__main__":
     app.run(debug=True)

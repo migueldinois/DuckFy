@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simulador Patrimônio</title>
+
+    <!-- Bootstrap 5 -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+
+    <link rel="stylesheet" href="/static/css/variables.css">
+</head>
+
+<body>
+
+    <div class="app-container d-flex flex-column justify-content-between">
+
+        <!-- HEADER -->
+        <header class="header">
+            <div class="d-flex align-items-center mb-4">
+                <a href="#" class="text-white text-decoration-none fs-4 me-3" aria-label="Voltar">
+                    <i class="bi bi-arrow-left"></i>
+                </a>
+                <h1 class="h4 mb-0 fw-normal text-white">Simulador Investimentos</h1>
+            </div>
+
+            <form id="form-simulador">
+                <div class="row g-3">
+                    <div class="col-6">
+                        <label class="form-label text-white fw-bold">Aporte Inicial (R$)</label>
+                        <input type="number" class="form-control custom-input" id="aporte-inicial" name="aporte_inicial" step="0.01" placeholder="0,00" required>
+                    </div>
+
+                    <div class="col-6">
+                        <label class="form-label text-white fw-bold">Aporte Mensal (R$)</label>
+                        <input type="number" class="form-control custom-input" id="aporte-mensal" name="aporte_mensal" step="0.01" placeholder="0,00" required>
+                    </div>
+                </div>
+            </form>
+        </header>
+
+        <!-- CARTO DE CONTEÚDO PRINCIPAL -->
+        <main class="card-cinza flex-grow-1 d-flex flex-column my-3">
+
+            <!-- FILTROS E EDITAR -->
+            <div class="d-flex justify-content-between align-items-center mb-4 gap-2">
+                <div class="d-flex gap-2">
+                    <button type="button" class="btn-periodo active">5 anos</button>
+                    <button type="button" class="btn-periodo">10 anos</button>
+                </div>
+
+                <button type="button" class="btn-edit" id="btn-editar-periodo" title="Editar Período">
+                    <i class="bi bi-pencil-fill"></i>
+                </button>
+            </div>
+
+            <!-- MÉTRICAS -->
+            <div class="row text-center mb-4">
+                <div class="metric-box col-6">
+                    <span class="value fw-bold text-white fs-5" id="total-investido">R$00,00</span>
+                    <span class="d-block text-white-50 fw-semibold">Investido</span>
+                </div>
+
+                <div class="metric-box col-6">
+                    <span class="value fw-bold text-destaque-verde fs-5" id="total-rendimento">R$00,00</span>
+                    <span class="d-block text-white-50 fw-semibold">Rendimentos</span>
+                </div>
+            </div>
+
+            <div class="grafic-container flex-grow-1 d-flex align-items-center justify-content-center text-center">
+                <h2 class="h5 fw-bold text-white">
+                    (Gráfico de investido<br>e rendimento)
+                </h2>
+            </div>
+
+        </main>
+
+    </div>
+
+</body>
+
+</html>
