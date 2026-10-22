@@ -1,4 +1,5 @@
 from flask import Flask, render_template, request, redirect, session, flash, url_for
+from decimal import Decimal, InvalidOperation
 from database.conexao import Conexao
 from model.categorias import Categoria
 from model.usuarios import Usuario
@@ -180,6 +181,26 @@ def guardar_reserva():
     Reserva.guardar_dinheiro(id_usuario, valor_guardar, descricao)
 
     flash(f'R$ {valor_guardar:.2f} guardados na reserva com sucesso!', 'success')
+    return redirect(url_for('reserva_emergencia'))
+
+
+@app.route('/alterar_meta_reserva', methods=['POST'])
+def alterar_meta_reserva():
+    if "usuario" not in session or not session.get("id_usuario"):
+        flash("Sessão expirada. Faça login novamente.", "error")
+        return redirect('/login')
+
+    try:
+        nova_meta = Decimal(request.form.get('meta_valor', '').replace(',', '.'))
+    except (InvalidOperation, AttributeError):
+        nova_meta = Decimal('0')
+
+    if not nova_meta.is_finite() or nova_meta <= 0 or nova_meta > Decimal('99999999.99'):
+        flash("Informe uma meta válida maior que zero.", "error")
+        return redirect(url_for('reserva_emergencia'))
+
+    Reserva.atualizar_meta(session['id_usuario'], nova_meta)
+    flash("Meta da reserva atualizada com sucesso!", "success")
     return redirect(url_for('reserva_emergencia'))
     
 
