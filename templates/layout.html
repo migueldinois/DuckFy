@@ -1,155 +1,247 @@
+
 <!DOCTYPE html>
-<html lang="pt-br">
+<html lang="pt-BR">
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>
-        {% block title %}DuckFy{% endblock %}
-    </title>
+  <title>{% block title %}DuckFy{% endblock %}</title>
 
-    <!-- Bootstrap -->
-    <link
-        href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
-        rel="stylesheet"
-    >
+  <!-- Bootstrap -->
+  <link
+    href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+    rel="stylesheet"
+  >
 
-    <!-- Bootstrap Icons -->
-    <link
-        rel="stylesheet"
-        href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css"
-    >
+  <!-- Ícones do Bootstrap -->
+  <link
+    rel="stylesheet"
+    href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css"
+  >
 
-  <!-- Ficheiros CSS -->
-  <link rel="stylesheet" href="{{ url_for('static', filename='css/layout.css') }}">
-  <link rel="stylesheet" href="/static/css/extrato.css">
+  <!-- Estilos globais -->
+  <link
+    rel="stylesheet"
+    href="{{ url_for('static', filename='css/variables.css') }}"
+  >
 
-  
-  
-  {% block extra_css %}
-  {% endblock %}
+  <link
+    rel="stylesheet"
+    href="{{ url_for('static', filename='css/layout.css') }}"
+  >
+
+  <!-- Estilos específicos das páginas -->
+  {% block styles %}{% endblock %}
+  {% block extra_css %}{% endblock %}
 </head>
 
 <body class="app-body">
 
-    <div class="app-container">
+  <div class="app-container">
 
-        <!-- sidebar -->
-        <aside class="sidebar collapsed" id="sidebar">
+    <!-- Sidebar -->
+    <aside class="sidebar collapsed" id="sidebar">
 
-            <!-- botão da sidebar -->
-            <button
-                class="sidebar-toggle-btn d-none d-md-flex"
-                id="sidebarToggle"
-                type="button"
-                title="Alternar Menu"
-            >
-                <i class="bi bi-chevron-right" id="toggleIcon"></i>
-            </button>
 
+      <!-- Logo -->
       <a href="/dashboard" class="sidebar-brand">
         <span class="brand-text">DuckFy</span>
       </a>
 
-            <hr class="sidebar-divider">
+      <hr class="sidebar-divider">
 
+      <!-- Navegação -->
       <ul class="sidebar-menu list-unstyled">
+
+        <!-- Dashboard -->
         <li>
-          <a href="/dashboard" class="sidebar-link active" title="Dashboard">
-            <img src="{{ url_for('static', filename='img/icons/dashboard.svg') }}" alt="Dashboard" class="sidebar-icon">
+          <a
+            href="/dashboard"
+            class="sidebar-link {% if request.path.rstrip('/') == '/dashboard' %}active{% endif %}"
+            title="Dashboard"
+            {% if request.path.rstrip('/') == '/dashboard' %}aria-current="page"{% endif %}
+          >
+            <img
+              src="{{ url_for('static', filename='img/icons/dashboard.svg') }}"
+              alt=""
+              class="sidebar-icon"
+            >
             <span class="brand-text">Dashboard</span>
           </a>
         </li>
+
+        <!-- Extrato -->
         <li>
-          <a href="/extrato" class="sidebar-link" title="Extrato">
-            <img src="{{ url_for('static', filename='img/icons/extrato.svg') }}" alt="Extrato" class="sidebar-icon">
+          <a
+            href="/extrato"
+            class="sidebar-link {% if request.path.rstrip('/') == '/extrato' %}active{% endif %}"
+            title="Extrato"
+            {% if request.path.rstrip('/') == '/extrato' %}aria-current="page"{% endif %}
+          >
+            <img
+              src="{{ url_for('static', filename='img/icons/extrato.svg') }}"
+              alt=""
+              class="sidebar-icon"
+            >
             <span class="brand-text">Extrato</span>
           </a>
         </li>
+
+        <!-- Simulador -->
         <li>
-          <a href="/simulador" class="sidebar-link" title="Simulador de Patrimônio">
-            <img src="{{ url_for('static', filename='img/icons/simulador.svg') }}" alt="Simulador de Patrimônio"
-              class="sidebar-icon">
+          <a
+            href="/simulador"
+            class="sidebar-link {% if request.path.rstrip('/') == '/simulador' %}active{% endif %}"
+            title="Simulador de Patrimônio"
+            {% if request.path.rstrip('/') == '/simulador' %}aria-current="page"{% endif %}
+          >
+            <img
+              src="{{ url_for('static', filename='img/icons/simulador.svg') }}"
+              alt=""
+              class="sidebar-icon"
+            >
             <span class="brand-text">Simulador</span>
           </a>
         </li>
+
+        <!-- Lançamentos -->
         <li>
-          <a href="/lancamento" class="sidebar-link" title="Lançamentos">
-            <img src="{{ url_for('static', filename='img/icons/lancamento.svg') }}" alt="Lançamentos" class="sidebar-icon">
+          <a
+            href="/lancamento"
+            class="sidebar-link {% if request.path.rstrip('/') == '/lancamento' %}active{% endif %}"
+            title="Lançamentos"
+            {% if request.path.rstrip('/') == '/lancamento' %}aria-current="page"{% endif %}
+          >
+            <img
+              src="{{ url_for('static', filename='img/icons/lancamento.svg') }}"
+              alt=""
+              class="sidebar-icon"
+            >
             <span class="brand-text">Lançamentos</span>
           </a>
         </li>
+
+        <!-- Categorias -->
         <li>
-          <a href="/categorias" class="sidebar-link" title="Categorias">
-            <img src="{{ url_for('static', filename='img/icons/categoria.svg') }}" alt="Categorias" class="sidebar-icon">
+          <a
+            href="/categorias"
+            class="sidebar-link {% if request.path.rstrip('/') == '/categorias' %}active{% endif %}"
+            title="Categorias"
+            {% if request.path.rstrip('/') == '/categorias' %}aria-current="page"{% endif %}
+          >
+            <img
+              src="{{ url_for('static', filename='img/icons/categoria.svg') }}"
+              alt=""
+              class="sidebar-icon"
+            >
             <span class="brand-text">Categorias</span>
           </a>
         </li>
+
+        <!-- Reserva de Emergência -->
         <li>
-          <a href="/reserva_emergencia" class="sidebar-link" title="Reserva de Emergência">
-            <img src="{{ url_for('static', filename='img/icons/reserva.svg') }}" alt="Reserva de Emergência" class="sidebar-icon">
+          <a
+            href="/reserva_emergencia"
+            class="sidebar-link {% if request.path.rstrip('/') == '/reserva_emergencia' %}active{% endif %}"
+            title="Reserva de Emergência"
+            {% if request.path.rstrip('/') == '/reserva_emergencia' %}aria-current="page"{% endif %}
+          >
+            <img
+              src="{{ url_for('static', filename='img/icons/reserva.svg') }}"
+              alt=""
+              class="sidebar-icon"
+            >
             <span class="brand-text">Reserva de Emergência</span>
           </a>
         </li>
+
+        <!-- Perfil -->
         <li>
-          <a href="/perfil" class="sidebar-link" title="Perfil">
-            <img src="{{ url_for('static', filename='img/icons/perfill.svg') }}" alt="Perfil" class="sidebar-icon">
+          <a
+            href="/perfil"
+            class="sidebar-link {% if request.path.rstrip('/') == '/perfil' %}active{% endif %}"
+            title="Perfil"
+            {% if request.path.rstrip('/') == '/perfil' %}aria-current="page"{% endif %}
+          >
+            <img
+              src="{{ url_for('static', filename='img/icons/perfill.svg') }}"
+              alt=""
+              class="sidebar-icon"
+            >
             <span class="brand-text">Perfil</span>
           </a>
         </li>
+
+        <!-- Sequência -->
         <li>
-          <a href="/sequencia" class="sidebar-link" title="Sequencia">
-            <img src="{{ url_for('static', filename='img/icons/sequencia.svg') }}" alt="Sequencia" class="sidebar-icon">
-            <span class="brand-text">Sequencia</span>
+          <a
+            href="/sequencia"
+            class="sidebar-link {% if request.path.rstrip('/') == '/sequencia' %}active{% endif %}"
+            title="Sequência"
+            {% if request.path.rstrip('/') == '/sequencia' %}aria-current="page"{% endif %}
+          >
+            <img
+              src="{{ url_for('static', filename='img/icons/sequencia.svg') }}"
+              alt=""
+              class="sidebar-icon"
+            >
+            <span class="brand-text">Sequência</span>
           </a>
         </li>
-        <!-- colocando la em baixo -->
+
+        <!-- Sair da conta -->
         <li class="mt-auto">
-          <a href="/logout" class="sidebar-logout" title="Sair">
-            <img src="{{ url_for('static', filename='img/icons/logout.svg') }}" alt="Sair" class="sidebar-icon">
+          <a
+            href="/logout"
+            class="sidebar-logout"
+            title="Sair"
+          >
+            <img
+              src="{{ url_for('static', filename='img/icons/logout.svg') }}"
+              alt=""
+              class="sidebar-icon"
+            >
             <span class="brand-text">Sair</span>
           </a>
         </li>
+
       </ul>
     </aside>
 
-        <!-- conteúdo principal -->
-        <main class="main-content">
+    <!-- Conteúdo principal -->
+    <main class="main-content">
+      {% block content %}{% endblock %}
+    </main>
 
-            {% block content %}
-            {% endblock %}
+  </div>
 
-        </main>
+  <!-- Barra inferior para dispositivos móveis -->
+  {% include 'components/bottom_bar.html' %}
 
-    </div>
+  <!-- Bootstrap JavaScript -->
+  <script
+    src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+  ></script>
 
-    <!-- barra inferior -->
-    {% include 'components/bottom_bar.html' %}
+  <!-- Alternância de tema -->
+  <script
+    src="{{ url_for('static', filename='js/tema.js') }}"
+    defer
+  ></script>
 
-    <!-- javascript da sidebar -->
-    <script>
-        const sidebar = document.getElementById('sidebar');
-        const toggleBtn = document.getElementById('sidebarToggle');
-        const toggleIcon = document.getElementById('toggleIcon');
+  <!-- Gerenciador de modais -->
+  <script
+    src="{{ url_for('static', filename='js/modalManager.js') }}"
+  ></script>
+  <!-- js layout -->
+  <script
+    src="{{ url_for('static', filename='js/layout.js') }}"
+  ></script>
 
-        toggleBtn?.addEventListener('click', () => {
-            sidebar.classList.toggle('collapsed');
+  <!-- Scripts específicos das páginas -->
+  {% block extra_js %}{% endblock %}
 
-            toggleIcon.classList.toggle('bi-chevron-right');
-            toggleIcon.classList.toggle('bi-chevron-left');
-        });
-    </script>
 
-    <!-- Bootstrap JS -->
-    <script
-        src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js">
-        
-    </script>
-    <script src="{{ url_for('static', filename='js/modalManager.js') }}"></script>
-    
-    {% block extra_js %}
-    {% endblock %}
 </body>
-
 </html>
