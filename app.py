@@ -43,12 +43,13 @@ def logout():
 
 @app.get("/termos")
 def termos():
-    return render_template("termos.html")
+    logado = "usuario" in session
+    return render_template("termos.html", usuario_logado=logado)
 
 @app.route('/privacidade')
 def privacidade():
-    return render_template("privacidade.html")
-
+    logado = "usuario" in session
+    return render_template("privacidade.html", usuario_logado=logado)
 
 @app.get('/dashboard')
 def dashboard():
