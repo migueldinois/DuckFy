@@ -12,7 +12,7 @@
     {% set messages = get_flashed_messages(with_categories=true) %}
     {% if messages %}
       {% for category, message in messages %}
-        <div class="alert alert-{{ 'success' if category == 'success' else 'danger' }} alert-dismissible fade show text-white border-0 mb-3" role="alert">
+        <div class="alert alert-{{ 'success' if category == 'success' else 'danger' }} bg-{{ 'success' if category == 'success' else 'danger' }} alert-dismissible fade show text-white border-0 mb-3" role="alert">
           {{ message }}
           <button type="button" class="btn-close btn-close-white" data-bs-dismiss="alert" aria-label="Close"></button>
         </div>

@@ -251,7 +251,7 @@ def retirar_reserva():
         flash("Não foi possível retirar: confira o saldo da reserva e a conta selecionada.", "error")
         return redirect(url_for('reserva_emergencia'))
 
-    flash(f'R$ {valor_retirar:.2f} retirados da reserva com sucesso!', 'success')
+    flash(f'R$ {valor_retirar:.2f} retirados da reserva com sucesso!', 'withdrawal')
     return redirect(url_for('reserva_emergencia'))
 
 
