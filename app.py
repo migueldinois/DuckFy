@@ -160,7 +160,60 @@ def editar_conta(id_conta):
 
     return redirect('/contas')
 
+@app.route('/contas/<int:id_conta>/excluir', methods=['POST'])
+def excluir_conta(id_conta):
+    if "usuario" not in session or not session.get("id_usuario"):
+        flash("Faça login novamente.", "error")
+        return redirect(url_for('login'))
 
+    sucesso = ContaBancaria.deletar_conta(
+        id_conta,
+        session['id_usuario']
+    )
+
+    if sucesso:
+        flash("Conta bancária excluída com sucesso!", "success")
+    else:
+        flash("Não foi possível excluir a conta bancária.", "error")
+
+    return redirect(url_for('contas'))
+@app.route('/contas/criar', methods=['POST'])
+def criar_conta():
+    if "usuario" not in session or "id_usuario" not in session:
+        flash("Faça login novamente para cadastrar uma conta.", "error")
+        return redirect(url_for('login'))
+
+    id_usuario = session.get('id_usuario')
+    nome_conta = request.form.get('nome_conta', '').strip()
+    tipo_conta = request.form.get('tipo_conta', '').strip()
+    saldo_atual = request.form.get('saldo_atual', '0').strip()
+
+    if not nome_conta or not tipo_conta:
+        flash("Preencha todos os campos.", "error")
+        return redirect(url_for('contas'))
+
+    try:
+        saldo_atual = float(saldo_atual.replace(',', '.'))
+
+        if saldo_atual < 0:
+            raise ValueError
+
+        sucesso = ContaBancaria.criar_conta(
+            id_usuario,
+            nome_conta,
+            tipo_conta,
+            saldo_atual
+        )
+
+        if sucesso:
+            flash("Conta bancária criada com sucesso!", "success")
+        else:
+            flash("Não foi possível criar a conta bancária.", "error")
+
+    except (ValueError, TypeError):
+        flash("Informe um saldo válido.", "error")
+
+    return redirect(url_for('contas'))
 @app.route('/reserva_emergencia')
 def reserva_emergencia():
     if "usuario" not in session:
