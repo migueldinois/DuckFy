@@ -51,6 +51,11 @@ def privacidade():
     return render_template("privacidade.html")
 
 
+@app.route("/contas")
+def contas():
+    
+    return render_template("contas.html")
+
 @app.get('/dashboard')
 def dashboard():
     if "usuario" in session:
@@ -318,6 +323,8 @@ def cadastrar():
     else:
         flash("Erro ao cadastrar usuário. Tente novamente.", "error")
         return redirect('/cadastro')
+
+
 
 if __name__ == "__main__":
     app.run(debug=True)
