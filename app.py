@@ -1,5 +1,6 @@
 import math
 import json
+import requests
 from flask import Flask, render_template, request, redirect, session, flash, url_for
 from decimal import Decimal, InvalidOperation
 from database.conexao import Conexao
@@ -8,10 +9,25 @@ from model.usuarios import Usuario
 from model.extrato import Extrato
 from model.contas_bancarias import ContaBancaria
 from model.reserva_emergencia import Reserva
+from model.simulador import SimuladorPatrimonio
 
 
 app = Flask(__name__)
 app.secret_key = "duckfy999"
+
+def obter_taxa_selic_bcb():
+    """Busca a taxa Selic/CDI na API do Banco Central (SGS 1178)"""
+    url = "https://api.bcb.gov.br/dados/serie/bcdata.sgs.1178/dados/ultimos/1?formato=json"
+    try:
+        response = requests.get(url, timeout=3)
+        if response.status_code == 200:
+            dados = response.json()
+            if dados and len(dados) > 0:
+                return float(dados[0]["valor"])
+    except Exception as e:
+        print(f"Erro ao buscar taxa do BCB: {e}")
+    
+    return 10.0  
 
 @app.get("/")
 @app.get("/login")
@@ -44,7 +60,7 @@ def tela_simulador():
         except (ValueError, TypeError):
             pass
 
-    taxa_anual = 10.0  # 10% a.a.
+    taxa_anual = obter_taxa_selic_bcb() # 10% a.a.
     taxa_mensal = (1 + (taxa_anual / 100)) ** (1 / 12) - 1
     meses = anos * 12
 
