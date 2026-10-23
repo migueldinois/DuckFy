@@ -1,4 +1,6 @@
-{% extends 'layout.html' %}
+{% if usuario_logado %}
+    {% extends 'layout.html' %}
+{% endif %}
 
 {% block title %}Política de Privacidade - DuckFy{% endblock %}
 
@@ -8,13 +10,13 @@
 
 {% block content %}
 
-<main class="termos">
+<main class="termos {% if not usuario_logado %}termos-deslogado{% endif %}">
 
     <!-- topo da página -->
     <header class="termos-topo">
 
-        <a href="{{ url_for('perfil') }}" class="btn-voltar" aria-label="Voltar para o perfil">
-            ←
+        <a class="link-voltar position-absolute text-white text-decoration-none fs-4"href="{{ url_for('perfil') if usuario_logado else url_for('index') }}" class="btn-voltar" aria-label="Voltar">
+            <i class="fa-solid fa-arrow-left"></i>
         </a>
 
         <h1>Política de Privacidade</h1>
@@ -37,79 +39,24 @@
     <!-- conteúdo -->
     <section class="termos-conteudo">
 
-        <h2>Lorem ipsum</h2>
-
+        <h2>1. Coleta de Informações</h2>
         <p>
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-            Etiam porttitor, dui sed consequat pretium, velit eros
-            congue velit, eu ultrices dui massa vitae massa. Nunc eu
-            tincidunt nunc. Quisque eu vehicula arcu. Aliquam eleifend
-            neque vel risus accumsan dictum.
+            A sua privacidade é importante para nós. É política do DuckFy respeitar a sua privacidade em relação a qualquer informação que possamos coletar no site DuckFy e outros sites que possuímos e operamos.
         </p>
 
-        <h2>Lorem ipsum</h2>
-
+        <h2>2. Uso de Dados Pessoais</h2>
         <p>
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-            Maecenas vitae libero at nunc tincidunt tincidunt. Donec
-            suscipit, justo sit amet consequat consectetur, neque velit
-            posuere massa, eget tincidunt lorem ipsum at nunc.
+            Solicitamos informações pessoais apenas quando realmente precisamos delas para lhe fornecer um serviço. Fazemo-lo por meios justos e legais, com o seu conhecimento e consentimento.
         </p>
 
-        <h2>Lorem ipsum</h2>
-
+        <h2>3. Compartilhamento e Segurança</h2>
         <p>
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-            Integer feugiat, libero sit amet tincidunt consequat, nisl
-            purus tincidunt massa, vitae suscipit neque erat nec ipsum.
-            Vestibulum ante ipsum primis in faucibus orci luctus et
-            ultrices posuere cubilia curae.
+            Não compartilhamos informações de identificação pessoal publicamente ou com terceiros, exceto quando exigido por lei. Apenas retemos as informações coletadas pelo tempo necessário para prestar o serviço solicitado.
         </p>
 
-        <h2>Lorem ipsum</h2>
-
+        <h2>4. Direitos do Usuário</h2>
         <p>
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-            Suspendisse potenti. Morbi eu risus eget turpis consequat
-            suscipit. Nullam feugiat, lacus at consequat tincidunt,
-            sapien neque interdum massa, vitae faucibus lorem purus
-            eget nulla.
-        </p>
-
-        <h2>Lorem ipsum</h2>
-
-        <p>
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-            Sed eget sagittis ligula. Curabitur consequat, neque non
-            consectetur tincidunt, ipsum libero malesuada lorem, vitae
-            tincidunt justo nulla vel nunc.
-        </p>
-
-        <h2>Lorem ipsum</h2>
-
-        <p>
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-            Pellentesque habitant morbi tristique senectus et netus et
-            malesuada fames ac turpis egestas. Donec euismod, libero
-            quis tincidunt consequat, massa erat malesuada justo.
-        </p>
-
-        <h2>Lorem ipsum</h2>
-
-        <p>
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-            Vestibulum consectetur, velit eget tincidunt consequat,
-            massa lorem interdum arcu, at tincidunt justo neque vitae
-            lorem. Donec vitae risus sed libero consequat malesuada.
-        </p>
-
-        <h2>Lorem ipsum</h2>
-
-        <p>
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-            Aenean consequat, libero sed tincidunt malesuada, neque
-            purus elementum massa, vitae tincidunt nisl lorem vel
-            lectus. Sed eget sagittis ligula.
+            Você é livre para recusar a nossa solicitação de informações pessoais, entendendo que talvez não possamos fornecer alguns dos serviços desejados.
         </p>
 
     </section>

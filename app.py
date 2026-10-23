@@ -1,6 +1,10 @@
 import math
 import json
+import os
+import uuid
+
 from flask import Flask, render_template, request, redirect, session, flash, url_for
+from werkzeug.utils import secure_filename
 from decimal import Decimal, InvalidOperation
 from database.conexao import Conexao
 from model.categorias import Categoria
@@ -155,13 +159,15 @@ def logout():
 
 @app.get("/termos")
 def termos():
-    return render_template("termos.html")
+    logado = "usuario" in session
+    return render_template("termos.html", usuario_logado=logado)
 
 @app.route('/privacidade')
 def privacidade():
-    return render_template("privacidade.html")
+    logado = "usuario" in session
+    return render_template("privacidade.html", usuario_logado=logado)
 
-@app.route('/contas')
+@app.route("/contas")
 def contas():
     if "usuario" not in session:
         flash("Você precisa estar logado para acessar as contas!", "error")
@@ -427,13 +433,48 @@ def perfil():
     return render_template("perfil.html", usuario=usuario)
 
 
-@app.get("/editar-perfil")
+@app.route("/editar-perfil", methods=["GET", "POST"])
 def editar_perfil():
-    if "usuario" in session:
-        return render_template("editar_perfil.html")
-    else:
+    if "usuario" not in session:
         flash("Você precisa estar logado para editar o seu perfil!", "error")
         return redirect('/login')
+
+    email_atual = session["email"]
+
+    if request.method == "POST":
+        nome = request.form.get("nome", "").strip()
+        email = request.form.get("email", "").strip()
+        usuario = Usuario.recuperar_dados_usuario(email_atual)
+
+        if not nome or not email or "@" not in email:
+            flash("Informe um nome e um e-mail válido.", "error")
+            return render_template("editar_perfil.html", usuario=usuario), 400
+
+        foto_perfil = usuario["foto_perfil"]
+        arquivo_foto = request.files.get("foto_perfil")
+        if arquivo_foto and arquivo_foto.filename:
+            extensao = os.path.splitext(secure_filename(arquivo_foto.filename))[1].lower()
+            if extensao not in {".jpg", ".jpeg", ".png", ".webp", ".gif"}:
+                flash("Escolha uma imagem JPG, PNG, WEBP ou GIF.", "error")
+                return render_template("editar_perfil.html", usuario=usuario), 400
+
+            nome_arquivo = f"{uuid.uuid4().hex}{extensao}"
+            pasta_uploads = os.path.join(app.static_folder, "uploads", "perfis")
+            os.makedirs(pasta_uploads, exist_ok=True)
+            arquivo_foto.save(os.path.join(pasta_uploads, nome_arquivo))
+            foto_perfil = url_for("static", filename=f"uploads/perfis/{nome_arquivo}")
+
+        if Usuario.atualizar_dados(email_atual, nome, email, foto_perfil):
+            session["email"] = email
+            flash("Perfil atualizado com sucesso!", "success")
+            return redirect(url_for("perfil"))
+
+        usuario = Usuario.recuperar_dados_usuario(email_atual)
+        flash("Não foi possível atualizar. Verifique se o e-mail já está em uso.", "error")
+        return render_template("editar_perfil.html", usuario=usuario), 400
+
+    usuario = Usuario.recuperar_dados_usuario(email_atual)
+    return render_template("editar_perfil.html", usuario=usuario)
 
 @app.get("/extrato")
 def tela_extrato():
