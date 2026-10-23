@@ -1,3 +1,5 @@
+from decimal import Decimal
+
 from database.conexao import Conexao
 
 class Reserva:
@@ -86,7 +88,7 @@ class Reserva:
 
     @staticmethod
     def guardar_dinheiro(id_usuario: int, id_conta: int, valor_guardar, descricao: str):
-        '''Transfere um valor da conta para a reserva e registra no extrato'''
+        '''Aloca parte do saldo da conta na reserva e registra no extrato'''
         conexao, cursor = Conexao.conectar()
 
         try:
@@ -95,7 +97,22 @@ class Reserva:
                 [id_conta, id_usuario]
             )
             conta = cursor.fetchone()
-            if not conta or float(conta['saldo_atual']) < float(valor_guardar):
+            if not conta:
+                conexao.rollback()
+                return False
+
+            cursor.execute(
+                '''
+                SELECT COALESCE(SUM(rc.valor_alocado), 0) AS valor_alocado
+                FROM reserva_contas rc
+                INNER JOIN reserva_emergencia re ON re.id_reserva = rc.id_reserva
+                WHERE rc.id_conta = %s AND re.id_usuario = %s
+                ''',
+                [id_conta, id_usuario]
+            )
+            alocacao_atual = cursor.fetchone()['valor_alocado']
+            saldo_disponivel = Decimal(str(conta['saldo_atual'] or 0)) - Decimal(str(alocacao_atual or 0))
+            if saldo_disponivel < Decimal(str(valor_guardar)):
                 conexao.rollback()
                 return False
 
@@ -119,8 +136,12 @@ class Reserva:
                 id_reserva = cursor.lastrowid
 
             cursor.execute(
-                'UPDATE contas_bancarias SET saldo_atual = saldo_atual - %s WHERE id_conta = %s AND id_usuario = %s',
-                [valor_guardar, id_conta, id_usuario]
+                '''
+                INSERT INTO reserva_contas (id_reserva, id_conta, valor_alocado)
+                VALUES (%s, %s, %s)
+                ON DUPLICATE KEY UPDATE valor_alocado = valor_alocado + %s
+                ''',
+                [id_reserva, id_conta, valor_guardar, valor_guardar]
             )
             cursor.execute(
                 '''
@@ -142,7 +163,7 @@ class Reserva:
 
     @staticmethod
     def retirar_dinheiro(id_usuario: int, id_conta: int, valor_retirar, descricao: str):
-        '''Transfere um valor da reserva para uma conta do usuário e registra no extrato'''
+        '''Libera uma alocação da reserva e registra a movimentação no extrato'''
         conexao, cursor = Conexao.conectar()
 
         try:
@@ -166,13 +187,42 @@ class Reserva:
 
             id_reserva = reserva['id_reserva']
             cursor.execute(
+                '''
+                SELECT
+                    COALESCE(SUM(CASE WHEN rc.id_conta = %s THEN rc.valor_alocado ELSE 0 END), 0) AS alocado_conta,
+                    COALESCE(SUM(rc.valor_alocado), 0) AS alocado_total
+                FROM reserva_contas rc
+                WHERE rc.id_reserva = %s
+                ''',
+                [id_conta, id_reserva]
+            )
+            alocacao = cursor.fetchone()
+            valor_alocado_conta = Decimal(str(alocacao['alocado_conta'] or 0))
+            valor_alocado_total = Decimal(str(alocacao['alocado_total'] or 0))
+            valor_retirar_decimal = Decimal(str(valor_retirar))
+            valor_alocado_liberado = min(valor_alocado_conta, valor_retirar_decimal)
+            valor_historico = valor_retirar_decimal - valor_alocado_liberado
+            valor_historico_disponivel = (
+                Decimal(str(reserva['valor_atual'])) - valor_alocado_total
+            )
+            if valor_historico > valor_historico_disponivel:
+                conexao.rollback()
+                return False
+
+            cursor.execute(
                 'UPDATE reserva_emergencia SET valor_atual = valor_atual - %s WHERE id_reserva = %s',
                 [valor_retirar, id_reserva]
             )
-            cursor.execute(
-                'UPDATE contas_bancarias SET saldo_atual = saldo_atual + %s WHERE id_conta = %s AND id_usuario = %s',
-                [valor_retirar, id_conta, id_usuario]
-            )
+            if valor_alocado_liberado > 0:
+                cursor.execute(
+                    'UPDATE reserva_contas SET valor_alocado = valor_alocado - %s WHERE id_reserva = %s AND id_conta = %s',
+                    [valor_alocado_liberado, id_reserva, id_conta]
+                )
+            if valor_historico > 0:
+                cursor.execute(
+                    'UPDATE contas_bancarias SET saldo_atual = saldo_atual + %s WHERE id_conta = %s AND id_usuario = %s',
+                    [valor_historico, id_conta, id_usuario]
+                )
             cursor.execute(
                 '''
                 INSERT INTO transacoes

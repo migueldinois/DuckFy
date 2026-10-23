@@ -44,10 +44,11 @@
 
           <!-- Campo Valor -->
           <div class="col-12 col-md-6">
-            <label for="valor" class="form-label text-white-50 fs-7 fw-medium mb-1">Valor</label>
+            <label for="valor-display" class="form-label text-white-50 fs-7 fw-medium mb-1">Valor</label>
             <div class="input-group">
-              <span class="input-group-text form-control-custom border-end-0 text-white-50">$</span>
-              <input type="number" step="0.01" class="form-control form-control-custom border-start-0 rounded-end-3" id="valor" name="valor" placeholder="0,00" required>
+              <span class="input-group-text form-control-custom border-end-0 text-white-50">R$</span>
+              <input type="text" inputmode="numeric" autocomplete="off" class="form-control form-control-custom border-start-0 rounded-end-3" id="valor-display" placeholder="0,00" aria-label="Valor da transação" required>
+              <input type="hidden" id="valor" name="valor">
             </div>
           </div>
 
@@ -79,14 +80,30 @@
 
           <!-- Campo Sub-Categoria -->
           <div class="col-12">
-            <label for="subcategoria" class="form-label text-white-50 fs-7 fw-medium mb-1">Sub-Categoria</label>
-            <select class="form-select form-control-custom rounded-3" id="subcategoria" name="subcategoria">
+            <label id="subcategoria-label" class="form-label text-white-50 fs-7 fw-medium mb-1">Sub-Categoria</label>
+            <div class="custom-select" id="subcategoria-select">
+              <select id="subcategoria" name="subcategoria" hidden aria-hidden="true" tabindex="-1">
               <option value="" selected disabled>Selecione uma sub-categoria...</option>
               <option value="mercado">Mercado</option>
               <option value="restaurante">Restaurante / Lanchonete</option>
               <option value="combustivel">Combustível</option>
               <option value="aluguel">Aluguel / Contas</option>
-            </select>
+              </select>
+              <button type="button" class="custom-select-trigger" id="subcategoria-trigger" role="combobox"
+                aria-haspopup="listbox" aria-expanded="false" aria-controls="subcategoria-options"
+                aria-autocomplete="none" aria-labelledby="subcategoria-label subcategoria-value">
+                <span id="subcategoria-value">Selecione uma sub-categoria...</span>
+                <span class="custom-select-chevron" aria-hidden="true"></span>
+              </button>
+              <div class="custom-select-options" id="subcategoria-options" role="listbox"
+                aria-labelledby="subcategoria-label" hidden>
+                <div class="custom-select-option" role="option" aria-disabled="true" data-value="">Selecione uma sub-categoria...</div>
+                <div class="custom-select-option" role="option" aria-selected="false" data-value="mercado">Mercado</div>
+                <div class="custom-select-option" role="option" aria-selected="false" data-value="restaurante">Restaurante / Lanchonete</div>
+                <div class="custom-select-option" role="option" aria-selected="false" data-value="combustivel">Combustível</div>
+                <div class="custom-select-option" role="option" aria-selected="false" data-value="aluguel">Aluguel / Contas</div>
+              </div>
+            </div>
           </div>
 
           <!-- Campo Observação -->
@@ -106,4 +123,8 @@
 
   </div>
 </div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="{{ url_for('static', filename='js/lancamentos.js') }}" defer></script>
 {% endblock %}
