@@ -1,4 +1,3 @@
-
 /* configura a página */
 * {
     margin: 0;
@@ -30,51 +29,76 @@ body {
 
 /* tela principal */
 .login {
+    position: relative;
     width: 100%;
     min-height: 100vh;
 
     display: flex;
     flex-direction: column;
+    align-items: center;
 
     padding: 0 24px 35px;
 }
 
+
 /* cabeçalho */
 .login-cabecalho {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
     width: 100%;
     min-height: 76px;
-
+    padding: 4px 8px;
     display: flex;
-    align-items: center;
+    align-items: flex-start;
     justify-content: space-between;
-    gap: 16px;
-
-    padding: 14px 8px;
+    gap: 10px;
+    z-index: 10;
 }
 
-/* logo da duckfy */
-.login-logo {
-    position: relative;
-    top: -10px;
-
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-
-    text-decoration: none;
-    flex-shrink: 0;
-}
-
+/* logo */
 .logo-imagem {
     display: block;
     width: 220px;
     height: auto;
-    max-width: none;
+    max-width: 100%;
+    margin: 0;
+    padding: 0;
     object-fit: contain;
+    object-position: left top;
+    flex-shrink: 0;
+    transition: none;
+}
+
+/* opções do cabeçalho */
+.login-opcoes {
+    margin-left: auto;
+    flex-shrink: 0;
+}
+
+/* mantém o alinhamento do cabeçalho no topo */
+.login-cabecalho,
+.cadastro-cabecalho {
+    align-items: flex-start;
+}
+
+/* Ajustes para telas menores */
+@media (max-width: 500px) {
+    .login-cabecalho {
+        min-height: 68px;
+        padding: 4px 5px;
+    }
+
+    .logo-imagem {
+        width: 220px;
+        max-width: calc(100vw - 80px);
+    }
 }
 
 
-/* botao de tema */
+
+/* botão de tema */
 #btn-tema {
     display: inline-flex;
     align-items: center;
@@ -88,14 +112,12 @@ body {
     cursor: pointer;
 }
 
-/* icone do tema */
+/* ícone do tema */
 #btn-tema i {
     display: block;
     font-size: 18px;
     line-height: 1;
 }
-
-
 
 /* botões do cabeçalho */
 .login-opcoes {
@@ -166,7 +188,6 @@ body {
     animation: aparecer-aviso 0.25s ease;
 }
 
-/* esconde o aviso quando necessário */
 .aviso-termos[hidden] {
     display: none;
 }
@@ -259,17 +280,18 @@ body {
     }
 }
 
-
-/* cartão de login */
+/* cartão de login centralizado */
 .login-conteudo {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+
     width: 480px;
     max-width: calc(100vw - 32px);
     min-width: 0;
     min-height: 560px;
-    flex: 0 0 480px;
-    box-sizing: border-box;
-
-    margin: auto;
+    margin: 0;
     padding: 0;
 
     display: grid;
@@ -468,40 +490,6 @@ body {
     background: var(--accent-secondary, #58E4A0);
 }
 
-/* logo */
-.login-logo {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    flex-shrink: 0;
-    text-decoration: none;
-}
-
-.logo-imagem {
-    display: block;
-    width: 240px;
-    max-width: none;
-    height: auto;
-    object-fit: contain;
-}
-
-/* telas menores */
-@media (max-width: 520px) {
-    .login-conteudo {
-        width: calc(100vw - 32px);
-        max-width: 480px;
-        flex-basis: auto;
-    }
-
-    .login-formulario {
-        padding: 32px 24px;
-    }
-
-    .logo-imagem {
-        width: 210px;
-    }
-}
-
 /* mensagens de erro */
 .container__error {
     width: 100%;
@@ -668,6 +656,16 @@ body.tema-claro .logo-fy {
     color: #252033;
 }
 
+@media (max-width: 500px) {
+    .login-cabecalho {
+        padding: 4px 5px;
+    }
+
+    .logo-imagem {
+        width: 170px;
+    }
+}
+
 /* tablet */
 @media (max-width: 800px) {
     .login {
@@ -675,9 +673,8 @@ body.tema-claro .logo-fy {
     }
 
     .login-conteudo {
-        max-width: 520px;
-        min-height: auto;
-        grid-template-columns: minmax(0, 1fr);
+        width: min(480px, calc(100vw - 32px));
+        min-height: 560px;
     }
 
     .login-formulario {
@@ -693,12 +690,12 @@ body.tema-claro .logo-fy {
 
     .login-cabecalho {
         min-height: 68px;
-        padding: 12px 0;
+        padding: 12px 14px;
         gap: 8px;
     }
 
-    .login-logo {
-        font-size: 1.7rem;
+    .logo-imagem {
+        width: 180px;
     }
 
     .login-opcoes {
@@ -727,7 +724,11 @@ body.tema-claro .logo-fy {
     }
 
     .login-conteudo {
-        width: 100%;
+        width: calc(100vw - 28px);
+        max-width: 480px;
+        min-height: 0;
+        max-height: calc(100vh - 100px);
+        overflow-y: auto;
         border-radius: 17px;
     }
 
