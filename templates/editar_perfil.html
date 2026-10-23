@@ -64,7 +64,7 @@
 
                 <!-- AÇÕES ADICIONAIS -->
                 <div class="d-flex flex-column gap-2 mt-4">
-                    <button class="btn btn-acao-roxo p-3 rounded-3 fw-semibold" type="button">Alterar senha</button>
+                    <a href="{{ url_for('redefinir') }}" class="btn btn-acao-roxo p-3 rounded-3 fw-semibold" type="button">Redefinir senha</a>
                     <a href="{{ url_for('logout') }}" class="btn btn-acao-escuro p-3 rounded-3 fw-semibold text-center text-decoration-none">Sair da conta</a>
                     <button class="btn btn-acao-vermelho p-3 rounded-3 fw-semibold" type="button">Excluir conta</button>
                 </div>
