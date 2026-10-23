@@ -13,6 +13,15 @@ from model.reserva_emergencia import Reserva
 app = Flask(__name__)
 app.secret_key = "duckfy999"
 
+
+def parse_valor_monetario(valor):
+    texto = str(valor or "").strip().replace("R$", "").replace(" ", "")
+    if "," in texto:
+        texto = texto.replace(".", "").replace(",", ".")
+    elif texto.count(".") > 1 or ("." in texto and len(texto.rsplit(".", 1)[1]) == 3):
+        texto = texto.replace(".", "")
+    return Decimal(texto)
+
 @app.get("/")
 @app.get("/login")
 def index():
@@ -204,9 +213,7 @@ def transferir_dinheiro():
     try:
         id_conta_origem = int(request.form.get('id_conta_origem', ''))
         id_conta_destino = int(request.form.get('id_conta_destino', ''))
-        valor_transferencia = Decimal(
-            request.form.get('valor', '').replace(',', '.')
-        )
+        valor_transferencia = parse_valor_monetario(request.form.get('valor', ''))
 
         if not valor_transferencia.is_finite() or valor_transferencia <= 0:
             raise ValueError
@@ -250,9 +257,7 @@ def adicionar_dinheiro():
 
     try:
         id_conta = int(request.form.get('id_conta', ''))
-        valor_adicionar = Decimal(
-            request.form.get('valor', '').replace(',', '.')
-        )
+        valor_adicionar = parse_valor_monetario(request.form.get('valor', ''))
 
         if not valor_adicionar.is_finite() or valor_adicionar <= 0:
             raise ValueError
@@ -297,11 +302,11 @@ def editar_conta(id_conta):
     saldo_texto = request.form.get("saldo_atual", "").strip()
 
     try:
-        saldo_atual = float(saldo_texto)
-    except ValueError:
+        saldo_atual = parse_valor_monetario(saldo_texto)
+    except (ValueError, TypeError, InvalidOperation):
         flash("Informe um saldo válido.", "error")
         return redirect('/contas')
-    if not math.isfinite(saldo_atual):
+    if not saldo_atual.is_finite() or saldo_atual < 0:
         flash("Informe um saldo válido.", "error")
         return redirect('/contas')
 
@@ -315,7 +320,7 @@ def editar_conta(id_conta):
     if ContaBancaria.atualizar_conta(id_conta, id_usuario, nome_conta, tipo_conta, saldo_atual):
         flash("Conta atualizada com sucesso!", "success")
     else:
-        flash("Erro ao atualizar a conta. Tente novamente.", "error")
+        flash("O saldo não pode ser menor que o valor já reservado.", "error")
 
     return redirect('/contas')
 
@@ -352,9 +357,9 @@ def criar_conta():
         return redirect(url_for('contas'))
 
     try:
-        saldo_atual = float(saldo_atual.replace(',', '.'))
+        saldo_atual = parse_valor_monetario(saldo_atual)
 
-        if saldo_atual < 0:
+        if not saldo_atual.is_finite() or saldo_atual < 0:
             raise ValueError
 
         sucesso = ContaBancaria.criar_conta(
@@ -369,7 +374,7 @@ def criar_conta():
         else:
             flash("Não foi possível criar a conta bancária.", "error")
 
-    except (ValueError, TypeError):
+    except (ValueError, TypeError, InvalidOperation):
         flash("Informe um saldo válido.", "error")
 
     return redirect(url_for('contas'))
@@ -421,7 +426,7 @@ def guardar_reserva():
     id_usuario = Reserva.obter_id_por_email(email_usuario)
 
     try:
-        valor_guardar = Decimal(request.form.get('valor', '').replace(',', '.'))
+        valor_guardar = parse_valor_monetario(request.form.get('valor', ''))
         id_conta = int(request.form.get('id_conta', ''))
     except (InvalidOperation, ValueError, AttributeError):
         valor_guardar = Decimal('0')
@@ -448,7 +453,7 @@ def retirar_reserva():
         return redirect('/login')
 
     try:
-        valor_retirar = Decimal(request.form.get('valor', '').replace(',', '.'))
+        valor_retirar = parse_valor_monetario(request.form.get('valor', ''))
         id_conta = int(request.form.get('id_conta', ''))
     except (InvalidOperation, ValueError, AttributeError):
         valor_retirar = Decimal('0')
@@ -474,7 +479,7 @@ def alterar_meta_reserva():
         return redirect('/login')
 
     try:
-        nova_meta = Decimal(request.form.get('meta_valor', '').replace(',', '.'))
+        nova_meta = parse_valor_monetario(request.form.get('meta_valor', ''))
     except (InvalidOperation, AttributeError):
         nova_meta = Decimal('0')
 

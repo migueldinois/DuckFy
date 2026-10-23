@@ -174,7 +174,7 @@
           <label for="editarSaldoConta" class="card-subtitle d-block mb-2">
             Saldo atual (R$)
           </label>
-          <input id="editarSaldoConta" name="saldo_atual" class="search-input" type="number" step="0.01" required>
+          <input id="editarSaldoConta" name="saldo_atual" class="search-input" type="text" inputmode="decimal" data-currency-input min="0" required>
         </div>
 
         <button type="submit" class="btn-purple-action w-100">
@@ -212,6 +212,7 @@
         nome.value = botao.dataset.nome || '';
         tipo.value = botao.dataset.tipo || '';
         saldo.value = botao.dataset.saldo || '0';
+        saldo.dataset.currencyInitialValue = 'true';
         form.action = botao.dataset.url || '';
         urlExcluir = botao.dataset.urlExcluir || '';
 
