@@ -61,11 +61,15 @@
         <header class="login-cabecalho">
 
 
-            <!-- logo -->
+
+            <!-- Logo da DuckFy -->
             <a href="/" class="login-logo" aria-label="DuckFy - Página inicial">
-                <img src="{{ url_for('static', filename='img/logo_duckfy04.png') }}" alt="Logo DuckFy"
+                <img src="{{ url_for('static', filename='img/logo_escura.png') }}"
+                    data-logo-claro="{{ url_for('static', filename='img/logo_clara.png') }}"
+                    data-logo-escuro="{{ url_for('static', filename='img/logo_escura.png') }}" alt="Logo DuckFy"
                     class="logo-imagem">
             </a>
+
 
 
             <!-- opções do cabeçalho -->
@@ -99,6 +103,7 @@
 
             <!-- formulário -->
             <div class="login-formulario">
+
                 <!-- título -->
                 <section class="login-topo">
                     <h1>Que bom ter você aqui!</h1>
@@ -283,34 +288,71 @@
             }
         });
 
-        // alterna o tema sem remover o ícone
+        // elementos do tema e da logo
         const botaoTema = document.getElementById("btn-tema");
+        const logo = document.querySelector(".logo-imagem");
 
-        // atualiza o texto acessível do botão
-        function atualizarAcessibilidadeTema() {
-            const temaClaro = document.documentElement.classList.contains("tema-claro");
+        // observa as mudanças do tema e atualiza a logo
+        const observadorLogo = new MutationObserver(function () {
+            atualizarLogo();
+        });
 
-            botaoTema.setAttribute(
-                "aria-label",
-                temaClaro ? "ativar tema escuro" : "ativar tema claro"
-            );
+        observadorLogo.observe(document.documentElement, {
+            attributes: true,
+            attributeFilter: ["class"]
+        });
 
-            botaoTema.setAttribute(
-                "title",
-                temaClaro ? "ativar tema escuro" : "ativar tema claro"
-            );
+        observadorLogo.observe(document.body, {
+            attributes: true,
+            attributeFilter: ["class"]
+        });
+
+
+        function atualizarLogo() {
+            if (!logo) return;
+
+            const temaClaro =
+                document.documentElement.classList.contains("tema-claro") ||
+                document.body.classList.contains("tema-claro");
+
+            const novaLogo = temaClaro
+                ? logo.dataset.logoClaro
+                : logo.dataset.logoEscuro;
+
+            if (novaLogo && logo.getAttribute("src") !== novaLogo) {
+                logo.src = novaLogo;
+            }
         }
 
+
+        // Atualiza a descrição do tema atual
+        function atualizarAcessibilidadeTema() {
+            if (!botaoTema) return;
+
+            const temaClaro =
+                document.documentElement.classList.contains("tema-claro");
+
+            const descricao = temaClaro
+                ? "Tema claro ativado"
+                : "Tema escuro ativado";
+
+            botaoTema.setAttribute("aria-label", descricao);
+            botaoTema.setAttribute("title", descricao);
+        }
         // configura o botão de tema
         if (botaoTema) {
+            atualizarLogo();
             atualizarAcessibilidadeTema();
 
             botaoTema.addEventListener("click", function () {
                 document.documentElement.classList.toggle("tema-claro");
                 document.body.classList.toggle("tema-claro");
 
+                atualizarLogo();
                 atualizarAcessibilidadeTema();
             });
+        } else {
+            atualizarLogo();
         }
 
         // mostra o aviso dos termos
@@ -335,3 +377,50 @@
 </body>
 
 </html>
+
+
+        <!-- // elementos do tema e da logo
+        const botaoTema = document.getElementById("btn-tema");
+        const logo = document.querySelector(".logo-imagem");
+
+        // verifica o tema atual e atualiza a logo
+        function atualizarLogo() {
+            if (!logo) return;
+
+            const temaClaro =
+                document.documentElement.classList.contains("tema-claro");
+
+            logo.src = temaClaro
+                ? logo.dataset.logoClaro
+                : logo.dataset.logoEscuro;
+        }
+
+        // atualiza a descrição acessível do botão
+        function atualizarAcessibilidadeTema() {
+            if (!botaoTema) return;
+
+            const temaClaro =
+                document.documentElement.classList.contains("tema-claro");
+
+            const descricao = temaClaro
+                ? "Ativar tema escuro"
+                : "Ativar tema claro";
+
+            botaoTema.setAttribute("aria-label", descricao);
+            botaoTema.setAttribute("title", descricao);
+        }
+
+        // aplica o tema e a logo inicial
+        atualizarLogo();
+        atualizarAcessibilidadeTema();
+
+        // alterna o tema e a logo
+        if (botaoTema) {
+            botaoTema.addEventListener("click", function () {
+                document.documentElement.classList.toggle("tema-claro");
+                document.body.classList.toggle("tema-claro");
+
+                atualizarLogo();
+                atualizarAcessibilidadeTema();
+            });
+        } -->
