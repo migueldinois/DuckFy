@@ -64,15 +64,27 @@
 
                 <!-- AÇÕES ADICIONAIS -->
                 <div class="d-flex flex-column gap-2 mt-4">
-                    <button class="btn btn-acao-roxo p-3 rounded-3 fw-semibold" type="button">Alterar senha</button>
-                    <a href="{{ url_for('logout') }}" class="btn btn-acao-escuro p-3 rounded-3 fw-semibold text-center text-decoration-none">Sair da conta</a>
-                    <button class="btn btn-acao-vermelho p-3 rounded-3 fw-semibold" type="button">Excluir conta</button>
+                    <button class="btn btn-acao-vermelho p-3 rounded-3 fw-semibold" type="button" id="abrir-modal-excluir-conta">Excluir conta</button>
                 </div>
 
             </div>
         </section>
 
     </form>
+
+    <!-- MODAL DE EXCLUSÃO DE CONTA -->
+     <!-- dialog: serve para criar um modal, oque é um modal? é uma janela de diálogo que aparece sobre a página principal -->
+    <dialog id="modal-excluir-conta" class="modal-excluir-conta" aria-labelledby="titulo-excluir-conta">
+        <h2 id="titulo-excluir-conta">Excluir conta</h2>
+        <p>Tem certeza que deseja excluir sua conta?</p>
+        <div class="acoes-modal-excluir">
+            <button type="button" class="btn-cancelar-exclusao" id="cancelar-exclusao-conta">Cancelar</button>
+            <form action="{{ url_for('excluir_conta_usuario') }}" method="POST">
+                <button type="submit" class="btn-confirmar-exclusao">Sim, excluir</button>
+            </form>
+        </div>
+    </dialog>
+
 </div>
 {% endblock %}
 
@@ -109,6 +121,7 @@
         campo.classList.toggle('invalido', invalido);
     }
 
+    // Validação do formulário antes de enviar
     formularioPerfil.addEventListener('submit', function(event) {
         const nomeInvalido = campoNome.value.trim() === '';
         const emailInvalido = !regexEmail.test(campoEmail.value.trim());
@@ -119,6 +132,15 @@
         if (nomeInvalido || emailInvalido) {
             event.preventDefault();
         }
+    });
+
+
+    const modalExcluirConta = document.getElementById('modal-excluir-conta');
+    document.getElementById('abrir-modal-excluir-conta').addEventListener('click', function() {
+        modalExcluirConta.showModal();
+    });
+    document.getElementById('cancelar-exclusao-conta').addEventListener('click', function() {
+        modalExcluirConta.close();
     });
 </script>
 {% endblock %}

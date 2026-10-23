@@ -17,7 +17,7 @@
 .perfil-wrapper,
 .perfil-main-wrapper {
   width: 100% !important;
-  max-width: 850px !important; /* Limite proporcional para PC */
+  max-width: 980px !important; /* Limite proporcional para PC */
   margin: 0 auto !important;   /* Centraliza no painel principal */
   padding: 0 0 40px 0 !important;
   color: #ffffff;

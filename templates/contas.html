@@ -1,4 +1,4 @@
-{% include 'components/modal_adicionar_banco.html' %}
+
 
 
 {% extends 'layout.html' %}
@@ -12,6 +12,8 @@
 {% block content %}
 {% include 'components/modal_adicionar_banco.html' %}
 {% include 'components/modal_editar_conta.html' %}
+{% include 'components/modal_transferir_contas.html' %}
+{% include 'components/modal_adicionar_dinheiro_conta.html' %}
 <main class="pagina-patrimonio">
 
   <!-- Cabeçalho -->
@@ -47,14 +49,38 @@
       <h2 class="card-valor">
         R$ {{ reserva_total|default('0,00', true) }}
       </h2>
+      <span class="card-detalhe-reserva">
+        {{ '%.1f'|format(porcentagem_reservada|default(0, true))|replace('.', ',') }}% do patrimônio
+      </span>
+      <p class="aviso-reserva mb-0">Este valor já está incluído no seu patrimônio total</p>
+    </article>
+
+    <article class="card-patrimonio">
+      <span class="card-rotulo">Saldo fora da reserva</span>
+      <h2 class="card-valor">
+        R$ {{ saldo_fora_reserva|default('0,00', true) }}
+      </h2>
     </article>
   </section>
 
   <!-- Ações -->
-  <section class="mb-4">
-    <button type="button" class="btn-purple-action" data-open-modal="modalAdicionarBanco">
-      + Adicionar banco
+
+  <section class="acoes-patrimonio mb-4">
+    <button type="button" class="btn-acao-patrimonio btn-adicionar-banco" data-open-modal="modalAdicionarBanco">
+      <i class="bi bi-plus-lg" aria-hidden="true"></i>
+      <span>Adicionar banco</span>
     </button>
+    
+    <button type="button" class="btn-acao-patrimonio btn-adicionar-dinheiro" data-open-modal="modalAdicionarDinheiro">
+      <i class="bi bi-plus-lg" aria-hidden="true"></i>
+      <span>Adicionar dinheiro</span>
+    </button>
+
+    <button type="button" class="btn-acao-patrimonio btn-transferir-dinheiro" data-open-modal="modalTransferirContas">
+      <i class="bi bi-arrow-left-right" aria-hidden="true"></i>
+      <span>Transferir dinheiro</span>
+    </button>
+
   </section>
 
   <!-- Contas -->
@@ -85,6 +111,11 @@
           <span class="tipo-banco">
             {{ conta.tipo_conta }}
           </span>
+          {% if conta.valor_alocado|default(0, true)|float > 0 %}
+          <span class="alocacao-reserva">
+            Na reserva: R$ {{ '%.2f'|format(conta.valor_alocado|float)|replace('.', ',') }}
+          </span>
+          {% endif %}
         </div>
 
       </div>
@@ -143,7 +174,7 @@
           <label for="editarSaldoConta" class="card-subtitle d-block mb-2">
             Saldo atual (R$)
           </label>
-          <input id="editarSaldoConta" name="saldo_atual" class="search-input" type="number" step="0.01" required>
+          <input id="editarSaldoConta" name="saldo_atual" class="search-input" type="text" inputmode="decimal" data-currency-input min="0" required>
         </div>
 
         <button type="submit" class="btn-purple-action w-100">
@@ -159,7 +190,7 @@
 
 {% block extra_js %}
 <script>
-document.addEventListener('DOMContentLoaded', () => {
+  document.addEventListener('DOMContentLoaded', () => {
     const form = document.getElementById('formEditarConta');
     const nome = document.getElementById('editarNomeConta');
     const tipo = document.getElementById('editarTipoConta');
@@ -177,87 +208,88 @@ document.addEventListener('DOMContentLoaded', () => {
     if (!form || !nome || !tipo || !saldo) return;
 
     document.querySelectorAll('[data-editar-conta]').forEach(botao => {
-        botao.addEventListener('click', () => {
-            nome.value = botao.dataset.nome || '';
-            tipo.value = botao.dataset.tipo || '';
-            saldo.value = botao.dataset.saldo || '0';
-            form.action = botao.dataset.url || '';
-            urlExcluir = botao.dataset.urlExcluir || '';
+      botao.addEventListener('click', () => {
+        nome.value = botao.dataset.nome || '';
+        tipo.value = botao.dataset.tipo || '';
+        saldo.value = botao.dataset.saldo || '0';
+        saldo.dataset.currencyInitialValue = 'true';
+        form.action = botao.dataset.url || '';
+        urlExcluir = botao.dataset.urlExcluir || '';
 
-            if (confirmacao) confirmacao.hidden = true;
-            if (palavra) palavra.value = '';
-            if (btnConfirmar) btnConfirmar.disabled = true;
-            if (mensagem) mensagem.textContent = '';
+        if (confirmacao) confirmacao.hidden = true;
+        if (palavra) palavra.value = '';
+        if (btnConfirmar) btnConfirmar.disabled = true;
+        if (mensagem) mensagem.textContent = '';
 
-            ModalManager.abrir('modalEditarConta');
-        });
+        ModalManager.abrir('modalEditarConta');
+      });
     });
 
     palavra?.addEventListener('input', () => {
-        const valido = palavra.value.trim().toLowerCase() === 'deletar';
+      const valido = palavra.value.trim().toLowerCase() === 'deletar';
 
-        if (btnConfirmar) btnConfirmar.disabled = !valido;
+      if (btnConfirmar) btnConfirmar.disabled = !valido;
 
-        if (mensagem) {
-            mensagem.textContent = valido
-                ? 'Palavra correta. Você já pode confirmar.'
-                : '';
-        }
+      if (mensagem) {
+        mensagem.textContent = valido
+          ? 'Palavra correta. Você já pode confirmar.'
+          : '';
+      }
     });
 
     btnExcluir?.addEventListener('click', () => {
-        if (!urlExcluir) {
-            alert('Não foi possível identificar a conta selecionada.');
-            return;
-        }
+      if (!urlExcluir) {
+        alert('Não foi possível identificar a conta selecionada.');
+        return;
+      }
 
-        confirmacao.hidden = false;
-        palavra.value = '';
-        btnConfirmar.disabled = true;
-        mensagem.textContent = '';
-        palavra.focus();
+      confirmacao.hidden = false;
+      palavra.value = '';
+      btnConfirmar.disabled = true;
+      mensagem.textContent = '';
+      palavra.focus();
     });
 
     btnCancelar?.addEventListener('click', () => {
-        confirmacao.hidden = true;
-        palavra.value = '';
-        btnConfirmar.disabled = true;
-        mensagem.textContent = '';
+      confirmacao.hidden = true;
+      palavra.value = '';
+      btnConfirmar.disabled = true;
+      mensagem.textContent = '';
     });
 
     btnCopiar?.addEventListener('click', async () => {
-        try {
-            await navigator.clipboard.writeText('Deletar');
-            mensagem.textContent = 'Palavra copiada!';
-        } catch {
-            const temporario = document.createElement('textarea');
-            temporario.value = 'Deletar';
-            temporario.style.position = 'fixed';
-            temporario.style.opacity = '0';
-            document.body.appendChild(temporario);
-            temporario.select();
+      try {
+        await navigator.clipboard.writeText('Deletar');
+        mensagem.textContent = 'Palavra copiada!';
+      } catch {
+        const temporario = document.createElement('textarea');
+        temporario.value = 'Deletar';
+        temporario.style.position = 'fixed';
+        temporario.style.opacity = '0';
+        document.body.appendChild(temporario);
+        temporario.select();
 
-            const copiado = document.execCommand('copy');
-            temporario.remove();
+        const copiado = document.execCommand('copy');
+        temporario.remove();
 
-            mensagem.textContent = copiado
-                ? 'Palavra copiada!'
-                : 'Não foi possível copiar. Digite Deletar manualmente.';
-        }
+        mensagem.textContent = copiado
+          ? 'Palavra copiada!'
+          : 'Não foi possível copiar. Digite Deletar manualmente.';
+      }
     });
 
     btnConfirmar?.addEventListener('click', () => {
-        if (palavra.value.trim().toLowerCase() !== 'deletar' || !urlExcluir) {
-            btnConfirmar.disabled = true;
-            return;
-        }
+      if (palavra.value.trim().toLowerCase() !== 'deletar' || !urlExcluir) {
+        btnConfirmar.disabled = true;
+        return;
+      }
 
-        const formExcluir = document.createElement('form');
-        formExcluir.method = 'POST';
-        formExcluir.action = urlExcluir;
-        document.body.appendChild(formExcluir);
-        formExcluir.submit();
+      const formExcluir = document.createElement('form');
+      formExcluir.method = 'POST';
+      formExcluir.action = urlExcluir;
+      document.body.appendChild(formExcluir);
+      formExcluir.submit();
     });
-});
+  });
 </script>
 {% endblock %}
