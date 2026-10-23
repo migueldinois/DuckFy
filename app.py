@@ -12,6 +12,16 @@ from model.simulador import SimuladorPatrimonio
 app = Flask(__name__)
 app.secret_key = "duckfy999"
 
+@app.get("/")
+@app.get("/login")
+def index():
+
+    if "usuario" in session:
+        return redirect("/dashboard")
+    
+    
+    return render_template("tela_login.html")
+
 @app.route("/simulador", methods=["GET", "POST"])
 def tela_simulador():
     aporte_inicial = 0.0
