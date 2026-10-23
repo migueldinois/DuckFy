@@ -563,10 +563,18 @@ body {
     text-decoration: underline;
 }
 
+
 /* tema claro */
+html.tema-claro body,
 body.tema-claro {
-    color: #252033;
-    background: #f3f1f8;
+    color: var(--text-primary);
+    background: var(--auth-gradient, linear-gradient(
+        135deg,
+        #F3EFFB 0%,
+        #E6DDF5 50%,
+        #D8C8F0 100%
+    ));
+    background-attachment: fixed;
 }
 
 body.tema-claro .login {
@@ -574,87 +582,95 @@ body.tema-claro .login {
 }
 
 body.tema-claro .login-conteudo {
-    background: rgba(255, 255, 255, 0.92);
-    border-color: rgba(50, 35, 80, 0.12);
-    box-shadow: 0 20px 40px rgba(40, 25, 70, 0.12);
+    background: rgba(248, 245, 253, 0.92);
+    border-color: var(--border-color);
+    box-shadow: 0 20px 40px var(--shadow-color);
 }
 
 body.tema-claro .login-topo h1,
 body.tema-claro .campo label,
 body.tema-claro .login-link-acesso {
-    color: #252033;
+    color: var(--text-primary);
 }
 
 body.tema-claro .login-topo p,
-body.tema-claro .cadastro {
-    color: #706a80;
+body.tema-claro .cadastro,
+body.tema-claro .separador {
+    color: var(--text-muted);
 }
 
 body.tema-claro .login-opcoes a,
 body.tema-claro .login-opcoes button {
-    color: #302744;
-    background: rgba(255, 255, 255, 0.75);
-    border-color: rgba(50, 35, 80, 0.15);
+    color: var(--text-primary);
+    background: rgba(248, 245, 253, 0.8);
+    border-color: var(--border-color);
 }
 
 body.tema-claro .login-opcoes a:hover,
 body.tema-claro .login-opcoes button:hover {
-    color: #302744;
-    background: rgba(124, 77, 255, 0.1);
+    color: var(--text-primary);
+    background: rgba(124, 77, 255, 0.12);
+    border-color: var(--brand-secondary);
 }
 
 body.tema-claro .login .campo input {
-    color: #252033;
-    background: #ffffff;
-    border-color: #ded9e8;
+    color: var(--text-primary);
+    background: rgba(255, 255, 255, 0.8);
+    border-color: var(--border-color);
 }
 
 body.tema-claro .login .campo input::placeholder {
-    color: #858093;
+    color: var(--text-muted);
 }
 
 body.tema-claro .login .campo input:focus {
-    border-color: var(--brand-primary, #7C4DFF);
-}
-
-body.tema-claro .separador {
-    color: #777083;
+    background: #FFFFFF;
+    border-color: var(--brand-primary);
+    box-shadow: 0 0 0 3px rgba(112, 66, 200, 0.15);
 }
 
 body.tema-claro .separador::before,
 body.tema-claro .separador::after {
-    background: #e1dce9;
+    background: var(--border-color);
 }
 
 body.tema-claro .login-link-acesso {
-    color: #302744;
+    color: var(--text-primary);
+}
+
+body.tema-claro .senha-label a,
+body.tema-claro .cadastro a {
+    color: var(--brand-primary);
+}
+
+body.tema-claro .senha-label a:hover,
+body.tema-claro .cadastro a:hover {
+    color: var(--accent-primary);
 }
 
 /* aviso no tema claro */
 body.tema-claro .aviso-termos {
-    color: #302744;
-    background: #ffffff;
-    border-color: rgba(124, 77, 255, 0.35);
-    box-shadow: 0 10px 25px rgba(40, 25, 70, 0.1);
+    color: var(--text-primary);
+    background: var(--bg-surface-1);
+    border-color: var(--border-color);
+    box-shadow: 0 10px 25px var(--shadow-color);
 }
 
-body.tema-claro .aviso-texto p {
-    color: #706a80;
-}
-
+body.tema-claro .aviso-texto p,
 body.tema-claro .fechar-aviso {
-    color: #706a80;
+    color: var(--text-muted);
 }
 
 body.tema-claro .fechar-aviso:hover {
-    color: #302744;
+    color: var(--text-primary);
     background: rgba(124, 77, 255, 0.1);
 }
 
 /* logo no tema claro */
 body.tema-claro .logo-fy {
-    color: #252033;
+    color: var(--text-primary);
 }
+
 
 @media (max-width: 500px) {
     .login-cabecalho {

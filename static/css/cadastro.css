@@ -412,98 +412,101 @@ body {
     text-decoration: underline;
 }
 
+
 /* tema claro */
+html.tema-claro body,
 body.tema-claro {
-    color: #252033;
-    background: #f3f1f8;
+    color: var(--text-primary);
+    background: var(--auth-gradient, linear-gradient(
+        135deg,
+        #F3EFFB 0%,
+        #E6DDF5 50%,
+        #D8C8F0 100%
+    ));
+    background-attachment: fixed;
+}
+
+body.tema-claro .cadastro {
+    background: transparent;
 }
 
 body.tema-claro .cadastro-conteudo {
-    background: rgba(255, 255, 255, 0.92);
-    border-color: rgba(50, 35, 80, 0.12);
-    box-shadow: 0 20px 40px rgba(40, 25, 70, 0.12);
+    background: rgba(248, 245, 253, 0.94);
+    border-color: var(--border-color);
+    box-shadow: 0 20px 40px var(--shadow-color);
 }
 
 body.tema-claro .cadastro-topo h1,
 body.tema-claro .campo label {
-    color: #252033;
+    color: var(--text-primary);
 }
 
 body.tema-claro .cadastro-topo p,
 body.tema-claro .termos-concordancia,
 body.tema-claro .login {
-    color: #706a80;
+    color: var(--text-muted);
 }
 
 body.tema-claro .cadastro-opcoes button {
-    color: #302744;
-    background: rgba(255, 255, 255, 0.75);
-    border-color: rgba(50, 35, 80, 0.15);
+    color: var(--text-primary);
+    background: rgba(248, 245, 253, 0.8);
+    border-color: var(--border-color);
 }
 
 body.tema-claro .cadastro-opcoes button:hover {
-    background: rgba(124, 77, 255, 0.1);
+    background: rgba(124, 77, 255, 0.12);
+    border-color: var(--brand-secondary);
 }
 
 body.tema-claro .campo input {
-    color: #252033;
-    background: #ffffff;
-    border-color: #ded9e8;
+    color: var(--text-primary);
+    background: rgba(255, 255, 255, 0.85);
+    border-color: var(--border-color);
 }
 
 body.tema-claro .campo input::placeholder {
-    color: #858093;
+    color: var(--text-muted);
 }
 
 body.tema-claro .campo input:focus {
-    border-color: #7C4DFF;
+    background: #FFFFFF;
+    border-color: var(--brand-primary);
+    box-shadow: 0 0 0 3px rgba(112, 66, 200, 0.15);
+}
+
+body.tema-claro .termos-concordancia input[type="checkbox"] {
+    accent-color: var(--brand-primary);
 }
 
 body.tema-claro .termos-concordancia a {
-    color: #302744;
+    color: var(--brand-primary);
 }
 
 body.tema-claro .termos-concordancia a:hover {
-    color: #7C4DFF;
+    color: var(--brand-dark);
 }
 
 body.tema-claro .separador {
-    color: #777083;
+    color: var(--text-muted);
 }
 
 body.tema-claro .separador::before,
 body.tema-claro .separador::after {
-    background: #e1dce9;
+    background: var(--border-color);
 }
 
 body.tema-claro .login a {
-    color: #7C4DFF;
+    color: var(--brand-primary);
+}
+
+body.tema-claro .login a:hover {
+    color: var(--accent-primary);
 }
 
 body.tema-claro .logo-fy {
-    color: #252033;
+    color: var(--text-primary);
 }
 
-/* patinho flutuando no fundo */
-.patinho-fundo {
-    position: fixed;
-    top: 15%;
-    right: 8%;
-    width: 170px;
-    z-index: 0;
-    pointer-events: none;
-    animation: flutuar-patinho 4s ease-in-out infinite;
-}
-
-.patinho-fundo img {
-    width: 100%;
-    height: auto;
-    display: block;
-
-    filter:
-        drop-shadow(0 0 12px rgba(124, 77, 255, 0.7))
-        drop-shadow(0 0 25px rgba(0, 230, 118, 0.25));
-}
 
 /* animação do patinho */
 @keyframes flutuar-patinho {

@@ -1,52 +1,52 @@
 
 document.addEventListener("DOMContentLoaded", function () {
     const botaoTema = document.getElementById("btn-tema");
-    const logo = document.querySelector(".logo-imagem");
     const iconeTema = document.getElementById("icone-tema");
     const textoTema = document.getElementById("texto-tema");
 
-    // verifica o tema salvo
+    const CHAVE_TEMA = "duckfy-tema";
+
+    // Verifica o tema salvo
     function temaEstaClaro() {
-        return localStorage.getItem("duckfy-tema") === "claro";
+        return localStorage.getItem(CHAVE_TEMA) === "claro";
     }
 
-    // atualiza a logo de acordo com o tema
+    // Atualiza as logos conforme o tema
     function atualizarLogo() {
-        if (!logo) return;
+        const logos = document.querySelectorAll(
+            ".logo-imagem, .cadastro-logo-imagem"
+        );
 
-        const logoClara = logo.dataset.logoClaro;
-        const logoEscura = logo.dataset.logoEscuro;
+        logos.forEach(function (logo) {
+            const caminho = temaEstaClaro()
+                ? logo.dataset.logoClaro
+                : logo.dataset.logoEscuro;
 
-        const caminhoCorreto = temaEstaClaro()
-            ? logoClara
-            : logoEscura;
-
-        if (caminhoCorreto && logo.getAttribute("src") !== caminhoCorreto) {
-            logo.src = caminhoCorreto;
-        }
+            if (caminho && logo.getAttribute("src") !== caminho) {
+                logo.src = caminho;
+            }
+        });
     }
 
-    // aplica o tema e atualiza os elementos
+    // Aplica o tema em todo o documento
     function aplicarTema(tema) {
         const claro = tema === "claro";
 
         document.documentElement.classList.toggle("tema-claro", claro);
         document.body.classList.toggle("tema-claro", claro);
 
-        localStorage.setItem("duckfy-tema", tema);
+        localStorage.setItem(CHAVE_TEMA, tema);
 
         atualizarLogo();
 
         if (botaoTema) {
-            botaoTema.setAttribute(
-                "aria-label",
-                claro ? "Ativar tema escuro" : "Ativar tema claro"
-            );
+            const descricao = claro
+                ? "Ativar tema escuro"
+                : "Ativar tema claro";
 
-            botaoTema.setAttribute(
-                "title",
-                claro ? "Ativar tema escuro" : "Ativar tema claro"
-            );
+            botaoTema.setAttribute("aria-label", descricao);
+            botaoTema.setAttribute("title", descricao);
+            botaoTema.setAttribute("aria-pressed", String(claro));
         }
 
         if (iconeTema) {
@@ -62,10 +62,10 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     }
 
-    // carrega a preferência salva
-    aplicarTema(localStorage.getItem("duckfy-tema") || "escuro");
+    // Carrega o tema salvo
+    aplicarTema(localStorage.getItem(CHAVE_TEMA) || "escuro");
 
-    // alterna o tema
+    // Alterna entre os temas
     if (botaoTema) {
         botaoTema.addEventListener("click", function () {
             aplicarTema(temaEstaClaro() ? "escuro" : "claro");

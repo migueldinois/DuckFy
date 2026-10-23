@@ -1,4 +1,3 @@
-
 /* configuracoes gerais */
 * {
     margin: 0;
@@ -24,11 +23,9 @@ body {
 
     color: var(--text-primary, #FFFFFF);
     background:
-        radial-gradient(
-            circle at 15% 20%,
+        radial-gradient(circle at 15% 20%,
             rgba(124, 77, 255, 0.12),
-            transparent 35%
-        ),
+            transparent 35%),
         var(--bg-primary, #0F0C1B);
 }
 
@@ -225,6 +222,87 @@ button[type="submit"]:focus-visible {
     cursor: pointer;
 }
 
+
+/* tema claro */
+html.tema-claro body,
+body.tema-claro {
+    color: var(--text-primary, #302344);
+    background: var(--auth-gradient, linear-gradient(135deg,
+                #F3EFFB 0%,
+                #E6DDF5 50%,
+                #D8C8F0 100%));
+    background-attachment: fixed;
+}
+
+/* cartão de recuperação */
+html.tema-claro body .container,
+body.tema-claro .container {
+    background: rgba(248, 245, 253, 0.94);
+    border-color: var(--border-color, #D8CBEA);
+    box-shadow: 0 20px 40px var(--shadow-color, rgba(67, 43, 103, 0.10));
+}
+
+/* logo e título */
+html.tema-claro body .logo,
+body.tema-claro .logo {
+    color: var(--text-primary, #302344);
+}
+
+/* campos */
+html.tema-claro body .campo label,
+body.tema-claro .campo label {
+    color: var(--text-primary, #302344);
+}
+
+html.tema-claro body .campo input,
+body.tema-claro .campo input {
+    color: var(--text-primary, #302344);
+    background: rgba(255, 255, 255, 0.85);
+    border-color: var(--border-color, #D8CBEA);
+}
+
+html.tema-claro body .campo input::placeholder,
+body.tema-claro .campo input::placeholder {
+    color: var(--text-muted, #776A8C);
+}
+
+html.tema-claro body .campo input:focus,
+body.tema-claro .campo input:focus {
+    background: #FFFFFF;
+    border-color: var(--brand-primary, #7042C8);
+    box-shadow: 0 0 0 3px rgba(112, 66, 200, 0.15);
+}
+
+/* regras da senha */
+html.tema-claro body .regras p,
+body.tema-claro .regras p {
+    color: var(--text-muted, #776A8C);
+}
+
+/* aviso de sucesso */
+html.tema-claro body .aviso-sucesso,
+body.tema-claro .aviso-sucesso {
+    color: var(--text-primary, #302344);
+    background: var(--bg-surface-2, #E0D5F5);
+}
+
+/* botões */
+html.tema-claro body button[type="submit"],
+body.tema-claro button[type="submit"],
+html.tema-claro body .btn-continuar,
+body.tema-claro .btn-continuar {
+    color: #FFFFFF;
+    background: var(--brand-primary, #7042C8);
+}
+
+html.tema-claro body button[type="submit"]:hover,
+body.tema-claro button[type="submit"]:hover,
+html.tema-claro body .btn-continuar:hover,
+body.tema-claro .btn-continuar:hover {
+    background: var(--brand-dark, #512B9B);
+}
+
+
 /* celular */
 @media (max-width: 500px) {
     body {
@@ -252,6 +330,7 @@ button[type="submit"]:focus-visible {
 
 /* acessibilidade */
 @media (prefers-reduced-motion: reduce) {
+
     *,
     *::before,
     *::after {
