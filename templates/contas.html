@@ -1,3 +1,5 @@
+{% include 'components/modal_adicionar_banco.html' %}
+
 
 {% extends 'layout.html' %}
 
@@ -6,189 +8,151 @@
 <link rel="stylesheet" href="{{ url_for('static', filename='css/duckfy-modal.css') }}">
 {% endblock %}
 
+
 {% block content %}
+{% include 'components/modal_adicionar_banco.html' %}
+{% include 'components/modal_editar_conta.html' %}
 <main class="pagina-patrimonio">
 
-    <!-- Cabeçalho -->
-    <header class="cabecalho-pagina mb-4">
-        <a href="{{ url_for('dashboard') }}"
-           class="btn-voltar"
-           aria-label="Voltar ao painel">
-            <i class="bi bi-arrow-left" aria-hidden="true"></i>
-        </a>
-        <h1 class="titulo-pagina m-0">Patrimônio Total</h1>
-    </header>
+  <!-- Cabeçalho -->
+  <header class="cabecalho-pagina mb-4">
+    <a href="{{ url_for('dashboard') }}" class="btn-voltar" aria-label="Voltar ao painel">
+      <i class="bi bi-arrow-left" aria-hidden="true"></i>
+    </a>
+    <h1 class="titulo-pagina m-0">Patrimônio Total</h1>
+  </header>
 
-    <!-- Mensagens -->
-    {% with mensagens = get_flashed_messages(with_categories=true) %}
-        {% if mensagens %}
-            {% for categoria, mensagem in mensagens %}
-                <div class="alert {{ 'alert-success' if categoria == 'success' else 'alert-danger' }} mb-3"
-                     role="alert">
-                    {{ mensagem }}
-                </div>
-            {% endfor %}
-        {% endif %}
-    {% endwith %}
+  <!-- Mensagens -->
+  {% with mensagens = get_flashed_messages(with_categories=true) %}
+  {% if mensagens %}
+  {% for categoria, mensagem in mensagens %}
+  <div class="alert {{ 'alert-success' if categoria == 'success' else 'alert-danger' }} mb-3" role="alert">
+    {{ mensagem }}
+  </div>
+  {% endfor %}
+  {% endif %}
+  {% endwith %}
 
-    <!-- Resumo -->
-    <section class="patrimonio-resumo" aria-label="Resumo financeiro">
-        <article class="card-patrimonio">
-            <span class="card-rotulo">Saldo total das contas</span>
-            <h2 class="card-valor">
-                R$ {{ patrimonio_total|default('0,00', true) }}
-            </h2>
-        </article>
+  <!-- Resumo -->
+  <section class="patrimonio-resumo" aria-label="Resumo financeiro">
+    <article class="card-patrimonio">
+      <span class="card-rotulo">Saldo total das contas</span>
+      <h2 class="card-valor">
+        R$ {{ patrimonio_total|default('0,00', true) }}
+      </h2>
+    </article>
 
-        <article class="card-patrimonio card-reserva">
-            <span class="card-rotulo">Reserva de emergência</span>
-            <h2 class="card-valor">
-                R$ {{ reserva_total|default('0,00', true) }}
-            </h2>
-        </article>
-    </section>
+    <article class="card-patrimonio card-reserva">
+      <span class="card-rotulo">Reserva de emergência</span>
+      <h2 class="card-valor">
+        R$ {{ reserva_total|default('0,00', true) }}
+      </h2>
+    </article>
+  </section>
 
-    <!-- Ações -->
-    <section class="mb-4">
-        <button type="button"
-                class="btn-adicionar-banco w-100"
-                data-bs-toggle="modal"
-                data-bs-target="#modalNovoBanco">
-            <i class="bi bi-plus-lg" aria-hidden="true"></i>
-            Adicionar banco
+  <!-- Ações -->
+  <section class="mb-4">
+    <button type="button" class="btn-purple-action" data-open-modal="modalAdicionarBanco">
+      + Adicionar banco
+    </button>
+  </section>
+
+  <!-- Contas -->
+  <section class="card-lista-contas mb-4" aria-label="Contas bancárias">
+
+    {% if contas_bancarias %}
+    {% for conta in contas_bancarias %}
+    <article class="item-conta">
+
+      <div class="d-flex align-items-center gap-3">
+
+        <button type="button" class="btn-editar-conta" title="Editar {{ conta.nome_conta }}"
+          aria-label="Editar {{ conta.nome_conta }}" data-editar-conta data-id="{{ conta.id_conta }}"
+          data-nome="{{ conta.nome_conta }}" data-tipo="{{ conta.tipo_conta }}" data-saldo="{{ conta.saldo_atual }}"
+          data-url="{{ url_for('editar_conta', id_conta=conta.id_conta) }}"
+          data-url-excluir="{{ url_for('excluir_conta', id_conta=conta.id_conta) }}">
+          <i class="bi bi-pencil-square" aria-hidden="true"></i>
         </button>
-    </section>
 
-    <!-- Contas -->
-    <section class="card-lista-contas mb-4"
-             aria-label="Contas bancárias">
-
-        {% if contas_bancarias %}
-            {% for conta in contas_bancarias %}
-                <article class="item-conta">
-
-                    <div class="d-flex align-items-center gap-3">
-
-                        <button type="button"
-                                class="btn-editar-conta"
-                                title="Editar {{ conta.nome_conta }}"
-                                aria-label="Editar {{ conta.nome_conta }}"
-                                data-editar-conta
-                                data-id="{{ conta.id_conta }}"
-                                data-nome="{{ conta.nome_conta }}"
-                                data-tipo="{{ conta.tipo_conta }}"
-                                data-saldo="{{ conta.saldo_atual }}"
-                                data-url="{{ url_for('editar_conta', id_conta=conta.id_conta) }}">
-                            <i class="bi bi-pencil-square" aria-hidden="true"></i>
-                        </button>
-
-                        <div class="avatar-banco" aria-hidden="true">
-                            <i class="bi bi-bank"></i>
-                        </div>
-
-                        <div class="info-banco">
-                            <h2 class="nome-banco m-0">
-                                {{ conta.nome_conta }}
-                            </h2>
-                            <span class="tipo-banco">
-                                {{ conta.tipo_conta }}
-                            </span>
-                        </div>
-
-                    </div>
-
-                    <div class="saldo-banco text-end">
-                        R$ {{ "%.2f"|format(conta.saldo_atual|float)|replace('.', ',') }}
-                    </div>
-
-                </article>
-            {% endfor %}
-        {% else %}
-            <div class="p-4 text-center">
-                <i class="bi bi-bank fs-2 d-block mb-3"
-                   aria-hidden="true"></i>
-                <p class="mb-1 fw-semibold">Nenhuma conta cadastrada</p>
-                <p class="tipo-banco mb-0">
-                    Adicione uma conta para visualizar seu patrimônio.
-                </p>
-            </div>
-        {% endif %}
-
-    </section>
-
-    <!-- Modal de edição -->
-    <div id="modalEditarConta"
-         class="duckfy-modal"
-         role="dialog"
-         aria-modal="true"
-         aria-labelledby="tituloModalEditarConta"
-         aria-hidden="true">
-
-        <div class="dash-card modal-content">
-
-            <div class="d-flex justify-content-between align-items-center mb-4">
-                <h2 id="tituloModalEditarConta"
-                    class="card-section-title m-0">
-                    Editar conta
-                </h2>
-
-                <button type="button"
-                        class="btn-close-custom"
-                        data-close-modal
-                        aria-label="Fechar modal">
-                    &times;
-                </button>
-            </div>
-
-            <form id="formEditarConta" method="POST">
-
-                <div class="mb-3">
-                    <label for="editarNomeConta"
-                           class="card-subtitle d-block mb-2">
-                        Nome do banco
-                    </label>
-                    <input id="editarNomeConta"
-                           name="nome_conta"
-                           class="search-input"
-                           type="text"
-                           maxlength="50"
-                           required>
-                </div>
-
-                <div class="mb-3">
-                    <label for="editarTipoConta"
-                           class="card-subtitle d-block mb-2">
-                        Tipo de conta
-                    </label>
-                    <input id="editarTipoConta"
-                           name="tipo_conta"
-                           class="search-input"
-                           type="text"
-                           maxlength="40"
-                           required>
-                </div>
-
-                <div class="mb-4">
-                    <label for="editarSaldoConta"
-                           class="card-subtitle d-block mb-2">
-                        Saldo atual (R$)
-                    </label>
-                    <input id="editarSaldoConta"
-                           name="saldo_atual"
-                           class="search-input"
-                           type="number"
-                           step="0.01"
-                           required>
-                </div>
-
-                <button type="submit"
-                        class="btn-purple-action w-100">
-                    Salvar alterações
-                </button>
-
-            </form>
+        <div class="avatar-banco" aria-hidden="true">
+          <i class="bi bi-bank"></i>
         </div>
+
+        <div class="info-banco">
+          <h2 class="nome-banco m-0">
+            {{ conta.nome_conta }}
+          </h2>
+          <span class="tipo-banco">
+            {{ conta.tipo_conta }}
+          </span>
+        </div>
+
+      </div>
+
+      <div class="saldo-banco text-end">
+        R$ {{ "%.2f"|format(conta.saldo_atual|float)|replace('.', ',') }}
+      </div>
+
+    </article>
+    {% endfor %}
+    {% else %}
+    <div class="p-4 text-center">
+      <i class="bi bi-bank fs-2 d-block mb-3" aria-hidden="true"></i>
+      <p class="mb-1 fw-semibold">Nenhuma conta cadastrada</p>
+      <p class="tipo-banco mb-0">
+        Adicione uma conta para visualizar seu patrimônio.
+      </p>
     </div>
+    {% endif %}
+
+  </section>
+
+  <!-- Modal de edição -->
+  <div id="modalEditarConta" class="duckfy-modal" role="dialog" aria-modal="true"
+    aria-labelledby="tituloModalEditarConta" aria-hidden="true">
+
+    <div class="dash-card modal-content">
+
+      <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2 id="tituloModalEditarConta" class="card-section-title m-0">
+          Editar conta
+        </h2>
+
+        <button type="button" class="btn-close-custom" data-close-modal aria-label="Fechar modal">
+          &times;
+        </button>
+      </div>
+
+      <form id="formEditarConta" method="POST">
+
+        <div class="mb-3">
+          <label for="editarNomeConta" class="card-subtitle d-block mb-2">
+            Nome do banco
+          </label>
+          <input id="editarNomeConta" name="nome_conta" class="search-input" type="text" maxlength="50" required>
+        </div>
+
+        <div class="mb-3">
+          <label for="editarTipoConta" class="card-subtitle d-block mb-2">
+            Tipo de conta
+          </label>
+          <input id="editarTipoConta" name="tipo_conta" class="search-input" type="text" maxlength="40" required>
+        </div>
+
+        <div class="mb-4">
+          <label for="editarSaldoConta" class="card-subtitle d-block mb-2">
+            Saldo atual (R$)
+          </label>
+          <input id="editarSaldoConta" name="saldo_atual" class="search-input" type="number" step="0.01" required>
+        </div>
+
+        <button type="submit" class="btn-purple-action w-100">
+          Salvar alterações
+        </button>
+
+      </form>
+    </div>
+  </div>
 
 </main>
 {% endblock %}
@@ -196,27 +160,103 @@
 {% block extra_js %}
 <script>
 document.addEventListener('DOMContentLoaded', () => {
-    const modalId = 'modalEditarConta';
     const form = document.getElementById('formEditarConta');
     const nome = document.getElementById('editarNomeConta');
     const tipo = document.getElementById('editarTipoConta');
     const saldo = document.getElementById('editarSaldoConta');
+    const btnExcluir = document.getElementById('btnExcluirConta');
+    const confirmacao = document.getElementById('confirmacaoExcluirConta');
+    const palavra = document.getElementById('palavraConfirmacaoExcluir');
+    const btnConfirmar = document.getElementById('confirmarExcluirConta');
+    const btnCancelar = document.getElementById('cancelarExcluirConta');
+    const btnCopiar = document.getElementById('copiarPalavraDeletar');
+    const mensagem = document.getElementById('mensagemConfirmacaoExcluir');
+
+    let urlExcluir = '';
 
     if (!form || !nome || !tipo || !saldo) return;
 
-    document.querySelectorAll('[data-editar-conta]').forEach((botao) => {
+    document.querySelectorAll('[data-editar-conta]').forEach(botao => {
         botao.addEventListener('click', () => {
-            if (!botao.dataset.url) return;
-
             nome.value = botao.dataset.nome || '';
             tipo.value = botao.dataset.tipo || '';
-            saldo.value = botao.dataset.saldo || '';
-            form.action = botao.dataset.url;
+            saldo.value = botao.dataset.saldo || '0';
+            form.action = botao.dataset.url || '';
+            urlExcluir = botao.dataset.urlExcluir || '';
 
-            if (typeof ModalManager !== 'undefined') {
-                ModalManager.abrir(modalId);
-            }
+            if (confirmacao) confirmacao.hidden = true;
+            if (palavra) palavra.value = '';
+            if (btnConfirmar) btnConfirmar.disabled = true;
+            if (mensagem) mensagem.textContent = '';
+
+            ModalManager.abrir('modalEditarConta');
         });
+    });
+
+    palavra?.addEventListener('input', () => {
+        const valido = palavra.value.trim().toLowerCase() === 'deletar';
+
+        if (btnConfirmar) btnConfirmar.disabled = !valido;
+
+        if (mensagem) {
+            mensagem.textContent = valido
+                ? 'Palavra correta. Você já pode confirmar.'
+                : '';
+        }
+    });
+
+    btnExcluir?.addEventListener('click', () => {
+        if (!urlExcluir) {
+            alert('Não foi possível identificar a conta selecionada.');
+            return;
+        }
+
+        confirmacao.hidden = false;
+        palavra.value = '';
+        btnConfirmar.disabled = true;
+        mensagem.textContent = '';
+        palavra.focus();
+    });
+
+    btnCancelar?.addEventListener('click', () => {
+        confirmacao.hidden = true;
+        palavra.value = '';
+        btnConfirmar.disabled = true;
+        mensagem.textContent = '';
+    });
+
+    btnCopiar?.addEventListener('click', async () => {
+        try {
+            await navigator.clipboard.writeText('Deletar');
+            mensagem.textContent = 'Palavra copiada!';
+        } catch {
+            const temporario = document.createElement('textarea');
+            temporario.value = 'Deletar';
+            temporario.style.position = 'fixed';
+            temporario.style.opacity = '0';
+            document.body.appendChild(temporario);
+            temporario.select();
+
+            const copiado = document.execCommand('copy');
+            temporario.remove();
+
+            mensagem.textContent = copiado
+                ? 'Palavra copiada!'
+                : 'Não foi possível copiar. Digite Deletar manualmente.';
+        }
+    });
+
+    btnConfirmar?.addEventListener('click', () => {
+        if (palavra.value.trim().toLowerCase() !== 'deletar' || !urlExcluir) {
+            btnConfirmar.disabled = true;
+            return;
+        }
+
+        const formExcluir = document.createElement('form');
+        formExcluir.method = 'POST';
+        formExcluir.action = urlExcluir;
+        document.body.appendChild(formExcluir);
+        formExcluir.submit();
     });
 });
 </script>
