@@ -31,7 +31,7 @@
                     <!-- avatar -->
                     <div class="avatar-container flex-shrink-0">
                         {% if usuario.foto_perfil %}
-                            <img src="{{ url_for('static', filename='img/' + usuario.foto_perfil) }}" alt="Foto de {{ usuario.nome }}" class="avatar rounded-circle object-fit-cover" width="70" height="70">
+                            <img src="{{ usuario.foto_perfil }}" alt="Foto de {{ usuario.nome }}" class="avatar rounded-circle object-fit-cover" width="70" height="70">
                         {% else %}
                             <div class="avatar" aria-hidden="true">
                                 <span class="avatar-cabeca"></span>

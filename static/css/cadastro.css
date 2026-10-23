@@ -1,234 +1,520 @@
+/* configura a página */
 * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
 }
 
+html,
+body {
+    width: 100%;
+    min-height: 100%;
+}
+
 body {
     min-height: 100vh;
-
-    background-color: #0F0C1B;
-
     font-family: Arial, Helvetica, sans-serif;
-}
-/* text-error */
-.text-error {
-    margin-top: 15px;
-    text-align: center;
-    color: red;
+    color: #ffffff;
+
+    background:
+        radial-gradient(circle at 15% 20%,
+            rgba(124, 77, 255, 0.12),
+            transparent 35%),
+        var(--bg-primary, #0F0C1B);
+
+    transition: background 0.3s ease, color 0.3s ease;
 }
 
-/* LOGO */
-
-h1 {
+/* tela principal */
+.cadastro {
     width: 100%;
-    height: 150px;
-
-    background-color: #7C4DFF;
-
+    min-height: 100vh;
     display: flex;
-    justify-content: center;
-    align-items: center;
-
-    color: #ffffff;
-
-    font-size: 34px;
-    font-weight: 400;
-
-    letter-spacing: 1px;
-
-    box-shadow: 0 5px 18px rgba(0, 0, 0, 0.20);
+    flex-direction: column;
+    padding: 0 24px 35px;
 }
 
-
-/* DUCK */
-
-.duck {
-    color: #ffffff;
-}
-
-
-/* FY */
-
-.fy {
-    color: #EDE7FF;
-}
-
-
-/* FORMULÁRIO */
-
-form {
+/* cabeçalho */
+.cadastro-cabecalho {
     width: 100%;
-    max-width: 600px;
-
-    margin: 0 auto;
-
-    padding: 40px 35px;
+    min-height: 76px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    padding: 14px 8px;
 }
 
+/* logo da duckfy */
+.cadastro-logo {
+    display: inline-flex;
+    align-items: center;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 2rem;
+    font-weight: 400;
+    letter-spacing: -1.5px;
+    line-height: 1;
+    text-decoration: none;
+    white-space: nowrap;
+}
 
-/* LABELS */
+/* fundo roxo do duck */
+.logo-duck {
+    color: #0F0C1B;
+    background: #7C4DFF;
+    padding: 2px 5px;
+    border-radius: 5px 5px 0 0;
+}
 
-label {
-    display: block;
-
+/* letras fy */
+.logo-fy {
     color: #ffffff;
-
-    font-size: 15px;
-    font-weight: 500;
-
-    margin-bottom: 7px;
+    padding-left: 1px;
 }
 
+/* opções do cabeçalho */
+.cadastro-opcoes {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 8px;
+}
 
-/* CAMPOS */
+.cadastro-opcoes button {
+    min-height: 38px;
+    padding: 9px 13px;
+    color: #ffffff;
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    border-radius: 11px;
+    font-family: inherit;
+    font-size: 0.82rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
 
-input {
+.cadastro-opcoes button:hover {
+    background: rgba(124, 77, 255, 0.16);
+    border-color: #B093FF;
+}
+
+/* cartão de cadastro */
+.cadastro-conteudo {
+    width: 100%;
+    max-width: 480px;
+    margin: auto;
+    overflow: hidden;
+    background: var(--bg-surface-1, #19191B);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    border-radius: 20px;
+    box-shadow:
+        0 20px 40px rgba(0, 0, 0, 0.4),
+        inset 0 1px 0 rgba(255, 255, 255, 0.08);
+}
+
+/* formulário */
+.cadastro-formulario {
+    min-width: 0;
+    padding: 38px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+/* título e descrição */
+.cadastro-topo {
+    margin-bottom: 28px;
+    text-align: center;
+}
+
+.cadastro-topo h1 {
+    margin-bottom: 8px;
+    color: #ffffff;
+    font-size: 1.65rem;
+    font-weight: 600;
+    line-height: 1.3;
+    letter-spacing: -0.5px;
+}
+
+.cadastro-topo p {
+    color: #a0a0b5;
+    font-size: 0.88rem;
+    line-height: 1.5;
+}
+
+/* formulário */
+.cadastro-formulario form {
+    width: 100%;
+}
+
+/* campos */
+.campo {
+    width: 100%;
+    margin-bottom: 18px;
+}
+
+.campo label {
+    display: block;
+    margin-bottom: 8px;
+    color: #ffffff;
+    font-size: 0.85rem;
+    font-weight: 500;
+}
+
+.campo input {
+    display: block;
     width: 100%;
     height: 48px;
-
-    background-color: #19191B;
-
+    padding: 0 14px;
     color: #ffffff;
-
-    border: 1px solid #292631;
-    border-radius: 11px;
-
-    padding: 12px 16px;
-
-    font-size: 15px;
-
+    background: rgba(15, 12, 27, 0.75);
+    border: 1px solid rgba(255, 255, 255, 0.13);
+    border-radius: 12px;
     outline: none;
-
-    transition: 0.2s ease;
+    font-family: inherit;
+    font-size: 0.85rem;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
 }
 
+.campo input::placeholder {
+    color: #8a879b;
+}
 
-/* CAMPO SELECIONADO */
-
-input:focus {
+.campo input:focus {
+    background: rgba(15, 12, 27, 0.95);
     border-color: #7C4DFF;
-
     box-shadow: 0 0 0 3px rgba(124, 77, 255, 0.18);
 }
 
-
-/* REMOVE OS BR */
-
-form br {
-    display: none;
-}
-
-
-/* BOTÕES */
-
-.botoes {
+/* concordância com os termos */
+.termos-concordancia {
     display: flex;
-
-    gap: 15px;
-
-    width: 100%;
-
-    margin-top: 25px;
+    align-items: flex-start;
+    gap: 10px;
+    margin: 20px 0;
+    color: #a0a0b5;
+    font-size: 0.85rem;
+    line-height: 1.6;
 }
 
-
-.botoes button {
-    flex: 1;
-
-    height: 48px;
-
-    border: none;
-    border-radius: 11px;
-
-    color: #ffffff;
-
-    font-size: 14px;
-    font-weight: 600;
-
+/* checkbox */
+.termos-concordancia input[type="checkbox"] {
+    width: 16px;
+    height: 16px;
+    flex-shrink: 0;
+    margin-top: 4px;
+    accent-color: #7C4DFF;
     cursor: pointer;
-
-    transition: 0.2s ease;
 }
 
-
-/* BOTÃO CANCELAR */
-
-.botoes button:first-child {
-    background-color: #181826;
-
-    border: 1px solid #292631;
+/* texto dos termos */
+.termos-concordancia label {
+    margin: 0;
+    color: inherit;
+    font-size: inherit;
+    font-weight: 400;
+    line-height: inherit;
+    cursor: pointer;
 }
 
+/* links dos termos */
+.termos-concordancia a {
+    color: #ffffff;
+    text-decoration: underline;
+    text-underline-offset: 3px;
+}
 
-.botoes button:first-child:hover {
-    background-color: #242333;
+.termos-concordancia a:hover {
+    color: #B093FF;
+}
 
+/* botão de cadastro */
+.btn-cadastrar {
+    width: 100%;
+    min-height: 50px;
+    padding: 12px 18px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #ffffff;
+    background: #7C4DFF;
+    border: 1px solid rgba(255, 255, 255, 0.22);
+    border-radius: 13px;
+    font-family: inherit;
+    font-size: 0.92rem;
+    font-weight: 600;
+    cursor: pointer;
+    box-shadow:
+        0 8px 20px rgba(124, 77, 255, 0.25),
+        inset 0 1px 0 rgba(255, 255, 255, 0.15);
+    transition: all 0.2s ease;
+}
+
+.btn-cadastrar:hover {
+    color: #ffffff;
+    background: #B093FF;
     transform: translateY(-2px);
 }
 
-
-/* BOTÃO CADASTRAR */
-
-.botoes button:last-child {
-    background-color: #7C4DFF;
-}
-
-
-.botoes button:last-child:hover {
-    background-color: #B093FF;
-
-    transform: translateY(-2px);
-}
-
-
-/* CLIQUE */
-
-.botoes button:active {
+.btn-cadastrar:active {
     transform: translateY(0);
 }
 
+.btn-cadastrar:focus-visible {
+    outline: 2px solid #B093FF;
+    outline-offset: 3px;
+}
 
-/* CELULAR */
+/* mensagens de erro */
+.container__error {
+    width: 100%;
+}
 
+.text-error {
+    margin-top: 12px;
+    color: #ff7185;
+    font-size: 0.82rem;
+    line-height: 1.5;
+    text-align: center;
+}
+
+/* separador */
+.separador {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin: 26px 0 20px;
+    color: #a0a0b5;
+    font-size: 0.8rem;
+}
+
+.separador::before,
+.separador::after {
+    content: "";
+    flex: 1;
+    height: 1px;
+    background: rgba(255, 255, 255, 0.13);
+}
+
+/* acesso ao login */
+.login {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 5px;
+    color: #a0a0b5;
+    font-size: 0.82rem;
+    text-align: center;
+}
+
+.login a {
+    color: #B093FF;
+    font-size: 0.82rem;
+    font-weight: 600;
+    text-decoration: none;
+}
+
+.login a:hover {
+    color: #58E4A0;
+    text-decoration: underline;
+}
+
+/* tema claro */
+body.tema-claro {
+    color: #252033;
+    background: #f3f1f8;
+}
+
+body.tema-claro .cadastro-conteudo {
+    background: rgba(255, 255, 255, 0.92);
+    border-color: rgba(50, 35, 80, 0.12);
+    box-shadow: 0 20px 40px rgba(40, 25, 70, 0.12);
+}
+
+body.tema-claro .cadastro-topo h1,
+body.tema-claro .campo label {
+    color: #252033;
+}
+
+body.tema-claro .cadastro-topo p,
+body.tema-claro .termos-concordancia,
+body.tema-claro .login {
+    color: #706a80;
+}
+
+body.tema-claro .cadastro-opcoes button {
+    color: #302744;
+    background: rgba(255, 255, 255, 0.75);
+    border-color: rgba(50, 35, 80, 0.15);
+}
+
+body.tema-claro .cadastro-opcoes button:hover {
+    background: rgba(124, 77, 255, 0.1);
+}
+
+body.tema-claro .campo input {
+    color: #252033;
+    background: #ffffff;
+    border-color: #ded9e8;
+}
+
+body.tema-claro .campo input::placeholder {
+    color: #858093;
+}
+
+body.tema-claro .campo input:focus {
+    border-color: #7C4DFF;
+}
+
+body.tema-claro .termos-concordancia a {
+    color: #302744;
+}
+
+body.tema-claro .termos-concordancia a:hover {
+    color: #7C4DFF;
+}
+
+body.tema-claro .separador {
+    color: #777083;
+}
+
+body.tema-claro .separador::before,
+body.tema-claro .separador::after {
+    background: #e1dce9;
+}
+
+body.tema-claro .login a {
+    color: #7C4DFF;
+}
+
+body.tema-claro .logo-fy {
+    color: #252033;
+}
+
+
+/* patinho flutuando no fundo */
+.patinho-fundo {
+    position: fixed;
+    top: 15%;
+    right: 8%;
+    width: 170px;
+    z-index: 0;
+    pointer-events: none;
+    animation: flutuar-patinho 4s ease-in-out infinite;
+}
+
+/* configura a imagem do patinho */
+.patinho-fundo img {
+    width: 100%;
+    height: auto;
+    display: block;
+    filter:
+        drop-shadow(0 0 12px rgba(124, 77, 255, 0.7)) drop-shadow(0 0 25px rgba(0, 230, 118, 0.25));
+}
+
+/* animação de flutuação */
+@keyframes flutuar-patinho {
+
+    0%,
+    100% {
+        transform: translateY(0) rotate(-5deg);
+    }
+
+    50% {
+        transform: translateY(-20px) rotate(5deg);
+    }
+}
+
+/* adapta o tamanho para telas menores */
 @media (max-width: 700px) {
+    .patinho-fundo {
+        width: 90px;
+        top: 8%;
+        right: 4%;
+        opacity: 0.7;
+    }
+}
 
-    h1 {
-        height: 130px;
+/* respeita quem prefere menos animações */
+@media (prefers-reduced-motion: reduce) {
+    .patinho-fundo {
+        animation: none;
+    }
+}
 
-        font-size: 30px;
+/* tablet */
+@media (max-width: 800px) {
+    .cadastro {
+        padding: 0 20px 28px;
     }
 
-
-    form {
-        max-width: 100%;
-
-        padding: 35px 25px;
+    .cadastro-conteudo {
+        max-width: 520px;
     }
 
+    .cadastro-formulario {
+        padding: 34px;
+    }
+}
 
-    label {
-        font-size: 14px;
+/* celular */
+@media (max-width: 500px) {
+    .cadastro {
+        padding: 0 14px 20px;
     }
 
-
-    input {
-        height: 46px;
-
-        font-size: 14px;
+    .cadastro-cabecalho {
+        min-height: 68px;
+        padding: 12px 0;
+        gap: 8px;
     }
 
-
-    .botoes {
-        gap: 10px;
-
-        margin-top: 22px;
+    .cadastro-logo {
+        font-size: 1.7rem;
     }
 
+    .cadastro-opcoes button {
+        min-height: 34px;
+        padding: 7px 8px;
+        font-size: 0.7rem;
+    }
 
-    .botoes button {
-        height: 46px;
+    .cadastro-conteudo {
+        border-radius: 17px;
+    }
 
-        font-size: 13px;
+    .cadastro-formulario {
+        padding: 28px 22px;
+    }
+
+    .cadastro-topo {
+        margin-bottom: 24px;
+    }
+
+    .cadastro-topo h1 {
+        font-size: 1.4rem;
+    }
+
+    .cadastro-topo p {
+        font-size: 0.82rem;
+    }
+
+    .termos-concordancia {
+        gap: 8px;
+        font-size: 0.8rem;
+        line-height: 1.55;
+    }
+}
+
+/* respeita a preferência por menos animações */
+@media (prefers-reduced-motion: reduce) {
+
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
     }
 }

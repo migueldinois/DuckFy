@@ -1,0 +1,150 @@
+{% extends 'layout.html' %}
+
+{% block title %}Simulador Patrimônio - DuckFy{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/simulador_patrimonio.css') }}?v=5.0">
+{% endblock %}
+
+{% block content %}
+<div class="simulador-page-wrapper">
+    <div class="row g-4 align-items-stretch h-100">
+
+        <!-- CARTÃO DA ESQUERDA: FORMULÁRIO -->
+        <div class="col-12 col-lg-4 d-flex">
+            <div class="card-painel w-100 d-flex flex-column justify-content-between">
+                <div>
+
+                    <a href="/dashboard" class="text-white text-decoration-none fs-4 me-3" aria-label="Voltar">
+                        <i class="bi bi-arrow-left"></i>
+                    </a>
+                    <div class="d-flex align-items-center mb-4">
+
+                        <h1 class="h5 mb-0 fw-bold text-white">Simulador Investimentos</h1>
+                    </div>
+
+                    <form id="form-simulador" method="POST" action="/simulador">
+                        <input type="hidden" name="anos" id="input_anos" value="{{ anos or 5 }}">
+
+                        <div class="mb-3">
+                            <label class="form-label text-white-50 fw-semibold">Aporte Inicial (R$)</label>
+                            <input type="number" step="0.01" class="form-control input-custom" id="aporte-inicial"
+                                name="aporte_inicial" value="{{ aporte_inicial if aporte_inicial else '' }}"
+                                placeholder="0,00">
+                        </div>
+
+                        <div class="mb-4">
+                            <label class="form-label text-white-50 fw-semibold">Aporte Mensal (R$)</label>
+                            <input type="number" step="0.01" class="form-control input-custom" id="aporte-mensal"
+                                name="aporte_mensal" value="{{ aporte_mensal if aporte_mensal else '' }}"
+                                placeholder="0,00">
+                        </div>
+
+                        <button type="submit" class="btn btn-purple w-100 fw-bold">Simular</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- CARTÃO DA DIREITA: MÉTRICAS E GRÁFICO -->
+        <div class="col-12 col-lg-8 d-flex">
+            <div class="card-painel w-100 d-flex flex-column justify-content-between">
+
+                <div>
+                    <!-- FILTROS DE PERÍODO -->
+                    <div class="d-flex justify-content-between align-items-center mb-4">
+                        <div class="d-flex gap-2 align-items-center">
+                            <button type="button" class="btn-periodo {% if anos == 5 %}active{% endif %}"
+                                onclick="alterarAnos(5)">5 anos</button>
+                            <button type="button" class="btn-periodo {% if anos == 10 %}active{% endif %}"
+                                onclick="alterarAnos(10)">10 anos</button>
+
+                            <!-- Exibe badge com valor personalizado se não for 5 nem 10 -->
+                            {% if anos and anos != 5 and anos != 10 %}
+                            <span class="badge bg-purple px-3 py-2 fs-6 style-custom-badge">{{ anos }} anos</span>
+                            {% endif %}
+                        </div>
+
+                        <button type="button" class="btn-edit" id="btn-editar-periodo" title="Editar Período">
+                            <i class="bi bi-pencil-fill"></i>
+                        </button>
+                    </div>
+
+                    <!-- MÉTRICAS -->
+                    <div class="row text-center mb-3 g-3">
+                        <div class="col-6">
+                            <div class="metric-box">
+                                <h3 class="fw-bold text-white mb-1 fs-3">R$ {{ "%.2f"|format(resultado.total_investido)
+                                    if resultado else "0.00" }}</h3>
+                                <small class="text-white-50 text-uppercase fw-semibold">Investido</small>
+                            </div>
+                        </div>
+
+                        <div class="col-6">
+                            <div class="metric-box">
+                                <h3 class="fw-bold mb-1 fs-3 text-destaque-verde">R$ {{
+                                    "%.2f"|format(resultado.rendimentos) if resultado else "0.00" }}</h3>
+                                <small class="text-white-50 text-uppercase fw-semibold">Rendimentos</small>
+                            </div>
+                        </div>
+                    </div>
+
+                    <p class="text-center text-white-50 small mb-3">
+                        Taxa utilizada: <strong>{{ resultado.taxa_anual_aplicada if resultado else "10.0" }}%
+                            a.a.</strong> (Fonte: Banco Central do Brasil)
+                    </p>
+                </div>
+
+                <!-- CONTAINER DO CANVAS -->
+                <div class="grafic-container flex-grow-1">
+                    <canvas id="graficoSimulador"></canvas>
+                </div>
+
+            </div>
+        </div>
+
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<script>
+    window.dadosGrafico = {{ (resultado.grafico if resultado else { }) | tojson | safe }};
+
+    function alterarAnos(anos) {
+        const inputAnos = document.getElementById('input_anos');
+        const formSimulador = document.getElementById('form-simulador');
+
+        if (inputAnos && formSimulador) {
+            inputAnos.value = anos;
+            formSimulador.submit();
+        }
+    }
+
+    // Lógica para o botão de lápis (editar período livremente)
+    document.addEventListener('DOMContentLoaded', () => {
+        const btnEditar = document.getElementById('btn-editar-periodo');
+
+        if (btnEditar) {
+            btnEditar.addEventListener('click', () => {
+                const anosAtuais = document.getElementById('input_anos').value || 5;
+                const entrada = prompt("Informe o período desejado em anos (ex: 1 a 30):", anosAtuais);
+
+                if (entrada !== null) {
+                    const anosPersonalizados = parseInt(entrada, 10);
+
+                    if (!isNaN(anosPersonalizados) && anosPersonalizados > 0 && anosPersonalizados <= 50) {
+                        alterarAnos(anosPersonalizados);
+                    } else {
+                        alert("Por favor, insira um número válido de anos entre 1 e 50.");
+                    }
+                }
+            });
+        }
+    });
+</script>
+
+<script src="{{ url_for('static', filename='js/simulador.js') }}?v=5.0"></script>
+{% endblock %}

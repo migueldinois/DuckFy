@@ -1,19 +1,27 @@
 {% extends 'layout.html' %}
 
-
 {% block extra_css %}
 <link rel="stylesheet" href="{{ url_for('static', filename='css/reserva_emergencia.css') }}">
 {% endblock %}
-
 
 {% block content %}
 <div id="page-reserva" class="py-3">
   <div class="style-reserva-container">
 
+    <!-- Mensagens Flash -->
+    {% set messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+      {% for category, message in messages %}
+        <div class="alert alert-{{ 'success' if category == 'success' else 'danger' }} bg-{{ 'success' if category == 'success' else 'danger' }} alert-dismissible fade show text-white border-0 mb-3" role="alert">
+          {{ message }}
+          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+      {% endfor %}
+    {% endif %}
+
     <!-- Header superior -->
     <header class="d-flex align-items-center mb-3">
-      <button type="button" class="btn-voltar border-0 bg-transparent text-white p-0 me-3 fs-4" aria-label="Voltar"
-        onclick="history.back()">
+      <button type="button" class="btn-voltar border-0 bg-transparent text-white p-0 me-3 fs-4" aria-label="Voltar" onclick="history.back()">
         <i class="bi bi-arrow-left"></i>
       </button>
       <h1 class="h4 mb-0 fw-semibold text-white">Reserva de Emergência</h1>
@@ -24,11 +32,11 @@
       <div class="d-flex justify-content-between align-items-start mb-3">
         <div>
           <h2 class="h5 mb-1 text-white fw-bold">Status da Reserva</h2>
-          <span class="text-white-50 fs-7">Meta total: R$ 3.000,00</span>
+          <span class="text-white-50 fs-7">Meta total: R$ {{ "%.2f"|format(meta_total)|replace('.', ',') }}</span>
         </div>
         <div class="text-end">
           <span class="d-block text-uppercase text-white-50 fs-7 fw-bold">PROGRESSO</span>
-          <span class="fs-5 fw-bold text-success">77%</span>
+          <span class="fs-5 fw-bold text-success">{{ progresso_porcentagem }}%</span>
         </div>
       </div>
 
@@ -37,74 +45,195 @@
         <div class="d-flex justify-content-between align-items-baseline mb-3">
           <div>
             <span class="text-white-50 fs-7 d-block mb-1">Total Guardado</span>
-            <span class="fs-2 fw-bold text-white">R$ 2.309,00</span>
+            <span class="fs-2 fw-bold text-white">R$ {{ "%.2f"|format(total_guardado)|replace('.', ',') }}</span>
           </div>
         </div>
 
-        <!-- Barra de Progresso com Classe Ajustada -->
         <div class="progress progress-reserva rounded-pill mb-2">
-          <div class="progress-bar bar-progresso" role="progressbar" style="width: 77%;" aria-valuenow="2309"
-            aria-valuemin="0" aria-valuemax="3000">
+          <div class="progress-bar bar-progresso"
+               role="progressbar" 
+               style="width: {{ progresso_barra }}%;" 
+               aria-valuenow="{{ total_guardado }}" 
+               aria-valuemin="0" 
+               aria-valuemax="{{ meta_total }}">
           </div>
         </div>
 
         <div class="d-flex justify-content-between text-white-50 fs-7 pt-1">
           <span>R$ 0,00</span>
-          <span>Faltam R$ 691,00 para a meta</span>
-          <span>R$ 3.000,00</span>
+          <span>Faltam R$ {{ "%.2f"|format(faltam_para_meta)|replace('.', ',') }} para a meta</span>
+          <span>R$ {{ "%.2f"|format(meta_total)|replace('.', ',') }}</span>
         </div>
       </div>
     </div>
 
     <!-- Botões de Ação -->
-    <div class="row g-3 mb-3">
-      <div class="col-6">
-        <a href="/" class="btn-purple-action">Guardar Dinheiro</a>
-      </div>
-      <div class="col-6">
-        <a href="/lancamento" class="btn-purple-action">Ir para Lançamento</a>
-      </div>
+    <div class="reserva-actions mb-3">
+      <button type="button" class="btn-purple-action border-0" data-bs-toggle="modal" data-bs-target="#modalGuardarDinheiro">
+        Guardar
+      </button>
+      <button type="button" class="btn-purple-action border-0" data-bs-toggle="modal" data-bs-target="#modalRetirarDinheiro">
+        Retirar
+      </button>
+      <button type="button" class="btn-purple-action border-0" data-bs-toggle="modal" data-bs-target="#modalAlterarMeta">
+        Alterar meta
+      </button>
     </div>
 
     <!-- Card de Histórico de Movimentações -->
     <div class="reserva-block p-4 rounded-4 shadow-lg">
       <div class="d-flex justify-content-between align-items-center mb-3">
         <h3 class="h5 text-white fw-bold mb-0">Histórico de Movimentações</h3>
-        <a href="/extrato" class="text-white text-decoration-none fs-7 fw-semibold">Ver Extrato Completo <i
-            class="bi bi-arrow-right"></i></a>
+        <a href="/extrato" class="text-white text-decoration-none fs-7 fw-semibold">Ver Extrato Completo <i class="bi bi-arrow-right"></i></a>
       </div>
 
       <div class="d-flex flex-column gap-3">
-        <!-- Item 1: Entrada -->
+        {% for item in historico_movimentacoes %}
         <div class="d-flex justify-content-between align-items-center">
           <div class="d-flex align-items-center gap-3">
-            <div class="icon-circle bg-success text-dark d-flex align-items-center justify-content-center fw-bold">
-              +
-            </div>
+            {% if item.tipo == 'Entrada' %}
+              <div class="icon-circle bg-success text-dark d-flex align-items-center justify-content-center fw-bold">+</div>
+            {% else %}
+              <div class="icon-circle bg-danger text-white d-flex align-items-center justify-content-center fw-bold">-</div>
+            {% endif %}
             <div>
-              <span class="d-block text-white fw-medium fs-6">Depósito na Reserva</span>
-              <span class="text-white-50 fs-7">16:20 • Entrada</span>
+              <span class="d-block text-white fw-medium fs-6">{{ item.descricao }}</span>
+              <span class="text-white-50 fs-7">{{ item.horario }} • {{ item.tipo }}</span>
             </div>
           </div>
-          <span class="text-success fw-bold fs-6">+ R$ 200,00</span>
+          <span class="{% if item.tipo == 'Entrada' %}text-success{% else %}text-danger{% endif %} fw-bold fs-6">
+            {% if item.tipo == 'Entrada' %}+{% else %}-{% endif %} R$ {{ "%.2f"|format(item.valor)|replace('.', ',') }}
+          </span>
         </div>
-
-        <!-- Item 2: Saída -->
-        <div class="d-flex justify-content-between align-items-center">
-          <div class="d-flex align-items-center gap-3">
-            <div class="icon-circle bg-danger text-white d-flex align-items-center justify-content-center fw-bold">
-              -
-            </div>
-            <div>
-              <span class="d-block text-white fw-medium fs-6">Resgate Emergencial</span>
-              <span class="text-white-50 fs-7">16:19 • Saída</span>
-            </div>
-          </div>
-          <span class="text-danger fw-bold fs-6">- R$ 50,00</span>
-        </div>
+        {% else %}
+        <p class="text-white-50 fs-7 mb-0 text-center py-2">Nenhuma movimentação registrada.</p>
+        {% endfor %}
       </div>
     </div>
 
   </div>
 </div>
+
+<!-- MODAL GUARDAR DINHEIRO -->
+<div class="modal fade" id="modalGuardarDinheiro" tabindex="-1" aria-labelledby="modalGuardarLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content reserva-block border-0 text-white p-2 rounded-4 shadow-lg">
+      
+      <div class="modal-header border-0 pb-0">
+        <h5 class="modal-title fw-bold" id="modalGuardarLabel">Guardar na Reserva</h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Fechar"></button>
+      </div>
+
+      <form action="{{ url_for('guardar_reserva') }}" method="POST">
+        <div class="modal-body">
+          <div class="mb-3">
+            <label for="id_conta" class="form-label text-white-50 fs-7 fw-medium mb-1">Conta de origem</label>
+            <select class="form-select bg-black bg-opacity-40 border-secondary border-opacity-25 text-white" id="id_conta" name="id_conta" required {% if not contas_usuario %}disabled{% endif %}>
+              <option value="" selected disabled>Selecione uma conta</option>
+              {% for conta in contas_usuario %}
+                <option value="{{ conta.id_conta }}">{{ conta.nome_conta }} • R$ {{ '%.2f'|format(conta.saldo_atual)|replace('.', ',') }}</option>
+              {% endfor %}
+            </select>
+            {% if not contas_usuario %}
+              <small class="text-warning d-block mt-2">Cadastre uma conta bancária para guardar dinheiro na reserva.</small>
+            {% endif %}
+          </div>
+
+          <div class="mb-3">
+            <label for="valor" class="form-label text-white-50 fs-7 fw-medium mb-1">Valor a Guardar</label>
+            <div class="input-group">
+              <span class="input-group-text bg-black bg-opacity-40 border-secondary border-opacity-25 text-white-50">R$</span>
+              <input type="number" step="0.01" class="form-control bg-black bg-opacity-40 border-secondary border-opacity-25 text-white" id="valor" name="valor" placeholder="0,00" required>
+            </div>
+          </div>
+
+          <div class="mb-3">
+            <label for="descricao" class="form-label text-white-50 fs-7 fw-medium mb-1">Descrição / Origem</label>
+            <input type="text" class="form-control bg-black bg-opacity-40 border-secondary border-opacity-25 text-white" id="descricao" name="descricao" placeholder="Ex: Sobra do salário, PIX..." required>
+          </div>
+        </div>
+
+        <div class="modal-footer border-0 pt-0">
+          <button type="button" class="btn btn-outline-light rounded-3 px-3" data-bs-dismiss="modal">Cancelar</button>
+          <button type="submit" class="btn-purple-action style-btn-sm px-4" {% if not contas_usuario %}disabled{% endif %}>Confirmar</button>
+        </div>
+      </form>
+
+    </div>
+  </div>
+</div>
+
+<!-- MODAL RETIRAR DINHEIRO -->
+<div class="modal fade" id="modalRetirarDinheiro" tabindex="-1" aria-labelledby="modalRetirarLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content reserva-block border-0 text-white p-2 rounded-4 shadow-lg">
+      <div class="modal-header border-0 pb-0">
+        <h5 class="modal-title fw-bold" id="modalRetirarLabel">Retirar da Reserva</h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Fechar"></button>
+      </div>
+
+      <form action="{{ url_for('retirar_reserva') }}" method="POST">
+        <div class="modal-body">
+          <div class="mb-3">
+            <label for="conta_destino_retirada" class="form-label text-white-50 fs-7 fw-medium mb-1">Conta de destino</label>
+            <select class="form-select bg-black bg-opacity-40 border-secondary border-opacity-25 text-white" id="conta_destino_retirada" name="id_conta" required {% if not contas_usuario %}disabled{% endif %}>
+              <option value="" selected disabled>Selecione uma conta</option>
+              {% for conta in contas_usuario %}
+                <option value="{{ conta.id_conta }}">{{ conta.nome_conta }}</option>
+              {% endfor %}
+            </select>
+            {% if not contas_usuario %}
+              <small class="text-warning d-block mt-2">Cadastre uma conta bancária para receber a retirada.</small>
+            {% endif %}
+          </div>
+
+          <div class="mb-3">
+            <label for="valor_retirada" class="form-label text-white-50 fs-7 fw-medium mb-1">Valor a retirar (disponível: R$ {{ '%.2f'|format(total_guardado)|replace('.', ',') }})</label>
+            <div class="input-group">
+              <span class="input-group-text bg-black bg-opacity-40 border-secondary border-opacity-25 text-white-50">R$</span>
+              <input type="number" step="0.01" min="0.01" max="{{ '%.2f'|format(total_guardado) }}" class="form-control bg-black bg-opacity-40 border-secondary border-opacity-25 text-white" id="valor_retirada" name="valor" placeholder="0,00" required {% if total_guardado <= 0 %}disabled{% endif %}>
+            </div>
+          </div>
+
+          <div class="mb-3">
+            <label for="descricao_retirada" class="form-label text-white-50 fs-7 fw-medium mb-1">Descrição</label>
+            <input type="text" class="form-control bg-black bg-opacity-40 border-secondary border-opacity-25 text-white" id="descricao_retirada" name="descricao" placeholder="Retirada da reserva" maxlength="100">
+          </div>
+        </div>
+
+        <div class="modal-footer border-0 pt-0">
+          <button type="button" class="btn btn-outline-light rounded-3 px-3" data-bs-dismiss="modal">Cancelar</button>
+          <button type="submit" class="btn-purple-action style-btn-sm px-4" {% if not contas_usuario or total_guardado <= 0 %}disabled{% endif %}>Retirar</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL ALTERAR META -->
+<div class="modal fade" id="modalAlterarMeta" tabindex="-1" aria-labelledby="modalAlterarMetaLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content reserva-block border-0 text-white p-2 rounded-4 shadow-lg">
+      <div class="modal-header border-0 pb-0">
+        <h5 class="modal-title fw-bold" id="modalAlterarMetaLabel">Alterar meta da reserva</h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Fechar"></button>
+      </div>
+
+      <form action="{{ url_for('alterar_meta_reserva') }}" method="POST">
+        <div class="modal-body">
+          <label for="meta_valor" class="form-label text-white-50 fs-7 fw-medium mb-1">Nova meta</label>
+          <div class="input-group">
+            <span class="input-group-text bg-black bg-opacity-40 border-secondary border-opacity-25 text-white-50">R$</span>
+            <input type="number" step="0.01" min="0.01" max="99999999.99" class="form-control bg-black bg-opacity-40 border-secondary border-opacity-25 text-white" id="meta_valor" name="meta_valor" value="{{ '%.2f'|format(meta_total) }}" required>
+          </div>
+        </div>
+
+        <div class="modal-footer border-0 pt-0">
+          <button type="button" class="btn btn-outline-light rounded-3 px-3" data-bs-dismiss="modal">Cancelar</button>
+          <button type="submit" class="btn-purple-action style-btn-sm px-4">Salvar meta</button>
+        </div>
+      </form>
+    </div>
+  </div>
+  </div>
 {% endblock %}
