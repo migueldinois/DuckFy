@@ -72,6 +72,8 @@
 
     </form>
 
+    <!-- MODAL DE EXCLUSÃO DE CONTA -->
+     <!-- dialog: serve para criar um modal, oque é um modal? é uma janela de diálogo que aparece sobre a página principal -->
     <dialog id="modal-excluir-conta" class="modal-excluir-conta" aria-labelledby="titulo-excluir-conta">
         <h2 id="titulo-excluir-conta">Excluir conta</h2>
         <p>Tem certeza que deseja excluir sua conta?</p>
@@ -119,6 +121,7 @@
         campo.classList.toggle('invalido', invalido);
     }
 
+    // Validação do formulário antes de enviar
     formularioPerfil.addEventListener('submit', function(event) {
         const nomeInvalido = campoNome.value.trim() === '';
         const emailInvalido = !regexEmail.test(campoEmail.value.trim());
@@ -130,6 +133,7 @@
             event.preventDefault();
         }
     });
+
 
     const modalExcluirConta = document.getElementById('modal-excluir-conta');
     document.getElementById('abrir-modal-excluir-conta').addEventListener('click', function() {

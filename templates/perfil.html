@@ -10,6 +10,7 @@
 {% block content %}
 <div class="perfil-pagina-container w-100">
 
+        <!-- MENSAGENS DE SUCESSO OU ERRO -->
     {% with mensagens = get_flashed_messages(with_categories=true) %}
         {% if mensagens %}
             <div aria-live="polite" aria-atomic="true">
@@ -121,6 +122,7 @@
 
 {% block extra_js %}
 <script>
+    // Função para exibir a mensagem de sucesso e removê-la após 3 segundos
     document.querySelectorAll('.perfil-mensagem-sucesso').forEach(function(mensagem) {
         window.setTimeout(function() {
             mensagem.style.transition = 'opacity 300ms ease';
@@ -128,7 +130,7 @@
             window.setTimeout(function() {
                 mensagem.remove();
             }, 300);
-        }, 4000);
+        }, 3000);
     });
 </script>
 {% endblock %}

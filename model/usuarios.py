@@ -107,6 +107,7 @@ class Usuario():
 
         return dados_usuario
 
+    # Função para atualizar os dados do usuário no banco de dados
     @staticmethod
     def atualizar_dados(email_atual, nome, email, foto_perfil):
         conexao, cursor = Conexao.conectar()
@@ -125,6 +126,7 @@ class Usuario():
             cursor.close()
             conexao.close()
 
+# Função para excluir um usuário do banco de dados
     @staticmethod
     def excluir_usuario(id_usuario):
         conexao, cursor = Conexao.conectar()

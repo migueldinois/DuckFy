@@ -5,6 +5,10 @@ import uuid
 
 from flask import Flask, render_template, request, redirect, session, flash, url_for
 from decimal import Decimal, InvalidOperation
+
+# essa importação é necessária para lidar com o upload de arquivos de forma segura
+from werkzeug.utils import secure_filename 
+
 from database.conexao import Conexao
 from model.categorias import Categoria
 from model.usuarios import Usuario
@@ -411,9 +415,15 @@ def sequencia():
 # Rota para exibir o perfil do usuário
 @app.route("/perfil", methods=["GET", "POST"])
 def perfil():
+    email = session.get("email")
+    if not email:
+        flash("Sua sessão expirou. Entre novamente para acessar seu perfil.", "error")
+        return redirect('/login')
 
-
-    dados_usuario = Usuario.recuperar_dados_usuario(session["email"])
+    dados_usuario = Usuario.recuperar_dados_usuario(email)
+    if not dados_usuario:
+        flash("Não foi possível localizar os dados do seu perfil.", "error")
+        return redirect('/login')
 
     usuario = {
         "nome": dados_usuario["nome"],
