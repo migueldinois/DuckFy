@@ -5,6 +5,7 @@
 {% block title %}Termos de Uso - DuckFy{% endblock %}
 
 {% block styles %}
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 <link rel="stylesheet" href="{{ url_for('static', filename='css/termos.css') }}">
 {% endblock %}
 
@@ -13,7 +14,7 @@
 <main class="termos {% if not usuario_logado %}termos-deslogado{% endif %}">
 
     <header class="termos-topo">
-        <a class="link-voltar position-absolute text-white text-decoration-none fs-4"href="{{ url_for('perfil') if usuario_logado else url_for('index') }}" class="btn-voltar" aria-label="Voltar">
+        <a class="btn-voltar" href="{{ url_for('perfil') if usuario_logado else url_for('index') }}" aria-label="Voltar para a página anterior" onclick="if (window.history.length > 1) { window.history.back(); return false; }">
             <i class="fa-solid fa-arrow-left"></i>
         </a>
 
