@@ -137,3 +137,42 @@ class ContaBancaria:
         finally:
             cursor.close()
             conexao.close()
+
+    @staticmethod
+    def transferir_dinheiro(id_conta_origem, id_conta_destino, id_usuario, valor):
+        """Transfere dinheiro entre duas contas do mesmo utilizador."""
+        conexao, cursor = Conexao.conectar()
+        try:
+            # Verifica se as contas pertencem ao mesmo usuário
+            sql_verificacao = """
+                SELECT id_conta FROM contas_bancarias 
+                WHERE id_conta IN (%s, %s) AND id_usuario = %s
+            """
+            cursor.execute(sql_verificacao, (id_conta_origem, id_conta_destino, id_usuario))
+            contas_validas = cursor.fetchall()
+            
+            if len(contas_validas) != 2:
+                print("Uma ou ambas as contas não pertencem ao usuário.")
+                return False
+
+            # Inicia a transação
+            conexao.autocommit = False
+
+            # Deduz o valor da conta de origem
+            sql_deduzir = "UPDATE contas_bancarias SET saldo_atual = saldo_atual - %s WHERE id_conta = %s"
+            cursor.execute(sql_deduzir, (valor, id_conta_origem))
+
+            # Adiciona o valor à conta de destino
+            sql_adicionar = "UPDATE contas_bancarias SET saldo_atual = saldo_atual + %s WHERE id_conta = %s"
+            cursor.execute(sql_adicionar, (valor, id_conta_destino))
+
+            # Confirma a transação
+            conexao.commit()
+            return True
+        except Exception as e:
+            print(f"Erro ao transferir dinheiro: {e}")
+            conexao.rollback()
+            return False
+        finally:
+            cursor.close()
+            conexao.close()

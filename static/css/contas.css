@@ -510,3 +510,138 @@
         width: 100%;
     }
 }
+
+
+
+#modalTransferirContas .modal-content {
+    width: min(100% - 32px, 460px);
+    max-height: 90vh;
+    overflow-y: auto;
+    padding: 28px;
+    border: 1px solid rgba(255, 255, 255, 0.09);
+    border-radius: 22px;
+    background: #17171d;
+    box-shadow: 0 24px 80px rgba(0, 0, 0, 0.45);
+}
+
+#modalTransferirContas .card-section-title {
+    color: #fff;
+    font-size: 22px;
+    font-weight: 700;
+    letter-spacing: -0.5px;
+}
+
+#modalTransferirContas .card-subtitle {
+    color: #aaa9bd;
+    font-size: 13px;
+    line-height: 1.6;
+}
+
+#modalTransferirContas label.card-subtitle {
+    margin-bottom: 9px !important;
+    color: #d4d2e2;
+    font-weight: 600;
+}
+
+#modalTransferirContas .input-icon-wrapper {
+    width: 100%;
+}
+
+#modalTransferirContas select.search-input,
+#modalTransferirContas input.search-input {
+    display: block;
+    width: 100%;
+    min-height: 48px;
+    padding: 12px 14px;
+    color: #f5f3ff;
+    background-color: #20202b;
+    border: 1px solid #373746;
+    border-radius: 12px;
+    font-size: 14px;
+    outline: none;
+    box-shadow: none;
+    transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+#modalTransferirContas select.search-input {
+    color-scheme: dark;
+    cursor: pointer;
+}
+
+#modalTransferirContas select.search-input option {
+    color: #f5f3ff;
+    background: #20202b;
+}
+
+#modalTransferirContas select.search-input:focus,
+#modalTransferirContas input.search-input:focus {
+    border-color: #914cff;
+    box-shadow: 0 0 0 3px rgba(145, 76, 255, 0.15);
+}
+
+#modalTransferirContas input::placeholder {
+    color: #77778c;
+}
+
+#modalTransferirContas .btn-alternar-contas {
+    display: grid;
+    place-items: center;
+    width: 44px;
+    height: 44px;
+    border: 1px solid rgba(145, 76, 255, 0.35);
+    border-radius: 14px;
+    background: rgba(145, 76, 255, 0.12);
+    cursor: pointer;
+    transition: background 0.2s, transform 0.2s;
+}
+
+#modalTransferirContas .btn-alternar-contas:hover {
+    background: rgba(145, 76, 255, 0.23);
+    transform: rotate(180deg);
+}
+
+#modalTransferirContas .icon-alternar-contas {
+    width: 21px;
+    height: 21px;
+    object-fit: contain;
+}
+
+#modalTransferirContas #resumoTransferencia {
+    padding: 16px;
+    border: 1px solid #353044;
+    border-radius: 14px;
+    background: #201d2a;
+}
+
+#modalTransferirContas #resumoTransferencia strong {
+    color: #fff;
+    font-size: 14px;
+}
+
+#modalTransferirContas .btn-close-custom.w-100 {
+    min-height: 46px;
+    border-radius: 12px;
+    font-size: 14px;
+}
+
+#modalTransferirContas .btn-purple-action {
+    min-height: 46px;
+    border-radius: 12px;
+    font-weight: 600;
+    white-space: nowrap;
+}
+
+#modalTransferirContas form > p {
+    margin-top: 18px;
+    font-size: 12px;
+}
+
+@media (max-width: 480px) {
+    #modalTransferirContas .modal-content {
+        padding: 22px 18px;
+    }
+
+    #modalTransferirContas .d-flex.gap-2.mt-3 {
+        gap: 10px !important;
+    }
+}

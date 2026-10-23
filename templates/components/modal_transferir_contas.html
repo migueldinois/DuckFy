@@ -5,25 +5,20 @@
             <button type="button" class="btn-close-custom" data-close-modal>&times;</button>
         </div>
 
-        <form action="{{ url_for('transferir_contas') }}" method="POST" id="formTransferirContas">
+        <form action="{{ url_for('transferir_dinheiro') }}" method="POST" id="formTransferirContas">
             <div class="mb-3">
                 <label for="conta_origem" class="card-subtitle d-block mb-1">
                     Conta de origem
                 </label>
 
                 <div class="input-icon-wrapper">
-                    <select
-                        name="id_conta_origem"
-                        id="conta_origem"
-                        class="search-input"
-                        required>
+                    <select name="id_conta_origem" id="conta_origem" class="search-input" required>
                         <option value="" disabled selected>Selecione de onde retirar</option>
-                        {% for conta in contas %}
-                            <option
-                                value="{{ conta.id_conta }}"
-                                data-saldo="{{ conta.saldo_atual }}">
-                                {{ conta.nome_conta }}
-                            </option>
+
+                        {% for conta in contas_bancarias %}
+                        <option value="{{ conta.id_conta }}" data-saldo="{{ conta.saldo_atual }}">
+                            {{ conta.nome_conta }}
+                        </option>
                         {% endfor %}
                     </select>
                 </div>
@@ -32,15 +27,9 @@
             </div>
 
             <div class="d-flex justify-content-center align-items-center my-3">
-                <button
-                    type="button"
-                    class="btn-alternar-contas"
-                    id="btnAlternarContas"
-                    title="Alternar contas"
+                <button type="button" class="btn-alternar-contas" id="btnAlternarContas" title="Alternar contas"
                     aria-label="Alternar conta de origem e destino">
-                    <img
-                        src="{{ url_for('static', filename='img/icons/alternar.svg') }}"
-                        alt=""
+                    <img src="{{ url_for('static', filename='img/icons/alternar.svg') }}" alt=""
                         class="icon-alternar-contas">
                 </button>
             </div>
@@ -51,18 +40,12 @@
                 </label>
 
                 <div class="input-icon-wrapper">
-                    <select
-                        name="id_conta_destino"
-                        id="conta_destino"
-                        class="search-input"
-                        required>
+                    <select name="id_conta_destino" id="conta_destino" class="search-input" required>
                         <option value="" disabled selected>Selecione para onde enviar</option>
-                        {% for conta in contas %}
-                            <option
-                                value="{{ conta.id_conta }}"
-                                data-saldo="{{ conta.saldo_atual }}">
-                                {{ conta.nome_conta }}
-                            </option>
+                        {% for conta in contas_bancarias %}
+                        <option value="{{ conta.id_conta }}" data-saldo="{{ conta.saldo_atual }}">
+                            {{ conta.nome_conta }}
+                        </option>
                         {% endfor %}
                     </select>
                 </div>
@@ -76,15 +59,8 @@
                 </label>
 
                 <div class="input-icon-wrapper">
-                    <input
-                        type="number"
-                        name="valor"
-                        id="valor_transferencia"
-                        class="search-input"
-                        placeholder="0,00"
-                        min="0.01"
-                        step="0.01"
-                        required>
+                    <input type="number" name="valor" id="valor_transferencia" class="search-input" placeholder="0,00"
+                        min="0.01" step="0.01" required>
                 </div>
             </div>
 
@@ -105,10 +81,7 @@
             </p>
 
             <div class="d-flex gap-2 mt-3">
-                <button
-                    type="button"
-                    class="btn-close-custom w-100"
-                    data-close-modal>
+                <button type="button" class="btn-close-custom w-100" data-close-modal>
                     Cancelar
                 </button>
 
