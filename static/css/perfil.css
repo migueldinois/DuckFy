@@ -1,150 +1,223 @@
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
+/* ======================================================
+   DUCKFY - PERFIL (COM GRADIENTE ROXO NEON E PROPORÇÃO IDEAL)
+   ====================================================== */
+
+:root {
+  --bg-dark: #0f0c1b;
+  --bg-card: #181826;
+  --bg-card-hover: #222234;
+  --primary-purple: #7c4dff;
+  --purple-glow: rgba(124, 77, 255, 0.35);
+  --border-glass: rgba(255, 255, 255, 0.08);
+  --text-muted: #a0a0b5;
 }
 
-html, body {
-    width: 100%;
-    min-height: 100vh;
-    background-color: var(--bg-primary);
+/* CONTAINER PRINCIPAL COM LARGURA MÁXIMA CONTROLADA */
+.perfil-pagina-container,
+.perfil-wrapper,
+.perfil-main-wrapper {
+  width: 100% !important;
+  max-width: 850px !important; /* Limite proporcional para PC */
+  margin: 0 auto !important;   /* Centraliza no painel principal */
+  padding: 0 0 40px 0 !important;
+  color: #ffffff;
+  box-sizing: border-box;
 }
 
-/* a tela inteira */
-.cartao-perfil-principal {
-    width: 100%;
-    min-height: 100vh;
-    background-color: var(--bg-primary);
-}
-
-/* 1. TOPO ROXO DE BORDA A BORDA */
+/* 1. CABEÇALHO COM O DEGRADÊ ROXO */
 .cabecalho-perfil {
-    width: 100%;
-    background-color: var(--brand-primary);
+  background: linear-gradient(180deg, rgba(124, 77, 255, 0.25) 0%, rgba(15, 12, 27, 0) 100%);
+  border-radius: 20px;
+  padding: 24px 20px;
+  margin-bottom: 24px;
 }
 
-.link-voltar {
-    top: 28px;
-    left: 28px;
-    transition: transform 0.2s ease;
+/* BOTÃO VOLTAR */
+.btn-voltar-perfil {
+  width: 42px;
+  height: 42px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid var(--border-glass);
+  border-radius: 12px;
+  color: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-decoration: none;
+  font-size: 1.1rem;
+  transition: all 0.25s ease;
+  backdrop-filter: blur(8px);
 }
 
-.link-voltar:hover {
-    transform: translateX(-4px);
+.btn-voltar-perfil:hover {
+  background: var(--primary-purple);
+  box-shadow: 0 0 15px var(--purple-glow);
+  transform: translateX(-3px);
 }
 
-/* Bloco centralizado do usuário no topo */
+/* 2. CARTÃO DO USUÁRIO */
+.cartao-usuario-destaque,
 .cartao-usuario {
-    max-width: 900px;
-    background-color: var(--bg-primary);
-    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+  background: var(--bg-card) !important;
+  border: 1px solid var(--border-glass) !important;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4), 0 0 20px rgba(124, 77, 255, 0.1) !important;
+  width: 100% !important;
+  border-radius: 18px !important;
+  backdrop-filter: blur(12px);
 }
 
-/* Avatar Personagem */
 .avatar {
-    width: 70px;
-    height: 70px;
-    border-radius: 50%;
-    background-color: var(--bg-surface-2);
-    position: relative;
-    overflow: hidden;
+  width: 72px;
+  height: 72px;
+  border: 2px solid var(--primary-purple);
+  box-shadow: 0 0 15px var(--purple-glow);
 }
 
-.avatar-cabeca {
-    width: 24px;
-    height: 24px;
-    background-color: var(--brand-primary);
-    border-radius: 50%;
-    position: absolute;
-    top: 14px;
-    left: 50%;
-    transform: translateX(-50%);
+.bg-purple-glow {
+  background: rgba(124, 77, 255, 0.2);
+  width: 72px;
+  height: 72px;
+  border: 2px solid var(--primary-purple);
 }
 
-.avatar-corpo {
-    width: 44px;
-    height: 30px;
-    background-color: var(--brand-primary);
-    border-radius: 50% 50% 0 0;
-    position: absolute;
-    bottom: 0;
-    left: 50%;
-    transform: translateX(-50%);
+.email-usuario {
+  color: var(--text-muted);
 }
 
-.tag-nivel {
-    background-color: var(--bg-surface-2);
-    color: var(--accent-primary);
-    padding: 6px 12px;
+/* BADGES GAMIFICADOS */
+.badge-gamification {
+  padding: 6px 14px;
+  border-radius: 20px;
+  font-size: 0.85rem;
+  font-weight: 700;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
 }
 
+.badge-fire {
+  background: rgba(255, 152, 0, 0.15);
+  color: #ff9800;
+  border: 1px solid rgba(255, 152, 0, 0.3);
+}
+
+.badge-xp {
+  background: rgba(0, 229, 255, 0.15);
+  color: #00e5ff;
+  border: 1px solid rgba(0, 229, 255, 0.3);
+}
+
+/* BOTÃO EDITAR PERFIL */
+.btn-editar-perfil,
 .btn-editar {
-    background-color: var(--brand-primary);
-    color: #ffffff;
-    border-radius: 12px;
-    font-weight: 600;
-    transition: background-color 0.2s ease;
+  background: var(--primary-purple);
+  color: #ffffff;
+  padding: 10px 22px;
+  border-radius: 12px;
+  font-weight: 600;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  transition: all 0.25s ease;
+  box-shadow: 0 4px 15px var(--purple-glow);
 }
 
+.btn-editar-perfil:hover,
 .btn-editar:hover {
-    background-color: var(--brand-dark);
-    color: #ffffff;
+  background: #6c3bfa;
+  color: #ffffff;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(124, 77, 255, 0.5);
 }
 
-/* 2. ÁREA INFERIOR DE BORDA A BORDA */
-.conteudo-perfil {
-    width: 100%;
-    background-color: var(--bg-primary);
-}
-
-/* Container para alinhar o conteúdo interno no PC */
-.container-conteudo {
-    max-width: 1000px;
-}
-
-/* Cards de Ação */
-.cartao-acao {
-    background-color: var(--bg-surface-1);
-    border: 1px solid var(--bg-surface-2);
-    transition: transform 0.2s ease, border-color 0.2s ease;
-}
-
-.cartao-acao:hover {
-    transform: translateY(-2px);
-    border-color: var(--brand-primary);
-}
-
-.icone-acao {
-    width: 46px;
-    height: 46px;
-}
-
-.icone-acao.roxo {
-    background-color: rgba(124, 77, 255, 0.15);
-    color: var(--brand-primary);
-}
-
-.icone-acao.verde {
-    background-color: rgba(0, 230, 118, 0.15);
-    color: var(--accent-primary);
-}
-
-/* Lista Secundária */
+/* 3. LISTA DE OPÇÕES */
 .titulo-secao {
-    font-size: 0.85rem;
-    letter-spacing: 0.5px;
+  font-size: 0.85rem;
+  letter-spacing: 1px;
+  color: var(--primary-purple);
+  margin-top: 1rem;
+}
+
+.secao-lista-config {
+  width: 100% !important;
 }
 
 .item-lista-config {
-    background-color: var(--bg-surface-1);
-    transition: background-color 0.2s ease;
+  background: var(--bg-card) !important;
+  border: 1px solid var(--border-glass) !important;
+  border-radius: 16px !important;
+  padding: 18px 24px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  text-decoration: none !important;
+  color: #ffffff !important;
+  width: 100% !important;
+  box-sizing: border-box !important;
+  transition: all 0.25s ease !important;
 }
 
 .item-lista-config:hover {
-    background-color: var(--bg-surface-2);
+  background: var(--bg-card-hover) !important;
+  border-color: var(--primary-purple) !important;
+  transform: translateX(4px) !important;
 }
 
+.texto-item {
+  font-weight: 500;
+  font-size: 1rem;
+}
+
+/* ÍCONES */
+.icone-box,
 .icone-lista {
-    color: var(--brand-secondary);
+  width: 42px;
+  height: 42px;
+  background: rgba(124, 77, 255, 0.15);
+  color: var(--primary-purple);
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.1rem;
+  transition: all 0.25s ease;
 }
 
+.item-lista-config:hover .icone-box,
+.item-lista-config:hover .icone-lista {
+  background: var(--primary-purple);
+  color: #ffffff;
+  box-shadow: 0 0 12px var(--purple-glow);
+}
+
+.seta {
+  color: var(--text-muted);
+  font-size: 0.9rem;
+}
+
+/* BOTÃO SAIR DA CONTA */
+.item-lista-config.sair {
+  border-color: rgba(255, 82, 82, 0.2) !important;
+}
+
+.texto-sair {
+  color: #ff5252;
+  font-weight: 600;
+}
+
+.icone-sair {
+  background: rgba(255, 82, 82, 0.15) !important;
+  color: #ff5252 !important;
+}
+
+.item-lista-config.sair:hover {
+  background: rgba(255, 82, 82, 0.1) !important;
+  border-color: #ff5252 !important;
+}
+
+.item-lista-config.sair:hover .icone-sair {
+  background: #ff5252 !important;
+  color: #ffffff !important;
+  box-shadow: 0 0 12px rgba(255, 82, 82, 0.4);
+}

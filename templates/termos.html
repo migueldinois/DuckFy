@@ -1,18 +1,21 @@
-{% extends 'layout.html' %}
+{% if usuario_logado %}
+    {% extends 'layout.html' %}
+{% endif %}
 
 {% block title %}Termos de Uso - DuckFy{% endblock %}
 
 {% block styles %}
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 <link rel="stylesheet" href="{{ url_for('static', filename='css/termos.css') }}">
 {% endblock %}
 
 {% block content %}
 
-<main class="termos">
+<main class="termos {% if not usuario_logado %}termos-deslogado{% endif %}">
 
     <header class="termos-topo">
-        <a href="javascript:history.back()" class="btn-voltar" aria-label="Voltar">
-            ←
+        <a class="btn-voltar" href="{{ url_for('perfil') if usuario_logado else url_for('index') }}" aria-label="Voltar para a página anterior" onclick="if (window.history.length > 1) { window.history.back(); return false; }">
+            <i class="fa-solid fa-arrow-left"></i>
         </a>
 
         <h1>Termos de Uso</h1>
@@ -30,72 +33,14 @@
 
     <section class="termos-conteudo">
 
-        <h2>Lorem ipsum</h2>
+        <h2>1. Termos</h2>
         <p>
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-            Etiam porttitor, dui sed consequat pretium, velit eros
-            congue velit, eu ultrices dui massa vitae massa. Nunc eu
-            tincidunt nunc. Quisque eu vehicula arcu. Aliquam eleifend
-            neque vel risus accumsan dictum. Pellentesque consequat
-            nunc id lacinia eleifend.
+            Ao acessar ao site DuckFy, concorda em cumprir estes termos de serviço, todas as leis e regulamentos aplicáveis.
         </p>
 
-        <h2>Lorem ipsum</h2>
+        <h2>2. Uso de Licença</h2>
         <p>
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-            Maecenas vitae libero at nunc tincidunt tincidunt. Donec
-            suscipit, justo sit amet consequat consectetur, neque velit
-            posuere massa, eget tincidunt lorem ipsum at nunc.
-        </p>
-
-        <h2>Lorem ipsum</h2>
-        <p>
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-            Integer feugiat, libero sit amet tincidunt consequat, nisl
-            purus tincidunt massa, vitae suscipit neque erat nec ipsum.
-            Vestibulum ante ipsum primis in faucibus orci luctus et
-            ultrices posuere cubilia curae.
-        </p>
-
-        <h2>Lorem ipsum</h2>
-        <p>
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-            Suspendisse potenti. Morbi eu risus eget turpis consequat
-            suscipit. Nullam feugiat, lacus at consequat tincidunt,
-            sapien neque interdum massa, vitae faucibus lorem purus
-            eget nulla.
-        </p>
-
-        <h2>Lorem ipsum</h2>
-        <p>
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-            Sed eget sagittis ligula. Curabitur consequat, neque non
-            consectetur tincidunt, ipsum libero malesuada lorem, vitae
-            tincidunt justo nulla vel nunc.
-        </p>
-
-        <h2>Lorem ipsum</h2>
-        <p>
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-            Pellentesque habitant morbi tristique senectus et netus et
-            malesuada fames ac turpis egestas. Donec euismod, libero
-            quis tincidunt consequat, massa erat malesuada justo.
-        </p>
-
-        <h2>Lorem ipsum</h2>
-        <p>
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-            Vestibulum consectetur, velit eget tincidunt consequat,
-            massa lorem interdum arcu, at tincidunt justo neque vitae
-            lorem. Donec vitae risus sed libero consequat malesuada.
-        </p>
-
-        <h2>Lorem ipsum</h2>
-        <p>
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-            Aenean consequat, libero sed tincidunt malesuada, neque
-            purus elementum massa, vitae tincidunt nisl lorem vel
-            lectus. Sed eget sagittis ligula.
+            É concedida permissão para baixar temporariamente uma cópia dos materiais no site DuckFy , apenas para visualização transitória pessoal e não comercial.
         </p>
 
     </section>
@@ -103,4 +48,3 @@
 </main>
 
 {% endblock %}
-
