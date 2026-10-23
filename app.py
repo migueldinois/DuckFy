@@ -10,7 +10,6 @@ from model.contas_bancarias import ContaBancaria
 from model.reserva_emergencia import Reserva
 
 
-
 app = Flask(__name__)
 app.secret_key = "duckfy999"
 
