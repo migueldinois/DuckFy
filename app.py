@@ -1,4 +1,5 @@
 import math
+import json
 import os
 import uuid
 
@@ -13,10 +14,79 @@ from model.contas_bancarias import ContaBancaria
 from model.reserva_emergencia import Reserva
 
 
-
 app = Flask(__name__)
 app.secret_key = "duckfy999"
 
+@app.get("/")
+@app.get("/login")
+def index():
+
+    if "usuario" in session:
+        return redirect("/dashboard")
+    
+    
+    return render_template("tela_login.html")
+
+import json
+from flask import Flask, render_template, request
+
+@app.route("/simulador", methods=["GET", "POST"])
+def tela_simulador():
+    aporte_inicial = 0.0
+    aporte_mensal = 0.0
+    anos = 5
+
+    # Tenta capturar dados se for POST
+    if request.method == "POST":
+        try:
+            anos = int(request.form.get("anos", 5))
+            if anos <= 0:
+                anos = 5
+            aporte_inicial = float(request.form.get("aporte_inicial") or 0.0)
+            aporte_mensal = float(request.form.get("aporte_mensal") or 0.0)
+            anos = int(request.form.get("anos") or 5)
+        except (ValueError, TypeError):
+            pass
+
+    taxa_anual = 10.0  # 10% a.a.
+    taxa_mensal = (1 + (taxa_anual / 100)) ** (1 / 12) - 1
+    meses = anos * 12
+
+    labels = []
+    investido_lista = []
+    patrimonio_lista = []
+
+    saldo_total = aporte_inicial
+    for mes in range(1, meses + 1):
+        saldo_total = (saldo_total + aporte_mensal) * (1 + taxa_mensal)
+        investido_acumulado = aporte_inicial + (aporte_mensal * mes)
+
+        labels.append(f"Mês {mes}")
+        investido_lista.append(round(investido_acumulado, 2))
+        patrimonio_lista.append(round(saldo_total, 2))
+
+    total_investido = aporte_inicial + (aporte_mensal * meses)
+    rendimentos = saldo_total - total_investido
+
+    # Dicionário alinhado 100% com as variáveis do seu simulador.html
+    resultado = {
+        "total_investido": round(total_investido, 2),
+        "rendimentos": round(rendimentos, 2),
+        "taxa_anual_aplicada": taxa_anual,
+        "grafico": {
+            "labels": labels,
+            "investido": investido_lista,
+            "patrimonio": patrimonio_lista
+        }
+    }
+
+    return render_template(
+        "simulador.html",
+        aporte_inicial=aporte_inicial,
+        aporte_mensal=aporte_mensal,
+        anos=anos,
+        resultado=resultado
+    )
 
 def obter_estado_fogo(dias_ofensiva):
     dias = int(dias_ofensiva or 0)
@@ -64,16 +134,6 @@ def obter_estado_fogo(dias_ofensiva):
         "mensagem": "Continua a registar a tua atividade diária para manter a chama acesa.",
     }
 
-
-@app.get("/")
-@app.get("/login")
-def index():
-
-    if "usuario" in session:
-        return redirect("/dashboard")
-    
-    
-    return render_template("tela_login.html")
 
 @app.post("/login/usuario")
 def logar():
@@ -165,7 +225,60 @@ def editar_conta(id_conta):
 
     return redirect('/contas')
 
+@app.route('/contas/<int:id_conta>/excluir', methods=['POST'])
+def excluir_conta(id_conta):
+    if "usuario" not in session or not session.get("id_usuario"):
+        flash("Faça login novamente.", "error")
+        return redirect(url_for('login'))
 
+    sucesso = ContaBancaria.deletar_conta(
+        id_conta,
+        session['id_usuario']
+    )
+
+    if sucesso:
+        flash("Conta bancária excluída com sucesso!", "success")
+    else:
+        flash("Não foi possível excluir a conta bancária.", "error")
+
+    return redirect(url_for('contas'))
+@app.route('/contas/criar', methods=['POST'])
+def criar_conta():
+    if "usuario" not in session or "id_usuario" not in session:
+        flash("Faça login novamente para cadastrar uma conta.", "error")
+        return redirect(url_for('login'))
+
+    id_usuario = session.get('id_usuario')
+    nome_conta = request.form.get('nome_conta', '').strip()
+    tipo_conta = request.form.get('tipo_conta', '').strip()
+    saldo_atual = request.form.get('saldo_atual', '0').strip()
+
+    if not nome_conta or not tipo_conta:
+        flash("Preencha todos os campos.", "error")
+        return redirect(url_for('contas'))
+
+    try:
+        saldo_atual = float(saldo_atual.replace(',', '.'))
+
+        if saldo_atual < 0:
+            raise ValueError
+
+        sucesso = ContaBancaria.criar_conta(
+            id_usuario,
+            nome_conta,
+            tipo_conta,
+            saldo_atual
+        )
+
+        if sucesso:
+            flash("Conta bancária criada com sucesso!", "success")
+        else:
+            flash("Não foi possível criar a conta bancária.", "error")
+
+    except (ValueError, TypeError):
+        flash("Informe um saldo válido.", "error")
+
+    return redirect(url_for('contas'))
 @app.route('/reserva_emergencia')
 def reserva_emergencia():
     if "usuario" not in session:
@@ -179,6 +292,7 @@ def reserva_emergencia():
     # Busca os dados no banco
     reserva = Reserva.obter_reserva(id_usuario)
     historico_movimentacoes = Reserva.obter_historico(id_usuario)
+    contas_usuario = Reserva.obter_contas_usuario(id_usuario)
 
     if reserva:
         total_guardado = float(reserva['valor_atual'])
@@ -198,7 +312,8 @@ def reserva_emergencia():
         faltam_para_meta=faltam_para_meta,
         progresso_porcentagem=progresso_porcentagem,
         progresso_barra=progresso_barra,
-        historico_movimentacoes=historico_movimentacoes
+        historico_movimentacoes=historico_movimentacoes,
+        contas_usuario=contas_usuario
     )
 
 
@@ -212,20 +327,49 @@ def guardar_reserva():
     id_usuario = Reserva.obter_id_por_email(email_usuario)
 
     try:
-        valor_guardar = float(request.form.get('valor', 0))
-    except ValueError:
-        valor_guardar = 0.0
+        valor_guardar = Decimal(request.form.get('valor', '').replace(',', '.'))
+        id_conta = int(request.form.get('id_conta', ''))
+    except (InvalidOperation, ValueError, AttributeError):
+        valor_guardar = Decimal('0')
+        id_conta = None
 
     descricao = request.form.get('descricao', 'Depósito na Reserva')
 
-    if valor_guardar <= 0:
-        flash("Informe um valor válido maior que zero!", "error")
+    if not valor_guardar.is_finite() or valor_guardar <= 0 or id_conta is None:
+        flash("Informe uma conta e um valor válido maior que zero!", "error")
         return redirect(url_for('reserva_emergencia'))
 
-    # Salva no Banco de Dados para o id_usuario correto
-    Reserva.guardar_dinheiro(id_usuario, valor_guardar, descricao)
+    if not Reserva.guardar_dinheiro(id_usuario, id_conta, valor_guardar, descricao):
+        flash("A conta selecionada não existe ou não tem saldo suficiente.", "error")
+        return redirect(url_for('reserva_emergencia'))
 
     flash(f'R$ {valor_guardar:.2f} guardados na reserva com sucesso!', 'success')
+    return redirect(url_for('reserva_emergencia'))
+
+
+@app.route('/retirar_reserva', methods=['POST'])
+def retirar_reserva():
+    if "usuario" not in session or not session.get("id_usuario"):
+        flash("Sessão expirada. Faça login novamente.", "error")
+        return redirect('/login')
+
+    try:
+        valor_retirar = Decimal(request.form.get('valor', '').replace(',', '.'))
+        id_conta = int(request.form.get('id_conta', ''))
+    except (InvalidOperation, ValueError, AttributeError):
+        valor_retirar = Decimal('0')
+        id_conta = None
+
+    if not valor_retirar.is_finite() or valor_retirar <= 0 or id_conta is None:
+        flash("Informe uma conta e um valor válido maior que zero.", "error")
+        return redirect(url_for('reserva_emergencia'))
+
+    descricao = request.form.get('descricao', '').strip() or 'Retirada da reserva'
+    if not Reserva.retirar_dinheiro(session['id_usuario'], id_conta, valor_retirar, descricao):
+        flash("Não foi possível retirar: confira o saldo da reserva e a conta selecionada.", "error")
+        return redirect(url_for('reserva_emergencia'))
+
+    flash(f'R$ {valor_retirar:.2f} retirados da reserva com sucesso!', 'withdrawal')
     return redirect(url_for('reserva_emergencia'))
 
 
