@@ -4,7 +4,6 @@ import os
 import uuid
 
 from flask import Flask, render_template, request, redirect, session, flash, url_for
-from werkzeug.utils import secure_filename
 from decimal import Decimal, InvalidOperation
 from database.conexao import Conexao
 from model.categorias import Categoria
@@ -27,8 +26,6 @@ def index():
     
     return render_template("tela_login.html")
 
-import json
-from flask import Flask, render_template, request
 
 @app.route("/simulador", methods=["GET", "POST"])
 def tela_simulador():
