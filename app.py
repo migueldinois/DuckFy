@@ -649,7 +649,13 @@ def tela_extrato():
 @app.get("/lancamento")
 def lancamento():
     if "usuario" in session:
-                return render_template("lancamentos.html")
+        categorias_despesa = Categoria.recuperar_categorias_por_tipo(session["id_usuario"], "Despesa")
+        categorias_receita = Categoria.recuperar_categorias_por_tipo(session["id_usuario"], "Receita")
+        return render_template(
+            "lancamentos.html",
+            categorias_despesa=categorias_despesa,
+            categorias_receita=categorias_receita,
+        )
     else:
         flash("Você precisa estar logado para editar o seu perfil!", "error")
         return redirect('/login')
