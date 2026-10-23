@@ -52,67 +52,48 @@ def tela_simulador():
     if request.method == "POST":
         try:
             anos = int(request.form.get("anos") or 5)
-            if anos <= 0:
-                anos = 5
             aporte_inicial = float(request.form.get("aporte_inicial") or 0.0)
             aporte_mensal = float(request.form.get("aporte_mensal") or 0.0)
         except (ValueError, TypeError):
-            pass
+            anos, aporte_inicial, aporte_mensal = 5, 0.0, 0.0
 
-    # 2. Definição das taxas de juros
-    taxa_anual_pct = obter_taxa_selic_bcb()  # Ex: 13.65%
-    taxa_anual = taxa_anual_pct / 100.0
-    
-    # Conversão equivalente para taxa mensal em juros compostos
+    if anos <= 0:
+        anos = 5
+
+    taxa_anual_pct = obter_taxa_selic_bcb()
+    taxa_anual = taxa_anual_pct / 100
     taxa_mensal = ((1 + taxa_anual) ** (1 / 12)) - 1
     meses = anos * 12
 
-    # 3. Listas para o gráfico
     labels = []
     investido_lista = []
     patrimonio_lista = []
-
-    # 4. Cálculo da Tabela de Evolução Anual
     tabela_anual = []
     saldo_atual = aporte_inicial
+    capital_inicial_ano = saldo_atual
 
-    for ano in range(1, anos + 1):
-        capital_inicial_ano = saldo_atual
-        
-        # Simula 12 meses do ano vigente
-        for mes_do_ano in range(1, 13):
-            # Juro sobre o saldo acumulado
-            saldo_atual = saldo_atual * (1 + taxa_mensal)
-            # Adiciona o aporte no final do mês
-            saldo_atual += aporte_mensal
-            
-            # Dados para o gráfico (mês global)
-            mes_global = ((ano - 1) * 12) + mes_do_ano
-            investido_acumulado = aporte_inicial + (aporte_mensal * mes_global)
-            
-            labels.append(f"Mês {mes_global}")
-            investido_lista.append(round(investido_acumulado, 2))
-            patrimonio_lista.append(round(saldo_atual, 2))
+    for mes in range(1, meses + 1):
+        saldo_atual = saldo_atual * (1 + taxa_mensal) + aporte_mensal
+        total_investido = aporte_inicial + aporte_mensal * mes
 
-        montante_final_ano = saldo_atual
-        aportes_no_ano = aporte_mensal * 12
-        juros_ganhos_ano = montante_final_ano - capital_inicial_ano - aportes_no_ano
+        labels.append(f"Mês {mes}")
+        investido_lista.append(round(total_investido, 2))
+        patrimonio_lista.append(round(saldo_atual, 2))
 
-        tabela_anual.append({
-            "ano": ano,
-            "capital_inicial": round(capital_inicial_ano, 2),
-            "juros_ano": round(juros_ganhos_ano, 2),
-            "montante_final": round(montante_final_ano, 2)
-        })
+        if mes % 12 == 0:
+            ano = mes // 12
+            juros_ganhos_ano = saldo_atual - capital_inicial_ano - aporte_mensal * 12
+            tabela_anual.append({
+                "ano": ano,
+                "capital_inicial": round(capital_inicial_ano, 2),
+                "juros_ano": round(juros_ganhos_ano, 2),
+                "montante_final": round(saldo_atual, 2)
+            })
+            capital_inicial_ano = saldo_atual
 
-    # 5. Totais Gerais do Período
-    total_investido = aporte_inicial + (aporte_mensal * meses)
-    valor_total_final = saldo_atual
-    rendimentos_totais = valor_total_final - total_investido
-
-    # 6. Estrutura de retorno enviada ao HTML
+    rendimentos_totais = saldo_atual - total_investido
     resultado = {
-        "valor_total_final": round(valor_total_final, 2),
+        "valor_total_final": round(saldo_atual, 2),
         "total_investido": round(total_investido, 2),
         "rendimentos": round(rendimentos_totais, 2),
         "taxa_anual_aplicada": taxa_anual_pct,
