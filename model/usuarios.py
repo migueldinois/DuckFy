@@ -40,6 +40,21 @@ class Usuario():
             print(f"Erro no Bcrypt: {erro}")
             return False
 
+
+    def buscar_id_por_email(email: str):
+        """Função para buscar o ID do usuário pelo email"""
+        conexao, cursor = Conexao.conectar()
+
+        cursor.execute("SELECT id_usuario FROM usuarios WHERE email = %s", [email])
+        resultado = cursor.fetchone() 
+        
+        conexao.close()
+        cursor.close()
+
+        if resultado:
+            return resultado['id_usuario']
+        else:
+            return None
     def criar_usuario(nome: str, email: str, senha_input: str, foto_perfil: str = "https://placehold.co/400x400"):
         """Função para cadastrar um novo usuário gerando o hash da senha"""
         conexao, cursor = Conexao.conectar()
@@ -81,3 +96,31 @@ class Usuario():
             cursor.close()
             conexao.close()
 
+    def recuperar_dados_usuario(email):
+        conexao, cursor = Conexao.conectar()
+
+        cursor.execute("SELECT nome, email, dias_ofensiva, pontos_xp, foto_perfil FROM usuarios WHERE email = %s", [email])
+        dados_usuario = cursor.fetchone() 
+        
+        conexao.close()
+        cursor.close()
+
+        return dados_usuario
+
+    @staticmethod
+    def atualizar_dados(email_atual, nome, email, foto_perfil):
+        conexao, cursor = Conexao.conectar()
+        try:
+            cursor.execute(
+                "UPDATE usuarios SET nome = %s, email = %s, foto_perfil = %s WHERE email = %s",
+                [nome, email, foto_perfil, email_atual]
+            )
+            conexao.commit()
+            return True
+        except Exception as erro:
+            print(f"Erro ao atualizar usuário: {erro}")
+            conexao.rollback()
+            return False
+        finally:
+            cursor.close()
+            conexao.close()

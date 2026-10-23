@@ -1,0 +1,67 @@
+{% if usuario_logado %}
+    {% extends 'layout.html' %}
+{% endif %}
+
+{% block title %}Política de Privacidade - DuckFy{% endblock %}
+
+{% block styles %}
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/privacidade.css') }}">
+{% endblock %}
+
+{% block content %}
+
+<main class="termos {% if not usuario_logado %}termos-deslogado{% endif %}">
+
+    <!-- topo da página -->
+    <header class="termos-topo">
+
+        <a class="btn-voltar" href="{{ url_for('perfil') if usuario_logado else url_for('index') }}" aria-label="Voltar para a página anterior" onclick="if (window.history.length > 1) { window.history.back(); return false; }">
+            <i class="fa-solid fa-arrow-left"></i>
+        </a>
+
+        <h1>Política de Privacidade</h1>
+
+    </header>
+
+    <!-- abas -->
+    <nav class="termos-abas">
+
+        <a href="{{ url_for('termos') }}" class="aba">
+            Termos de uso
+        </a>
+
+        <a href="{{ url_for('privacidade') }}" class="aba aba-ativa">
+            Política de privacidade
+        </a>
+
+    </nav>
+
+    <!-- conteúdo -->
+    <section class="termos-conteudo">
+
+        <h2>1. Coleta de Informações</h2>
+        <p>
+            A sua privacidade é importante para nós. É política do DuckFy respeitar a sua privacidade em relação a qualquer informação que possamos coletar no site DuckFy e outros sites que possuímos e operamos.
+        </p>
+
+        <h2>2. Uso de Dados Pessoais</h2>
+        <p>
+            Solicitamos informações pessoais apenas quando realmente precisamos delas para lhe fornecer um serviço. Fazemo-lo por meios justos e legais, com o seu conhecimento e consentimento.
+        </p>
+
+        <h2>3. Compartilhamento e Segurança</h2>
+        <p>
+            Não compartilhamos informações de identificação pessoal publicamente ou com terceiros, exceto quando exigido por lei. Apenas retemos as informações coletadas pelo tempo necessário para prestar o serviço solicitado.
+        </p>
+
+        <h2>4. Direitos do Usuário</h2>
+        <p>
+            Você é livre para recusar a nossa solicitação de informações pessoais, entendendo que talvez não possamos fornecer alguns dos serviços desejados.
+        </p>
+
+    </section>
+
+</main>
+
+{% endblock %}

@@ -7,85 +7,318 @@
 
     <title>Duckfy - Login</title>
 
-    <!-- conecta o CSS -->
-    <link rel="stylesheet" href="static/css/variables.css">
-    <link rel="stylesheet" href="static/css/login.css">
+    <!-- aplica o tema salvo antes de carregar o CSS -->
+    <script>
+        if (localStorage.getItem("duckfy-tema") === "claro") {
+            document.documentElement.classList.add("tema-claro");
+        }
+    </script>
+
+    <!-- conecta os estilos -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/variables.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/login.css') }}">
+
+    <!-- conecta os ícones flaticon -->
+    <link rel="stylesheet"
+        href="https://cdn-uicons.flaticon.com/3.0.0/uicons-solid-rounded/css/uicons-solid-rounded.css">
+
+    <style>
+        #particulas-fundo {
+            position: fixed;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        .login {
+            position: relative;
+            z-index: 1;
+        }
+
+        #btn-tema {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            cursor: pointer;
+        }
+
+        #btn-tema i {
+            font-size: 20px;
+            line-height: 1;
+        }
+    </style>
 </head>
 
 <body>
 
-    <!-- classe de login -->
+    <canvas id="particulas-fundo" aria-hidden="true"></canvas>
+
     <main class="login">
 
-        <!-- topo da tela -->
-        <section class="login-topo">
-            <h1>Bem Vindo(a) de Volta!</h1>
+        <header class="login-cabecalho">
 
-            <p>Faça login na sua conta da Duckfy</p>
-        </section>
+            <!-- logo da DuckFy -->
+            <a href="/" class="login-logo" aria-label="DuckFy - Página inicial">
+                <img src="{{ url_for('static', filename='img/logo_escura.png') }}"
+                    data-logo-claro="{{ url_for('static', filename='img/logo_clara.png') }}"
+                    data-logo-escuro="{{ url_for('static', filename='img/logo_escura.png') }}" alt="Logo DuckFy"
+                    class="logo-imagem">
+            </a>
 
-
-        <!-- conteúdo do login -->
-        <section class="login-conteudo">
-
-            <form action="/login/usuario" method="POST">
-
-                <!-- campo de e-mail -->
-                <div class="campo">
-                    <label for="email">E-mail:</label>
-                    <!-- ADICIONADO: name="email" -->
-                    <input type="email" id="email" name="email" placeholder="Digite seu e-mail" required>
-                </div>
-
-
-                <!-- campo de senha -->
-                <div class="campo">
-                    <div class="senha-label">
-                        <label for="senha">Senha:</label>
-                    </div>
-                    <!-- ADICIONADO: name="senha" -->
-                    <input type="password" id="senha" name="senha" placeholder="Digite sua senha" required>
-                </div>
-
-
-                <!-- botão de entrar -->
-                <button type="submit" class="btn-entrar">
-                    Entrar
+            <nav class="login-opcoes">
+                <button type="button" id="btn-tema" aria-label="Ativar tema claro" title="Ativar tema claro">
+                    <i class="fi fi-sr-contrast" aria-hidden="true"></i>
                 </button>
+            </nav>
 
-            </form>
+        </header>
 
+        <div class="aviso-termos" id="aviso-termos" role="status" aria-live="polite" hidden>
+            <span class="aviso-icone">!</span>
 
-
-            <div class="container__error">
-                {% with mensagens = get_flashed_messages()%}
-                {% for mensagem in mensagens %}
-                <p class="text-error">{{mensagem}}</p>
-                {%endfor%}
-                {%endwith%}
+            <div class="aviso-texto">
+                <strong>Faça login primeiro!</strong>
+                <p>Entre na sua conta para acessar os Termos de Uso.</p>
             </div>
 
+            <button type="button" class="fechar-aviso" id="fechar-aviso" aria-label="Fechar aviso">
+                &times;
+            </button>
+        </div>
 
-            <!-- separador -->
-            <div class="separador">
-                <span>ou</span>
-            </div>
+        <section class="login-conteudo">
+            <div class="login-formulario">
 
+                <section class="login-topo">
+                    <h1>Que bom ter você aqui!</h1>
+                    <p>Entre na sua conta e acompanhe sua vida financeira.</p>
+                </section>
 
-            <!-- cadastro -->
-            <div class="cadastro">
+                <form action="/login/usuario" method="POST">
 
-                <div>
-                    <a href="#">Não tem uma conta?</a>
+                    <div class="campo">
+                        <label for="email">E-mail:</label>
+                        <input type="email" id="email" name="email" placeholder="Digite seu e-mail" autocomplete="email"
+                            required>
+                    </div>
+
+                    <div class="campo">
+                        <div class="senha-label">
+                            <label for="senha">Senha:</label>
+                        </div>
+
+                        <input type="password" id="senha" name="senha" placeholder="Digite sua senha"
+                            autocomplete="current-password" required>
+                    </div>
+
+                    <button type="submit" class="btn-entrar">
+                        Entrar
+                    </button>
+
+                </form>
+
+                <div class="container__error">
+                    {% with mensagens = get_flashed_messages() %}
+                    {% for mensagem in mensagens %}
+                    <p class="text-error">{{ mensagem }}</p>
+                    {% endfor %}
+                    {% endwith %}
                 </div>
 
-                <a href="#">Esqueci Minha Senha</a>
+                <div class="separador">
+                    <span>ou</span>
+                </div>
+
+                <div class="cadastro">
+                    <span>Não tem uma conta?</span>
+                    <a href="/cadastro">Criar conta</a>
+                </div>
+
+                <a href="/redefinir" class="login-link-acesso">
+                    Esqueci minha senha
+                </a>
 
             </div>
-
         </section>
 
     </main>
+
+    <script>
+        // partículas do fundo
+        const canvas = document.getElementById("particulas-fundo");
+        const ctx = canvas.getContext("2d");
+
+        let particulas = [];
+        let largura = 0;
+        let altura = 0;
+        let animacaoAtiva = true;
+
+        const movimentoReduzido = window.matchMedia(
+            "(prefers-reduced-motion: reduce)"
+        ).matches;
+
+        function ajustarCanvas() {
+            const proporcao = Math.min(window.devicePixelRatio || 1, 2);
+
+            largura = window.innerWidth;
+            altura = window.innerHeight;
+
+            canvas.width = largura * proporcao;
+            canvas.height = altura * proporcao;
+
+            ctx.setTransform(proporcao, 0, 0, proporcao, 0, 0);
+
+            criarParticulas();
+        }
+
+        function criarParticulas() {
+            const quantidade = Math.min(
+                100,
+                Math.max(35, Math.floor((largura * altura) / 14000))
+            );
+
+            particulas = [];
+
+            for (let i = 0; i < quantidade; i++) {
+                particulas.push({
+                    x: Math.random() * largura,
+                    y: Math.random() * altura,
+                    tamanho: Math.random() * 2 + 0.6,
+                    velocidadeX: (Math.random() - 0.5) * 0.35,
+                    velocidadeY: (Math.random() - 0.5) * 0.35,
+                    opacidade: Math.random() * 0.6 + 0.2,
+                    fase: Math.random() * Math.PI * 2,
+                    cor: Math.random() > 0.5
+                        ? "124, 77, 255"
+                        : "0, 230, 118"
+                });
+            }
+        }
+
+        function desenharParticulas() {
+            ctx.clearRect(0, 0, largura, altura);
+
+            const tempo = performance.now() * 0.001;
+
+            particulas.forEach(function (p) {
+                if (!movimentoReduzido) {
+                    p.x += p.velocidadeX;
+                    p.y += p.velocidadeY;
+
+                    if (p.x < -5) p.x = largura + 5;
+                    if (p.x > largura + 5) p.x = -5;
+                    if (p.y < -5) p.y = altura + 5;
+                    if (p.y > altura + 5) p.y = -5;
+                }
+
+                const brilho = movimentoReduzido
+                    ? p.opacidade
+                    : p.opacidade * (
+                        0.7 + Math.sin(tempo + p.fase) * 0.3
+                    );
+
+                ctx.save();
+                ctx.globalAlpha = brilho;
+                ctx.fillStyle = `rgb(${p.cor})`;
+                ctx.shadowColor = `rgb(${p.cor})`;
+                ctx.shadowBlur = p.tamanho * 7;
+
+                ctx.beginPath();
+                ctx.arc(p.x, p.y, p.tamanho, 0, Math.PI * 2);
+                ctx.fill();
+                ctx.restore();
+            });
+
+            if (animacaoAtiva && !movimentoReduzido) {
+                requestAnimationFrame(desenharParticulas);
+            }
+        }
+
+        ajustarCanvas();
+        desenharParticulas();
+
+        window.addEventListener("resize", ajustarCanvas);
+
+        document.addEventListener("visibilitychange", function () {
+            if (document.hidden) {
+                animacaoAtiva = false;
+            } else if (!movimentoReduzido && !animacaoAtiva) {
+                animacaoAtiva = true;
+                desenharParticulas();
+            }
+        });
+
+        // tema e logo
+        const botaoTema = document.getElementById("btn-tema");
+        const logo = document.querySelector(".logo-imagem");
+
+        function temaEstaClaro() {
+            return document.documentElement.classList.contains("tema-claro");
+        }
+
+        function atualizarLogo() {
+            const logo = document.querySelector(".logo-imagem");
+
+            if (!logo) return;
+
+            const temaClaro = document.documentElement.classList.contains("tema-claro");
+
+            if (temaClaro) {
+                logo.src = logo.dataset.logoEscuro;
+            } else {
+                logo.src = logo.dataset.logoClaro;
+            }
+        }
+
+        function aplicarTema(tema) {
+            const claro = tema === "claro";
+
+            document.documentElement.classList.toggle("tema-claro", claro);
+            document.body.classList.toggle("tema-claro", claro);
+
+            localStorage.setItem("duckfy-tema", tema);
+
+            atualizarLogo();
+
+            if (botaoTema) {
+                const descricao = claro
+                    ? "Ativar tema escuro"
+                    : "Ativar tema claro";
+
+                botaoTema.setAttribute("aria-label", descricao);
+                botaoTema.setAttribute("title", descricao);
+            }
+        }
+
+        // aplica a preferência salva
+        aplicarTema(localStorage.getItem("duckfy-tema") || "escuro");
+
+        if (botaoTema) {
+            botaoTema.addEventListener("click", function () {
+                aplicarTema(temaEstaClaro() ? "escuro" : "claro");
+            });
+        }
+
+        // aviso dos termos
+        const botaoTermos = document.getElementById("btn-termos-bloqueado");
+        const avisoTermos = document.getElementById("aviso-termos");
+        const fecharAviso = document.getElementById("fechar-aviso");
+
+        if (botaoTermos && avisoTermos) {
+            botaoTermos.addEventListener("click", function () {
+                avisoTermos.hidden = false;
+            });
+        }
+
+        if (fecharAviso && avisoTermos) {
+            fecharAviso.addEventListener("click", function () {
+                avisoTermos.hidden = true;
+            });
+        }
+    </script>
 
 </body>
 

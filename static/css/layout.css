@@ -1,23 +1,20 @@
+
 /* ==========================================================================
    VARIÁVEIS PRINCIPAIS
    ========================================================================== */
 :root {
-  /* Regra 60% */
   --bg-primary: #0F0C1B;
   --bg-surface-1: #19191B;
   --bg-surface-2: #181826;
 
-  /* Regra 30% */
   --brand-primary: #7C4DFF;
   --brand-secondary: #B093FF;
   --brand-dark: #4300FF;
 
-  /* Regra 10% */
   --accent-primary: #00E676;
   --accent-secondary: #58E4A0;
   --accent-dark: #00E374;
 
-  /* Medidas da Sidebar */
   --sidebar-w-expanded: 240px;
   --sidebar-w-collapsed: 70px;
 }
@@ -26,25 +23,19 @@
    ESTRUTURA GLOBAL
    ========================================================================== */
 body.app-body {
-  background-color: #0F0C1B;
+  background-color: var(--bg-primary);
   color: #ffffff;
   margin: 0;
   min-height: 100vh;
 }
 
-.app-container {
-  display: flex;
-  min-height: 100vh;
-  width: 100%;
-}
-
 /* ==========================================================================
-   SIDEBAR (Sem bugs de sobreposição)
+   SIDEBAR
    ========================================================================== */
 .sidebar {
   width: var(--sidebar-w-expanded);
-  background-color: #19191B;
-  padding: 1.25rem 0.75rem;
+  background-color: var(--bg-surface-1);
+  padding: 1.25rem 0;
   display: flex;
   flex-direction: column;
   position: fixed;
@@ -56,76 +47,110 @@ body.app-body {
   transition: width 0.25s ease-in-out;
 }
 
-/* Sidebar Fechada (Padrão) */
 .sidebar.collapsed {
   width: var(--sidebar-w-collapsed);
 }
 
-.sidebar.collapsed:hover {
-  width: var(--sidebar-w-expanded);
-}
 
-/* Botão de Toggle na Borda */
-.sidebar-toggle-btn {
-  position: absolute;
-  top: 22px;
-  right: -13px;
-  width: 26px;
-  height: 26px;
-  background-color: #7C4DFF;
-  color: #ffffff;
-  border: none;
-  border-radius: 50%;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  z-index: 101;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.5);
-}
 
-.sidebar-toggle-btn:hover {
-  background-color: #4300FF;
-}
 
-/* Brand/Logo */
+/* Logo da DuckFy */
 .sidebar-brand {
   display: flex;
   align-items: center;
-  gap: 0.75rem;
-  color: #ffffff;
-  font-size: 1.2rem;
-  font-weight: 700;
-  text-decoration: none;
-  white-space: nowrap;
+  justify-content: center;
+  width: 100%;
+  height: 90px;
+  padding: 0;
   overflow: hidden;
-  height: 32px;
+  flex-shrink: 0;
+  text-decoration: none;
 }
 
-.brand-icon {
-  color: #7C4DFF;
-  font-size: 1.4rem;
-  min-width: 32px;
-  text-align: center;
+.sidebar-logo {
+  display: block;
+  width: 64px !important;
+  height: 64px !important;
+  max-width: none;
+  object-fit: contain;
+  flex-shrink: 0;
+  transition: width 0.25s ease, height 0.25s ease;
 }
 
+/* Sidebar aberta */
+.sidebar:not(.collapsed) .sidebar-brand {
+  justify-content: flex-start;
+  padding: 0 12px;
+}
+
+.sidebar:not(.collapsed) .sidebar-logo {
+  width: 210px !important;
+  height: 75px !important;
+}
+
+/* Sidebar recolhida */
+.sidebar.collapsed .sidebar-brand {
+  justify-content: center;
+  padding: 0;
+}
+
+.sidebar.collapsed .sidebar-logo {
+  width: 64px !important;
+  height: 64px !important;
+}
+
+/* Sidebar recolhida */
+.sidebar.collapsed .sidebar-brand {
+  justify-content: center;
+  padding: 0;
+}
+
+.sidebar.collapsed .sidebar-logo {
+  width: 64px;
+  height: 64px;
+}
+
+
+.sidebar.collapsed .sidebar-logo {
+  width: 60px;
+  height: 60px;
+}
+
+
+/* Divisor da sidebar */
 .sidebar-divider {
   border-top: 1px solid #2a2a38;
   margin: 1rem 0;
+  width: 100%;
 }
 
-/* Links do Menu */
+/* ==========================================================================
+   MENU LATERAL
+   ========================================================================== */
 .sidebar-menu {
   display: flex;
   flex-direction: column;
   gap: 0.4rem;
   padding: 0;
+  margin: 0;
+  list-style: none;
+  width: 100%;
+  flex: 1;
 }
 
-.sidebar-link {
+.sidebar-menu li {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+}
+
+.sidebar-link,
+.sidebar-logout {
   display: flex;
   align-items: center;
-  gap: 0.85rem;
-  padding: 0.65rem;
+  width: calc(100% - 1.5rem);
+  height: 48px;
+  padding: 0;
   color: #a0a0b5;
   text-decoration: none;
   border-radius: 0.5rem;
@@ -134,74 +159,191 @@ body.app-body {
   overflow: hidden;
   transition: background 0.2s, color 0.2s;
 }
-.sidebar-logout {
-  display: flex;
-  align-items: end;
-  gap: 0.85rem;
-  padding: 0.65rem;
-  color: #ff0000;
-  text-decoration: none;
-  border-radius: 0.5rem;
-  font-weight: 500;
-  white-space: nowrap;
-  overflow: hidden;
-  transition: background 0.2s, color 0.2s;
+
+.sidebar.collapsed .sidebar-link,
+.sidebar.collapsed .sidebar-logout {
+  width: 48px;
+  justify-content: center;
 }
 
-.sidebar-link i {
-  font-size: 1.2rem;
-  min-width: 32px;
-  text-align: center;
+.sidebar-icon {
+  width: 48px;
+  height: 48px;
+  padding: 12px;
+  flex-shrink: 0;
+  display: block;
+  object-fit: contain;
+}
+
+.sidebar-link .brand-text,
+.sidebar-logout .brand-text {
+  padding-left: 0.25rem;
 }
 
 .sidebar-link:hover {
   color: #ffffff;
-  background-color: #181826;
+  background-color: var(--bg-surface-2);
 }
 
 .sidebar-link.active {
   color: #ffffff;
-  background-color: #7C4DFF;
+  background-color: var(--brand-primary);
 }
 
-/* Esconde o texto quando a sidebar está recolhida */
+.sidebar-logout {
+  color: #ff0000;
+}
+
+.sidebar-logout:hover {
+  background-color: rgba(255, 0, 0, 0.1);
+}
+
+/* Texto dos itens */
+.sidebar .brand-text {
+  opacity: 1;
+  transition: opacity 0.2s ease-in-out;
+  display: inline-block;
+}
+
 .sidebar.collapsed .brand-text {
   opacity: 0;
-  display: none;
-}
-
-.sidebar.collapsed:hover .brand-text {
-  display: inline;
-  opacity: 1;
+  pointer-events: none;
+  width: 0;
+  overflow: hidden;
 }
 
 /* ==========================================================================
-   CONTEÚDO PRINCIPAL (Main Content ajusta margem sem quebrar)
+   CONTEÚDO PRINCIPAL
    ========================================================================== */
 .main-content {
   flex: 1;
-  margin-left: var(--sidebar-w-collapsed);
+  margin-left: var(--sidebar-w-expanded);
   padding: 1.5rem;
-  min-width: 0; /* Previne estouro de layout/flex */
+  min-width: 0;
   transition: margin-left 0.25s ease-in-out;
 }
 
-/* Quando a sidebar está aberta, empurra o main-content */
-.sidebar:not(.collapsed) ~ .main-content {
-  margin-left: var(--sidebar-w-expanded);
+.sidebar.collapsed ~ .main-content {
+  margin-left: var(--sidebar-w-collapsed);
 }
 
 /* ==========================================================================
-   RESPONSIVIDADE (Mobile)
+   BARRA INFERIOR PARA DISPOSITIVOS MÓVEIS
+   ========================================================================== */
+.bottom-bar {
+  display: none;
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 65px;
+  background-color: var(--bg-surface-1);
+  border-top: 1px solid #2a2a38;
+  z-index: 1000;
+}
+
+.bottom-bar-container {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  height: 100%;
+  width: 100%;
+  padding: 0 1rem;
+}
+
+.nav-icon-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 45px;
+  width: 45px;
+  border-radius: 0.5rem;
+  text-decoration: none;
+  position: relative;
+  cursor: pointer;
+}
+
+.nav-icon-btn img {
+  width: 24px;
+  height: 24px;
+  opacity: 0.6;
+  transition: opacity 0.2s;
+}
+
+.nav-icon-btn:hover img,
+.nav-icon-btn.active img {
+  opacity: 1;
+}
+
+.nav-icon-btn.active {
+  background-color: var(--brand-primary);
+}
+
+/* Menu suspenso da barra inferior */
+.dropdown-trigger {
+  position: relative;
+}
+
+.dropdown-menu {
+  display: none;
+  position: absolute;
+  bottom: 55px;
+  right: 0;
+  background-color: var(--bg-surface-2);
+  border: 1px solid #2a2a38;
+  border-radius: 0.5rem;
+  min-width: 180px;
+  box-shadow: 0 -4px 12px rgba(0, 0, 0, 0.5);
+  flex-direction: column;
+  padding: 0.5rem;
+  z-index: 1010;
+}
+
+.dropdown-menu.show {
+  display: flex;
+}
+
+.dropdown-menu a {
+  color: #a0a0b5;
+  text-decoration: none;
+  padding: 0.6rem 1rem;
+  font-size: 0.9rem;
+  border-radius: 0.375rem;
+  transition: background 0.2s, color 0.2s;
+}
+
+.dropdown-menu a:hover {
+  color: #ffffff;
+  background-color: var(--brand-primary);
+}
+
+.dropdown-menu a.logout-btn {
+  color: #ff4d4d;
+  border-top: 1px solid #2a2a38;
+  margin-top: 0.25rem;
+  border-radius: 0.375rem;
+}
+
+.dropdown-menu a.logout-btn:hover {
+  background-color: rgba(255, 77, 77, 0.1);
+  color: #ff4d4d;
+}
+
+/* ==========================================================================
+   RESPONSIVIDADE
    ========================================================================== */
 @media (max-width: 768px) {
   .sidebar {
-    display: none; /* Esconde sidebar no mobile */
+    display: none !important;
+  }
+
+  .bottom-bar {
+    display: block;
   }
 
   .main-content {
     margin-left: 0 !important;
     padding: 1rem;
-    padding-bottom: 80px; /* Esspaço para a bottom bar */
+    padding-bottom: 80px;
   }
 }

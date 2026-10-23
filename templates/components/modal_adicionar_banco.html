@@ -1,0 +1,83 @@
+
+<div id="modalAdicionarBanco" class="duckfy-modal">
+    <div class="dash-card modal-content">
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <h3 class="card-section-title m-0">Adicionar Banco</h3>
+            <button type="button" class="btn-close-custom" data-close-modal>&times;</button>
+        </div>
+
+        <form action="{{ url_for('criar_conta') }}" method="POST">
+
+            <div class="mb-3">
+                <label for="nome_conta" class="card-subtitle d-block mb-1">
+                    Nome do banco
+                </label>
+
+                <div class="input-icon-wrapper">
+                    <img src="{{ url_for('static', filename='img/icons/nome.svg') }}"
+                         class="input-icon" alt="Banco">
+
+                    <input
+                        type="text"
+                        name="nome_conta"
+                        id="nome_conta"
+                        class="search-input input-with-icon"
+                        placeholder="Ex.: Nubank, Itaú, Inter"
+                        maxlength="50"
+                        required>
+                </div>
+            </div>
+
+            <div class="mb-3">
+                <label for="tipo_conta" class="card-subtitle d-block mb-1">
+                    Tipo de conta
+                </label>
+
+                <div class="input-icon-wrapper">
+                    <img src="{{ url_for('static', filename='img/icons/tipo.svg') }}"
+                         class="input-icon" alt="Tipo de conta">
+
+                    <select
+                        name="tipo_conta"
+                        id="tipo_conta"
+                        class="search-input input-with-icon"
+                        required>
+                        <option value="" disabled selected>Selecione o tipo</option>
+                        <option value="Conta Corrente">Conta Corrente</option>
+                        <option value="Poupança">Poupança</option>
+                        <option value="Conta Digital">Conta Digital</option>
+                        <option value="Investimento">Investimento</option>
+                        <option value="Carteira Digital">Carteira Digital</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="mb-3">
+                <label for="saldo_atual" class="card-subtitle d-block mb-1">
+                    Saldo inicial (R$)
+                </label>
+
+                <div class="input-icon-wrapper">
+                    <input
+                        type="text"
+                        name="saldo_atual"
+                        id="saldo_atual"
+                        class="search-input"
+                        placeholder="0,00"
+                        inputmode="decimal"
+                        data-currency-input
+                        min="0"
+                        value="0"
+                        required>
+                </div>
+            </div>
+
+            <div class="d-flex gap-2 mt-3">
+                <button type="submit" class="btn-purple-action w-100">
+                    Adicionar banco
+                </button>
+            </div>
+
+        </form>
+    </div>
+</div>

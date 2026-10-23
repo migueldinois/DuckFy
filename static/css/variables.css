@@ -1,19 +1,50 @@
-:root {
-    --bg-main: #0F0C1B;          
-    --bg-card: #19191B;          
-    --bg-card-secondary: #181826;  
 
-    --purple-primary: #7C4DFF;   
-    --purple-light: #B093FF;     
-    --purple-dark: #4300FF;      
+/* ==========================
+   TEMA ESCURO (PADRÃO)
+========================== */
+:root {
+    color-scheme: dark;
+
+    --bg-primary: #0F0C1B;
+    --bg-surface-1: #19191B;
+    --bg-surface-2: #181826;
 
     --green-accent: #00E676;     
     --green-light: #58E4A0;      
     --green-dark: #00E374;       
 }
 
-* {
-    box-sizing: border-box;
+
+/* ==========================
+   TEMA CLARO DUCKFY
+========================== */
+
+html.tema-claro,
+body.tema-claro {
+    color-scheme: light;
+
+    /* Fundos */
+    --bg-primary: #F7F5FC;
+    --bg-surface-1: #FFFFFF;
+    --bg-surface-2: #F0ECF8;
+
+    /* Identidade visual roxa */
+    --brand-primary: #7042C8;
+    --brand-secondary: #8B68D5;
+    --brand-dark: #512B9B;
+
+    /* Destaques verdes */
+    --accent-primary: #128653;
+    --accent-secondary: #269B68;
+    --accent-dark: #0B6B41;
+
+    /* Tipografia */
+    --text-primary: #292238;
+    --text-muted: #746B84;
+
+    /* Bordas e profundidade */
+    --border-color: #E6E0F0;
+    --shadow-color: rgba(45, 29, 76, 0.08);
 }
 
 body {

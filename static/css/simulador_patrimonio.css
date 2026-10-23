@@ -1,0 +1,140 @@
+/* ==========================================================
+   PALETA DE CORES E VARIÁVEIS DO DUCKFY
+   ========================================================== */
+:root {
+    --bg-main: #0B0A12;          
+    --bg-card: #15141E;          
+    --bg-input: #1E1D2A;         
+
+    --purple-primary: #7C4DFF;   
+    --purple-hover: #6C3BFF;     
+
+    --green-accent: #00E676;     
+    --text-muted: #8E8E93;       
+}
+
+/* ==========================================================
+   ESTRUTURA EXPANDIDA DA PÁGINA (OCUPA MAIS ESPAÇO NO ECRÃ)
+   ========================================================== */
+.simulador-page-wrapper {
+    width: 100%;
+    max-width: 1200px;           /* Aumentado de 850px para 1200px para expandir a área */
+    margin: 0 auto;             
+    padding: 2rem 1.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;                
+}
+
+/* Ajuste da grelha de cartões no Bootstrap */
+.simulador-page-wrapper .row {
+    width: 100%;
+    margin: 0;
+}
+
+/* ==========================================================
+   CARTÕES / PAINÉIS
+   ========================================================== */
+.card-painel {
+    background-color: var(--bg-card);
+    border-radius: 20px;
+    padding: 2rem;               /* Aumento ligeiro do espaçamento interno */
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
+}
+
+/* ==========================================================
+   FORMULÁRIO E INPUTS
+   ========================================================== */
+.input-custom {
+    background-color: #ffffff !important;
+    border: none !important;
+    border-radius: 12px !important;
+    padding: 0.85rem 1rem !important;
+    font-weight: 600 !important;
+    color: #000000 !important;
+}
+
+.input-custom:focus {
+    box-shadow: 0 0 0 3px var(--purple-primary) !important;
+}
+
+.btn-purple {
+    background-color: var(--purple-primary);
+    color: #ffffff;
+    border: none;
+    padding: 0.85rem 1.5rem;
+    border-radius: 14px;
+    font-weight: 700;
+    font-size: 0.95rem;
+    transition: all 0.2s ease;
+}
+
+.btn-purple:hover {
+    background-color: var(--purple-hover);
+    color: #ffffff;
+    box-shadow: 0 4px 15px rgba(124, 77, 255, 0.35);
+}
+
+/* ==========================================================
+   BOTÕES DE PERÍODO
+   ========================================================== */
+.btn-periodo {
+    background-color: #222030;
+    color: var(--text-muted);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    padding: 0.5rem 1.25rem;
+    border-radius: 10px;
+    font-weight: 600;
+    font-size: 0.85rem;
+    transition: all 0.2s ease;
+}
+
+.btn-periodo:hover {
+    color: #ffffff;
+}
+
+.btn-periodo.active {
+    background-color: var(--purple-primary);
+    color: #ffffff;
+    border-color: var(--purple-primary);
+}
+
+.btn-edit {
+    background-color: #222030;
+    color: #ffffff;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    width: 36px;
+    height: 36px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* ==========================================================
+   MÉTRICAS DE RESULTADO
+   ========================================================== */
+.metric-box {
+    background-color: #1A1926;
+    border-radius: 14px;
+    padding: 1.5rem 1rem;
+    border: 1px solid rgba(255, 255, 255, 0.03);
+}
+
+.text-destaque-verde {
+    color: var(--green-accent) !important;
+}
+
+/* ==========================================================
+   ÁREA DO GRÁFICO EXPANDIDA
+   ========================================================== */
+.grafic-container {
+    background-color: #12111A;
+    border-radius: 16px;
+    padding: 1.5rem;
+    min-height: 400px;           /* Altura aumentada para o gráfico preencher melhor o cartão */
+    border: 1px solid rgba(255, 255, 255, 0.03);
+    position: relative;
+    width: 100%;
+}

@@ -1,0 +1,50 @@
+{% if usuario_logado %}
+    {% extends 'layout.html' %}
+{% endif %}
+
+{% block title %}Termos de Uso - DuckFy{% endblock %}
+
+{% block styles %}
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/termos.css') }}">
+{% endblock %}
+
+{% block content %}
+
+<main class="termos {% if not usuario_logado %}termos-deslogado{% endif %}">
+
+    <header class="termos-topo">
+        <a class="btn-voltar" href="{{ url_for('perfil') if usuario_logado else url_for('index') }}" aria-label="Voltar para a página anterior" onclick="if (window.history.length > 1) { window.history.back(); return false; }">
+            <i class="fa-solid fa-arrow-left"></i>
+        </a>
+
+        <h1>Termos de Uso</h1>
+    </header>
+
+    <nav class="termos-abas">
+        <a href="{{ url_for('termos') }}" class="aba aba-ativa">
+            Termos de uso
+        </a>
+
+        <a href="{{ url_for('privacidade') }}" class="aba">
+            Política de privacidade
+        </a>
+    </nav>
+
+    <section class="termos-conteudo">
+
+        <h2>1. Termos</h2>
+        <p>
+            Ao acessar ao site DuckFy, concorda em cumprir estes termos de serviço, todas as leis e regulamentos aplicáveis.
+        </p>
+
+        <h2>2. Uso de Licença</h2>
+        <p>
+            É concedida permissão para baixar temporariamente uma cópia dos materiais no site DuckFy , apenas para visualização transitória pessoal e não comercial.
+        </p>
+
+    </section>
+
+</main>
+
+{% endblock %}

@@ -1,16 +1,37 @@
+{% block extra_css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/bottom-bar.css') }}">
+{% endblock %}
+
+
 <nav class="bottom-bar">
   <div class="bottom-bar-container">
-    <a href="/" class="nav-icon-btn active" title="Dashboard">
+    <a href="/dashboard" class="nav-icon-btn active" title="Dashboard">
       <span><img src="{{ url_for('static', filename='img/icons/dashboard.svg') }}" alt="Dashboard"></span>
     </a>
-    <a href="/" class="nav-icon-btn" title="Extrato">
+    <a href="/extrato" class="nav-icon-btn" title="Extrato">
       <span><img src="{{ url_for('static', filename='img/icons/extrato.svg') }}" alt="Extrato"></span>
     </a>
-    <a href="/" class="nav-icon-btn" title="Simulador de Patrimônio">
+    <a href="/simulador" class="nav-icon-btn" title="Simulador de Patrimônio">
       <span><img src="{{ url_for('static', filename='img/icons/simulador.svg') }}" alt="Simulador de Patrimônio"></span>
     </a>
-    <a href="/" class="nav-icon-btn" title="Perfil">
+    <a href="/perfil" class="nav-icon-btn" title="Perfil">
       <span><img src="{{ url_for('static', filename='img/icons/perfill.svg') }}" alt="Perfil"></span>
     </a>
+    <a href="/contas" class="nav-icon-btn" title="Contas Bancárias">
+      <span><img src="{{ url_for('static', filename='img/icons/contas-bancarias.svg') }}" alt="Contas Bancárias"></span>
+    </a>
+
+    <div class="nav-icon-btn dropdown-trigger" title="Configurações">
+      <span><img src="{{ url_for('static', filename='img/icons/mais.svg') }}" alt="Configurações"></span>
+      
+      <div class="dropdown-menu">
+        <a href="/lancamento">Lançamentos</a>
+        <a href="/reserva">Reserva de emergencia</a>
+        <a href="/categorias">Categorias</a>
+        <a href="/sequencia">Sequencia</a>
+        <a href="/logout" class="logout-btn">Sair</a>
+      </div>
+    </div>
+    
   </div>
 </nav>

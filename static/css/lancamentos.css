@@ -1,96 +1,121 @@
 @import url('../css/variables.css');
 
-
-/* RESET & ESTILOS GERAIS */
-*,
-label,
-h1,
-span,
-p,
-input,
-select,
-textarea {
-  color: var(--text-primary) !important;
-}
-
-body {
-  background-color: var(--bg-primary);
+body#page-lancamento, body {
+  background-color: #0b0b12;
+  color: #ffffff;
+  font-family: system-ui, -apple-system, sans-serif;
   min-height: 100vh;
 }
 
-/* Cartão Principal */
-.custom-card {
+/* Container alinhado */
+.style-container {
+  max-width: 900px;
+  width: 100%;
+  margin: 0 auto;
+}
+
+/* Botão Voltar */
+.btn-voltar {
+  transition: opacity 0.2s ease, transform 0.2s ease;
+  cursor: pointer;
+}
+
+.btn-voltar:hover {
+  opacity: 0.8;
+  transform: translateX(-3px);
+}
+
+/* Card Principal Escuro */
+.lancamento-block {
   background-color: var(--bg-surface-2);
-  border: none;
+  border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
-/* Campos de Entrada (Inputs, Select e Textarea) */
-.custom-input {
-  background-color: var(--bg-surface-1);
-  border: 1px solid var(--border-color);
+/* Switch Entrada / Saída */
+.tipo-switch-container {
+  background-color: rgba(0, 0, 0, 0.4);
+  border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
-.custom-input:focus {
-  border-color: var(--brand-primary);
-  box-shadow: 0 0 0 0.25rem rgba(176, 147, 255, 0.25);
-}
-
-/* Alternador (Toggle Entrada / Saída) */
-.toggle-container {
-  background-color: var(--bg-surface-1);
-  border: 1px solid var(--border-color);
-}
-
-.btn-custom-toggle {
-  background-color: transparent;
+.btn-tipo-switch {
   color: var(--text-muted);
   border: none;
+  font-weight: 600;
+  font-size: 14px;
+  transition: all 0.2s ease;
 }
 
-.btn-check:checked+.btn-custom-toggle {
+.btn-check:checked + .btn-tipo-switch {
   background-color: var(--brand-primary);
   color: var(--text-primary);
-  box-shadow: 0 2px 8px rgba(176, 147, 255, 0.4);
+  box-shadow: 0 4px 12px rgba(124, 77, 255, 0.4);
+}
+
+/* Inputs, Selects e Textarea */
+.form-control-custom {
+  background-color: rgba(0, 0, 0, 0.4);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  color: var(--text-primary);
+  padding: 12px 16px;
+  font-size: 15px;
+}
+
+.form-control-custom:focus {
+  border-color: var(--brand-primary);
+  box-shadow: 0 0 0 0.25rem rgba(124, 77, 255, 0.25);
+}
+
+.form-control-custom::placeholder {
+  color: rgba(255, 255, 255, 0.3);
 }
 
 /* Ícones de Categoria */
-.category-btn {
-  width: 40px;
-  height: 40px;
-  background-color: #D9D9D9;
+.btn-categoria-icon {
+  width: 44px;
+  height: 44px;
+  background-color: rgba(0, 0, 0, 0.4);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  color: rgba(255, 255, 255, 0.7);
+  transition: all 0.2s ease;
+  cursor: pointer;
 }
 
-.category-btn i {
-  color: var(--bg-primary);
-}
-
-.btn-check:checked+.category-btn {
+.btn-check:checked + .btn-categoria-icon {
   background-color: var(--brand-primary);
-}
-
-.btn-check:checked+.category-btn i {
   color: var(--text-primary);
+  border-color: var(--brand-primary);
+  box-shadow: 0 0 12px rgba(124, 77, 255, 0.4);
 }
 
-/* Botão Principal "Lançar Entrada" */
-.btn-launch {
+/* Botão Roxo Principal */
+.btn-purple-action {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 48px;
   background-color: var(--brand-primary);
-  border: none;
   color: var(--text-primary);
+  font-weight: 600;
+  font-size: 1rem;
+  border-radius: 12px;
+  text-decoration: none;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-top: 1px solid rgba(255, 255, 255, 0.35);
+  box-shadow: 0 8px 20px rgba(124, 77, 255, 0.35),
+  inset 0 1px 0 rgba(255, 255, 255, 0.2);
+  transition: all 0.2s ease;
+  cursor: pointer;
 }
 
-.btn-launch:hover {
-  background-color: var(--brand-primary);
+.btn-purple-action:hover {
+  background-color: var(--brand-secondary);
+  opacity: 0.92;
+  transform: translateY(-2px);
+  box-shadow: 0 12px 25px rgba(124, 77, 255, 0.5),
+  inset 0 1px 0 rgba(255, 255, 255, 0.3);
 }
 
-
-.form-control:focus,
-.form-select:focus {
-  background-color: var(--bg-surface-1);
-  /* ou #000000, conforme preferir */
-  color: var(--text-primary);
-  border-color: var(--brand-secondary);
-  /* borda roxa ao focar */
-  box-shadow: 0 0 0 0.25rem rgba(176, 147, 255, 0.25);
-  /* brilho suave em volta */
+.fs-7 {
+  font-size: 13px;
 }

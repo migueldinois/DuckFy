@@ -1,0 +1,146 @@
+/* ==========================================
+   DUCKFY - TERMOS E PRIVACIDADE (privacidade.css)
+   ========================================== */
+
+/* RESET E BASE DA PÁGINA */
+.termos {
+  width: 100%;
+  max-width: 850px;
+  margin: 0 auto;
+  padding: 32px 24px 80px 24px;
+  box-sizing: border-box;
+  color: #FFFFFF;
+}
+
+/* ESTILO ESPECIAL QUANDO O UTILIZADOR NÃO ESTÁ LOGADO */
+.termos-deslogado {
+  margin-top: 40px;
+  margin-bottom: 40px;
+  background-color: #181622;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 24px;
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.4);
+}
+
+/* 1. CABEÇALHO */
+.termos-topo {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 28px;
+}
+
+.termos-topo h1 {
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: #FFFFFF;
+  margin: 0;
+}
+
+.btn-voltar {
+  color: #FFFFFF;
+  background-color: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  padding: 8px 16px;
+  border-radius: 12px;
+  font-size: 0.95rem;
+  font-weight: 600;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  transition: all 0.2s ease;
+}
+
+.btn-voltar:hover {
+  background-color: #7C4DFF;
+  border-color: #7C4DFF;
+  color: #FFFFFF;
+  transform: translateX(-3px);
+}
+
+/* 2. NAVEGAÇÃO ENTRE ABAS */
+.termos-abas {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 32px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  padding-bottom: 12px;
+}
+
+.aba {
+  color: rgba(255, 255, 255, 0.6);
+  text-decoration: none;
+  font-size: 1rem;
+  font-weight: 600;
+  padding: 10px 18px;
+  border-radius: 12px;
+  transition: all 0.2s ease;
+}
+
+.aba:hover {
+  color: #FFFFFF;
+  background-color: rgba(255, 255, 255, 0.05);
+}
+
+.aba-ativa {
+  color: #FFFFFF !important;
+  background-color: #7C4DFF !important;
+  box-shadow: 0 4px 16px rgba(124, 77, 255, 0.35);
+}
+
+/* 3. CONTEÚDO DOS TERMOS E PRIVACIDADE */
+.termos-conteudo {
+  background-color: #181622;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  border-radius: 20px;
+  padding: 32px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.25);
+}
+
+/* QUANDO DESLOGADO, O CARD INTERNO ADAPTA-SE */
+.termos-deslogado .termos-conteudo {
+  background-color: transparent;
+  border: none;
+  padding: 0;
+  box-shadow: none;
+}
+
+.termos-conteudo h2 {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: #7C4DFF;
+  margin-top: 24px;
+  margin-bottom: 12px;
+}
+
+.termos-conteudo h2:first-child {
+  margin-top: 0;
+}
+
+.termos-conteudo p {
+  font-size: 0.95rem;
+  line-height: 1.65;
+  color: rgba(255, 255, 255, 0.75);
+  margin-bottom: 20px;
+}
+
+/* RESPONSIVIDADE PARA MÓVEL */
+@media (max-width: 576px) {
+  .termos {
+    padding: 20px 16px 60px 16px;
+  }
+
+  .termos-conteudo {
+    padding: 20px;
+  }
+
+  .termos-abas {
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .aba {
+    text-align: center;
+  }
+}
