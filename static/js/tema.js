@@ -1,37 +1,74 @@
-// Alternância entre tema claro e escuro
+
 document.addEventListener("DOMContentLoaded", function () {
     const botaoTema = document.getElementById("btn-tema");
-    const textoTema = document.getElementById("texto-tema");
+    const logo = document.querySelector(".logo-imagem");
     const iconeTema = document.getElementById("icone-tema");
+    const textoTema = document.getElementById("texto-tema");
 
-    // Verifica se o botão existe na página
-    if (!botaoTema) {
-        return;
+    // verifica o tema salvo
+    function temaEstaClaro() {
+        return localStorage.getItem("duckfy-tema") === "claro";
     }
 
-    botaoTema.addEventListener("click", function () {
-        // Alterna o tema
-        document.body.classList.toggle("tema-claro");
+    // atualiza a logo de acordo com o tema
+    function atualizarLogo() {
+        if (!logo) return;
 
-        const temaClaro = document.body.classList.contains("tema-claro");
+        const logoClara = logo.dataset.logoClaro;
+        const logoEscura = logo.dataset.logoEscuro;
 
-        // Atualiza o texto
+        const caminhoCorreto = temaEstaClaro()
+            ? logoClara
+            : logoEscura;
+
+        if (caminhoCorreto && logo.getAttribute("src") !== caminhoCorreto) {
+            logo.src = caminhoCorreto;
+        }
+    }
+
+    // aplica o tema e atualiza os elementos
+    function aplicarTema(tema) {
+        const claro = tema === "claro";
+
+        document.documentElement.classList.toggle("tema-claro", claro);
+        document.body.classList.toggle("tema-claro", claro);
+
+        localStorage.setItem("duckfy-tema", tema);
+
+        atualizarLogo();
+
+        if (botaoTema) {
+            botaoTema.setAttribute(
+                "aria-label",
+                claro ? "Ativar tema escuro" : "Ativar tema claro"
+            );
+
+            botaoTema.setAttribute(
+                "title",
+                claro ? "Ativar tema escuro" : "Ativar tema claro"
+            );
+        }
+
+        if (iconeTema) {
+            iconeTema.className = claro
+                ? "bi bi-moon-fill"
+                : "bi bi-sun-fill";
+        }
+
         if (textoTema) {
-            textoTema.textContent = temaClaro
+            textoTema.textContent = claro
                 ? "Tema escuro"
                 : "Tema claro";
         }
+    }
 
-        // Atualiza o ícone
-        if (iconeTema) {
-            iconeTema.classList.toggle("bi-sun-fill", !temaClaro);
-            iconeTema.classList.toggle("bi-moon-fill", temaClaro);
-        }
+    // carrega a preferência salva
+    aplicarTema(localStorage.getItem("duckfy-tema") || "escuro");
 
-        // Atualiza a descrição acessível
-        botaoTema.setAttribute(
-            "aria-label",
-            temaClaro ? "Ativar tema escuro" : "Ativar tema claro"
-        );
-    });
+    // alterna o tema
+    if (botaoTema) {
+        botaoTema.addEventListener("click", function () {
+            aplicarTema(temaEstaClaro() ? "escuro" : "claro");
+        });
+    }
 });
