@@ -7,6 +7,13 @@
 
     <title>Duckfy - Login</title>
 
+    <!-- aplica o tema salvo antes de carregar o CSS -->
+    <script>
+        if (localStorage.getItem("duckfy-tema") === "claro") {
+            document.documentElement.classList.add("tema-claro");
+        }
+    </script>
+
     <!-- conecta os estilos -->
     <link rel="stylesheet" href="{{ url_for('static', filename='css/variables.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/login.css') }}">
@@ -16,7 +23,6 @@
         href="https://cdn-uicons.flaticon.com/3.0.0/uicons-solid-rounded/css/uicons-solid-rounded.css">
 
     <style>
-        /* deixa as partículas no fundo */
         #particulas-fundo {
             position: fixed;
             inset: 0;
@@ -26,13 +32,11 @@
             pointer-events: none;
         }
 
-        /* mantém o login na frente das partículas */
         .login {
             position: relative;
             z-index: 1;
         }
 
-        /* organiza o botão de tema com o ícone */
         #btn-tema {
             display: inline-flex;
             align-items: center;
@@ -41,7 +45,6 @@
             cursor: pointer;
         }
 
-        /* ajusta o tamanho do ícone */
         #btn-tema i {
             font-size: 20px;
             line-height: 1;
@@ -51,18 +54,13 @@
 
 <body>
 
-    <!-- fundo animado -->
     <canvas id="particulas-fundo" aria-hidden="true"></canvas>
 
-    <!-- tela de login -->
     <main class="login">
 
-        <!-- cabeçalho -->
         <header class="login-cabecalho">
 
-
-
-            <!-- Logo da DuckFy -->
+            <!-- logo da DuckFy -->
             <a href="/" class="login-logo" aria-label="DuckFy - Página inicial">
                 <img src="{{ url_for('static', filename='img/logo_escura.png') }}"
                     data-logo-claro="{{ url_for('static', filename='img/logo_clara.png') }}"
@@ -70,21 +68,14 @@
                     class="logo-imagem">
             </a>
 
-
-
-            <!-- opções do cabeçalho -->
             <nav class="login-opcoes">
-
-                <!-- botão de tema -->
-                <button type="button" id="btn-tema" aria-label="ativar tema claro" title="alternar tema">
+                <button type="button" id="btn-tema" aria-label="Ativar tema claro" title="Ativar tema claro">
                     <i class="fi fi-sr-contrast" aria-hidden="true"></i>
                 </button>
-
             </nav>
 
         </header>
 
-        <!-- aviso de acesso aos termos -->
         <div class="aviso-termos" id="aviso-termos" role="status" aria-live="polite" hidden>
             <span class="aviso-icone">!</span>
 
@@ -93,54 +84,42 @@
                 <p>Entre na sua conta para acessar os Termos de Uso.</p>
             </div>
 
-            <button type="button" class="fechar-aviso" id="fechar-aviso" aria-label="fechar aviso">
+            <button type="button" class="fechar-aviso" id="fechar-aviso" aria-label="Fechar aviso">
                 &times;
             </button>
         </div>
 
-        <!-- cartão de login -->
         <section class="login-conteudo">
-
-            <!-- formulário -->
             <div class="login-formulario">
 
-                <!-- título -->
                 <section class="login-topo">
                     <h1>Que bom ter você aqui!</h1>
                     <p>Entre na sua conta e acompanhe sua vida financeira.</p>
                 </section>
 
-                <!-- formulário de acesso -->
                 <form action="/login/usuario" method="POST">
 
-                    <!-- campo de e-mail -->
                     <div class="campo">
                         <label for="email">E-mail:</label>
-
                         <input type="email" id="email" name="email" placeholder="Digite seu e-mail" autocomplete="email"
                             required>
                     </div>
 
-                    <!-- campo de senha -->
                     <div class="campo">
-
                         <div class="senha-label">
                             <label for="senha">Senha:</label>
                         </div>
 
                         <input type="password" id="senha" name="senha" placeholder="Digite sua senha"
                             autocomplete="current-password" required>
-
                     </div>
 
-                    <!-- botão de entrar -->
                     <button type="submit" class="btn-entrar">
                         Entrar
                     </button>
 
                 </form>
 
-                <!-- mensagens do flask -->
                 <div class="container__error">
                     {% with mensagens = get_flashed_messages() %}
                     {% for mensagem in mensagens %}
@@ -149,31 +128,26 @@
                     {% endwith %}
                 </div>
 
-                <!-- separador -->
                 <div class="separador">
                     <span>ou</span>
                 </div>
 
-                <!-- cadastro -->
                 <div class="cadastro">
                     <span>Não tem uma conta?</span>
                     <a href="/cadastro">Criar conta</a>
                 </div>
 
-                <!-- recuperação de senha -->
                 <a href="/redefinir" class="login-link-acesso">
                     Esqueci minha senha
                 </a>
 
             </div>
-
         </section>
 
     </main>
 
-    <!-- scripts da página -->
     <script>
-        // cria as partículas do fundo
+        // partículas do fundo
         const canvas = document.getElementById("particulas-fundo");
         const ctx = canvas.getContext("2d");
 
@@ -182,12 +156,10 @@
         let altura = 0;
         let animacaoAtiva = true;
 
-        // reduz a animação para quem prefere menos movimento
         const movimentoReduzido = window.matchMedia(
             "(prefers-reduced-motion: reduce)"
         ).matches;
 
-        // ajusta o fundo ao tamanho da tela
         function ajustarCanvas() {
             const proporcao = Math.min(window.devicePixelRatio || 1, 2);
 
@@ -202,7 +174,6 @@
             criarParticulas();
         }
 
-        // cria partículas roxas e verdes
         function criarParticulas() {
             const quantidade = Math.min(
                 100,
@@ -227,7 +198,6 @@
             }
         }
 
-        // desenha e movimenta as partículas
         function desenharParticulas() {
             ctx.clearRect(0, 0, largura, altura);
 
@@ -238,23 +208,19 @@
                     p.x += p.velocidadeX;
                     p.y += p.velocidadeY;
 
-                    // reaparece do outro lado da tela
                     if (p.x < -5) p.x = largura + 5;
                     if (p.x > largura + 5) p.x = -5;
                     if (p.y < -5) p.y = altura + 5;
                     if (p.y > altura + 5) p.y = -5;
                 }
 
-                // faz a luz variar suavemente
                 const brilho = movimentoReduzido
                     ? p.opacidade
                     : p.opacidade * (
                         0.7 + Math.sin(tempo + p.fase) * 0.3
                     );
 
-                // cria o brilho da partícula
                 ctx.save();
-
                 ctx.globalAlpha = brilho;
                 ctx.fillStyle = `rgb(${p.cor})`;
                 ctx.shadowColor = `rgb(${p.cor})`;
@@ -263,7 +229,6 @@
                 ctx.beginPath();
                 ctx.arc(p.x, p.y, p.tamanho, 0, Math.PI * 2);
                 ctx.fill();
-
                 ctx.restore();
             });
 
@@ -272,13 +237,11 @@
             }
         }
 
-        // prepara a animação
         ajustarCanvas();
         desenharParticulas();
 
         window.addEventListener("resize", ajustarCanvas);
 
-        // pausa a animação quando a aba não está visível
         document.addEventListener("visibilitychange", function () {
             if (document.hidden) {
                 animacaoAtiva = false;
@@ -288,74 +251,58 @@
             }
         });
 
-        // elementos do tema e da logo
+        // tema e logo
         const botaoTema = document.getElementById("btn-tema");
         const logo = document.querySelector(".logo-imagem");
 
-        // observa as mudanças do tema e atualiza a logo
-        const observadorLogo = new MutationObserver(function () {
-            atualizarLogo();
-        });
-
-        observadorLogo.observe(document.documentElement, {
-            attributes: true,
-            attributeFilter: ["class"]
-        });
-
-        observadorLogo.observe(document.body, {
-            attributes: true,
-            attributeFilter: ["class"]
-        });
-
+        function temaEstaClaro() {
+            return document.documentElement.classList.contains("tema-claro");
+        }
 
         function atualizarLogo() {
+            const logo = document.querySelector(".logo-imagem");
+
             if (!logo) return;
 
-            const temaClaro =
-                document.documentElement.classList.contains("tema-claro") ||
-                document.body.classList.contains("tema-claro");
+            const temaClaro = document.documentElement.classList.contains("tema-claro");
 
-            const novaLogo = temaClaro
-                ? logo.dataset.logoClaro
-                : logo.dataset.logoEscuro;
-
-            if (novaLogo && logo.getAttribute("src") !== novaLogo) {
-                logo.src = novaLogo;
+            if (temaClaro) {
+                logo.src = logo.dataset.logoEscuro;
+            } else {
+                logo.src = logo.dataset.logoClaro;
             }
         }
 
+        function aplicarTema(tema) {
+            const claro = tema === "claro";
 
-        // Atualiza a descrição do tema atual
-        function atualizarAcessibilidadeTema() {
-            if (!botaoTema) return;
+            document.documentElement.classList.toggle("tema-claro", claro);
+            document.body.classList.toggle("tema-claro", claro);
 
-            const temaClaro =
-                document.documentElement.classList.contains("tema-claro");
+            localStorage.setItem("duckfy-tema", tema);
 
-            const descricao = temaClaro
-                ? "Tema claro ativado"
-                : "Tema escuro ativado";
+            atualizarLogo();
 
-            botaoTema.setAttribute("aria-label", descricao);
-            botaoTema.setAttribute("title", descricao);
+            if (botaoTema) {
+                const descricao = claro
+                    ? "Ativar tema escuro"
+                    : "Ativar tema claro";
+
+                botaoTema.setAttribute("aria-label", descricao);
+                botaoTema.setAttribute("title", descricao);
+            }
         }
-        // configura o botão de tema
+
+        // aplica a preferência salva
+        aplicarTema(localStorage.getItem("duckfy-tema") || "escuro");
+
         if (botaoTema) {
-            atualizarLogo();
-            atualizarAcessibilidadeTema();
-
             botaoTema.addEventListener("click", function () {
-                document.documentElement.classList.toggle("tema-claro");
-                document.body.classList.toggle("tema-claro");
-
-                atualizarLogo();
-                atualizarAcessibilidadeTema();
+                aplicarTema(temaEstaClaro() ? "escuro" : "claro");
             });
-        } else {
-            atualizarLogo();
         }
 
-        // mostra o aviso dos termos
+        // aviso dos termos
         const botaoTermos = document.getElementById("btn-termos-bloqueado");
         const avisoTermos = document.getElementById("aviso-termos");
         const fecharAviso = document.getElementById("fechar-aviso");
@@ -366,7 +313,6 @@
             });
         }
 
-        // fecha o aviso
         if (fecharAviso && avisoTermos) {
             fecharAviso.addEventListener("click", function () {
                 avisoTermos.hidden = true;
@@ -377,50 +323,3 @@
 </body>
 
 </html>
-
-
-        <!-- // elementos do tema e da logo
-        const botaoTema = document.getElementById("btn-tema");
-        const logo = document.querySelector(".logo-imagem");
-
-        // verifica o tema atual e atualiza a logo
-        function atualizarLogo() {
-            if (!logo) return;
-
-            const temaClaro =
-                document.documentElement.classList.contains("tema-claro");
-
-            logo.src = temaClaro
-                ? logo.dataset.logoClaro
-                : logo.dataset.logoEscuro;
-        }
-
-        // atualiza a descrição acessível do botão
-        function atualizarAcessibilidadeTema() {
-            if (!botaoTema) return;
-
-            const temaClaro =
-                document.documentElement.classList.contains("tema-claro");
-
-            const descricao = temaClaro
-                ? "Ativar tema escuro"
-                : "Ativar tema claro";
-
-            botaoTema.setAttribute("aria-label", descricao);
-            botaoTema.setAttribute("title", descricao);
-        }
-
-        // aplica o tema e a logo inicial
-        atualizarLogo();
-        atualizarAcessibilidadeTema();
-
-        // alterna o tema e a logo
-        if (botaoTema) {
-            botaoTema.addEventListener("click", function () {
-                document.documentElement.classList.toggle("tema-claro");
-                document.body.classList.toggle("tema-claro");
-
-                atualizarLogo();
-                atualizarAcessibilidadeTema();
-            });
-        } -->
