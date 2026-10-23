@@ -19,6 +19,34 @@ class ContaBancaria:
             conexao.close()
 
     @staticmethod
+    def buscar_com_alocacao_reserva(id_usuario):
+        """Retorna as contas do usuário com os valores alocados em reservas."""
+        conexao, cursor = Conexao.conectar()
+        try:
+            sql = """
+                SELECT cb.*, COALESCE(aloc.valor_alocado, 0) AS valor_alocado
+                FROM contas_bancarias cb
+                LEFT JOIN (
+                    SELECT rc.id_conta, SUM(rc.valor_alocado) AS valor_alocado
+                    FROM reserva_contas rc
+                    INNER JOIN reserva_emergencia re
+                        ON re.id_reserva = rc.id_reserva
+                    WHERE re.id_usuario = %s
+                    GROUP BY rc.id_conta
+                ) aloc ON aloc.id_conta = cb.id_conta
+                WHERE cb.id_usuario = %s
+                ORDER BY cb.id_conta DESC
+            """
+            cursor.execute(sql, (id_usuario, id_usuario))
+            return cursor.fetchall()
+        except Exception as e:
+            print(f"Erro ao buscar alocações da reserva por conta: {e}")
+            return []
+        finally:
+            cursor.close()
+            conexao.close()
+
+    @staticmethod
     def buscar_por_id(id_conta, id_usuario):
         """Busca uma conta bancária específica verificando se pertence ao utilizador."""
         conexao, cursor = Conexao.conectar()

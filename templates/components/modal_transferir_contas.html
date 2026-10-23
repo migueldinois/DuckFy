@@ -1,0 +1,121 @@
+<div id="modalTransferirContas" class="duckfy-modal">
+    <div class="dash-card modal-content">
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <h3 class="card-section-title m-0">Transferir dinheiro</h3>
+            <button type="button" class="btn-close-custom" data-close-modal>&times;</button>
+        </div>
+
+        <form action="{{ url_for('transferir_contas') }}" method="POST" id="formTransferirContas">
+            <div class="mb-3">
+                <label for="conta_origem" class="card-subtitle d-block mb-1">
+                    Conta de origem
+                </label>
+
+                <div class="input-icon-wrapper">
+                    <select
+                        name="id_conta_origem"
+                        id="conta_origem"
+                        class="search-input"
+                        required>
+                        <option value="" disabled selected>Selecione de onde retirar</option>
+                        {% for conta in contas %}
+                            <option
+                                value="{{ conta.id_conta }}"
+                                data-saldo="{{ conta.saldo_atual }}">
+                                {{ conta.nome_conta }}
+                            </option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <small class="card-subtitle d-block mt-1" id="saldoContaOrigem"></small>
+            </div>
+
+            <div class="d-flex justify-content-center align-items-center my-3">
+                <button
+                    type="button"
+                    class="btn-alternar-contas"
+                    id="btnAlternarContas"
+                    title="Alternar contas"
+                    aria-label="Alternar conta de origem e destino">
+                    <img
+                        src="{{ url_for('static', filename='img/icons/alternar.svg') }}"
+                        alt=""
+                        class="icon-alternar-contas">
+                </button>
+            </div>
+
+            <div class="mb-3">
+                <label for="conta_destino" class="card-subtitle d-block mb-1">
+                    Conta de destino
+                </label>
+
+                <div class="input-icon-wrapper">
+                    <select
+                        name="id_conta_destino"
+                        id="conta_destino"
+                        class="search-input"
+                        required>
+                        <option value="" disabled selected>Selecione para onde enviar</option>
+                        {% for conta in contas %}
+                            <option
+                                value="{{ conta.id_conta }}"
+                                data-saldo="{{ conta.saldo_atual }}">
+                                {{ conta.nome_conta }}
+                            </option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <small class="card-subtitle d-block mt-1" id="saldoContaDestino"></small>
+            </div>
+
+            <div class="mb-3">
+                <label for="valor_transferencia" class="card-subtitle d-block mb-1">
+                    Valor da transferência (R$)
+                </label>
+
+                <div class="input-icon-wrapper">
+                    <input
+                        type="number"
+                        name="valor"
+                        id="valor_transferencia"
+                        class="search-input"
+                        placeholder="0,00"
+                        min="0.01"
+                        step="0.01"
+                        required>
+                </div>
+            </div>
+
+            <div class="dash-card mb-3" id="resumoTransferencia" hidden>
+                <div class="d-flex justify-content-between align-items-center mb-2">
+                    <span class="card-subtitle">Saldo restante na origem</span>
+                    <strong id="novoSaldoOrigem">R$ 0,00</strong>
+                </div>
+
+                <div class="d-flex justify-content-between align-items-center">
+                    <span class="card-subtitle">Saldo final no destino</span>
+                    <strong id="novoSaldoDestino">R$ 0,00</strong>
+                </div>
+            </div>
+
+            <p class="card-subtitle mb-3">
+                A transferência movimenta o dinheiro entre suas contas e não aumenta nem diminui seu patrimônio total.
+            </p>
+
+            <div class="d-flex gap-2 mt-3">
+                <button
+                    type="button"
+                    class="btn-close-custom w-100"
+                    data-close-modal>
+                    Cancelar
+                </button>
+
+                <button type="submit" class="btn-purple-action w-100">
+                    Transferir dinheiro
+                </button>
+            </div>
+        </form>
+    </div>
+</div>

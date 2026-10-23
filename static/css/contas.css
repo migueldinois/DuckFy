@@ -82,6 +82,22 @@
   border-color: var(--accent-primary);
 }
 
+.pagina-patrimonio .card-detalhe-reserva {
+  display: block;
+  margin-top: 8px;
+  color: var(--brand-secondary);
+  font-size: .9rem;
+  font-weight: 650;
+  font-variant-numeric: tabular-nums;
+}
+
+.pagina-patrimonio .aviso-reserva {
+  margin-top: 6px;
+  color: var(--text-muted);
+  font-size: .78rem;
+  line-height: 1.4;
+}
+
 /* Botões */
 .pagina-patrimonio .btn-adicionar-banco,
 .pagina-patrimonio .btn-purple-action {
@@ -185,6 +201,15 @@
   margin-top: 4px;
   color: var(--text-muted);
   font-size: .82rem;
+  overflow-wrap: anywhere;
+}
+
+.pagina-patrimonio .alocacao-reserva {
+  display: block;
+  margin-top: 5px;
+  color: var(--brand-secondary);
+  font-size: .78rem;
+  font-variant-numeric: tabular-nums;
   overflow-wrap: anywhere;
 }
 
@@ -412,4 +437,76 @@
 
 .btn-confirmar-exclusao:not(:disabled):hover {
     background: #c93636;
+}
+
+
+.acoes-patrimonio {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 12px;
+}
+
+.btn-acao-patrimonio {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    min-height: 46px;
+    padding: 0 20px;
+    border: 1px solid transparent;
+    border-radius: 12px;
+    font-family: inherit;
+    font-size: 14px;
+    font-weight: 600;
+    line-height: 1;
+    cursor: pointer;
+    transition: background-color 0.2s ease, border-color 0.2s ease,
+                transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.btn-acao-patrimonio i {
+    font-size: 17px;
+}
+
+.btn-acao-patrimonio:hover {
+    transform: translateY(-1px);
+}
+
+.btn-acao-patrimonio:focus-visible {
+    outline: 3px solid rgba(124, 92, 230, 0.3);
+    outline-offset: 3px;
+}
+
+.btn-adicionar-banco {
+    background: #7856e8;
+    color: #fff;
+    box-shadow: 0 4px 12px rgba(120, 86, 232, 0.18);
+}
+
+.btn-adicionar-banco:hover {
+    background: #6845d6;
+    box-shadow: 0 6px 16px rgba(120, 86, 232, 0.25);
+}
+
+.btn-transferir-dinheiro {
+    background: var(--card-bg, #fff);
+    color: var(--text-color, #352d48);
+    border-color: var(--border-color, #e5e0ef);
+}
+
+.btn-transferir-dinheiro:hover {
+    background: var(--hover-bg, #f7f4ff);
+    border-color: #b9a7f5;
+}
+
+@media (max-width: 576px) {
+    .acoes-patrimonio {
+        display: grid;
+        grid-template-columns: 1fr;
+    }
+
+    .btn-acao-patrimonio {
+        width: 100%;
+    }
 }

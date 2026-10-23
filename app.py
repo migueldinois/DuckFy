@@ -104,22 +104,61 @@ def privacidade():
 
 @app.route('/contas')
 def contas():
-    if "usuario" not in session:
+    if "usuario" not in session or not session.get('id_usuario'):
         flash("Você precisa estar logado para acessar as contas!", "error")
         return redirect('/login')
 
-    id_usuario = session.get('id_usuario')
+    id_usuario = session['id_usuario']
 
-    lista_contas = ContaBancaria.buscar_todas_por_usuario(id_usuario)
+    lista_contas = ContaBancaria.buscar_com_alocacao_reserva(id_usuario)
     total_contas = ContaBancaria.calcular_patrimonio_total(id_usuario)
+    reserva = Reserva.obter_reserva(id_usuario)
+    total_reservado = Decimal(str(reserva['valor_atual'] or 0)) if reserva else Decimal('0')
+    patrimonio = Decimal(str(total_contas or 0))
+    saldo_fora_reserva = patrimonio - total_reservado
+    porcentagem_reservada = (
+        (total_reservado / patrimonio) * 100
+        if patrimonio > 0 else Decimal('0')
+    )
 
-    patrimonio_fmt = f"{total_contas:,.2f}".replace(',', 'X').replace('.', ',').replace('X', '.')
+    def formatar_moeda(valor):
+        return f"{valor:,.2f}".replace(',', 'X').replace('.', ',').replace('X', '.')
 
     return render_template(
         'contas.html',
         contas_bancarias=lista_contas,
-        patrimonio_total=patrimonio_fmt
+        patrimonio_total=formatar_moeda(patrimonio),
+        reserva_total=formatar_moeda(total_reservado),
+        saldo_fora_reserva=formatar_moeda(saldo_fora_reserva),
+        porcentagem_reservada=porcentagem_reservada
     )
+
+@app.post("contas/<int:id_conta>/transferir")
+def transferir_dinheiro(id_conta):
+    if "usuario" not in session or not session.get("id_usuario"):
+        flash("Faça login novamente.", "error")
+        return redirect(url_for('login'))
+
+    id_usuario = session['id_usuario']
+    valor_transferencia = request.form.get('valor_transferencia', '').replace(',', '.')
+    id_conta_destino = request.form.get('id_conta_destino')
+
+    try:
+        valor_transferencia = Decimal(valor_transferencia)
+        if valor_transferencia <= 0:
+            raise ValueError("O valor da transferência deve ser maior que zero.")
+    except (InvalidOperation, ValueError):
+        flash("Informe um valor válido para a transferência.", "error")
+        return redirect(url_for('contas'))
+
+    sucesso = ContaBancaria.transferir_dinheiro(id_conta, id_conta_destino, id_usuario, valor_transferencia)
+
+    if sucesso:
+        flash(f'Transferência de R$ {valor_transferencia:.2f} realizada com sucesso!', 'success')
+    else:
+        flash("Não foi possível realizar a transferência. Verifique os dados e tente novamente.", "error")
+
+    return redirect(url_for('contas'))
 
 @app.post("/contas/<int:id_conta>/editar")
 def editar_conta(id_conta):
