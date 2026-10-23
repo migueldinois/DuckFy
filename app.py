@@ -5,6 +5,10 @@ import uuid
 
 from flask import Flask, render_template, request, redirect, session, flash, url_for
 from decimal import Decimal, InvalidOperation
+
+# essa importação é necessária para lidar com o upload de arquivos de forma segura
+from werkzeug.utils import secure_filename 
+
 from database.conexao import Conexao
 from model.categorias import Categoria
 from model.usuarios import Usuario
@@ -516,9 +520,15 @@ def sequencia():
 # Rota para exibir o perfil do usuário
 @app.route("/perfil", methods=["GET", "POST"])
 def perfil():
+    email = session.get("email")
+    if not email:
+        flash("Sua sessão expirou. Entre novamente para acessar seu perfil.", "error")
+        return redirect('/login')
 
-
-    dados_usuario = Usuario.recuperar_dados_usuario(session["email"])
+    dados_usuario = Usuario.recuperar_dados_usuario(email)
+    if not dados_usuario:
+        flash("Não foi possível localizar os dados do seu perfil.", "error")
+        return redirect('/login')
 
     usuario = {
         "nome": dados_usuario["nome"],
@@ -577,6 +587,34 @@ def editar_perfil():
 
     usuario = Usuario.recuperar_dados_usuario(email_atual)
     return render_template("editar_perfil.html", usuario=usuario)
+
+@app.post("/excluir-conta")
+def excluir_conta_usuario():
+    id_usuario = session.get("id_usuario")
+    if "usuario" not in session or not id_usuario:
+        flash("Faça login novamente para excluir sua conta.", "error")
+        return redirect(url_for("index"))
+
+    dados_usuario = Usuario.recuperar_dados_usuario(session["email"])
+    if not Usuario.excluir_usuario(id_usuario):
+        flash("Não foi possível excluir sua conta. Tente novamente.", "error")
+        return redirect(url_for("editar_perfil"))
+
+    foto_perfil = (dados_usuario or {}).get("foto_perfil", "")
+    prefixo_upload = "/static/uploads/perfis/"
+    if foto_perfil.startswith(prefixo_upload):
+        caminho_foto = os.path.join(
+            app.static_folder,
+            "uploads",
+            "perfis",
+            os.path.basename(foto_perfil)
+        )
+        if os.path.isfile(caminho_foto):
+            os.remove(caminho_foto)
+
+    session.clear()
+    flash("Sua conta e seus dados foram excluídos.", "success")
+    return redirect(url_for("index"))
 
 @app.get("/extrato")
 def tela_extrato():
@@ -729,10 +767,7 @@ def cadastrar():
     
 @app.get("/redefinir")
 def redefinir():
-    if "usuario" in session:
-        return redirect('/dashboard')
-    else:
-        return render_template("redefinir_senha.html")
+    return render_template("redefinir_senha.html")
 
 
 
