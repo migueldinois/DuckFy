@@ -106,3 +106,21 @@ class Usuario():
         cursor.close()
 
         return dados_usuario
+
+    @staticmethod
+    def atualizar_dados(email_atual, nome, email, foto_perfil):
+        conexao, cursor = Conexao.conectar()
+        try:
+            cursor.execute(
+                "UPDATE usuarios SET nome = %s, email = %s, foto_perfil = %s WHERE email = %s",
+                [nome, email, foto_perfil, email_atual]
+            )
+            conexao.commit()
+            return True
+        except Exception as erro:
+            print(f"Erro ao atualizar usuário: {erro}")
+            conexao.rollback()
+            return False
+        finally:
+            cursor.close()
+            conexao.close()
