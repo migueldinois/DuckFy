@@ -13,6 +13,7 @@
 {% include 'components/modal_adicionar_banco.html' %}
 {% include 'components/modal_editar_conta.html' %}
 {% include 'components/modal_transferir_contas.html' %}
+{% include 'components/modal_adicionar_dinheiro_conta.html' %}
 <main class="pagina-patrimonio">
 
   <!-- Cabeçalho -->
@@ -69,11 +70,17 @@
       <i class="bi bi-plus-lg" aria-hidden="true"></i>
       <span>Adicionar banco</span>
     </button>
+    
+    <button type="button" class="btn-acao-patrimonio btn-adicionar-dinheiro" data-open-modal="modalAdicionarDinheiro">
+      <i class="bi bi-plus-lg" aria-hidden="true"></i>
+      <span>Adicionar dinheiro</span>
+    </button>
 
     <button type="button" class="btn-acao-patrimonio btn-transferir-dinheiro" data-open-modal="modalTransferirContas">
       <i class="bi bi-arrow-left-right" aria-hidden="true"></i>
       <span>Transferir dinheiro</span>
     </button>
+
   </section>
 
   <!-- Contas -->

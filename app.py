@@ -222,7 +222,7 @@ def transferir_dinheiro():
     sucesso = ContaBancaria.transferir_dinheiro(
         id_conta_origem,
         id_conta_destino,
-        id_usuario,
+        id_usuario, 
         valor_transferencia
     )
 
@@ -234,6 +234,47 @@ def transferir_dinheiro():
     else:
         flash(
             "Não foi possível transferir. Verifique as contas e o saldo disponível.",
+            "error"
+        )
+
+    return redirect(url_for('contas'))
+
+# Adicionar dinheiro a contas bancárias
+@app.route('/contas/adicionar_dinheiro', methods=['POST'])
+def adicionar_dinheiro():
+    if "usuario" not in session or not session.get("id_usuario"):
+        flash("Faça login novamente.", "error")
+        return redirect(url_for('index'))
+
+    id_usuario = session['id_usuario']
+
+    try:
+        id_conta = int(request.form.get('id_conta', ''))
+        valor_adicionar = Decimal(
+            request.form.get('valor', '').replace(',', '.')
+        )
+
+        if not valor_adicionar.is_finite() or valor_adicionar <= 0:
+            raise ValueError
+
+    except (ValueError, TypeError, InvalidOperation):
+        flash("Informe uma conta válida e um valor maior que zero.", "error")
+        return redirect(url_for('contas'))
+
+    sucesso = ContaBancaria.adicionar_dinheiro(
+        id_conta,
+        id_usuario,
+        valor_adicionar
+    )
+
+    if sucesso:
+        flash(
+            f"R$ {valor_adicionar:.2f} adicionados à conta com sucesso!",
+            "success"
+        )
+    else:
+        flash(
+            "Não foi possível adicionar dinheiro. Verifique a conta selecionada.",
             "error"
         )
 

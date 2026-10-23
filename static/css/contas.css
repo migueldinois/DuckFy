@@ -489,6 +489,12 @@
     box-shadow: 0 6px 16px rgba(120, 86, 232, 0.25);
 }
 
+.btn-adicionar-dinheiro {
+    background: var(--brand-secondary);
+    color: var(--text-primary);
+    
+}
+
 .btn-transferir-dinheiro {
     background: var(--card-bg, #fff);
     color: var(--text-color, #352d48);
