@@ -58,11 +58,27 @@
                 >
             </div>
 
-            <button type="submit">CONFIRMAR</button>
+            <button type="submit">SALVAR NOVA SENHA</button>
 
         </form>
 
     </main>
+
+    {% if senha_alterada %}
+    <div class="overlay-sucesso">
+        <div class="card-sucesso">
+            <div class="icone-sucesso">✓</div>
+
+            <h2>Senha alterada!</h2>
+
+            <p>Sua senha foi alterada com sucesso.</p>
+
+            <a href="/login" class="btn-continuar">
+                CONTINUAR
+            </a>
+        </div>
+    </div>
+{% endif %}
 
 </body>
 </html>
