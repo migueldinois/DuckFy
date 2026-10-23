@@ -1,0 +1,141 @@
+
+<div id="modalEditarConta" class="duckfy-modal" role="dialog" aria-modal="true"
+    aria-labelledby="tituloModalEditarConta" aria-hidden="true">
+
+    <div class="dash-card modal-content">
+
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h2 id="tituloModalEditarConta" class="card-section-title m-0">
+                Editar conta
+            </h2>
+
+            <button type="button" class="btn-close-custom" data-close-modal
+                aria-label="Fechar modal">
+                &times;
+            </button>
+        </div>
+
+        <form id="formEditarConta" method="POST">
+
+            <div class="mb-3">
+                <label for="editarNomeConta" class="card-subtitle d-block mb-2">
+                    Nome do banco
+                </label>
+
+                <input
+                    id="editarNomeConta"
+                    name="nome_conta"
+                    class="search-input"
+                    type="text"
+                    maxlength="50"
+                    placeholder="Ex.: Nubank, Itaú, Inter"
+                    required>
+            </div>
+
+            <div class="mb-3">
+                <label for="editarTipoConta" class="card-subtitle d-block mb-2">
+                    Tipo de conta
+                </label>
+
+                <select
+                    id="editarTipoConta"
+                    name="tipo_conta"
+                    class="search-input"
+                    required>
+                    <option value="" disabled>Selecione o tipo</option>
+                    <option value="Conta Corrente">Conta Corrente</option>
+                    <option value="Poupança">Poupança</option>
+                    <option value="Conta Digital">Conta Digital</option>
+                    <option value="Investimento">Investimento</option>
+                    <option value="Carteira Digital">Carteira Digital</option>
+                </select>
+            </div>
+
+            <div class="mb-4">
+                <label for="editarSaldoConta" class="card-subtitle d-block mb-2">
+                    Saldo atual (R$)
+                </label>
+
+                <input
+                    id="editarSaldoConta"
+                    name="saldo_atual"
+                    class="search-input"
+                    type="number"
+                    min="0"
+                    step="0.01"
+                    required>
+            </div>
+
+            <div class="d-flex flex-column gap-2">
+                <button type="submit" class="btn-purple-action w-100">
+                    Salvar alterações
+                </button>
+
+                <button
+                    type="button"
+                    id="btnExcluirConta"
+                    class="btn-excluir-conta w-100">
+                    <i class="bi bi-trash" aria-hidden="true"></i>
+                    Excluir conta
+                </button>
+            </div>
+
+        </form>
+
+        <div id="confirmacaoExcluirConta" class="confirmacao-excluir-conta" hidden>
+
+            <p class="titulo-confirmacao-exclusao">
+                Confirmar exclusão
+            </p>
+
+            <p class="texto-confirmacao-exclusao">
+                Para excluir esta conta permanentemente, digite
+                <strong>Deletar</strong> no campo abaixo.
+            </p>
+
+            <div class="campo-palavra-exclusao">
+                <input
+                    type="text"
+                    id="palavraConfirmacaoExcluir"
+                    class="search-input"
+                    placeholder="Digite Deletar"
+                    autocomplete="off"
+                    aria-label="Digite Deletar para confirmar">
+
+                <button
+                    type="button"
+                    id="copiarPalavraDeletar"
+                    class="btn-copiar-deletar"
+                    title="Copiar palavra Deletar"
+                    aria-label="Copiar palavra Deletar">
+                    <i class="bi bi-copy" aria-hidden="true"></i>
+                </button>
+            </div>
+
+            <p
+                id="mensagemConfirmacaoExcluir"
+                class="mensagem-confirmacao-exclusao"
+                aria-live="polite">
+            </p>
+
+            <div class="acoes-confirmacao-exclusao">
+                <button
+                    type="button"
+                    id="cancelarExcluirConta"
+                    class="btn-cancelar-exclusao">
+                    Cancelar
+                </button>
+
+                <button
+                    type="button"
+                    id="confirmarExcluirConta"
+                    class="btn-confirmar-exclusao"
+                    disabled>
+                    Excluir definitivamente
+                </button>
+            </div>
+
+        </div>
+
+    </div>
+</div>
