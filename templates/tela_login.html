@@ -12,10 +12,8 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='css/login.css') }}">
 
     <!-- conecta os ícones flaticon -->
-    <link
-        rel="stylesheet"
-        href="https://cdn-uicons.flaticon.com/3.0.0/uicons-solid-rounded/css/uicons-solid-rounded.css"
-    >
+    <link rel="stylesheet"
+        href="https://cdn-uicons.flaticon.com/3.0.0/uicons-solid-rounded/css/uicons-solid-rounded.css">
 
     <style>
         /* deixa as partículas no fundo */
@@ -62,21 +60,19 @@
         <!-- cabeçalho -->
         <header class="login-cabecalho">
 
+
             <!-- logo -->
-            <a href="/" class="login-logo" aria-label="Duckfy - Página inicial">
-                <span class="logo-duck">DUCK</span><span class="logo-fy">FY</span>
+            <a href="/" class="login-logo" aria-label="DuckFy - Página inicial">
+                <img src="{{ url_for('static', filename='img/logo_duckfy04.png') }}" alt="Logo DuckFy"
+                    class="logo-imagem">
             </a>
+
 
             <!-- opções do cabeçalho -->
             <nav class="login-opcoes">
 
                 <!-- botão de tema -->
-                <button
-                    type="button"
-                    id="btn-tema"
-                    aria-label="ativar tema claro"
-                    title="alternar tema"
-                >
+                <button type="button" id="btn-tema" aria-label="ativar tema claro" title="alternar tema">
                     <i class="fi fi-sr-contrast" aria-hidden="true"></i>
                 </button>
 
@@ -85,13 +81,7 @@
         </header>
 
         <!-- aviso de acesso aos termos -->
-        <div
-            class="aviso-termos"
-            id="aviso-termos"
-            role="status"
-            aria-live="polite"
-            hidden
-        >
+        <div class="aviso-termos" id="aviso-termos" role="status" aria-live="polite" hidden>
             <span class="aviso-icone">!</span>
 
             <div class="aviso-texto">
@@ -99,12 +89,7 @@
                 <p>Entre na sua conta para acessar os Termos de Uso.</p>
             </div>
 
-            <button
-                type="button"
-                class="fechar-aviso"
-                id="fechar-aviso"
-                aria-label="fechar aviso"
-            >
+            <button type="button" class="fechar-aviso" id="fechar-aviso" aria-label="fechar aviso">
                 &times;
             </button>
         </div>
@@ -114,11 +99,10 @@
 
             <!-- formulário -->
             <div class="login-formulario">
-
                 <!-- título -->
                 <section class="login-topo">
-                    <h1>Bem-vindo(a) de volta!</h1>
-                    <p>Faça login na sua conta da Duckfy</p>
+                    <h1>Que bom ter você aqui!</h1>
+                    <p>Entre na sua conta e acompanhe sua vida financeira.</p>
                 </section>
 
                 <!-- formulário de acesso -->
@@ -128,14 +112,8 @@
                     <div class="campo">
                         <label for="email">E-mail:</label>
 
-                        <input
-                            type="email"
-                            id="email"
-                            name="email"
-                            placeholder="Digite seu e-mail"
-                            autocomplete="email"
-                            required
-                        >
+                        <input type="email" id="email" name="email" placeholder="Digite seu e-mail" autocomplete="email"
+                            required>
                     </div>
 
                     <!-- campo de senha -->
@@ -145,14 +123,8 @@
                             <label for="senha">Senha:</label>
                         </div>
 
-                        <input
-                            type="password"
-                            id="senha"
-                            name="senha"
-                            placeholder="Digite sua senha"
-                            autocomplete="current-password"
-                            required
-                        >
+                        <input type="password" id="senha" name="senha" placeholder="Digite sua senha"
+                            autocomplete="current-password" required>
 
                     </div>
 
@@ -166,9 +138,9 @@
                 <!-- mensagens do flask -->
                 <div class="container__error">
                     {% with mensagens = get_flashed_messages() %}
-                        {% for mensagem in mensagens %}
-                            <p class="text-error">{{ mensagem }}</p>
-                        {% endfor %}
+                    {% for mensagem in mensagens %}
+                    <p class="text-error">{{ mensagem }}</p>
+                    {% endfor %}
                     {% endwith %}
                 </div>
 

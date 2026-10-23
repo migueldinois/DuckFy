@@ -45,32 +45,57 @@ body {
     padding: 14px 8px;
 }
 
+
 /* logo da duckfy */
 .cadastro-logo {
+    position: relative;
+    top: -10px;
+
     display: inline-flex;
     align-items: center;
-    font-family: Arial, Helvetica, sans-serif;
-    font-size: 2rem;
-    font-weight: 400;
-    letter-spacing: -1.5px;
-    line-height: 1;
+    justify-content: center;
+
     text-decoration: none;
-    white-space: nowrap;
+    flex-shrink: 0;
 }
 
-/* fundo roxo do duck */
-.logo-duck {
-    color: #0F0C1B;
-    background: #7C4DFF;
-    padding: 2px 5px;
-    border-radius: 5px 5px 0 0;
+.cadastro-logo-imagem {
+  display: block;
+    width: 220px;
+    height: auto;
+    max-width: none;
+    object-fit: contain;
 }
 
-/* letras fy */
-.logo-fy {
-    color: #ffffff;
-    padding-left: 1px;
+
+/* botao de tema */
+#btn-tema {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 42px;
+    height: 42px;
+    min-width: 42px;
+    padding: 0;
+    box-sizing: border-box;
+    line-height: 1;
+    cursor: pointer;
 }
+
+/* icone do tema */
+#btn-tema i {
+    display: block;
+    font-size: 18px;
+    line-height: 1;
+}
+
+
+/* posicionamento dentro do cartão */
+.cadastro-conteudo {
+    position: relative;
+}
+
+
 
 /* opções do cabeçalho */
 .cadastro-opcoes {
