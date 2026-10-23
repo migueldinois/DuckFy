@@ -1,5 +1,10 @@
 import math
 
+import random
+import os
+import secrets
+from datetime import datetime, timedelta
+from flask_mail import Mail, Message
 from flask import Flask, render_template, request, redirect, session, flash, url_for
 from decimal import Decimal, InvalidOperation
 from database.conexao import Conexao
@@ -13,6 +18,19 @@ from model.reserva_emergencia import Reserva
 
 app = Flask(__name__)
 app.secret_key = "duckfy999"
+
+
+app.config['MAIL_SERVER'] = 'smtp.gmail.com'
+app.config['MAIL_PORT'] = 587
+app.config['MAIL_USE_TLS'] = True
+app.config['MAIL_USERNAME'] = os.environ.get('DUCKFY_EMAIL')
+app.config['MAIL_PASSWORD'] = os.environ.get('DUCKFY_EMAIL_PASSWORD')
+app.config['MAIL_DEFAULT_SENDER'] = os.environ.get('DUCKFY_EMAIL')
+
+mail = Mail(app)
+
+codigos_recuperacao = {}
+
 
 
 def obter_estado_fogo(dias_ofensiva):
@@ -525,6 +543,7 @@ def cadastrar():
         flash("Erro ao cadastrar usuário. Tente novamente.", "error")
         return redirect('/cadastro')
     
+    
 @app.get("/redefinir")
 def redefinir():
     
@@ -534,6 +553,28 @@ def redefinir():
         return redirect('/dashboard')
     else:
         return render_template("redefinir_senha.html")
+    
+
+
+@app.post("/api/recuperacao/enviar-codigo")
+def solicitar_codigo():
+    dados = request.get_json(silent=True) or {}
+    email = dados.get("email", "").strip()
+
+    if not email:
+        return {"message": "Informe seu e-mail."}, 400
+
+    usuario = Usuario.buscar_por_email(email)
+
+    if usuario:
+        return {
+            "message": "E-mail encontrado! Ainda precisamos configurar o envio do código."
+        }, 200
+
+    return {
+        "message": "Não foi possível processar a solicitação."
+    }, 400
+
 
 
 
