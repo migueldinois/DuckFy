@@ -227,6 +227,7 @@ def reserva_emergencia():
     # Busca os dados no banco
     reserva = Reserva.obter_reserva(id_usuario)
     historico_movimentacoes = Reserva.obter_historico(id_usuario)
+    contas_usuario = Reserva.obter_contas_usuario(id_usuario)
 
     if reserva:
         total_guardado = float(reserva['valor_atual'])
@@ -246,7 +247,8 @@ def reserva_emergencia():
         faltam_para_meta=faltam_para_meta,
         progresso_porcentagem=progresso_porcentagem,
         progresso_barra=progresso_barra,
-        historico_movimentacoes=historico_movimentacoes
+        historico_movimentacoes=historico_movimentacoes,
+        contas_usuario=contas_usuario
     )
 
 
@@ -260,20 +262,49 @@ def guardar_reserva():
     id_usuario = Reserva.obter_id_por_email(email_usuario)
 
     try:
-        valor_guardar = float(request.form.get('valor', 0))
-    except ValueError:
-        valor_guardar = 0.0
+        valor_guardar = Decimal(request.form.get('valor', '').replace(',', '.'))
+        id_conta = int(request.form.get('id_conta', ''))
+    except (InvalidOperation, ValueError, AttributeError):
+        valor_guardar = Decimal('0')
+        id_conta = None
 
     descricao = request.form.get('descricao', 'Depósito na Reserva')
 
-    if valor_guardar <= 0:
-        flash("Informe um valor válido maior que zero!", "error")
+    if not valor_guardar.is_finite() or valor_guardar <= 0 or id_conta is None:
+        flash("Informe uma conta e um valor válido maior que zero!", "error")
         return redirect(url_for('reserva_emergencia'))
 
-    # Salva no Banco de Dados para o id_usuario correto
-    Reserva.guardar_dinheiro(id_usuario, valor_guardar, descricao)
+    if not Reserva.guardar_dinheiro(id_usuario, id_conta, valor_guardar, descricao):
+        flash("A conta selecionada não existe ou não tem saldo suficiente.", "error")
+        return redirect(url_for('reserva_emergencia'))
 
     flash(f'R$ {valor_guardar:.2f} guardados na reserva com sucesso!', 'success')
+    return redirect(url_for('reserva_emergencia'))
+
+
+@app.route('/retirar_reserva', methods=['POST'])
+def retirar_reserva():
+    if "usuario" not in session or not session.get("id_usuario"):
+        flash("Sessão expirada. Faça login novamente.", "error")
+        return redirect('/login')
+
+    try:
+        valor_retirar = Decimal(request.form.get('valor', '').replace(',', '.'))
+        id_conta = int(request.form.get('id_conta', ''))
+    except (InvalidOperation, ValueError, AttributeError):
+        valor_retirar = Decimal('0')
+        id_conta = None
+
+    if not valor_retirar.is_finite() or valor_retirar <= 0 or id_conta is None:
+        flash("Informe uma conta e um valor válido maior que zero.", "error")
+        return redirect(url_for('reserva_emergencia'))
+
+    descricao = request.form.get('descricao', '').strip() or 'Retirada da reserva'
+    if not Reserva.retirar_dinheiro(session['id_usuario'], id_conta, valor_retirar, descricao):
+        flash("Não foi possível retirar: confira o saldo da reserva e a conta selecionada.", "error")
+        return redirect(url_for('reserva_emergencia'))
+
+    flash(f'R$ {valor_retirar:.2f} retirados da reserva com sucesso!', 'withdrawal')
     return redirect(url_for('reserva_emergencia'))
 
 
