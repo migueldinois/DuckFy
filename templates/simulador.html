@@ -7,19 +7,17 @@
 {% endblock %}
 
 {% block content %}
-<div class="simulador-page-wrapper">
-    <div class="row g-4 align-items-stretch h-100">
+<div class="simulador-page-wrapper container-fluid px-2 px-md-4 py-3">
+    <div class="row g-4 align-items-stretch">
 
         <!-- CARTÃO DA ESQUERDA: FORMULÁRIO -->
         <div class="col-12 col-lg-4 d-flex">
-            <div class="card-painel w-100 d-flex flex-column justify-content-between">
+            <div class="card-painel w-100 d-flex flex-column justify-content-between p-3 p-md-4">
                 <div>
-
-                    <a href="/dashboard" class="text-white text-decoration-none fs-4 me-3" aria-label="Voltar">
-                        <i class="bi bi-arrow-left"></i>
-                    </a>
                     <div class="d-flex align-items-center mb-4">
-
+                        <a href="/dashboard" class="text-white text-decoration-none fs-4 me-3" aria-label="Voltar">
+                            <i class="bi bi-arrow-left"></i>
+                        </a>
                         <h1 class="h5 mb-0 fw-bold text-white">Simulador Investimentos</h1>
                     </div>
 
@@ -40,26 +38,25 @@
                                 placeholder="0,00">
                         </div>
 
-                        <button type="submit" class="btn btn-purple w-100 fw-bold">Simular</button>
+                        <button type="submit" class="btn btn-purple w-100 fw-bold py-2">Simular</button>
                     </form>
                 </div>
             </div>
         </div>
 
-        <!-- CARTÃO DA DIREITA: MÉTRICAS E GRÁFICO -->
+        <!-- CARTÃO DA DIREITA: MÉTRICAS, GRÁFICO E TABELA -->
         <div class="col-12 col-lg-8 d-flex">
-            <div class="card-painel w-100 d-flex flex-column justify-content-between">
+            <div class="card-painel w-100 d-flex flex-column justify-content-between p-3 p-md-4">
 
                 <div>
                     <!-- FILTROS DE PERÍODO -->
-                    <div class="d-flex justify-content-between align-items-center mb-4">
-                        <div class="d-flex gap-2 align-items-center">
+                    <div class="d-flex flex-wrap justify-content-between align-items-center gap-2 mb-4">
+                        <div class="d-flex gap-2 align-items-center flex-wrap">
                             <button type="button" class="btn-periodo {% if anos == 5 %}active{% endif %}"
                                 onclick="alterarAnos(5)">5 anos</button>
                             <button type="button" class="btn-periodo {% if anos == 10 %}active{% endif %}"
                                 onclick="alterarAnos(10)">10 anos</button>
 
-                            <!-- Exibe badge com valor personalizado se não for 5 nem 10 -->
                             {% if anos and anos != 5 and anos != 10 %}
                             <span class="badge bg-purple px-3 py-2 fs-6 style-custom-badge">{{ anos }} anos</span>
                             {% endif %}
@@ -70,35 +67,74 @@
                         </button>
                     </div>
 
-                    <!-- MÉTRICAS -->
-                    <div class="row text-center mb-3 g-3">
-                        <div class="col-6">
-                            <div class="metric-box">
-                                <h3 class="fw-bold text-white mb-1 fs-3">R$ {{ "%.2f"|format(resultado.total_investido)
-                                    if resultado else "0.00" }}</h3>
-                                <small class="text-white-50 text-uppercase fw-semibold">Investido</small>
+                    <!-- MÉTRICAS (GRID ADAPTÁVEL) -->
+                    <div class="row text-center mb-3 g-2 g-md-3">
+                        <div class="col-12 col-sm-6 col-md-4">
+                            <div class="metric-box p-3">
+                                <h3 class="fw-bold text-white mb-1 fs-4 text-truncate">
+                                    R$ {{ "%.2f"|format(resultado.total_investido) if resultado else "0.00" }}
+                                </h3>
+                                <small class="text-white-50 text-uppercase fw-semibold d-block">Investido</small>
                             </div>
                         </div>
 
-                        <div class="col-6">
-                            <div class="metric-box">
-                                <h3 class="fw-bold mb-1 fs-3 text-destaque-verde">R$ {{
-                                    "%.2f"|format(resultado.rendimentos) if resultado else "0.00" }}</h3>
-                                <small class="text-white-50 text-uppercase fw-semibold">Rendimentos</small>
+                        <div class="col-12 col-sm-6 col-md-4">
+                            <div class="metric-box p-3">
+                                <h3 class="fw-bold mb-1 fs-4 text-destaque-verde text-truncate">
+                                    R$ {{ "%.2f"|format(resultado.rendimentos) if resultado else "0.00" }}
+                                </h3>
+                                <small class="text-white-50 text-uppercase fw-semibold d-block">Juros Acumulados</small>
+                            </div>
+                        </div>
+
+                        <div class="col-12 col-md-4">
+                            <div class="metric-box p-3">
+                                <h3 class="fw-bold mb-1 fs-4 text-destaque-verde text-truncate">
+                                    R$ {{ "%.2f"|format(resultado.valor_total_final) if resultado else "0.00" }}
+                                </h3>
+                                <small class="text-white-50 text-uppercase fw-semibold d-block">Valor Final</small>
                             </div>
                         </div>
                     </div>
 
-                    <p class="text-center text-white-50 small mb-3">
-                        Taxa utilizada: <strong>{{ resultado.taxa_anual_aplicada if resultado else "10.0" }}%
-                            a.a.</strong> (Fonte: Banco Central do Brasil)
+                    <p class="text-center text-white-50 small mb-4">
+                        Taxa utilizada: <strong>{{ resultado.taxa_anual_aplicada if resultado else "10.0" }}% a.a.</strong> 
+                        (Fonte: Banco Central do Brasil)
                     </p>
                 </div>
 
-                <!-- CONTAINER DO CANVAS -->
-                <div class="grafic-container flex-grow-1">
+                <!-- CONTAINER DO CANVAS COM ALTURA MÍNIMA RESPONSIVA -->
+                <div class="grafic-container flex-grow-1 w-100 mb-4 position-relative" style="min-height: 250px;">
                     <canvas id="graficoSimulador"></canvas>
                 </div>
+
+                <!-- TABELA RESPONSIVA COM ROLAGEM LATERAL NO MOBILE -->
+                {% if resultado and resultado.tabela_anual %}
+                <div class="tabela-container">
+                    <div class="table-responsive">
+                        <table class="table table-dark table-borderless align-middle mb-0">
+                            <thead>
+                                <tr>
+                                    <th scope="col" class="text-nowrap">Ano</th>
+                                    <th scope="col" class="text-nowrap">Capital Inicial (R$)</th>
+                                    <th scope="col" class="text-nowrap">Juros Ganhos no Ano (R$)</th>
+                                    <th scope="col" class="text-nowrap">Montante Final (R$)</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for linha in resultado.tabela_anual %}
+                                <tr>
+                                    <td class="fw-semibold text-nowrap">Ano {{ linha.ano }}</td>
+                                    <td class="text-nowrap">R$ {{ "%.2f"|format(linha.capital_inicial) }}</td>
+                                    <td class="text-nowrap text-destaque-verde">R$ {{ "%.2f"|format(linha.juros_ano) }}</td>
+                                    <td class="fw-bold text-nowrap">R$ {{ "%.2f"|format(linha.montante_final) }}</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                {% endif %}
 
             </div>
         </div>
@@ -123,7 +159,6 @@
         }
     }
 
-    // Lógica para o botão de lápis (editar período livremente)
     document.addEventListener('DOMContentLoaded', () => {
         const btnEditar = document.getElementById('btn-editar-periodo');
 

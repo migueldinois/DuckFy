@@ -48,43 +48,75 @@ def tela_simulador():
     aporte_mensal = 0.0
     anos = 5
 
-    # Tenta capturar dados se for POST
+    # 1. Captura de dados do formulário POST
     if request.method == "POST":
         try:
-            anos = int(request.form.get("anos", 5))
+            anos = int(request.form.get("anos") or 5)
             if anos <= 0:
                 anos = 5
             aporte_inicial = float(request.form.get("aporte_inicial") or 0.0)
             aporte_mensal = float(request.form.get("aporte_mensal") or 0.0)
-            anos = int(request.form.get("anos") or 5)
         except (ValueError, TypeError):
             pass
 
-    taxa_anual = obter_taxa_selic_bcb() # 10% a.a.
-    taxa_mensal = (1 + (taxa_anual / 100)) ** (1 / 12) - 1
+    # 2. Definição das taxas de juros
+    taxa_anual_pct = obter_taxa_selic_bcb()  # Ex: 13.65%
+    taxa_anual = taxa_anual_pct / 100.0
+    
+    # Conversão equivalente para taxa mensal em juros compostos
+    taxa_mensal = ((1 + taxa_anual) ** (1 / 12)) - 1
     meses = anos * 12
 
+    # 3. Listas para o gráfico
     labels = []
     investido_lista = []
     patrimonio_lista = []
 
-    saldo_total = aporte_inicial
-    for mes in range(1, meses + 1):
-        saldo_total = (saldo_total + aporte_mensal) * (1 + taxa_mensal)
-        investido_acumulado = aporte_inicial + (aporte_mensal * mes)
+    # 4. Cálculo da Tabela de Evolução Anual
+    tabela_anual = []
+    saldo_atual = aporte_inicial
 
-        labels.append(f"Mês {mes}")
-        investido_lista.append(round(investido_acumulado, 2))
-        patrimonio_lista.append(round(saldo_total, 2))
+    for ano in range(1, anos + 1):
+        capital_inicial_ano = saldo_atual
+        
+        # Simula 12 meses do ano vigente
+        for mes_do_ano in range(1, 13):
+            # Juro sobre o saldo acumulado
+            saldo_atual = saldo_atual * (1 + taxa_mensal)
+            # Adiciona o aporte no final do mês
+            saldo_atual += aporte_mensal
+            
+            # Dados para o gráfico (mês global)
+            mes_global = ((ano - 1) * 12) + mes_do_ano
+            investido_acumulado = aporte_inicial + (aporte_mensal * mes_global)
+            
+            labels.append(f"Mês {mes_global}")
+            investido_lista.append(round(investido_acumulado, 2))
+            patrimonio_lista.append(round(saldo_atual, 2))
 
+        montante_final_ano = saldo_atual
+        aportes_no_ano = aporte_mensal * 12
+        juros_ganhos_ano = montante_final_ano - capital_inicial_ano - aportes_no_ano
+
+        tabela_anual.append({
+            "ano": ano,
+            "capital_inicial": round(capital_inicial_ano, 2),
+            "juros_ano": round(juros_ganhos_ano, 2),
+            "montante_final": round(montante_final_ano, 2)
+        })
+
+    # 5. Totais Gerais do Período
     total_investido = aporte_inicial + (aporte_mensal * meses)
-    rendimentos = saldo_total - total_investido
+    valor_total_final = saldo_atual
+    rendimentos_totais = valor_total_final - total_investido
 
-    # Dicionário alinhado 100% com as variáveis do seu simulador.html
+    # 6. Estrutura de retorno enviada ao HTML
     resultado = {
+        "valor_total_final": round(valor_total_final, 2),
         "total_investido": round(total_investido, 2),
-        "rendimentos": round(rendimentos, 2),
-        "taxa_anual_aplicada": taxa_anual,
+        "rendimentos": round(rendimentos_totais, 2),
+        "taxa_anual_aplicada": taxa_anual_pct,
+        "tabela_anual": tabela_anual,
         "grafico": {
             "labels": labels,
             "investido": investido_lista,
@@ -99,6 +131,7 @@ def tela_simulador():
         anos=anos,
         resultado=resultado
     )
+
 
 def obter_estado_fogo(dias_ofensiva):
     dias = int(dias_ofensiva or 0)
