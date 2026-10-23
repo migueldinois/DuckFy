@@ -5,13 +5,16 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>Duckfy - Cadastro</title>
+    <title>DuckFy - Cadastro</title>
 
     <!-- conecta os estilos -->
     <link rel="stylesheet" href="{{ url_for('static', filename='css/variables.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/cadastro.css') }}">
 
-    <!-- posiciona o fundo das partículas -->
+    <!-- biblioteca de icones flaticon -->
+    <link rel="stylesheet" href="https://cdn-uicons.flaticon.com/3.0.0/uicons-solid-rounded/css/uicons-solid-rounded.css">
+
+    <!-- posiciona o fundo das particulas -->
     <style>
         #particulas-fundo {
             position: fixed;
@@ -37,86 +40,70 @@
     <!-- tela de cadastro -->
     <main class="cadastro">
 
-        <!-- cabeçalho -->
+        <!-- cabecalho -->
         <header class="cadastro-cabecalho">
 
             <!-- logo -->
-            <a href="{{ url_for('index') }}" class="cadastro-logo" aria-label="Duckfy - Página inicial">
-
-                <span class="logo-duck">DUCK</span><span class="logo-fy">FY</span>
-
+            <a href="{{ url_for('index') }}" class="cadastro-logo" aria-label="DuckFy - Pagina inicial">
+                <img src="{{ url_for('static', filename='img/logo_duckfy04.png') }}" alt="Logo DuckFy"
+                    class="cadastro-logo-imagem">
             </a>
 
-            <!-- opções do cabeçalho -->
+            <!-- opcoes do cabecalho -->
             <nav class="cadastro-opcoes">
-
-                <button type="button" id="btn-tema" aria-label="Ativar tema claro">
-                    Tema claro
+                <!-- botão de tema -->
+                <button type="button" id="btn-tema" aria-label="ativar tema claro" title="alternar tema">
+                    <i class="fi fi-sr-contrast" aria-hidden="true"></i>
                 </button>
 
             </nav>
 
         </header>
 
-        <!-- cartão de cadastro -->
+        <!-- cartao de cadastro -->
         <section class="cadastro-conteudo">
 
-            <!-- formulário -->
+            <!-- formulario -->
             <div class="cadastro-formulario">
 
-                <!-- título -->
+                <!-- titulo -->
                 <section class="cadastro-topo">
-
                     <h1>Crie sua conta!</h1>
-
                     <p>Comece a organizar sua vida financeira com a DuckFy.</p>
-
                 </section>
 
-                <!-- formulário de cadastro -->
+                <!-- formulario de cadastro -->
                 <form action="{{ url_for('cadastrar') }}" method="POST" id="form-cadastro">
 
                     <!-- nome -->
                     <div class="campo">
-
                         <label for="nome">Nome completo:</label>
-
                         <input type="text" id="nome" name="nome" placeholder="Digite seu nome" autocomplete="name"
                             required>
-
                     </div>
 
                     <!-- e-mail -->
                     <div class="campo">
-
                         <label for="email">E-mail:</label>
-
                         <input type="email" id="email" name="email" placeholder="Digite seu e-mail" autocomplete="email"
                             required>
-
                     </div>
 
                     <!-- senha -->
                     <div class="campo">
-
                         <label for="senha">Senha:</label>
-
                         <input type="password" id="senha" name="senha" placeholder="Crie uma senha"
                             autocomplete="new-password" required>
-
                     </div>
 
                     <!-- confirmar senha -->
                     <div class="campo">
-
                         <label for="confirmar_senha">Confirmar senha:</label>
-
                         <input type="password" id="confirmar_senha" name="confirmar_senha"
                             placeholder="Digite a senha novamente" autocomplete="new-password" required>
-
                     </div>
 
-                    <!-- concordância obrigatória com os termos -->
+                    <!-- concordancia com os termos -->
                     <div class="termos-concordancia">
 
                         <input type="checkbox" id="aceitar-termos" name="aceitar_termos" value="sim" required>
@@ -129,13 +116,13 @@
 
                             e a
 
-                            <a href="{{ url_for('privacidade') }}" target="_blank" rel="noopener noreferrer">Política de
+                            <a href="{{ url_for('privacidade') }}" target="_blank" rel="noopener noreferrer">Politica de
                                 Privacidade</a>.
                         </label>
 
                     </div>
 
-                    <!-- botão de cadastro -->
+                    <!-- botao de cadastro -->
                     <button type="submit" class="btn-cadastrar">
                         Criar conta
                     </button>
@@ -146,13 +133,9 @@
                 <div class="container__error" aria-live="polite">
 
                     {% with mensagens = get_flashed_messages(with_categories=true) %}
-
                     {% for categoria, mensagem in mensagens %}
-
                     <p class="text-error">{{ mensagem }}</p>
-
                     {% endfor %}
-
                     {% endwith %}
 
                 </div>
@@ -164,11 +147,8 @@
 
                 <!-- acesso ao login -->
                 <div class="login">
-
                     <span>Já tem uma conta?</span>
-
                     <a href="{{ url_for('index') }}">Entrar</a>
-
                 </div>
 
             </div>
@@ -177,7 +157,7 @@
 
     </main>
 
-    <!-- anima as partículas roxas e verdes -->
+    <!-- anima as particulas roxas e verdes -->
     <script>
         const canvas = document.getElementById("particulas-fundo");
         const ctx = canvas.getContext("2d");
@@ -187,7 +167,7 @@
         let altura = window.innerHeight;
         let animacaoAtiva = true;
 
-        // cria uma partícula
+        // cria uma particula
         function criarParticula() {
             return {
                 x: Math.random() * largura,
@@ -228,7 +208,7 @@
             );
         }
 
-        // movimenta e desenha as partículas
+        // movimenta e desenha as particulas
         function desenharParticulas() {
             if (!animacaoAtiva) {
                 return;
@@ -257,11 +237,7 @@
                     Math.PI * 2
                 );
 
-                ctx.fillStyle = `rgba(
-                    ${particula.cor},
-                    ${particula.opacidade}
-                )`;
-
+                ctx.fillStyle = `rgba(${particula.cor}, ${particula.opacidade})`;
                 ctx.shadowBlur = 12;
                 ctx.shadowColor = `rgba(${particula.cor}, 0.8)`;
 
@@ -276,7 +252,7 @@
         // inicia o fundo
         ajustarCanvas();
 
-        // respeita quem prefere menos animações
+        // respeita quem prefere menos animacoes
         const prefereMenosMovimento = window.matchMedia(
             "(prefers-reduced-motion: reduce)"
         ).matches;
@@ -288,7 +264,7 @@
         // atualiza o fundo quando a tela muda de tamanho
         window.addEventListener("resize", ajustarCanvas);
 
-        // pausa a animação quando a página não está visível
+        // pausa a animacao quando a pagina nao esta visivel
         document.addEventListener("visibilitychange", function () {
             if (document.hidden) {
                 animacaoAtiva = false;
@@ -303,49 +279,57 @@
     <script>
         const botaoTema = document.getElementById("btn-tema");
 
-        botaoTema.addEventListener("click", function () {
-
-            document.body.classList.toggle("tema-claro");
-
-            const temaClaro = document.body.classList.contains("tema-claro");
-
-            botaoTema.textContent = temaClaro
-                ? "Tema escuro"
-                : "Tema claro";
+        if (botaoTema) {
+            // verifica o tema atual
+            const temaInicialClaro =
+                document.body.classList.contains("tema-claro") ||
+                document.documentElement.classList.contains("tema-claro");
 
             botaoTema.setAttribute(
                 "aria-label",
-                temaClaro ? "Ativar tema escuro" : "Ativar tema claro"
+                temaInicialClaro ? "Ativar tema escuro" : "Ativar tema claro"
             );
 
-        });
+            // alterna entre tema claro e escuro
+            botaoTema.addEventListener("click", function () {
+                const temaClaro = !document.body.classList.contains("tema-claro");
+
+                document.body.classList.toggle("tema-claro", temaClaro);
+                document.documentElement.classList.toggle("tema-claro", temaClaro);
+
+                botaoTema.setAttribute(
+                    "aria-label",
+                    temaClaro ? "Ativar tema escuro" : "Ativar tema claro"
+                );
+            });
+        }
     </script>
 
-    <!-- confere se as senhas são iguais -->
+    <!-- confere se as senhas sao iguais -->
     <script>
         const formulario = document.getElementById("form-cadastro");
         const senha = document.getElementById("senha");
         const confirmarSenha = document.getElementById("confirmar_senha");
 
-        formulario.addEventListener("submit", function (evento) {
+        if (formulario && senha && confirmarSenha) {
+            formulario.addEventListener("submit", function (evento) {
+                if (senha.value !== confirmarSenha.value) {
+                    evento.preventDefault();
 
-            if (senha.value !== confirmarSenha.value) {
-                evento.preventDefault();
+                    confirmarSenha.setCustomValidity(
+                        "As senhas precisam ser iguais."
+                    );
 
-                confirmarSenha.setCustomValidity(
-                    "As senhas precisam ser iguais."
-                );
+                    confirmarSenha.reportValidity();
+                } else {
+                    confirmarSenha.setCustomValidity("");
+                }
+            });
 
-                confirmarSenha.reportValidity();
-            } else {
+            confirmarSenha.addEventListener("input", function () {
                 confirmarSenha.setCustomValidity("");
-            }
-
-        });
-
-        confirmarSenha.addEventListener("input", function () {
-            confirmarSenha.setCustomValidity("");
-        });
+            });
+        }
     </script>
 
 </body>
