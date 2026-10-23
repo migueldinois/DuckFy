@@ -476,6 +476,34 @@ def editar_perfil():
     usuario = Usuario.recuperar_dados_usuario(email_atual)
     return render_template("editar_perfil.html", usuario=usuario)
 
+@app.post("/excluir-conta")
+def excluir_conta_usuario():
+    id_usuario = session.get("id_usuario")
+    if "usuario" not in session or not id_usuario:
+        flash("Faça login novamente para excluir sua conta.", "error")
+        return redirect(url_for("index"))
+
+    dados_usuario = Usuario.recuperar_dados_usuario(session["email"])
+    if not Usuario.excluir_usuario(id_usuario):
+        flash("Não foi possível excluir sua conta. Tente novamente.", "error")
+        return redirect(url_for("editar_perfil"))
+
+    foto_perfil = (dados_usuario or {}).get("foto_perfil", "")
+    prefixo_upload = "/static/uploads/perfis/"
+    if foto_perfil.startswith(prefixo_upload):
+        caminho_foto = os.path.join(
+            app.static_folder,
+            "uploads",
+            "perfis",
+            os.path.basename(foto_perfil)
+        )
+        if os.path.isfile(caminho_foto):
+            os.remove(caminho_foto)
+
+    session.clear()
+    flash("Sua conta e seus dados foram excluídos.", "success")
+    return redirect(url_for("index"))
+
 @app.get("/extrato")
 def tela_extrato():
     try:
@@ -627,11 +655,7 @@ def cadastrar():
     
 @app.get("/redefinir")
 def redefinir():
-    
-    if "usuario" in session:
-        return redirect('/dashboard')
-    else:
-        return render_template("redefinir_senha.html")
+    return render_template("redefinir_senha.html")
 
 
 

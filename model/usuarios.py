@@ -124,3 +124,25 @@ class Usuario():
         finally:
             cursor.close()
             conexao.close()
+
+    @staticmethod
+    def excluir_usuario(id_usuario):
+        conexao, cursor = Conexao.conectar()
+        try:
+            cursor.execute(
+                "DELETE FROM usuarios WHERE id_usuario = %s",
+                [id_usuario]
+            )
+            if cursor.rowcount != 1:
+                conexao.rollback()
+                return False
+
+            conexao.commit()
+            return True
+        except Exception as erro:
+            print(f"Erro ao excluir usuário: {erro}")
+            conexao.rollback()
+            return False
+        finally:
+            cursor.close()
+            conexao.close()
