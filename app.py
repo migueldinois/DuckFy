@@ -527,6 +527,9 @@ def cadastrar():
     
 @app.get("/redefinir")
 def redefinir():
+    
+
+
     if "usuario" in session:
         return redirect('/dashboard')
     else:
