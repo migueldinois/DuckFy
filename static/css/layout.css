@@ -26,6 +26,7 @@
 /* ==========================================================================
    TEMA CLARO
    ========================================================================== */
+
 html.tema-claro,
 body.tema-claro {
     color-scheme: light;
@@ -44,6 +45,7 @@ body.tema-claro {
 
     --text-primary: #292238;
     --text-muted: #746B84;
+
     --border-color: #E6E0F0;
     --shadow-color: rgba(45, 29, 76, 0.08);
 }
@@ -342,6 +344,8 @@ body.app-body {
     background-color: rgba(229, 72, 77, 0.1);
     color: #E5484D;
 }
+
+
 
 /* ==========================================================================
    RESPONSIVIDADE

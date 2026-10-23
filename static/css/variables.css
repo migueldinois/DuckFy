@@ -32,9 +32,9 @@ body.tema-claro {
     color-scheme: light;
 
     /* Fundos */
-    --bg-primary: #EAE4F5;
-    --bg-surface-1: #F8F5FD;
-    --bg-surface-2: #E0D5F5;
+    --bg-primary: #F3EFFB;
+    --bg-surface-1: #FFFFFF;
+    --bg-surface-2: #EAE2F7;
 
     /* Roxos da marca */
     --brand-primary: #7042C8;
@@ -49,16 +49,23 @@ body.tema-claro {
     /* Textos */
     --text-primary: #302344;
     --text-muted: #776A8C;
+    --text-placeholder: #8B809B;
 
     /* Bordas e sombras */
     --border-color: #D8CBEA;
+    --border-focus: #7042C8;
     --shadow-color: rgba(67, 43, 103, 0.10);
 
-    /* Gradiente para as telas de autenticação */
+    /* Campos e cartões */
+    --bg-input: #FFFFFF;
+    --bg-hover: #EAE2F7;
+    --bg-card: #FFFFFF;
+
+    /* Gradiente das telas de autenticação */
     --auth-gradient: linear-gradient(
         135deg,
         #F3EFFB 0%,
-        #E6DDF5 50%,
-        #D8C8F0 100%
+        #EAE2F7 50%,
+        #DCCDF2 100%
     );
 }
