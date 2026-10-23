@@ -1,5 +1,5 @@
 import math
-
+import json
 from flask import Flask, render_template, request, redirect, session, flash, url_for
 from decimal import Decimal, InvalidOperation
 from database.conexao import Conexao
@@ -24,11 +24,66 @@ def index():
     
     return render_template("tela_login.html")
 
+import json
+from flask import Flask, render_template, request
+
 @app.route("/simulador", methods=["GET", "POST"])
 def tela_simulador():
     aporte_inicial = 0.0
     aporte_mensal = 0.0
     anos = 5
+
+    # Tenta capturar dados se for POST
+    if request.method == "POST":
+        try:
+            anos = int(request.form.get("anos", 5))
+            if anos <= 0:
+                anos = 5
+            aporte_inicial = float(request.form.get("aporte_inicial") or 0.0)
+            aporte_mensal = float(request.form.get("aporte_mensal") or 0.0)
+            anos = int(request.form.get("anos") or 5)
+        except (ValueError, TypeError):
+            pass
+
+    taxa_anual = 10.0  # 10% a.a.
+    taxa_mensal = (1 + (taxa_anual / 100)) ** (1 / 12) - 1
+    meses = anos * 12
+
+    labels = []
+    investido_lista = []
+    patrimonio_lista = []
+
+    saldo_total = aporte_inicial
+    for mes in range(1, meses + 1):
+        saldo_total = (saldo_total + aporte_mensal) * (1 + taxa_mensal)
+        investido_acumulado = aporte_inicial + (aporte_mensal * mes)
+
+        labels.append(f"Mês {mes}")
+        investido_lista.append(round(investido_acumulado, 2))
+        patrimonio_lista.append(round(saldo_total, 2))
+
+    total_investido = aporte_inicial + (aporte_mensal * meses)
+    rendimentos = saldo_total - total_investido
+
+    # Dicionário alinhado 100% com as variáveis do seu simulador.html
+    resultado = {
+        "total_investido": round(total_investido, 2),
+        "rendimentos": round(rendimentos, 2),
+        "taxa_anual_aplicada": taxa_anual,
+        "grafico": {
+            "labels": labels,
+            "investido": investido_lista,
+            "patrimonio": patrimonio_lista
+        }
+    }
+
+    return render_template(
+        "simulador.html",
+        aporte_inicial=aporte_inicial,
+        aporte_mensal=aporte_mensal,
+        anos=anos,
+        resultado=resultado
+    )
 
 def obter_estado_fogo(dias_ofensiva):
     dias = int(dias_ofensiva or 0)
@@ -76,16 +131,6 @@ def obter_estado_fogo(dias_ofensiva):
         "mensagem": "Continua a registar a tua atividade diária para manter a chama acesa.",
     }
 
-
-@app.get("/")
-@app.get("/login")
-def index():
-
-    if "usuario" in session:
-        return redirect("/dashboard")
-    
-    
-    return render_template("tela_login.html")
 
 @app.post("/login/usuario")
 def logar():

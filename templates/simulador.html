@@ -53,11 +53,16 @@
                 <div>
                     <!-- FILTROS DE PERÍODO -->
                     <div class="d-flex justify-content-between align-items-center mb-4">
-                        <div class="d-flex gap-2">
-                            <button type="button" class="btn-periodo {% if anos == 5 or not anos %}active{% endif %}"
+                        <div class="d-flex gap-2 align-items-center">
+                            <button type="button" class="btn-periodo {% if anos == 5 %}active{% endif %}"
                                 onclick="alterarAnos(5)">5 anos</button>
                             <button type="button" class="btn-periodo {% if anos == 10 %}active{% endif %}"
                                 onclick="alterarAnos(10)">10 anos</button>
+
+                            <!-- Exibe badge com valor personalizado se não for 5 nem 10 -->
+                            {% if anos and anos != 5 and anos != 10 %}
+                            <span class="badge bg-purple px-3 py-2 fs-6 style-custom-badge">{{ anos }} anos</span>
+                            {% endif %}
                         </div>
 
                         <button type="button" class="btn-edit" id="btn-editar-periodo" title="Editar Período">
@@ -103,19 +108,43 @@
 {% endblock %}
 
 {% block extra_js %}
-<script>
-    // Injeta os dados do Python para a memória global do navegador
-    window.dadosGrafico = {{ (resultado.grafico if resultado else { }) | tojson | safe }};
-
-    function alterarAnos(qtdAnos) {
-        document.getElementById('input_anos').value = qtdAnos;
-        document.getElementById('form-simulador').submit();
-    }
-</script>
-
-<!-- 1. Carrega Chart.js -->
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
-<!-- 2. Carrega seu script local -->
+<script>
+    window.dadosGrafico = {{ (resultado.grafico if resultado else { }) | tojson | safe }};
+
+    function alterarAnos(anos) {
+        const inputAnos = document.getElementById('input_anos');
+        const formSimulador = document.getElementById('form-simulador');
+
+        if (inputAnos && formSimulador) {
+            inputAnos.value = anos;
+            formSimulador.submit();
+        }
+    }
+
+    // Lógica para o botão de lápis (editar período livremente)
+    document.addEventListener('DOMContentLoaded', () => {
+        const btnEditar = document.getElementById('btn-editar-periodo');
+
+        if (btnEditar) {
+            btnEditar.addEventListener('click', () => {
+                const anosAtuais = document.getElementById('input_anos').value || 5;
+                const entrada = prompt("Informe o período desejado em anos (ex: 1 a 30):", anosAtuais);
+
+                if (entrada !== null) {
+                    const anosPersonalizados = parseInt(entrada, 10);
+
+                    if (!isNaN(anosPersonalizados) && anosPersonalizados > 0 && anosPersonalizados <= 50) {
+                        alterarAnos(anosPersonalizados);
+                    } else {
+                        alert("Por favor, insira um número válido de anos entre 1 e 50.");
+                    }
+                }
+            });
+        }
+    });
+</script>
+
 <script src="{{ url_for('static', filename='js/simulador.js') }}?v=5.0"></script>
 {% endblock %}
