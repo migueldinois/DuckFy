@@ -119,10 +119,21 @@
         </div>
 
       </div>
+<div class="saldo-banco text-end">
+    <span class="card-subtitle d-block">Disponível</span>
 
-      <div class="saldo-banco text-end">
-        R$ {{ "%.2f"|format(conta.saldo_atual|float)|replace('.', ',') }}
-      </div>
+    <strong>
+        R$ {{ '%.2f'|format(
+            (conta.saldo_atual|float - conta.valor_alocado|default(0, true)|float)
+        )|replace('.', ',') }}
+    </strong>
+
+    <small class="card-subtitle d-block mt-1">
+        Total: R$ {{ '%.2f'|format(
+            conta.saldo_atual|float
+        )|replace('.', ',') }}
+    </small>
+</div>
 
     </article>
     {% endfor %}
