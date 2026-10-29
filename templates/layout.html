@@ -124,7 +124,7 @@
                 </li>
 
                 <!-- sequencia -->
-                <li>
+                <li class="mt-auto">
                     <a href="/sequencia"
                         class="sidebar-link {% if request.path.rstrip('/') == '/sequencia' %}active{% endif %}"
                         title="Sequência" {% if request.path.rstrip('/')=='/sequencia' %}aria-current="page" {% endif
@@ -147,7 +147,7 @@
                 </li>
 
                 <!-- sair -->
-                <li class="mt-auto">
+                <li>
                     <a href="/logout" class="sidebar-logout" title="Sair">
                         <img src="{{ url_for('static', filename='img/icons/logout.svg') }}" alt="" class="sidebar-icon">
                         <span class="brand-text">Sair</span>
