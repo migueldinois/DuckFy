@@ -3,6 +3,7 @@ import math
 import random
 import os
 import secrets
+from dotenv import load_dotenv
 from datetime import datetime, timedelta
 from flask_mail import Mail, Message
 from flask import Flask, render_template, request, redirect, session, flash, url_for
@@ -14,18 +15,17 @@ from model.extrato import Extrato
 from model.contas_bancarias import ContaBancaria
 from model.reserva_emergencia import Reserva
 
-
+load_dotenv()
 
 app = Flask(__name__)
 app.secret_key = "duckfy999"
 
-
-app.config['MAIL_SERVER'] = 'smtp.gmail.com'
-app.config['MAIL_PORT'] = 587
-app.config['MAIL_USE_TLS'] = True
-app.config['MAIL_USERNAME'] = os.environ.get('DUCKFY_EMAIL')
-app.config['MAIL_PASSWORD'] = os.environ.get('DUCKFY_EMAIL_PASSWORD')
-app.config['MAIL_DEFAULT_SENDER'] = os.environ.get('DUCKFY_EMAIL')
+app.config["MAIL_SERVER"] = "smtp-relay.brevo.com"
+app.config["MAIL_PORT"] = 587
+app.config["MAIL_USE_TLS"] = True
+app.config["MAIL_USERNAME"] = "bfb405001@smtp-brevo.com"
+app.config["MAIL_PASSWORD"] = os.getenv("BREVO_SMTP_KEY")
+app.config["MAIL_DEFAULT_SENDER"] = os.getenv("BREVO_EMAIL_REMETENTE")
 
 mail = Mail(app)
 
@@ -556,6 +556,7 @@ def redefinir():
     
 
 
+
 @app.post("/api/recuperacao/enviar-codigo")
 def solicitar_codigo():
     dados = request.get_json(silent=True) or {}
@@ -566,14 +567,61 @@ def solicitar_codigo():
 
     usuario = Usuario.buscar_por_email(email)
 
-    if usuario:
+
+    if not usuario:
         return {
-            "message": "E-mail encontrado! Ainda precisamos configurar o envio do código."
+            "message": "Se o e-mail estiver cadastrado, você receberá um código."
         }, 200
 
-    return {
-        "message": "Não foi possível processar a solicitação."
-    }, 400
+    codigo = f"{secrets.randbelow(1000000):06d}"
+
+    mensagem = Message(
+        subject="Código de recuperação - Duckfy",
+        recipients=[email],
+        sender=os.getenv("BREVO_EMAIL_REMETENTE"),
+        body=(
+            f"Olá!\n\n"
+            f"Seu código de recuperação de senha do Duckfy é: {codigo}\n\n"
+            f"Ele expira em 10 minutos.\n"
+            f"Se você não solicitou essa alteração, ignore este e-mail."
+        )
+    )
+
+    try:
+        mail.send(mensagem)
+
+        codigos_recuperacao[email] = {
+            "codigo": codigo,
+            "expira_em": datetime.now() + timedelta(minutes=10)
+        }
+
+        return {
+            "message": "Se o e-mail estiver cadastrado, você receberá um código."
+        }, 200
+
+    except Exception as erro:
+        print(f"Erro ao enviar e-mail pela Brevo: {erro}")
+        return {
+            "message": "Não foi possível enviar o e-mail. Tente novamente."
+        }, 500
+
+
+
+@app.get("/teste-email")
+def teste_email():
+    try:
+        mensagem = Message(
+            subject="Teste de e-mail - Duckfy",
+            recipients=[os.getenv("BREVO_EMAIL_REMETENTE")],
+            body="Deu certo! O Duckfy conseguiu enviar um e-mail pela Brevo."
+        )
+
+        mail.send(mensagem)
+        return "E-mail de teste enviado!"
+
+    except Exception as erro:
+        print(f"Erro ao enviar e-mail: {erro}")
+        return "Falha no envio. Confira o terminal do VS Code.", 500
 
 
 
