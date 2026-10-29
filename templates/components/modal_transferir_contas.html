@@ -16,7 +16,7 @@
                         <option value="" disabled selected>Selecione de onde retirar</option>
 
                         {% for conta in contas_bancarias %}
-                        <option value="{{ conta.id_conta }}" data-saldo="{{ conta.saldo_atual }}">
+                        <option value="{{ conta.id_conta }}" data-saldo="{{ conta.saldo_atual }}" data-saldo-disponivel="{{ conta.saldo_atual|float - conta.valor_alocado|default(0, true)|float }}">
                             {{ conta.nome_conta }}
                         </option>
                         {% endfor %}
@@ -43,7 +43,7 @@
                     <select name="id_conta_destino" id="conta_destino" class="search-input" required>
                         <option value="" disabled selected>Selecione para onde enviar</option>
                         {% for conta in contas_bancarias %}
-                        <option value="{{ conta.id_conta }}" data-saldo="{{ conta.saldo_atual }}">
+                        <option value="{{ conta.id_conta }}" data-saldo="{{ conta.saldo_atual }}" data-saldo-disponivel="{{ conta.saldo_atual|float - conta.valor_alocado|default(0, true)|float }}">
                             {{ conta.nome_conta }}
                         </option>
                         {% endfor %}

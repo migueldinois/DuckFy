@@ -202,7 +202,10 @@
 {% block extra_js %}
 <script>
   document.addEventListener('DOMContentLoaded', () => {
-    if (new URLSearchParams(window.location.search).get('adicionar') === '1') {
+    const parametros = new URLSearchParams(window.location.search);
+    if (parametros.get('adicionar_saldo') === '1') {
+      ModalManager.abrir('modalAdicionarDinheiro');
+    } else if (parametros.get('adicionar') === '1') {
       ModalManager.abrir('modalAdicionarBanco');
     }
 
@@ -330,7 +333,10 @@ document.addEventListener('DOMContentLoaded', () => {
             return;
         }
 
-        elemento.textContent = formatarSaldo(opcao.dataset.saldo);
+        const saldo = seletor.id === 'conta_origem'
+          ? opcao.dataset.saldoDisponivel
+          : opcao.dataset.saldo;
+        elemento.textContent = formatarSaldo(saldo);
     }
 
     origem.addEventListener('change', () => {

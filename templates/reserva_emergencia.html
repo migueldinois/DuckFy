@@ -91,18 +91,18 @@
         {% for item in historico_movimentacoes %}
         <div class="d-flex justify-content-between align-items-center">
           <div class="d-flex align-items-center gap-3">
-            {% if item.tipo == 'Entrada' %}
+            {% if item.tipo == 'Crédito' %}
               <div class="icon-circle bg-success text-dark d-flex align-items-center justify-content-center fw-bold">+</div>
             {% else %}
               <div class="icon-circle bg-danger text-white d-flex align-items-center justify-content-center fw-bold">-</div>
             {% endif %}
             <div>
-              <span class="d-block text-white fw-medium fs-6">{{ item.descricao }}</span>
-              <span class="text-white-50 fs-7">{{ item.horario }} • {{ item.tipo }}</span>
+              <span class="d-block text-white fw-medium fs-6">{{ item.tipo }}</span>
+              <span class="text-white-50 fs-7">{{ item.horario }}</span>
             </div>
           </div>
-          <span class="{% if item.tipo == 'Entrada' %}text-success{% else %}text-danger{% endif %} fw-bold fs-6">
-            {% if item.tipo == 'Entrada' %}+{% else %}-{% endif %} R$ {{ "%.2f"|format(item.valor)|replace('.', ',') }}
+          <span class="{% if item.tipo == 'Crédito' %}text-success{% else %}text-danger{% endif %} fw-bold fs-6">
+            {% if item.tipo == 'Crédito' %}+{% else %}-{% endif %} R$ {{ "%.2f"|format(item.valor)|replace('.', ',') }}
           </span>
         </div>
         {% else %}
@@ -126,13 +126,21 @@
 
       <form action="{{ url_for('guardar_reserva') }}" method="POST">
         <div class="modal-body">
+          {% if request.args.get('erro_saldo') == '1' %}
+            <div class="alert alert-warning mb-3" role="alert">
+              O saldo disponível desta conta é insuficiente. Adicione dinheiro à conta para continuar.
+            </div>
+            <a class="btn btn-reserva-primary btn-reserva-add-account mb-3" href="{{ url_for('contas', adicionar_saldo=1, conta_id=request.args.get('conta_id')|int) }}">
+              <i class="bi bi-plus-lg me-1" aria-hidden="true"></i>Adicionar saldo à conta
+            </a>
+          {% endif %}
           <div class="mb-3">
             <label id="id_conta-label" for="id_conta" class="form-label text-white-50 fs-7 fw-medium mb-1">Conta de origem</label>
             <div class="custom-select reserva-custom-select" data-reserva-select>
               <select class="custom-select-native" id="id_conta" name="id_conta" aria-hidden="true" tabindex="-1" {% if not contas_usuario %}disabled{% endif %}>
 
                 {% for conta in contas_usuario %}
-                  <option value="{{ conta.id_conta }}">{{ conta.nome_conta }} • R$ {{ '%.2f'|format(conta.saldo_atual)|replace('.', ',') }}</option>
+                  <option value="{{ conta.id_conta }}" {% if (request.args.get('conta_id')|int) == conta.id_conta %}selected{% endif %}>{{ conta.nome_conta }} • Disponível: R$ {{ '%.2f'|format(conta.saldo_atual|float - conta.valor_alocado|float)|replace('.', ',') }}</option>
                 {% endfor %}
               </select>
               <button type="button" class="custom-select-trigger has-placeholder" id="id_conta-trigger" role="combobox" aria-haspopup="listbox" aria-expanded="false" aria-controls="id_conta-options" aria-autocomplete="none" aria-labelledby="id_conta-label id_conta-value" aria-required="true" {% if not contas_usuario %}disabled{% endif %}>
@@ -141,7 +149,7 @@
               </button>
               <div class="custom-select-options" id="id_conta-options" role="listbox" aria-labelledby="id_conta-label" hidden>
                 {% for conta in contas_usuario %}
-                  <div class="custom-select-option" role="option" aria-selected="false" data-value="{{ conta.id_conta }}">{{ conta.nome_conta }} • R$ {{ '%.2f'|format(conta.saldo_atual)|replace('.', ',') }}</div>
+                  <div class="custom-select-option" role="option" aria-selected="false" data-value="{{ conta.id_conta }}" {% if (request.args.get('conta_id')|int) == conta.id_conta %}data-selected="true"{% endif %}>{{ conta.nome_conta }} • Disponível: R$ {{ '%.2f'|format(conta.saldo_atual|float - conta.valor_alocado|float)|replace('.', ',') }}</div>
                 {% endfor %}
               </div>
               <small class="reserva-select-error" role="alert" hidden>Selecione uma conta para continuar.</small>
@@ -162,10 +170,6 @@
             </div>
           </div>
 
-          <div class="mb-3">
-            <label for="descricao" class="form-label text-white-50 fs-7 fw-medium mb-1">Descrição / Origem</label>
-            <input type="text" class="form-control bg-black bg-opacity-40 border-secondary border-opacity-25 text-white" id="descricao" name="descricao" placeholder="Ex: Sobra do salário, PIX..." required>
-          </div>
         </div>
 
         <div class="modal-footer border-0 pt-0">
@@ -195,7 +199,7 @@
               <select class="custom-select-native" id="conta_destino_retirada" name="id_conta" aria-hidden="true" tabindex="-1" {% if not contas_usuario %}disabled{% endif %}>
 
                 {% for conta in contas_usuario %}
-                  <option value="{{ conta.id_conta }}">{{ conta.nome_conta }} • R$ {{ '%.2f'|format(conta.saldo_atual)|replace('.', ',') }}</option>
+                  <option value="{{ conta.id_conta }}" data-valor-alocado="{{ conta.valor_alocado }}">{{ conta.nome_conta }} • Na reserva: R$ {{ '%.2f'|format(conta.valor_alocado|float)|replace('.', ',') }}</option>
                 {% endfor %}
               </select>
               <button type="button" class="custom-select-trigger has-placeholder" id="conta_destino_retirada-trigger" role="combobox" aria-haspopup="listbox" aria-expanded="false" aria-controls="conta_destino_retirada-options" aria-autocomplete="none" aria-labelledby="conta_destino_retirada-label conta_destino_retirada-value" aria-required="true" {% if not contas_usuario %}disabled{% endif %}>
@@ -204,7 +208,7 @@
               </button>
               <div class="custom-select-options" id="conta_destino_retirada-options" role="listbox" aria-labelledby="conta_destino_retirada-label" hidden>
                 {% for conta in contas_usuario %}
-                  <div class="custom-select-option" role="option" aria-selected="false" data-value="{{ conta.id_conta }}">{{ conta.nome_conta }} • R$ {{ '%.2f'|format(conta.saldo_atual)|replace('.', ',') }}</div>
+                  <div class="custom-select-option" role="option" aria-selected="false" data-value="{{ conta.id_conta }}" data-valor-alocado="{{ conta.valor_alocado }}">{{ conta.nome_conta }} • Na reserva: R$ {{ '%.2f'|format(conta.valor_alocado|float)|replace('.', ',') }}</div>
                 {% endfor %}
               </div>
               <small class="reserva-select-error" role="alert" hidden>Selecione uma conta para continuar.</small>
@@ -218,17 +222,13 @@
           </div>
 
           <div class="mb-3">
-            <label for="valor_retirada" class="form-label text-white-50 fs-7 fw-medium mb-1">Valor a retirar (disponível: R$ {{ '%.2f'|format(total_guardado)|replace('.', ',') }})</label>
+            <label for="valor_retirada" class="form-label text-white-50 fs-7 fw-medium mb-1">Valor a retirar</label>
             <div class="input-group">
               <span class="input-group-text bg-black bg-opacity-40 border-secondary border-opacity-25 text-white-50">R$</span>
               <input type="text" inputmode="numeric" data-currency-input data-currency-cents min="0.01" max="{{ '%.2f'|format(total_guardado) }}" class="form-control bg-black bg-opacity-40 border-secondary border-opacity-25 text-white" id="valor_retirada" name="valor" placeholder="0,00" required {% if total_guardado <= 0 %}disabled{% endif %}>
             </div>
           </div>
 
-          <div class="mb-3">
-            <label for="descricao_retirada" class="form-label text-white-50 fs-7 fw-medium mb-1">Descrição</label>
-            <input type="text" class="form-control bg-black bg-opacity-40 border-secondary border-opacity-25 text-white" id="descricao_retirada" name="descricao" placeholder="Retirada da reserva" maxlength="100">
-          </div>
         </div>
 
         <div class="modal-footer border-0 pt-0">

@@ -42,12 +42,11 @@ class Reserva:
             cursor.execute(
                 '''
                 SELECT
-                    t.descricao,
                     t.valor,
                     CASE
-                        WHEN LOWER(t.tipo) IN ('receita', 'entrada', 'transferência', 'transferencia')
-                            THEN 'Entrada'
-                        ELSE 'Saída'
+                        WHEN LOWER(t.tipo) IN ('crédito', 'credito', 'receita', 'entrada', 'transferência', 'transferencia')
+                            THEN 'Crédito'
+                        ELSE 'Débito'
                     END AS tipo,
                     DATE_FORMAT(t.data_transacao, '%d/%m/%Y') AS horario
                 FROM reserva_emergencia r
@@ -78,8 +77,21 @@ class Reserva:
         conexao, cursor = Conexao.conectar()
         try:
             cursor.execute(
-                'SELECT id_conta, nome_conta, saldo_atual FROM contas_bancarias WHERE id_usuario = %s ORDER BY nome_conta',
-                [id_usuario]
+                '''
+                SELECT cb.id_conta, cb.nome_conta, cb.saldo_atual,
+                       COALESCE(aloc.valor_alocado, 0) AS valor_alocado
+                FROM contas_bancarias cb
+                LEFT JOIN (
+                    SELECT rc.id_conta, SUM(rc.valor_alocado) AS valor_alocado
+                    FROM reserva_contas rc
+                    INNER JOIN reserva_emergencia re ON re.id_reserva = rc.id_reserva
+                    WHERE re.id_usuario = %s
+                    GROUP BY rc.id_conta
+                ) aloc ON aloc.id_conta = cb.id_conta
+                WHERE cb.id_usuario = %s
+                ORDER BY cb.nome_conta
+                ''',
+                [id_usuario, id_usuario]
             )
             return cursor.fetchall()
         finally:
@@ -87,7 +99,7 @@ class Reserva:
             conexao.close()
 
     @staticmethod
-    def guardar_dinheiro(id_usuario: int, id_conta: int, valor_guardar, descricao: str):
+    def guardar_dinheiro(id_usuario: int, id_conta: int, valor_guardar):
         '''Aloca parte do saldo da conta na reserva e registra no extrato'''
         conexao, cursor = Conexao.conectar()
 
@@ -98,7 +110,7 @@ class Reserva:
                 return False
 
             cursor.execute(
-                'SELECT id_conta FROM contas_bancarias WHERE id_conta = %s AND id_usuario = %s FOR UPDATE',
+                'SELECT id_conta, saldo_atual FROM contas_bancarias WHERE id_conta = %s AND id_usuario = %s FOR UPDATE',
                 [id_conta, id_usuario]
             )
             conta = cursor.fetchone()
@@ -108,13 +120,16 @@ class Reserva:
 
             cursor.execute(
                 '''
-                UPDATE contas_bancarias
-                SET saldo_atual = saldo_atual + %s
-                WHERE id_conta = %s AND id_usuario = %s
+                SELECT COALESCE(SUM(rc.valor_alocado), 0) AS valor_alocado
+                FROM reserva_contas rc
+                INNER JOIN reserva_emergencia re ON re.id_reserva = rc.id_reserva
+                WHERE rc.id_conta = %s AND re.id_usuario = %s
                 ''',
-                [valor_guardar, id_conta, id_usuario]
+                [id_conta, id_usuario]
             )
-            if cursor.rowcount != 1:
+            alocacao_atual = Decimal(str(cursor.fetchone()['valor_alocado'] or 0))
+            saldo_disponivel = Decimal(str(conta['saldo_atual'] or 0)) - alocacao_atual
+            if saldo_disponivel < valor_guardar:
                 conexao.rollback()
                 return False
 
@@ -148,10 +163,10 @@ class Reserva:
             cursor.execute(
                 '''
                 INSERT INTO transacoes
-                    (id_usuario, id_conta, descricao, valor, tipo, data_transacao, id_reserva)
-                VALUES (%s, %s, %s, %s, 'Transferência', CURDATE(), %s)
+                    (id_usuario, id_conta, valor, tipo, data_transacao, id_reserva)
+                VALUES (%s, %s, %s, 'Crédito', CURDATE(), %s)
                 ''',
-                [id_usuario, id_conta, descricao, valor_guardar, id_reserva]
+                [id_usuario, id_conta, valor_guardar, id_reserva]
             )
 
             conexao.commit()
@@ -164,7 +179,7 @@ class Reserva:
             conexao.close()
 
     @staticmethod
-    def retirar_dinheiro(id_usuario: int, id_conta: int, valor_retirar, descricao: str):
+    def retirar_dinheiro(id_usuario: int, id_conta: int, valor_retirar):
         '''Libera uma alocação da reserva e registra a movimentação no extrato'''
         conexao, cursor = Conexao.conectar()
 
@@ -175,11 +190,11 @@ class Reserva:
                 return False
 
             cursor.execute(
-                'SELECT id_conta, saldo_atual FROM contas_bancarias WHERE id_conta = %s AND id_usuario = %s FOR UPDATE',
+                'SELECT id_conta FROM contas_bancarias WHERE id_conta = %s AND id_usuario = %s FOR UPDATE',
                 [id_conta, id_usuario]
             )
             conta = cursor.fetchone()
-            if not conta or Decimal(str(conta['saldo_atual'] or 0)) < valor_retirar:
+            if not conta:
                 conexao.rollback()
                 return False
 
@@ -205,11 +220,7 @@ class Reserva:
             )
             alocacao = cursor.fetchone()
             valor_alocado_conta = Decimal(str(alocacao['alocado_conta'] or 0))
-            valor_alocado_total = Decimal(str(alocacao['alocado_total'] or 0))
-            valor_alocado_liberado = min(valor_alocado_conta, valor_retirar)
-            valor_sem_alocacao = valor_retirar - valor_alocado_liberado
-            saldo_reserva_nao_alocado = Decimal(str(reserva['valor_atual'])) - valor_alocado_total
-            if valor_sem_alocacao > saldo_reserva_nao_alocado:
+            if valor_alocado_conta < valor_retirar:
                 conexao.rollback()
                 return False
 
@@ -218,19 +229,9 @@ class Reserva:
                 [valor_retirar, id_reserva]
             )
 
-            if valor_alocado_liberado > 0:
-                cursor.execute(
-                    'UPDATE reserva_contas SET valor_alocado = valor_alocado - %s WHERE id_reserva = %s AND id_conta = %s',
-                    [valor_alocado_liberado, id_reserva, id_conta]
-                )
-
             cursor.execute(
-                '''
-                UPDATE contas_bancarias
-                SET saldo_atual = saldo_atual - %s
-                WHERE id_conta = %s AND id_usuario = %s AND saldo_atual >= %s
-                ''',
-                [valor_retirar, id_conta, id_usuario, valor_retirar]
+                'UPDATE reserva_contas SET valor_alocado = valor_alocado - %s WHERE id_reserva = %s AND id_conta = %s AND valor_alocado >= %s',
+                [valor_retirar, id_reserva, id_conta, valor_retirar]
             )
             if cursor.rowcount != 1:
                 conexao.rollback()
@@ -238,10 +239,10 @@ class Reserva:
             cursor.execute(
                 '''
                 INSERT INTO transacoes
-                    (id_usuario, id_conta, descricao, valor, tipo, data_transacao, id_reserva)
-                VALUES (%s, %s, %s, %s, 'Retirada', CURDATE(), %s)
+                    (id_usuario, id_conta, valor, tipo, data_transacao, id_reserva)
+                VALUES (%s, %s, %s, 'Débito', CURDATE(), %s)
                 ''',
-                [id_usuario, id_conta, descricao, valor_retirar, id_reserva]
+                [id_usuario, id_conta, valor_retirar, id_reserva]
             )
 
             conexao.commit()

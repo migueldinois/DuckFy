@@ -8,7 +8,9 @@ document.querySelectorAll('[data-reserva-select]').forEach((container, selectInd
   const enabledOptions = options.filter((option) => option.getAttribute('aria-disabled') !== 'true');
   let activeIndex = -1;
 
-  select.selectedIndex = -1;
+  const opcaoPreSelecionada = options.find((option) => option.dataset.selected === 'true');
+  if (opcaoPreSelecionada) select.value = opcaoPreSelecionada.dataset.value;
+  else select.selectedIndex = -1;
 
   const syncSelection = () => {
     const selectedOption = select.selectedOptions[0];
@@ -111,3 +113,28 @@ document.querySelectorAll('[data-reserva-select]').forEach((container, selectInd
 
   syncSelection();
 });
+
+const contaRetirada = document.querySelector('#conta_destino_retirada');
+const valorRetirada = document.querySelector('#valor_retirada');
+
+const atualizarLimiteRetirada = () => {
+  if (!contaRetirada || !valorRetirada) return;
+
+  const opcaoSelecionada = contaRetirada.selectedOptions[0];
+  const valorAlocado = Number(opcaoSelecionada?.dataset.valorAlocado || 0);
+  valorRetirada.max = valorAlocado.toFixed(2);
+
+  if (valorRetirada.value) {
+    valorRetirada.dispatchEvent(new Event('input', { bubbles: true }));
+  }
+};
+
+contaRetirada?.addEventListener('change', atualizarLimiteRetirada);
+atualizarLimiteRetirada();
+
+if (new URLSearchParams(window.location.search).get('abrir_guardar') === '1') {
+  const modalGuardar = document.getElementById('modalGuardarDinheiro');
+  if (modalGuardar && window.bootstrap?.Modal) {
+    window.bootstrap.Modal.getOrCreateInstance(modalGuardar).show();
+  }
+}

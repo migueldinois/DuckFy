@@ -225,8 +225,8 @@ def contas():
     total_contas = ContaBancaria.calcular_patrimonio_total(id_usuario)
     reserva = Reserva.obter_reserva(id_usuario)
     total_reservado = Decimal(str(reserva['valor_atual'] or 0)) if reserva else Decimal('0')
-    saldo_fora_reserva = Decimal(str(total_contas or 0))
-    patrimonio = saldo_fora_reserva + total_reservado
+    patrimonio = Decimal(str(total_contas or 0))
+    saldo_fora_reserva = patrimonio - total_reservado
     porcentagem_reservada = (
         (total_reservado / patrimonio) * 100
         if patrimonio > 0 else Decimal('0')
@@ -476,14 +476,17 @@ def guardar_reserva():
         id_conta = None
 
     descricao = request.form.get('descricao', 'Depósito na Reserva')
-
     if not valor_guardar.is_finite() or valor_guardar <= 0 or id_conta is None:
         flash("Informe uma conta e um valor válido maior que zero!", "error")
         return redirect(url_for('reserva_emergencia'))
 
-    if not Reserva.guardar_dinheiro(id_usuario, id_conta, valor_guardar, descricao):
-        flash("A conta selecionada não existe ou não tem saldo suficiente.", "error")
-        return redirect(url_for('reserva_emergencia'))
+    if not Reserva.guardar_dinheiro(id_usuario, id_conta, valor_guardar):
+        return redirect(url_for(
+            'reserva_emergencia',
+            erro_saldo=1,
+            abrir_guardar=1,
+            conta_id=id_conta
+        ))
 
     flash(f'R$ {valor_guardar:.2f} guardados na reserva com sucesso!', 'success')
     return redirect(url_for('reserva_emergencia'))
@@ -506,8 +509,7 @@ def retirar_reserva():
         flash("Informe uma conta e um valor válido maior que zero.", "error")
         return redirect(url_for('reserva_emergencia'))
 
-    descricao = request.form.get('descricao', '').strip() or 'Retirada da reserva'
-    if not Reserva.retirar_dinheiro(session['id_usuario'], id_conta, valor_retirar, descricao):
+    if not Reserva.retirar_dinheiro(session['id_usuario'], id_conta, valor_retirar):
         flash("Não foi possível retirar: confira o saldo da reserva e a conta selecionada.", "error")
         return redirect(url_for('reserva_emergencia'))
 
