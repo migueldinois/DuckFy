@@ -42,6 +42,10 @@ def index():
 import json
 from flask import Flask, render_template, request
 
+def formatar_moeda_brl(valor):
+    """Converte valores numéricos para a pontuação brasileira R$ X.XXX,XX"""
+    return f"{valor:,.2f}".replace(",", "X").replace(".", ",").replace("X", ".")
+
 @app.route("/simulador", methods=["GET", "POST"])
 def tela_simulador():
     aporte_inicial = 0.0
@@ -625,3 +629,4 @@ def redefinir():
 
 if __name__ == "__main__":
     app.run(debug=True)
+ 
