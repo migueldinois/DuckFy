@@ -1,5 +1,9 @@
 document.addEventListener('DOMContentLoaded', () => {
     const canvas = document.getElementById('graficoSimulador');
+    const formatarMoeda = valor => new Intl.NumberFormat('pt-BR', {
+        style: 'currency',
+        currency: 'BRL'
+    }).format(valor);
 
     if (canvas && window.dadosGrafico && window.dadosGrafico.labels && window.dadosGrafico.labels.length > 0) {
 
@@ -68,7 +72,10 @@ document.addEventListener('DOMContentLoaded', () => {
                         borderColor: 'rgba(255, 255, 255, 0.1)',
                         borderWidth: 1,
                         padding: 12,
-                        displayColors: false
+                        displayColors: false,
+                        callbacks: {
+                            label: context => `${context.dataset.label}: ${formatarMoeda(context.parsed.y)}`
+                        }
                     }
                 },
                 scales: {
@@ -78,7 +85,11 @@ document.addEventListener('DOMContentLoaded', () => {
                     },
                     y: {
                         grid: { color: 'rgba(255, 255, 255, 0.05)' },
-                        ticks: { color: '#8E8E93', font: { size: 11 } }
+                        ticks: {
+                            color: '#8E8E93',
+                            font: { size: 11 },
+                            callback: value => formatarMoeda(value)
+                        }
                     }
                 }
             }

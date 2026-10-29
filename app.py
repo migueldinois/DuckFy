@@ -39,9 +39,6 @@ def index():
     
     return render_template("tela_login.html")
 
-import json
-from flask import Flask, render_template, request
-
 def formatar_moeda_brl(valor):
     """Converte valores numéricos para a pontuação brasileira R$ X.XXX,XX"""
     return f"{valor:,.2f}".replace(",", "X").replace(".", ",").replace("X", ".")

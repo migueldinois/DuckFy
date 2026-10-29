@@ -1,5 +1,9 @@
 {% extends 'layout.html' %}
 
+{% macro moeda_br(valor) -%}
+{{ "{:,.2f}".format(valor)|replace(",", "X")|replace(".", ",")|replace("X", ".") }}
+{%- endmacro %}
+
 {% block title %}Simulador Patrimônio - DuckFy{% endblock %}
 
 {% block extra_css %}
@@ -38,7 +42,7 @@
                                 placeholder="0,00">
                         </div>
 
-                        <button type="submit" class="btn btn-purple w-100 fw-bold py-2">Simular</button>
+                        <button type="submit" class="btn btn-purple w-100 fw-bold py-20">Simular</button>
 
                         <div class="mt-4 pt-3 border-top border-secondary border-opacity-25">
 
@@ -108,7 +112,7 @@
                         <div class="col-12 col-sm-6 col-md-4">
                             <div class="metric-box p-3">
                                 <h3 class="fw-bold text-white mb-1 fs-4 text-truncate">
-                                    R$ {{ "%.2f"|format(resultado.total_investido) if resultado else "0.00" }}
+                                    R$ {{ moeda_br(resultado.total_investido) if resultado else "0,00" }}
                                 </h3>
                                 <small class="text-white-50 text-uppercase fw-semibold d-block">Investido</small>
                             </div>
@@ -117,7 +121,7 @@
                         <div class="col-12 col-sm-6 col-md-4">
                             <div class="metric-box p-3">
                                 <h3 class="fw-bold mb-1 fs-4 text-destaque-verde text-truncate">
-                                    R$ {{ "%.2f"|format(resultado.rendimentos) if resultado else "0.00" }}
+                                    R$ {{ moeda_br(resultado.rendimentos) if resultado else "0,00" }}
                                 </h3>
                                 <small class="text-white-50 text-uppercase fw-semibold d-block">Juros Acumulados</small>
                             </div>
@@ -126,7 +130,7 @@
                         <div class="col-12 col-md-4">
                             <div class="metric-box p-3">
                                 <h3 class="fw-bold mb-1 fs-4 text-destaque-verde text-truncate">
-                                    R$ {{ "%.2f"|format(resultado.valor_total_final) if resultado else "0.00" }}
+                                    R$ {{ moeda_br(resultado.valor_total_final) if resultado else "0,00" }}
                                 </h3>
                                 <small class="text-white-50 text-uppercase fw-semibold d-block">Valor Final</small>
                             </div>
@@ -189,10 +193,10 @@
                                 {% for linha in resultado.tabela_anual %}
                                 <tr>
                                     <td class="fw-semibold text-nowrap">Ano {{ linha.ano }}</td>
-                                    <td class="text-nowrap">R$ {{ "%.2f"|format(linha.capital_inicial) }}</td>
-                                    <td class="text-nowrap text-destaque-verde">R$ {{ "%.2f"|format(linha.juros_ano) }}
+                                    <td class="text-nowrap">R$ {{ moeda_br(linha.capital_inicial) }}</td>
+                                    <td class="text-nowrap text-destaque-verde">R$ {{ moeda_br(linha.juros_ano) }}
                                     </td>
-                                    <td class="fw-bold text-nowrap">R$ {{ "%.2f"|format(linha.montante_final) }}</td>
+                                    <td class="fw-bold text-nowrap">R$ {{ moeda_br(linha.montante_final) }}</td>
                                 </tr>
                                 {% endfor %}
                             </tbody>
