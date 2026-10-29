@@ -8,6 +8,8 @@ document.querySelectorAll('[data-reserva-select]').forEach((container, selectInd
   const enabledOptions = options.filter((option) => option.getAttribute('aria-disabled') !== 'true');
   let activeIndex = -1;
 
+  select.selectedIndex = -1;
+
   const syncSelection = () => {
     const selectedOption = select.selectedOptions[0];
     valueLabel.textContent = selectedOption?.textContent.trim() || 'Selecione uma conta';

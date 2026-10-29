@@ -103,15 +103,17 @@
 }
 
 #modalGuardarDinheiro .modal-footer,
-#modalRetirarDinheiro .modal-footer {
+#modalRetirarDinheiro .modal-footer,
+#modalAlterarMeta .modal-footer {
   display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
+  flex-direction: row;
+  gap: 0.75rem;
   padding: 0 1rem 1rem;
 }
 
 #modalGuardarDinheiro .modal-footer > *,
-#modalRetirarDinheiro .modal-footer > * {
+#modalRetirarDinheiro .modal-footer > *,
+#modalAlterarMeta .modal-footer > * {
   width: 100%;
   margin: 0;
 }
@@ -122,33 +124,87 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  min-height: 42px;
+  min-height: 48px;
   padding: 0.5rem 1rem;
-  border-radius: 10px;
-  font-size: 0.95rem;
+  border-radius: 12px;
+  font-size: 1rem;
   font-weight: 600;
   line-height: 1.25;
   text-decoration: none;
 }
 
 .btn-reserva-secondary {
-  border: 1px solid var(--border-color, rgba(255, 255, 255, 0.2));
-  background: rgba(255, 255, 255, 0.04);
+  border: 0;
+  background: #c62828;
   color: var(--text-primary, #fff);
-  transition: background-color 0.2s ease, border-color 0.2s ease;
+  box-shadow: 0 8px 20px rgba(198, 40, 40, 0.3),
+              inset 0 1px 0 rgba(255, 255, 255, 0.2);
+  transition: background-color 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease;
 }
 
 .btn-reserva-secondary:hover {
-  border-color: color-mix(in srgb, var(--brand-primary) 55%, var(--border-color));
-  background: color-mix(in srgb, var(--brand-primary) 12%, transparent);
+  background: #b71c1c;
   color: var(--text-primary, #fff);
+  box-shadow: 0 12px 25px rgba(198, 40, 40, 0.4),
+              inset 0 1px 0 rgba(255, 255, 255, 0.3);
+  transform: translateY(-2px);
 }
 
 .btn-reserva-primary {
-  min-height: 42px;
-  height: 42px;
+  min-height: 48px;
+  height: 48px;
   padding: 0.5rem 1rem;
-  border-radius: 10px;
+  border: 0;
+  border-radius: 12px;
+  background: #16834a;
+  box-shadow: 0 8px 20px rgba(22, 131, 74, 0.35),
+              inset 0 1px 0 rgba(255, 255, 255, 0.2);
+}
+
+.btn-reserva-primary:hover {
+  background: #1b9b57;
+  color: #fff;
+  box-shadow: 0 12px 25px rgba(22, 131, 74, 0.45),
+              inset 0 1px 0 rgba(255, 255, 255, 0.3);
+  transform: translateY(-2px);
+}
+
+.btn-reserva-primary:disabled,
+.btn-reserva-secondary:disabled {
+  box-shadow: none;
+  transform: none;
+  cursor: not-allowed;
+}
+
+#modalGuardarDinheiro .modal-footer > *,
+#modalRetirarDinheiro .modal-footer > *,
+#modalAlterarMeta .modal-footer > * {
+  flex: 1 1 0;
+  min-width: 0;
+}
+
+#modalGuardarDinheiro .input-group:focus-within,
+#modalRetirarDinheiro .input-group:focus-within,
+#modalAlterarMeta .input-group:focus-within {
+  position: relative;
+  z-index: 2;
+  border-radius: 0.5rem;
+  box-shadow: 0 0 0 0.2rem rgba(124, 77, 255, 0.25);
+}
+
+#modalGuardarDinheiro .input-group:focus-within .form-control,
+#modalRetirarDinheiro .input-group:focus-within .form-control,
+#modalAlterarMeta .input-group:focus-within .form-control {
+  border-color: var(--brand-primary);
+  box-shadow: none;
+}
+
+#modalGuardarDinheiro .modal-body > .mb-3 > input:focus,
+#modalRetirarDinheiro .modal-body > .mb-3 > input:focus,
+#modalAlterarMeta .modal-body > input:focus {
+  border-color: var(--brand-primary);
+  outline: none;
+  box-shadow: 0 0 0 0.2rem rgba(124, 77, 255, 0.25);
 }
 
 .btn-reserva-add-account {
@@ -190,6 +246,7 @@
 }
 
 .reserva-custom-select .custom-select-trigger:focus-visible,
+.reserva-custom-select .custom-select-trigger:focus,
 .reserva-custom-select.is-open .custom-select-trigger {
   border-color: var(--brand-primary);
   outline: none;
