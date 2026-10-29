@@ -1,4 +1,3 @@
-
 /* ==========================================================================
    VARIÁVEIS PRINCIPAIS
    ========================================================================== */
@@ -15,8 +14,8 @@
   --accent-secondary: #58E4A0;
   --accent-dark: #00E374;
 
-  --sidebar-w-expanded: 240px;
-  --sidebar-w-collapsed: 70px;
+  --sidebar-w-expanded: 280px;
+  --sidebar-w-collapsed: 80px;
 }
 
 /* ==========================================================================
@@ -223,7 +222,7 @@ body.app-body {
   transition: margin-left 0.25s ease-in-out;
 }
 
-.sidebar.collapsed ~ .main-content {
+.sidebar.collapsed~.main-content {
   margin-left: var(--sidebar-w-collapsed);
 }
 
@@ -328,6 +327,30 @@ body.app-body {
   background-color: rgba(255, 77, 77, 0.1);
   color: #ff4d4d;
 }
+
+
+/* ajusta o texto da barra lateral recolhida */
+.sidebar.collapsed .sidebar-link .brand-text {
+  display: none;
+}
+
+/* mostra o texto quando a barra é expandida */
+.sidebar.collapsed:hover .sidebar-link .brand-text {
+  display: inline;
+}
+
+/* impede que o texto ultrapasse a barra */
+.sidebar-link {
+  min-width: 0;
+  overflow: hidden;
+}
+
+.sidebar-link .brand-text {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
 
 /* ==========================================================================
    RESPONSIVIDADE

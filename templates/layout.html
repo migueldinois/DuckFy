@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -30,6 +31,7 @@
   {% block extra_css %}{% endblock %}
   {% block styles %}{% endblock %}
 </head>
+
 <body class="app-body">
   <div class="app-container">
     <!-- sidebar -->
@@ -86,13 +88,18 @@
             <span class="brand-text">Reserva de Emergência</span>
           </a>
         </li>
+
+
         <li>
-          <a href="/contas" class="sidebar-link" title="Contas Bancárias">
-            <img src="{{ url_for('static', filename='img/icons/contas-bancarias.svg') }}" alt="Contas Bancárias"
-              class="sidebar-icon">
+          <a href="/contas" class="sidebar-link {% if request.path.rstrip('/') == '/contas' %}active{% endif %}"
+            title="Contas Bancárias" {% if request.path.rstrip('/')=='/contas' %}aria-current="page" {% endif %}>
+
+            <img src="{{ url_for('static', filename='img/icons/contas-bancarias.svg') }}" alt="" class="sidebar-icon">
+
             <span class="brand-text">Contas Bancárias</span>
           </a>
         </li>
+
         <li>
           <a href="/perfil" class="sidebar-link {% if request.path.rstrip('/') == '/perfil' %}active{% endif %}"
             title="Perfil" {% if request.path.rstrip('/')=='/perfil' %}aria-current="page" {% endif %}>
@@ -132,10 +139,7 @@
   <!-- gerenciamento de modais -->
   <script src="{{ url_for('static', filename='js/modalManager.js') }}"></script>
 
-  <script
-    src="{{ url_for('static', filename='js/currencyMask.js') }}"
-    defer
-  ></script>
+  <script src="{{ url_for('static', filename='js/currencyMask.js') }}" defer></script>
 
   <!-- comportamento do layout -->
   <script src="{{ url_for('static', filename='js/layout.js') }}"></script>
