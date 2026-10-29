@@ -7,7 +7,7 @@
 {% block title %}Simulador Patrimônio - DuckFy{% endblock %}
 
 {% block extra_css %}
-<link rel="stylesheet" href="{{ url_for('static', filename='css/simulador_patrimonio.css') }}?v=5.0">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/simulador_patrimonio.css') }}?v=6.0">
 {% endblock %}
 
 {% block content %}
@@ -30,16 +30,18 @@
 
                         <div class="mb-3">
                             <label class="form-label text-white-50 fw-semibold">Aporte Inicial (R$)</label>
-                            <input type="number" step="0.01" class="form-control input-custom" id="aporte-inicial"
-                                name="aporte_inicial" value="{{ aporte_inicial if aporte_inicial else '' }}"
-                                placeholder="0,00">
+                            <input type="text" inputmode="decimal" autocomplete="off"
+                                class="form-control input-custom" id="aporte-inicial" name="aporte_inicial"
+                                value="{{ 'R$ ' ~ moeda_br(aporte_inicial) if aporte_inicial else '' }}"
+                                placeholder="R$ 0,00" aria-label="Aporte inicial em reais">
                         </div>
 
                         <div class="mb-4">
                             <label class="form-label text-white-50 fw-semibold">Aporte Mensal (R$)</label>
-                            <input type="number" step="0.01" class="form-control input-custom" id="aporte-mensal"
-                                name="aporte_mensal" value="{{ aporte_mensal if aporte_mensal else '' }}"
-                                placeholder="0,00">
+                            <input type="text" inputmode="decimal" autocomplete="off"
+                                class="form-control input-custom" id="aporte-mensal" name="aporte_mensal"
+                                value="{{ 'R$ ' ~ moeda_br(aporte_mensal) if aporte_mensal else '' }}"
+                                placeholder="R$ 0,00" aria-label="Aporte mensal em reais">
                         </div>
 
                         <button type="submit" class="btn btn-purple w-100 fw-bold py-20">Simular</button>
@@ -111,7 +113,7 @@
                     <div class="row text-center mb-3 g-2 g-md-3">
                         <div class="col-12 col-sm-6 col-md-4">
                             <div class="metric-box p-3">
-                                <h3 class="fw-bold text-white mb-1 fs-4 text-truncate">
+                                <h3 class="metric-value fw-bold text-white mb-1">
                                     R$ {{ moeda_br(resultado.total_investido) if resultado else "0,00" }}
                                 </h3>
                                 <small class="text-white-50 text-uppercase fw-semibold d-block">Investido</small>
@@ -120,7 +122,7 @@
 
                         <div class="col-12 col-sm-6 col-md-4">
                             <div class="metric-box p-3">
-                                <h3 class="fw-bold mb-1 fs-4 text-destaque-verde text-truncate">
+                                <h3 class="metric-value fw-bold mb-1 text-destaque-verde">
                                     R$ {{ moeda_br(resultado.rendimentos) if resultado else "0,00" }}
                                 </h3>
                                 <small class="text-white-50 text-uppercase fw-semibold d-block">Juros Acumulados</small>
@@ -129,7 +131,7 @@
 
                         <div class="col-12 col-md-4">
                             <div class="metric-box p-3">
-                                <h3 class="fw-bold mb-1 fs-4 text-destaque-verde text-truncate">
+                                <h3 class="metric-value fw-bold mb-1 text-destaque-verde">
                                     R$ {{ moeda_br(resultado.valor_total_final) if resultado else "0,00" }}
                                 </h3>
                                 <small class="text-white-50 text-uppercase fw-semibold d-block">Valor Final</small>
@@ -145,16 +147,16 @@
                 </div>
 
                 <!-- CANVAS DO GRÁFICO -->
-                <div class="grafic-container flex-grow-1 w-100 mb-2 position-relative" style="min-height: 250px;">
+                <div class="grafic-container flex-grow-1 w-100 mb-2 position-relative">
                     <canvas id="graficoSimulador"></canvas>
                 </div>
 
                 <!-- LEGENDA EXPLICATIVA ABAIXO DO GRÁFICO -->
-                <div class="d-flex flex-wrap gap-4 align-items-start mt-2 mb-4 px-2">
-                    <div class="d-flex align-items-start gap-2" style="max-width: 48%;">
+                <div class="grafico-legenda d-flex flex-wrap gap-4 align-items-start mt-2 mb-4 px-2">
+                    <div class="legenda-item d-flex align-items-start gap-2">
                         <span
                             style="width: 12px; height: 12px; background-color: #7C4DFF; border-radius: 50%; display: inline-block; margin-top: 4px; flex-shrink: 0;"></span>
-                        <div>
+                        <div class="legenda-texto">
                             <div class="fw-bold text-white small">CDI (Benchmark)</div>
                             <div class="text-white-50" style="font-size: 0.75rem; line-height: 1.2;">
                                 Taxa de referência do mercado (Selic). Funciona como uma régua para você comparar se o
@@ -163,10 +165,10 @@
                         </div>
                     </div>
 
-                    <div class="d-flex align-items-start gap-2" style="max-width: 48%;">
+                    <div class="legenda-item d-flex align-items-start gap-2">
                         <span
                             style="width: 12px; height: 12px; background-color: #00E676; border: 2px solid #FFFFFF; border-radius: 50%; display: inline-block; margin-top: 4px; flex-shrink: 0;"></span>
-                        <div>
+                        <div class="legenda-texto">
                             <div class="fw-bold text-white small">Rentabilidade</div>
                             <div class="text-white-50" style="font-size: 0.75rem; line-height: 1.2;">
                                 Evolução real do seu patrimônio acumulado mês a mês (seus aportes somados aos juros
@@ -177,16 +179,17 @@
                 </div>
 
                 <!-- TABELA DE RESULTADOS -->
-                {% if resultado and resultado.tabela_anual %}
+                {% if simulado and resultado and resultado.tabela_anual %}
                 <div class="tabela-container">
+                    <p class="table-hint">Deslize a tabela para o lado para ver todas as colunas.</p>
                     <div class="table-responsive">
                         <table class="table table-dark table-borderless align-middle mb-0">
                             <thead>
                                 <tr>
-                                    <th scope="col" class="text-nowrap">Ano</th>
-                                    <th scope="col" class="text-nowrap">Capital Inicial (R$)</th>
-                                    <th scope="col" class="text-nowrap">Juros Ganhos no Ano (R$)</th>
-                                    <th scope="col" class="text-nowrap">Montante Final (R$)</th>
+                                    <th scope="col">Ano</th>
+                                    <th scope="col">Capital Inicial (R$)</th>
+                                    <th scope="col">Juros Ganhos no Ano (R$)</th>
+                                    <th scope="col">Montante Final (R$)</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -294,5 +297,5 @@
     });
 </script>
 
-<script src="{{ url_for('static', filename='js/simulador.js') }}?v=5.0"></script>
+<script src="{{ url_for('static', filename='js/simulador.js') }}?v=6.0"></script>
 {% endblock %}
