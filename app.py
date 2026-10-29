@@ -15,6 +15,7 @@ from model.usuarios import Usuario
 from model.extrato import Extrato
 from model.contas_bancarias import ContaBancaria
 from model.reserva_emergencia import Reserva
+from model.transacoes import Transacao
 
 
 app = Flask(__name__)
@@ -648,11 +649,92 @@ def tela_extrato():
 
 @app.get("/lancamento")
 def lancamento():
-    if "usuario" in session:
-                return render_template("lancamentos.html")
-    else:
+    id_usuario = session.get("id_usuario")
+    if "usuario" not in session or not id_usuario:
         flash("Você precisa estar logado para editar o seu perfil!", "error")
-        return redirect('/login')
+        return redirect(url_for("index"))
+
+    contas_usuario = ContaBancaria.buscar_todas_por_usuario(id_usuario)
+    categorias_despesa = Categoria.recuperar_categorias_por_tipo(id_usuario, "Despesa")
+    categorias_receita = Categoria.recuperar_categorias_por_tipo(id_usuario, "Receita")
+    return render_template(
+        "lancamentos.html",
+        contas_usuario=contas_usuario,
+        categorias_despesa=categorias_despesa,
+        categorias_receita=categorias_receita,
+    )
+
+
+@app.post("/salvar_lancamento")
+def salvar_lancamento():
+    id_usuario = session.get("id_usuario")
+    if "usuario" not in session or not id_usuario:
+        flash("Faça login para registrar um lançamento.", "error")
+        return redirect(url_for("index"))
+
+    descricao = request.form.get("local", "").strip()
+    tipo_form = request.form.get("tipo_transacao", "").strip().lower()
+    tipo = {"entrada": "Receita", "saida": "Despesa"}.get(tipo_form)
+    id_conta = request.form.get("id_conta", type=int)
+    id_categoria = request.form.get("categoria", type=int)
+    subcategoria = request.form.get("subcategoria", "").strip()
+    observacao = request.form.get("observacao", "").strip()
+
+    try:
+        valor = parse_valor_monetario(request.form.get("valor", ""))
+    except (InvalidOperation, ValueError, TypeError):
+        flash("Informe um valor válido.", "error")
+        return redirect(url_for("lancamento"))
+
+    subcategorias_validas = {"mercado", "restaurante", "combustivel", "aluguel"}
+    if subcategoria and subcategoria not in subcategorias_validas:
+        flash("Selecione uma subcategoria válida.", "error")
+        return redirect(url_for("lancamento"))
+
+    if not descricao or len(descricao) > 100:
+        flash("O campo Local deve ter entre 1 e 100 caracteres.", "error")
+        return redirect(url_for("lancamento"))
+    if not tipo or not id_conta:
+        flash("Selecione o tipo de lançamento e uma conta.", "error")
+        return redirect(url_for("lancamento"))
+    if not valor.is_finite() or valor <= 0:
+        flash("O valor deve ser maior que zero.", "error")
+        return redirect(url_for("lancamento"))
+
+    detalhes = []
+    if subcategoria:
+        detalhes.append(f"Subcategoria: {subcategoria}")
+    if observacao:
+        detalhes.append(f"Obs.: {observacao}")
+    if detalhes:
+        descricao = f"{descricao} | {' | '.join(detalhes)}"
+    if len(descricao) > 100:
+        flash("Local, subcategoria e observação devem caber em 100 caracteres no total.", "error")
+        return redirect(url_for("lancamento"))
+
+    sucesso, motivo = Transacao.criar_transacao(
+        id_usuario=id_usuario,
+        id_conta=id_conta,
+        id_categoria=id_categoria,
+        descricao=descricao,
+        valor=valor,
+        tipo=tipo,
+    )
+    if sucesso:
+        flash("Lançamento registrado com sucesso!", "success")
+        return redirect(url_for("tela_extrato"))
+
+    if motivo == "saldo_insuficiente":
+        mensagem = "Saldo disponível insuficiente. Parte do saldo pode estar reservada para sua emergência; escolha outra conta ou libere saldo da reserva."
+    elif motivo == "categoria_invalida":
+        mensagem = "A categoria selecionada não corresponde ao tipo de lançamento. Escolha outra categoria."
+    elif motivo == "conta_invalida":
+        mensagem = "A conta selecionada não foi encontrada para este usuário. Selecione uma conta válida."
+    else:
+        mensagem = "Não foi possível registrar o lançamento. Confira os dados e tente novamente."
+
+    flash(mensagem, "error")
+    return redirect(url_for("lancamento"))
 
 @app.get("/categorias")
 def categorias():

@@ -1,0 +1,4 @@
+USE duckfy;
+
+ALTER TABLE transacoes
+    MODIFY COLUMN data_transacao DATE NOT NULL DEFAULT (CURRENT_DATE);

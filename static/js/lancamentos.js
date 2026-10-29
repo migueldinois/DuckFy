@@ -41,6 +41,51 @@ function configurarLancamentos() {
     valorDigitado.form?.addEventListener('reset', limparValorDepoisDoReset);
   }
 
+  const tipoTransacaoInputs = document.querySelectorAll('[name="tipo_transacao"]');
+  const opcoesCategoria = Array.from(document.querySelectorAll('[data-category-option]'));
+  const mensagensCategoriaVazia = document.querySelectorAll('[data-category-empty]');
+
+  function atualizarCategoriasPorTipo() {
+    const tipoSelecionado = document.querySelector('[name="tipo_transacao"]:checked')?.value;
+    let primeiraOpcaoDisponivel = null;
+    let opcaoSelecionadaVisivel = false;
+
+    opcoesCategoria.forEach(function (opcao) {
+      const radio = opcao.querySelector('[name="categoria"]');
+      const visivel = opcao.dataset.categoryType === tipoSelecionado;
+
+      opcao.hidden = !visivel;
+      radio.disabled = !visivel;
+
+      if (visivel && !primeiraOpcaoDisponivel) {
+        primeiraOpcaoDisponivel = radio;
+      }
+      if (visivel && radio.checked) {
+        opcaoSelecionadaVisivel = true;
+      }
+      if (!visivel && radio.checked) {
+        radio.checked = false;
+      }
+    });
+
+    if (!opcaoSelecionadaVisivel && primeiraOpcaoDisponivel) {
+      primeiraOpcaoDisponivel.checked = true;
+    }
+
+    mensagensCategoriaVazia.forEach(function (mensagem) {
+      const tipoDaMensagem = mensagem.dataset.categoryEmpty;
+      const existeOpcao = opcoesCategoria.some(function (opcao) {
+        return opcao.dataset.categoryType === tipoDaMensagem;
+      });
+      mensagem.hidden = tipoDaMensagem !== tipoSelecionado || existeOpcao;
+    });
+  }
+
+  tipoTransacaoInputs.forEach(function (input) {
+    input.addEventListener('change', atualizarCategoriasPorTipo);
+  });
+  atualizarCategoriasPorTipo();
+
   const container = document.querySelector('#subcategoria-select');
   if (!container) return;
 

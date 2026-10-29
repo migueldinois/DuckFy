@@ -8,6 +8,14 @@
 <div id="page-lancamento" class="py-3">
   <div class="style-container">
 
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% for category, message in messages %}
+      <div class="alert alert-{{ 'success' if category == 'success' else 'danger' }} mb-3" role="alert">
+        {{ message }}
+      </div>
+      {% endfor %}
+    {% endwith %}
+
     <!-- Header superior -->
     <header class="d-flex align-items-center mb-3">
       <button type="button" class="btn-voltar border-0 bg-transparent text-white p-0 me-3 fs-4" aria-label="Voltar" onclick="history.back()">
@@ -52,29 +60,41 @@
             </div>
           </div>
 
+          <div class="col-12 col-md-6">
+            <label for="id_conta" class="form-label text-white-50 fs-7 fw-medium mb-1">Conta</label>
+            <select class="form-select form-control-custom" id="id_conta" name="id_conta" required {% if not contas_usuario %}disabled{% endif %}>
+              <option value="" selected disabled>Selecione uma conta...</option>
+              {% for conta in contas_usuario %}
+              <option value="{{ conta.id_conta }}">{{ conta.nome_conta }}</option>
+              {% endfor %}
+            </select>
+            {% if not contas_usuario %}
+            <small class="text-warning">Cadastre uma conta antes de lançar uma transação.</small>
+            {% endif %}
+          </div>
+
           <!-- Seleção de Categoria -->
           <div class="col-12 mb-2">
             <label class="form-label text-white-50 fs-7 fw-medium d-block mb-2">Categoria</label>
-            <div class="d-flex flex-wrap gap-2">
-              <input type="radio" class="btn-check" name="categoria" id="catHome" value="moradia" checked>
-              <label class="btn btn-categoria-icon rounded-circle d-flex align-items-center justify-content-center" for="catHome" title="Moradia">
-                <i class="bi bi-house-door fs-5"></i>
-              </label>
-
-              <input type="radio" class="btn-check" name="categoria" id="catTransport" value="transporte">
-              <label class="btn btn-categoria-icon rounded-circle d-flex align-items-center justify-content-center" for="catTransport" title="Transporte">
-                <i class="bi bi-car-front fs-5"></i>
-              </label>
-
-              <input type="radio" class="btn-check" name="categoria" id="catFood" value="alimentacao">
-              <label class="btn btn-categoria-icon rounded-circle d-flex align-items-center justify-content-center" for="catFood" title="Alimentação">
-                <i class="bi bi-cup-hot fs-5"></i>
-              </label>
-
-              <input type="radio" class="btn-check" name="categoria" id="catWork" value="trabalho">
-              <label class="btn btn-categoria-icon rounded-circle d-flex align-items-center justify-content-center" for="catWork" title="Trabalho / Salário">
-                <i class="bi bi-briefcase fs-5"></i>
-              </label>
+            <div class="d-flex flex-wrap gap-2" id="categorias-opcoes">
+              {% for categoria in categorias_receita %}
+              <div data-category-option data-category-type="entrada">
+                <input type="radio" class="btn-check" name="categoria" id="categoria-{{ categoria.id_categoria }}" value="{{ categoria.id_categoria }}" {% if loop.first %}checked{% endif %}>
+                <label class="btn btn-categoria-icon rounded-circle d-flex align-items-center justify-content-center" for="categoria-{{ categoria.id_categoria }}" title="{{ categoria.nome }}" aria-label="{{ categoria.nome }}">
+                  {{ categoria.emoji or '💰' }}
+                </label>
+              </div>
+              {% endfor %}
+              {% for categoria in categorias_despesa %}
+              <div data-category-option data-category-type="saida" hidden>
+                <input type="radio" class="btn-check" name="categoria" id="categoria-{{ categoria.id_categoria }}" value="{{ categoria.id_categoria }}" {% if loop.first and not categorias_receita %}checked{% endif %}>
+                <label class="btn btn-categoria-icon rounded-circle d-flex align-items-center justify-content-center" for="categoria-{{ categoria.id_categoria }}" title="{{ categoria.nome }}" aria-label="{{ categoria.nome }}">
+                  {{ categoria.emoji or '💸' }}
+                </label>
+              </div>
+              {% endfor %}
+              <p class="text-white-50 mb-0" data-category-empty="entrada" {% if categorias_receita %}hidden{% endif %}>Nenhuma categoria de entrada cadastrada.</p>
+              <p class="text-white-50 mb-0" data-category-empty="saida" hidden>Nenhuma categoria de saída cadastrada.</p>
             </div>
           </div>
 
@@ -114,7 +134,7 @@
 
           <!-- Botão Submeter Form -->
           <div class="col-12 mt-4">
-            <button type="submit" class="btn-purple-action">Lançar Transação</button>
+            <button type="submit" class="btn-purple-action" {% if not contas_usuario %}disabled{% endif %}>Lançar Transação</button>
           </div>
         </div>
 

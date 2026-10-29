@@ -96,7 +96,7 @@ CREATE TABLE transacoes (
     descricao VARCHAR(100),
     valor DECIMAL(10, 2) NOT NULL,
     tipo VARCHAR(40),
-    data_transacao DATE NOT NULL,
+    data_transacao DATE NOT NULL DEFAULT (CURRENT_DATE),
     id_reserva INT,
     CONSTRAINT fk_transacoes_usuarios
         FOREIGN KEY (id_usuario) REFERENCES usuarios(id_usuario)
