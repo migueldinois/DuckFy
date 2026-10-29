@@ -390,6 +390,40 @@
   transform: translateY(-1px);
 }
 
+.pagina-patrimonio .duckfy-modal .btn-excluir-conta {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 9px;
+  min-height: 46px;
+  padding: 10px 16px;
+  color: #ef6262;
+  background: color-mix(in srgb, #ef4444 8%, var(--bg-surface-1));
+  border: 1px solid color-mix(in srgb, #ef4444 34%, var(--border-color));
+  border-radius: 12px;
+  font: inherit;
+  font-size: .9rem;
+  font-weight: 650;
+  cursor: pointer;
+  transition: color .2s, background .2s, border-color .2s, transform .2s, box-shadow .2s;
+}
+
+.pagina-patrimonio .duckfy-modal .btn-excluir-conta i {
+  font-size: 1rem;
+}
+
+.pagina-patrimonio .duckfy-modal .btn-excluir-conta:hover {
+  color: #fff;
+  background: #d94343;
+  border-color: #d94343;
+  box-shadow: 0 5px 16px rgba(217, 67, 67, .2);
+  transform: translateY(-1px);
+}
+
+.pagina-patrimonio .duckfy-modal .btn-excluir-conta:active {
+  transform: translateY(0);
+}
+
 .pagina-patrimonio .duckfy-modal .btn-close-custom.w-100 {
   display: inline-flex;
   align-items: center;
@@ -691,6 +725,7 @@
   .pagina-patrimonio .nome-banco {
     font-size: .86rem;
   }
+
 
   .pagina-patrimonio .tipo-banco {
     font-size: .75rem;
