@@ -1,57 +1,136 @@
 document.addEventListener('DOMContentLoaded', () => {
-    const canvas = document.getElementById('graficoSimulador');
     const formatarMoeda = valor => new Intl.NumberFormat('pt-BR', {
         style: 'currency',
         currency: 'BRL'
     }).format(valor);
 
-    ['aporte-inicial', 'aporte-mensal'].forEach(id => {
-        const input = document.getElementById(id);
+    const inputsAporte = [
+        document.getElementById('aporte-inicial'),
+        document.getElementById('aporte-mensal')
+    ];
+    const formSimulador = document.getElementById('form-simulador');
+    const campoAnos = document.getElementById('input_anos');
+    const avisoAporte = document.getElementById('aviso-periodo');
+    const campoAnosPersonalizado = document.getElementById('inputModalAnos');
+    const elementoModal = document.getElementById('modalEditarPeriodo');
+    const modalPeriodo = elementoModal ? new bootstrap.Modal(elementoModal) : null;
+
+    function campoTemValor(input) {
+        return Boolean(input && /\d/.test(input.value));
+    }
+
+    function validarAportes() {
+        const camposVazios = inputsAporte.filter(input => !campoTemValor(input));
+        if (camposVazios.length > 0) {
+            avisoAporte?.classList.remove('d-none');
+            camposVazios[0]?.focus();
+            return false;
+        }
+
+        avisoAporte?.classList.add('d-none');
+        return true;
+    }
+
+    function configurarMascaraMonetaria(input) {
         if (!input) {
             return;
         }
 
-        const atualizarValor = () => {
+        function formatarValor() {
             const digitos = input.value.replace(/\D/g, '').slice(0, 15);
             if (!digitos) {
                 input.value = '';
                 return;
             }
 
-            const valor = Number(digitos) / 100;
-            input.value = `R$ ${valor.toLocaleString('pt-BR', {
+            input.value = `R$ ${(Number(digitos) / 100).toLocaleString('pt-BR', {
                 minimumFractionDigits: 2,
                 maximumFractionDigits: 2
             })}`;
-        };
+        }
 
         input.addEventListener('focus', () => input.select());
-        input.addEventListener('input', atualizarValor);
-        atualizarValor();
-    });
+        input.addEventListener('input', formatarValor);
+        formatarValor();
+    }
 
-    if (canvas && window.dadosGrafico && window.dadosGrafico.labels && window.dadosGrafico.labels.length > 0) {
+    function alterarPeriodo(anos) {
+        if (!formSimulador || !campoAnos || !validarAportes()) {
+            return false;
+        }
+
+        campoAnos.value = anos;
+        formSimulador.requestSubmit();
+        return true;
+    }
+
+    function configurarFormulario() {
+        formSimulador?.addEventListener('submit', event => {
+            if (!validarAportes()) {
+                event.preventDefault();
+            }
+        });
+
+        inputsAporte.forEach(input => {
+            configurarMascaraMonetaria(input);
+            input?.addEventListener('input', () => {
+                if (inputsAporte.every(campoTemValor)) {
+                    avisoAporte?.classList.add('d-none');
+                }
+            });
+        });
+
+        document.querySelectorAll('[data-anos]').forEach(botao => {
+            botao.addEventListener('click', () => {
+                alterarPeriodo(Number(botao.dataset.anos));
+            });
+        });
+
+        const botaoEditarPeriodo = document.getElementById('btn-editar-periodo');
+        botaoEditarPeriodo?.addEventListener('click', () => {
+            if (campoAnosPersonalizado) {
+                campoAnosPersonalizado.value = campoAnos?.value || 5;
+                modalPeriodo?.show();
+            }
+        });
+
+        const botaoConfirmarPeriodo = document.getElementById('btnConfirmarAnosModal');
+        botaoConfirmarPeriodo?.addEventListener('click', () => {
+            const anos = Number.parseInt(campoAnosPersonalizado?.value, 10);
+            const anosValidados = Number.isNaN(anos)
+                ? 1
+                : Math.min(Math.max(anos, 1), 50);
+
+            modalPeriodo?.hide();
+            alterarPeriodo(anosValidados);
+        });
+    }
+
+    function configurarGrafico() {
+        const canvas = document.getElementById('graficoSimulador');
+        const dadosGrafico = window.dadosGrafico;
+
+        if (!canvas || !dadosGrafico?.labels?.length) {
+            return;
+        }
 
         if (window.meuGraficoSimulador instanceof Chart) {
             window.meuGraficoSimulador.destroy();
         }
 
         const ctx = canvas.getContext('2d');
-
-        // Gradiente de preenchimento
         const gradientPatrimonio = ctx.createLinearGradient(0, 0, 0, 300);
-        gradientPatrimonio.addColorStop(0, 'rgba(255, 255, 255, 0.25)'); 
-        gradientPatrimonio.addColorStop(1, 'rgba(255, 255, 255, 0.0)');  
+        gradientPatrimonio.addColorStop(0, 'rgba(255, 255, 255, 0.25)');
+        gradientPatrimonio.addColorStop(1, 'rgba(255, 255, 255, 0.0)');
 
         window.meuGraficoSimulador = new Chart(ctx, {
             type: 'line',
             data: {
-                labels: window.dadosGrafico.labels,
+                labels: dadosGrafico.labels,
                 datasets: [
-                    // 1. Linha do Benchmark (CDI / Investido)
                     {
                         label: 'CDI (Benchmark)',
-                        data: window.dadosGrafico.investido,
+                        data: dadosGrafico.investido,
                         borderColor: '#7C4DFF',
                         borderWidth: 2,
                         borderDash: [5, 5],
@@ -61,10 +140,9 @@ document.addEventListener('DOMContentLoaded', () => {
                         pointHoverRadius: 5,
                         pointBackgroundColor: '#7C4DFF'
                     },
-                    // 2. Linha Principal (Patrimônio / Rentabilidade)
                     {
                         label: 'Rentabilidade',
-                        data: window.dadosGrafico.patrimonio,
+                        data: dadosGrafico.patrimonio,
                         borderColor: '#FFFFFF',
                         backgroundColor: gradientPatrimonio,
                         fill: true,
@@ -86,7 +164,6 @@ document.addEventListener('DOMContentLoaded', () => {
                     intersect: false
                 },
                 plugins: {
-                    // Legenda interna desativada para dar lugar à explicação HTML
                     legend: {
                         display: false
                     },
@@ -120,4 +197,7 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
     }
+
+    configurarFormulario();
+    configurarGrafico();
 });

@@ -44,6 +44,11 @@
                                 placeholder="R$ 0,00" aria-label="Aporte mensal em reais">
                         </div>
 
+                        <div id="aviso-periodo" class="alert alert-warning py-2 small d-none" role="alert"
+                            aria-live="polite">
+                            Preencha os campos de aporte inicial e mensal antes de continuar.
+                        </div>
+
                         <button type="submit" class="btn btn-purple w-100 fw-bold py-20">Simular</button>
 
                         <div class="mt-4 pt-3 border-top border-secondary border-opacity-25">
@@ -95,9 +100,9 @@
                     <div class="d-flex flex-wrap justify-content-between align-items-center gap-2 mb-4">
                         <div class="d-flex gap-2 align-items-center flex-wrap">
                             <button type="button" class="btn-periodo {% if anos == 5 %}active{% endif %}"
-                                onclick="alterarAnos(5)">5 anos</button>
+                                data-anos="5">5 anos</button>
                             <button type="button" class="btn-periodo {% if anos == 10 %}active{% endif %}"
-                                onclick="alterarAnos(10)">10 anos</button>
+                                data-anos="10">10 anos</button>
 
                             {% if anos and anos != 5 and anos != 10 %}
                             <span class="badge bg-purple px-3 py-2 fs-6 style-custom-badge">{{ anos }} anos</span>
@@ -253,49 +258,7 @@
 
 <script>
     window.dadosGrafico = {{ (resultado.grafico if resultado else { }) | tojson | safe }};
-
-    function alterarAnos(anos) {
-        const inputAnos = document.getElementById('input_anos');
-        const formSimulador = document.getElementById('form-simulador');
-
-        if (inputAnos && formSimulador) {
-            inputAnos.value = anos;
-            formSimulador.submit();
-        }
-    }
-
-    document.addEventListener('DOMContentLoaded', () => {
-        const btnEditar = document.getElementById('btn-editar-periodo');
-        const inputAnos = document.getElementById('input_anos');
-        const inputModalAnos = document.getElementById('inputModalAnos');
-        const btnConfirmarAnosModal = document.getElementById('btnConfirmarAnosModal');
-
-        const modalElement = document.getElementById('modalEditarPeriodo');
-        const modalEditar = modalElement ? new bootstrap.Modal(modalElement) : null;
-
-        if (btnEditar && modalEditar) {
-            btnEditar.addEventListener('click', () => {
-                inputModalAnos.value = inputAnos ? (inputAnos.value || 5) : 5;
-                modalEditar.show();
-            });
-        }
-
-        if (btnConfirmarAnosModal) {
-            btnConfirmarAnosModal.addEventListener('click', () => {
-                let anosPersonalizados = parseInt(inputModalAnos.value, 10);
-
-                if (isNaN(anosPersonalizados) || anosPersonalizados < 1) {
-                    anosPersonalizados = 1;
-                } else if (anosPersonalizados > 50) {
-                    anosPersonalizados = 50;
-                }
-
-                modalEditar.hide();
-                alterarAnos(anosPersonalizados);
-            });
-        }
-    });
 </script>
 
-<script src="{{ url_for('static', filename='js/simulador.js') }}?v=6.0"></script>
+<script src="{{ url_for('static', filename='js/simulador.js') }}?v=7.0"></script>
 {% endblock %}
