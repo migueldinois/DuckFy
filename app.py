@@ -64,14 +64,15 @@ def tela_simulador():
     aporte_inicial = 0.0
     aporte_mensal = 0.0
     anos = 5
+    simulado = request.method == "POST"
 
     # 1. Captura de dados do formulário POST
     if request.method == "POST":
         try:
             anos = int(request.form.get("anos") or 5)
-            aporte_inicial = float(request.form.get("aporte_inicial") or 0.0)
-            aporte_mensal = float(request.form.get("aporte_mensal") or 0.0)
-        except (ValueError, TypeError):
+            aporte_inicial = float(parse_valor_monetario(request.form.get("aporte_inicial")))
+            aporte_mensal = float(parse_valor_monetario(request.form.get("aporte_mensal")))
+        except (ValueError, TypeError, InvalidOperation):
             anos, aporte_inicial, aporte_mensal = 5, 0.0, 0.0
 
     if anos <= 0:
@@ -127,7 +128,8 @@ def tela_simulador():
         aporte_inicial=aporte_inicial,
         aporte_mensal=aporte_mensal,
         anos=anos,
-        resultado=resultado
+        resultado=resultado,
+        simulado=simulado
     )
 
 

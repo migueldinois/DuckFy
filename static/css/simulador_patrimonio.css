@@ -41,22 +41,37 @@
     padding: 2rem;               /* Aumento ligeiro do espaçamento interno */
     border: 1px solid rgba(255, 255, 255, 0.05);
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
+    min-width: 0;
 }
 
 /* ==========================================================
    FORMULÁRIO E INPUTS
    ========================================================== */
 .input-custom {
-    background-color: #ffffff !important;
-    border: none !important;
+    background-color: #0B0A12 !important;
+    border: 1px solid rgba(255, 255, 255, 0.12) !important;
     border-radius: 12px !important;
     padding: 0.85rem 1rem !important;
     font-weight: 600 !important;
-    color: #000000 !important;
+    color: #ffffff !important;
+    caret-color: var(--purple-primary);
+}
+
+.input-custom::placeholder {
+    color: #8E8E93 !important;
+    opacity: 1;
 }
 
 .input-custom:focus {
-    box-shadow: 0 0 0 3px var(--purple-primary) !important;
+    border-color: var(--purple-primary) !important;
+    box-shadow: 0 0 0 3px rgba(124, 77, 255, 0.25) !important;
+}
+
+.input-custom:-webkit-autofill,
+.input-custom:-webkit-autofill:hover,
+.input-custom:-webkit-autofill:focus {
+    -webkit-text-fill-color: #ffffff;
+    box-shadow: 0 0 0 1000px #0B0A12 inset;
 }
 
 .btn-purple {
@@ -122,6 +137,12 @@
     border: 1px solid rgba(255, 255, 255, 0.03);
 }
 
+.metric-value {
+    font-size: clamp(1.05rem, 3vw, 1.5rem);
+    line-height: 1.25;
+    overflow-wrap: anywhere;
+}
+
 .text-destaque-verde {
     color: var(--green-accent) !important;
 }
@@ -144,6 +165,18 @@
     border-radius: 8px;
     padding: 16px;
     margin-top: 20px;
+    min-width: 0;
+}
+
+.table-hint {
+    display: none;
+    color: var(--text-muted);
+    font-size: 0.8rem;
+    margin: 0 0 0.5rem;
+}
+
+.tabela-container .table-responsive {
+    -webkit-overflow-scrolling: touch;
 }
 
 table {
@@ -166,4 +199,82 @@ th {
 
 tbody tr:last-child {
     font-weight: bold;
+}
+
+@media (max-width: 767.98px) {
+    .simulador-page-wrapper {
+        padding: 1rem 0.75rem;
+    }
+
+    .simulador-page-wrapper > .row {
+        --bs-gutter-x: 0.75rem;
+        --bs-gutter-y: 1rem;
+    }
+
+    .card-painel {
+        padding: 1rem !important;
+        border-radius: 16px;
+    }
+
+    .metric-box {
+        padding: 1rem 0.75rem !important;
+    }
+
+    .metric-value {
+        font-size: clamp(1rem, 5vw, 1.35rem);
+    }
+
+    .grafic-container {
+        min-height: 280px;
+        padding: 0.75rem;
+    }
+
+    .grafico-legenda {
+        gap: 1rem !important;
+        padding-right: 0 !important;
+        padding-left: 0 !important;
+    }
+
+    .legenda-item {
+        flex: 1 1 100%;
+        max-width: 100%;
+    }
+
+    .legenda-texto {
+        min-width: 0;
+        overflow-wrap: anywhere;
+    }
+
+    .tabela-container {
+        padding: 0.75rem;
+        margin-top: 1rem;
+    }
+
+    .table-hint {
+        display: block;
+    }
+
+    .tabela-container table {
+        min-width: 600px;
+        font-size: 0.875rem;
+    }
+
+    .tabela-container th,
+    .tabela-container td {
+        padding: 0.65rem 0.75rem;
+    }
+}
+
+@media (max-width: 359.98px) {
+    .card-painel {
+        padding: 0.75rem !important;
+    }
+
+    .simulador-page-wrapper h1 {
+        font-size: 1rem;
+    }
+
+    .btn-periodo {
+        padding: 0.45rem 0.75rem;
+    }
 }
