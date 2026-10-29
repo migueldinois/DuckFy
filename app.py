@@ -23,28 +23,18 @@ load_dotenv()
 app = Flask(__name__)
 app.secret_key = "duckfy999"
 
-app.config["MAIL_SERVER"] = "smtp-relay.brevo.com"
+app.config["MAIL_SERVER"] = "smtp.gmail.com"
 app.config["MAIL_PORT"] = 587
 app.config["MAIL_USE_TLS"] = True
-app.config["MAIL_USERNAME"] = "bfb405001@smtp-brevo.com"
-app.config["MAIL_PASSWORD"] = os.getenv("BREVO_SMTP_KEY")
-app.config["MAIL_DEFAULT_SENDER"] = os.getenv("BREVO_EMAIL_REMETENTE")
+app.config["MAIL_USERNAME"] = "alexstocco.senai@gmail.com"
+app.config["MAIL_PASSWORD"] = os.getenv("SMTP_KEY")
+app.config["MAIL_DEFAULT_SENDER"] = os.getenv("EMAIL_REMETENTE")
+app.config["MAIL_TIMEOUT"] = 10
 
 mail = Mail(app)
 
 codigos_recuperacao = {}
 
-
-app.config["MAIL_SERVER"] = "smtp-relay.brevo.com"
-app.config["MAIL_PORT"] = 587
-app.config["MAIL_USE_TLS"] = True
-app.config["MAIL_USERNAME"] = "bfb405001@smtp-brevo.com"
-app.config["MAIL_PASSWORD"] = os.getenv("BREVO_SMTP_KEY")
-app.config["MAIL_DEFAULT_SENDER"] = os.getenv("BREVO_EMAIL_REMETENTE")
-
-mail = Mail(app)
-
-codigos_recuperacao = {}
 
 
 
@@ -67,63 +57,7 @@ def index():
     return render_template("tela_login.html")
 
 
-@app.route("/simulador", methods=["GET", "POST"])
-def tela_simulador():
-    aporte_inicial = 0.0
-    aporte_mensal = 0.0
-    anos = 5
 
-    # Tenta capturar dados se for POST
-    if request.method == "POST":
-        try:
-            anos = int(request.form.get("anos", 5))
-            if anos <= 0:
-                anos = 5
-            aporte_inicial = float(request.form.get("aporte_inicial") or 0.0)
-            aporte_mensal = float(request.form.get("aporte_mensal") or 0.0)
-            anos = int(request.form.get("anos") or 5)
-        except (ValueError, TypeError):
-            pass
-
-    taxa_anual = 10.0  # 10% a.a.
-    taxa_mensal = (1 + (taxa_anual / 100)) ** (1 / 12) - 1
-    meses = anos * 12
-
-    labels = []
-    investido_lista = []
-    patrimonio_lista = []
-
-    saldo_total = aporte_inicial
-    for mes in range(1, meses + 1):
-        saldo_total = (saldo_total + aporte_mensal) * (1 + taxa_mensal)
-        investido_acumulado = aporte_inicial + (aporte_mensal * mes)
-
-        labels.append(f"Mês {mes}")
-        investido_lista.append(round(investido_acumulado, 2))
-        patrimonio_lista.append(round(saldo_total, 2))
-
-    total_investido = aporte_inicial + (aporte_mensal * meses)
-    rendimentos = saldo_total - total_investido
-
-    # Dicionário alinhado 100% com as variáveis do seu simulador.html
-    resultado = {
-        "total_investido": round(total_investido, 2),
-        "rendimentos": round(rendimentos, 2),
-        "taxa_anual_aplicada": taxa_anual,
-        "grafico": {
-            "labels": labels,
-            "investido": investido_lista,
-            "patrimonio": patrimonio_lista
-        }
-    }
-
-    return render_template(
-        "simulador.html",
-        aporte_inicial=aporte_inicial,
-        aporte_mensal=aporte_mensal,
-        anos=anos,
-        resultado=resultado
-    )
 
 def parse_valor_monetario(valor):
     texto = str(valor or "").strip().replace("R$", "").replace(" ", "")
@@ -133,9 +67,8 @@ def parse_valor_monetario(valor):
         texto = texto.replace(".", "")
     return Decimal(texto)
 
-@app.get("/")
 @app.get("/login")
-def index():
+def login():
 
     if "usuario" in session:
         return redirect("/dashboard")
@@ -930,13 +863,14 @@ def solicitar_codigo():
 
 
 
+
 @app.get("/teste-email")
 def teste_email():
     try:
         mensagem = Message(
             subject="Teste de e-mail - Duckfy",
             recipients=[os.getenv("BREVO_EMAIL_REMETENTE")],
-            body="Deu certo! O Duckfy conseguiu enviar um e-mail pela Brevo."
+            body="Teste de envio do Duckfy."
         )
 
         mail.send(mensagem)
@@ -944,7 +878,8 @@ def teste_email():
 
     except Exception as erro:
         print(f"Erro ao enviar e-mail: {erro}")
-        return "Falha no envio. Confira o terminal do VS Code.", 500
+        return f"Falha no envio: {erro}", 500
+
 
 
 
