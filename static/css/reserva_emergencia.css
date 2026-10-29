@@ -102,6 +102,178 @@
               inset 0 1px 0 rgba(255, 255, 255, 0.3);
 }
 
+#modalGuardarDinheiro .modal-footer,
+#modalRetirarDinheiro .modal-footer {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  padding: 0 1rem 1rem;
+}
+
+#modalGuardarDinheiro .modal-footer > *,
+#modalRetirarDinheiro .modal-footer > * {
+  width: 100%;
+  margin: 0;
+}
+
+.btn-reserva-secondary,
+.btn-reserva-primary,
+.btn-reserva-add-account {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 42px;
+  padding: 0.5rem 1rem;
+  border-radius: 10px;
+  font-size: 0.95rem;
+  font-weight: 600;
+  line-height: 1.25;
+  text-decoration: none;
+}
+
+.btn-reserva-secondary {
+  border: 1px solid var(--border-color, rgba(255, 255, 255, 0.2));
+  background: rgba(255, 255, 255, 0.04);
+  color: var(--text-primary, #fff);
+  transition: background-color 0.2s ease, border-color 0.2s ease;
+}
+
+.btn-reserva-secondary:hover {
+  border-color: color-mix(in srgb, var(--brand-primary) 55%, var(--border-color));
+  background: color-mix(in srgb, var(--brand-primary) 12%, transparent);
+  color: var(--text-primary, #fff);
+}
+
+.btn-reserva-primary {
+  min-height: 42px;
+  height: 42px;
+  padding: 0.5rem 1rem;
+  border-radius: 10px;
+}
+
+.btn-reserva-add-account {
+  width: 100%;
+}
+
+.reserva-custom-select {
+  position: relative;
+}
+
+.reserva-custom-select .custom-select-native {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  clip-path: inset(50%);
+  border: 0;
+}
+
+.reserva-custom-select .custom-select-trigger {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  min-height: 42px;
+  padding: 10px 12px;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 8px;
+  background: rgba(0, 0, 0, 0.4);
+  color: var(--text-primary);
+  font: inherit;
+  font-size: 15px;
+  text-align: left;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+  cursor: pointer;
+}
+
+.reserva-custom-select .custom-select-trigger:focus-visible,
+.reserva-custom-select.is-open .custom-select-trigger {
+  border-color: var(--brand-primary);
+  outline: none;
+  box-shadow: 0 0 0 0.2rem rgba(124, 77, 255, 0.25);
+}
+
+.reserva-custom-select .custom-select-trigger.has-placeholder {
+  color: color-mix(in srgb, var(--text-muted) 82%, transparent);
+}
+
+.reserva-custom-select .custom-select-trigger:disabled {
+  cursor: not-allowed;
+  opacity: 0.55;
+}
+
+.reserva-custom-select .custom-select-chevron {
+  width: 8px;
+  height: 8px;
+  margin: -4px 2px 0 12px;
+  flex: 0 0 auto;
+  border-right: 1.5px solid var(--text-muted);
+  border-bottom: 1.5px solid var(--text-muted);
+  transform: rotate(45deg);
+  transition: transform 0.2s ease;
+}
+
+.reserva-custom-select.is-open .custom-select-chevron {
+  margin-top: 4px;
+  transform: rotate(225deg);
+}
+
+.reserva-custom-select .custom-select-options {
+  position: absolute;
+  z-index: 1060;
+  top: calc(100% + 6px);
+  right: 0;
+  left: 0;
+  max-height: 220px;
+  overflow-y: auto;
+  padding: 5px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 10px;
+  background: var(--bg-surface-2);
+  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.4);
+}
+
+.reserva-custom-select .custom-select-options[hidden] {
+  display: none;
+}
+
+.reserva-custom-select .custom-select-option {
+  padding: 9px 11px;
+  border-radius: 6px;
+  color: var(--text-primary);
+  font-size: 14px;
+  cursor: pointer;
+  transition: background-color 0.15s ease, color 0.15s ease;
+}
+
+.reserva-custom-select .custom-select-option:hover,
+.reserva-custom-select .custom-select-option.is-active {
+  background: rgba(124, 77, 255, 0.16);
+}
+
+.reserva-custom-select .custom-select-option[aria-selected="true"] {
+  background: var(--brand-primary);
+  color: #fff;
+}
+
+.reserva-custom-select .custom-select-option[aria-disabled="true"] {
+  color: var(--text-muted);
+  cursor: default;
+}
+
+.reserva-select-error {
+  display: block;
+  margin-top: 0.4rem;
+  color: #ff8f9c;
+}
+
+.reserva-select-error[hidden] {
+  display: none;
+}
+
 .fs-7 {
   font-size: 13px;
 }

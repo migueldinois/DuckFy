@@ -122,7 +122,9 @@
 }
 
 .campo-input::placeholder {
-  color: rgba(255, 255, 255, 0.35) !important;
+  color: var(--text-muted) !important;
+  opacity: 1 !important;
+  -webkit-text-fill-color: var(--text-muted) !important;
 }
 
 .campo-input:focus {

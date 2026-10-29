@@ -189,8 +189,8 @@ def contas():
     total_contas = ContaBancaria.calcular_patrimonio_total(id_usuario)
     reserva = Reserva.obter_reserva(id_usuario)
     total_reservado = Decimal(str(reserva['valor_atual'] or 0)) if reserva else Decimal('0')
-    patrimonio = Decimal(str(total_contas or 0))
-    saldo_fora_reserva = patrimonio - total_reservado
+    saldo_fora_reserva = Decimal(str(total_contas or 0))
+    patrimonio = saldo_fora_reserva + total_reservado
     porcentagem_reservada = (
         (total_reservado / patrimonio) * 100
         if patrimonio > 0 else Decimal('0')

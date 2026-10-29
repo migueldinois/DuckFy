@@ -260,7 +260,7 @@ body {
 }
 
 .campo input::placeholder {
-    color: #8a879b;
+    color: var(--text-muted);
 }
 
 .campo input:focus {
@@ -452,7 +452,7 @@ body.tema-claro .campo input {
 }
 
 body.tema-claro .campo input::placeholder {
-    color: #858093;
+    color: var(--text-muted);
 }
 
 body.tema-claro .campo input:focus {

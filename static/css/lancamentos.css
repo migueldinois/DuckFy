@@ -104,7 +104,7 @@ body {
 }
 
 .custom-select-trigger.has-placeholder {
-  color: rgba(255, 255, 255, 0.4);
+  color: color-mix(in srgb, var(--text-muted) 82%, transparent);
 }
 
 .custom-select-chevron {
@@ -181,9 +181,9 @@ body {
 
 .lancamento-block input::placeholder,
 .lancamento-block textarea::placeholder {
-  color: rgba(255, 255, 255, 0.4) !important;
-  -webkit-text-fill-color: rgba(255, 255, 255, 0.4);
-  opacity: 1;
+  color: var(--text-muted) !important;
+  -webkit-text-fill-color: var(--text-muted) !important;
+  opacity: 1 !important;
 }
 
 /* Ícones de Categoria */

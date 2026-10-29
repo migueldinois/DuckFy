@@ -56,3 +56,14 @@ body.tema-claro {
     --border-color: #E6E0F0;
     --shadow-color: rgba(45, 29, 76, 0.08);
 }
+
+input::placeholder,
+textarea::placeholder {
+    color: var(--text-muted) !important;
+    opacity: 1 !important;
+    -webkit-text-fill-color: var(--text-muted) !important;
+}
+
+select:invalid {
+    color: color-mix(in srgb, var(--text-muted) 82%, transparent) !important;
+}

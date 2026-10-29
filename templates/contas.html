@@ -38,7 +38,7 @@
   <!-- Resumo -->
   <section class="patrimonio-resumo" aria-label="Resumo financeiro">
     <article class="card-patrimonio">
-      <span class="card-rotulo">Saldo total das contas</span>
+      <span class="card-rotulo">Patrimônio total</span>
       <h2 class="card-valor">
         R$ {{ patrimonio_total|default('0,00', true) }}
       </h2>
@@ -191,6 +191,10 @@
 {% block extra_js %}
 <script>
   document.addEventListener('DOMContentLoaded', () => {
+    if (new URLSearchParams(window.location.search).get('adicionar') === '1') {
+      ModalManager.abrir('modalAdicionarBanco');
+    }
+
     const form = document.getElementById('formEditarConta');
     const nome = document.getElementById('editarNomeConta');
     const tipo = document.getElementById('editarTipoConta');

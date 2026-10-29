@@ -92,8 +92,13 @@ class Reserva:
         conexao, cursor = Conexao.conectar()
 
         try:
+            valor_guardar = Decimal(str(valor_guardar))
+            if not valor_guardar.is_finite() or valor_guardar <= 0:
+                conexao.rollback()
+                return False
+
             cursor.execute(
-                'SELECT id_conta, saldo_atual FROM contas_bancarias WHERE id_conta = %s AND id_usuario = %s FOR UPDATE',
+                'SELECT id_conta FROM contas_bancarias WHERE id_conta = %s AND id_usuario = %s FOR UPDATE',
                 [id_conta, id_usuario]
             )
             conta = cursor.fetchone()
@@ -103,16 +108,13 @@ class Reserva:
 
             cursor.execute(
                 '''
-                SELECT COALESCE(SUM(rc.valor_alocado), 0) AS valor_alocado
-                FROM reserva_contas rc
-                INNER JOIN reserva_emergencia re ON re.id_reserva = rc.id_reserva
-                WHERE rc.id_conta = %s AND re.id_usuario = %s
+                UPDATE contas_bancarias
+                SET saldo_atual = saldo_atual + %s
+                WHERE id_conta = %s AND id_usuario = %s
                 ''',
-                [id_conta, id_usuario]
+                [valor_guardar, id_conta, id_usuario]
             )
-            alocacao_atual = cursor.fetchone()['valor_alocado']
-            saldo_disponivel = Decimal(str(conta['saldo_atual'] or 0)) - Decimal(str(alocacao_atual or 0))
-            if saldo_disponivel < Decimal(str(valor_guardar)):
+            if cursor.rowcount != 1:
                 conexao.rollback()
                 return False
 
@@ -167,12 +169,17 @@ class Reserva:
         conexao, cursor = Conexao.conectar()
 
         try:
+            valor_retirar = Decimal(str(valor_retirar))
+            if not valor_retirar.is_finite() or valor_retirar <= 0:
+                conexao.rollback()
+                return False
+
             cursor.execute(
-                'SELECT id_conta FROM contas_bancarias WHERE id_conta = %s AND id_usuario = %s FOR UPDATE',
+                'SELECT id_conta, saldo_atual FROM contas_bancarias WHERE id_conta = %s AND id_usuario = %s FOR UPDATE',
                 [id_conta, id_usuario]
             )
             conta = cursor.fetchone()
-            if not conta:
+            if not conta or Decimal(str(conta['saldo_atual'] or 0)) < valor_retirar:
                 conexao.rollback()
                 return False
 
@@ -181,7 +188,7 @@ class Reserva:
                 [id_usuario]
             )
             reserva = cursor.fetchone()
-            if not reserva or float(reserva['valor_atual']) < float(valor_retirar):
+            if not reserva or Decimal(str(reserva['valor_atual'])) < valor_retirar:
                 conexao.rollback()
                 return False
 
@@ -189,8 +196,8 @@ class Reserva:
             cursor.execute(
                 '''
                 SELECT
-                    COALESCE(SUM(CASE WHEN rc.id_conta = %s THEN rc.valor_alocado ELSE 0 END), 0) AS alocado_conta,
-                    COALESCE(SUM(rc.valor_alocado), 0) AS alocado_total
+                    COALESCE(SUM(CASE WHEN id_conta = %s THEN valor_alocado ELSE 0 END), 0) AS alocado_conta,
+                    COALESCE(SUM(valor_alocado), 0) AS alocado_total
                 FROM reserva_contas rc
                 WHERE rc.id_reserva = %s
                 ''',
@@ -199,13 +206,10 @@ class Reserva:
             alocacao = cursor.fetchone()
             valor_alocado_conta = Decimal(str(alocacao['alocado_conta'] or 0))
             valor_alocado_total = Decimal(str(alocacao['alocado_total'] or 0))
-            valor_retirar_decimal = Decimal(str(valor_retirar))
-            valor_alocado_liberado = min(valor_alocado_conta, valor_retirar_decimal)
-            valor_historico = valor_retirar_decimal - valor_alocado_liberado
-            valor_historico_disponivel = (
-                Decimal(str(reserva['valor_atual'])) - valor_alocado_total
-            )
-            if valor_historico > valor_historico_disponivel:
+            valor_alocado_liberado = min(valor_alocado_conta, valor_retirar)
+            valor_sem_alocacao = valor_retirar - valor_alocado_liberado
+            saldo_reserva_nao_alocado = Decimal(str(reserva['valor_atual'])) - valor_alocado_total
+            if valor_sem_alocacao > saldo_reserva_nao_alocado:
                 conexao.rollback()
                 return False
 
@@ -213,16 +217,24 @@ class Reserva:
                 'UPDATE reserva_emergencia SET valor_atual = valor_atual - %s WHERE id_reserva = %s',
                 [valor_retirar, id_reserva]
             )
+
             if valor_alocado_liberado > 0:
                 cursor.execute(
                     'UPDATE reserva_contas SET valor_alocado = valor_alocado - %s WHERE id_reserva = %s AND id_conta = %s',
                     [valor_alocado_liberado, id_reserva, id_conta]
                 )
-            if valor_historico > 0:
-                cursor.execute(
-                    'UPDATE contas_bancarias SET saldo_atual = saldo_atual + %s WHERE id_conta = %s AND id_usuario = %s',
-                    [valor_historico, id_conta, id_usuario]
-                )
+
+            cursor.execute(
+                '''
+                UPDATE contas_bancarias
+                SET saldo_atual = saldo_atual - %s
+                WHERE id_conta = %s AND id_usuario = %s AND saldo_atual >= %s
+                ''',
+                [valor_retirar, id_conta, id_usuario, valor_retirar]
+            )
+            if cursor.rowcount != 1:
+                conexao.rollback()
+                return False
             cursor.execute(
                 '''
                 INSERT INTO transacoes

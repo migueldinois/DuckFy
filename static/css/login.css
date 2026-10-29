@@ -423,7 +423,7 @@ body {
 }
 
 .login .campo input::placeholder {
-    color: #8a879b;
+    color: var(--text-muted);
 }
 
 .login .campo input:focus {
@@ -610,7 +610,7 @@ body.tema-claro .login .campo input {
 }
 
 body.tema-claro .login .campo input::placeholder {
-    color: #858093;
+    color: var(--text-muted);
 }
 
 body.tema-claro .login .campo input:focus {

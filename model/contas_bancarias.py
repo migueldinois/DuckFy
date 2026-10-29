@@ -105,19 +105,6 @@ class ContaBancaria:
                 conexao.rollback()
                 return False
 
-            cursor.execute(
-                """
-                SELECT COALESCE(SUM(rc.valor_alocado), 0) AS valor_alocado
-                FROM reserva_contas rc
-                INNER JOIN reserva_emergencia re ON re.id_reserva = rc.id_reserva
-                WHERE rc.id_conta = %s AND re.id_usuario = %s
-                """,
-                (id_conta, id_usuario)
-            )
-            valor_alocado = Decimal(str(cursor.fetchone()["valor_alocado"] or 0))
-            if saldo_atual < valor_alocado:
-                return False
-
             sql = """
                 UPDATE contas_bancarias 
                 SET nome_conta = %s, tipo_conta = %s, saldo_atual = %s 
@@ -224,18 +211,8 @@ class ContaBancaria:
                 conexao.rollback()
                 return False
 
-            cursor.execute(
-                """
-                SELECT COALESCE(SUM(rc.valor_alocado), 0) AS valor_alocado
-                FROM reserva_contas rc
-                INNER JOIN reserva_emergencia re ON re.id_reserva = rc.id_reserva
-                WHERE rc.id_conta = %s AND re.id_usuario = %s
-                """,
-                (id_conta_origem, id_usuario)
-            )
-            valor_alocado = Decimal(str(cursor.fetchone()["valor_alocado"] or 0))
             saldo_origem = Decimal(str(contas[id_conta_origem]["saldo_atual"] or 0))
-            if saldo_origem - valor_alocado < valor:
+            if saldo_origem < valor:
                 conexao.rollback()
                 return False
 

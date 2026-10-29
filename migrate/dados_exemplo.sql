@@ -33,12 +33,12 @@ VALUES
 INSERT INTO contas_bancarias
 (id_usuario, nome_conta, tipo_conta, saldo_atual)
 VALUES
-(1, 'Nubank', 'Conta Corrente', 4200.00),
-(1, 'Itaú Poupança', 'Poupança', 2800.00),
-(2, 'Bradesco', 'Conta Corrente', 1850.00),
-(2, 'Caixa Econômica', 'Poupança', 3200.00),
-(3, 'Banco do Brasil', 'Conta Corrente', 6500.00),
-(3, 'Inter Investimentos', 'Investimento', 8000.00);
+(1, 'Nubank', 'Conta Corrente', 2400.00),
+(1, 'Itaú Poupança', 'Poupança', 1600.00),
+(2, 'Bradesco', 'Conta Corrente', 1350.00),
+(2, 'Caixa Econômica', 'Poupança', 2200.00),
+(3, 'Banco do Brasil', 'Conta Corrente', 4500.00),
+(3, 'Inter Investimentos', 'Investimento', 5000.00);
 
 
 INSERT INTO reserva_emergencia

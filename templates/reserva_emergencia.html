@@ -127,15 +127,31 @@
       <form action="{{ url_for('guardar_reserva') }}" method="POST">
         <div class="modal-body">
           <div class="mb-3">
-            <label for="id_conta" class="form-label text-white-50 fs-7 fw-medium mb-1">Conta de origem</label>
-            <select class="form-select bg-black bg-opacity-40 border-secondary border-opacity-25 text-white" id="id_conta" name="id_conta" required {% if not contas_usuario %}disabled{% endif %}>
-              <option value="" selected disabled>Selecione uma conta</option>
-              {% for conta in contas_usuario %}
-                <option value="{{ conta.id_conta }}">{{ conta.nome_conta }} • R$ {{ '%.2f'|format(conta.saldo_atual)|replace('.', ',') }}</option>
-              {% endfor %}
-            </select>
+            <label id="id_conta-label" for="id_conta" class="form-label text-white-50 fs-7 fw-medium mb-1">Conta de origem</label>
+            <div class="custom-select reserva-custom-select" data-reserva-select>
+              <select class="custom-select-native" id="id_conta" name="id_conta" aria-hidden="true" tabindex="-1" {% if not contas_usuario %}disabled{% endif %}>
+                <option value="" selected disabled>Selecione uma conta</option>
+                {% for conta in contas_usuario %}
+                  <option value="{{ conta.id_conta }}">{{ conta.nome_conta }} • R$ {{ '%.2f'|format(conta.saldo_atual)|replace('.', ',') }}</option>
+                {% endfor %}
+              </select>
+              <button type="button" class="custom-select-trigger has-placeholder" id="id_conta-trigger" role="combobox" aria-haspopup="listbox" aria-expanded="false" aria-controls="id_conta-options" aria-autocomplete="none" aria-labelledby="id_conta-label id_conta-value" aria-required="true" {% if not contas_usuario %}disabled{% endif %}>
+                <span id="id_conta-value">Selecione uma conta</span>
+                <span class="custom-select-chevron" aria-hidden="true"></span>
+              </button>
+              <div class="custom-select-options" id="id_conta-options" role="listbox" aria-labelledby="id_conta-label" hidden>
+                <div class="custom-select-option" role="option" aria-disabled="true" data-value="">Selecione uma conta</div>
+                {% for conta in contas_usuario %}
+                  <div class="custom-select-option" role="option" aria-selected="false" data-value="{{ conta.id_conta }}">{{ conta.nome_conta }} • R$ {{ '%.2f'|format(conta.saldo_atual)|replace('.', ',') }}</div>
+                {% endfor %}
+              </div>
+              <small class="reserva-select-error" role="alert" hidden>Selecione uma conta para continuar.</small>
+            </div>
             {% if not contas_usuario %}
               <small class="text-warning d-block mt-2">Cadastre uma conta bancária para guardar dinheiro na reserva.</small>
+              <a class="btn btn-reserva-secondary btn-reserva-add-account mt-2" href="{{ url_for('contas', adicionar=1) }}">
+                <i class="bi bi-plus-lg me-1" aria-hidden="true"></i>Cadastrar conta bancária
+              </a>
             {% endif %}
           </div>
 
@@ -154,8 +170,8 @@
         </div>
 
         <div class="modal-footer border-0 pt-0">
-          <button type="button" class="btn btn-outline-light rounded-3 px-3" data-bs-dismiss="modal">Cancelar</button>
-          <button type="submit" class="btn-purple-action style-btn-sm px-4" {% if not contas_usuario %}disabled{% endif %}>Confirmar</button>
+          <button type="button" class="btn btn-reserva-secondary" data-bs-dismiss="modal">Cancelar</button>
+          <button type="submit" class="btn-purple-action btn-reserva-primary" {% if not contas_usuario %}disabled{% endif %}>Confirmar</button>
         </div>
       </form>
 
@@ -175,15 +191,31 @@
       <form action="{{ url_for('retirar_reserva') }}" method="POST">
         <div class="modal-body">
           <div class="mb-3">
-            <label for="conta_destino_retirada" class="form-label text-white-50 fs-7 fw-medium mb-1">Conta de destino</label>
-            <select class="form-select bg-black bg-opacity-40 border-secondary border-opacity-25 text-white" id="conta_destino_retirada" name="id_conta" required {% if not contas_usuario %}disabled{% endif %}>
-              <option value="" selected disabled>Selecione uma conta</option>
-              {% for conta in contas_usuario %}
-                <option value="{{ conta.id_conta }}">{{ conta.nome_conta }}</option>
-              {% endfor %}
-            </select>
+            <label id="conta_destino_retirada-label" for="conta_destino_retirada" class="form-label text-white-50 fs-7 fw-medium mb-1">Conta de destino</label>
+            <div class="custom-select reserva-custom-select" data-reserva-select>
+              <select class="custom-select-native" id="conta_destino_retirada" name="id_conta" aria-hidden="true" tabindex="-1" {% if not contas_usuario %}disabled{% endif %}>
+                <option value="" selected disabled>Selecione uma conta</option>
+                {% for conta in contas_usuario %}
+                  <option value="{{ conta.id_conta }}">{{ conta.nome_conta }} • R$ {{ '%.2f'|format(conta.saldo_atual)|replace('.', ',') }}</option>
+                {% endfor %}
+              </select>
+              <button type="button" class="custom-select-trigger has-placeholder" id="conta_destino_retirada-trigger" role="combobox" aria-haspopup="listbox" aria-expanded="false" aria-controls="conta_destino_retirada-options" aria-autocomplete="none" aria-labelledby="conta_destino_retirada-label conta_destino_retirada-value" aria-required="true" {% if not contas_usuario %}disabled{% endif %}>
+                <span id="conta_destino_retirada-value">Selecione uma conta</span>
+                <span class="custom-select-chevron" aria-hidden="true"></span>
+              </button>
+              <div class="custom-select-options" id="conta_destino_retirada-options" role="listbox" aria-labelledby="conta_destino_retirada-label" hidden>
+                <div class="custom-select-option" role="option" aria-disabled="true" data-value="">Selecione uma conta</div>
+                {% for conta in contas_usuario %}
+                  <div class="custom-select-option" role="option" aria-selected="false" data-value="{{ conta.id_conta }}">{{ conta.nome_conta }} • R$ {{ '%.2f'|format(conta.saldo_atual)|replace('.', ',') }}</div>
+                {% endfor %}
+              </div>
+              <small class="reserva-select-error" role="alert" hidden>Selecione uma conta para continuar.</small>
+            </div>
             {% if not contas_usuario %}
               <small class="text-warning d-block mt-2">Cadastre uma conta bancária para receber a retirada.</small>
+              <a class="btn btn-reserva-secondary btn-reserva-add-account mt-2" href="{{ url_for('contas', adicionar=1) }}">
+                <i class="bi bi-plus-lg me-1" aria-hidden="true"></i>Cadastrar conta bancária
+              </a>
             {% endif %}
           </div>
 
@@ -202,8 +234,8 @@
         </div>
 
         <div class="modal-footer border-0 pt-0">
-          <button type="button" class="btn btn-outline-light rounded-3 px-3" data-bs-dismiss="modal">Cancelar</button>
-          <button type="submit" class="btn-purple-action style-btn-sm px-4" {% if not contas_usuario or total_guardado <= 0 %}disabled{% endif %}>Retirar</button>
+          <button type="button" class="btn btn-reserva-secondary" data-bs-dismiss="modal">Cancelar</button>
+          <button type="submit" class="btn-purple-action btn-reserva-primary" {% if not contas_usuario or total_guardado <= 0 %}disabled{% endif %}>Retirar</button>
         </div>
       </form>
     </div>
@@ -236,4 +268,8 @@
     </div>
   </div>
   </div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="{{ url_for('static', filename='js/reserva_emergencia.js') }}" defer></script>
 {% endblock %}

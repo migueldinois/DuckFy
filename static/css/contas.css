@@ -371,7 +371,7 @@
 
 .pagina-patrimonio .search-input::placeholder {
   color: var(--text-muted);
-  opacity: .8;
+  opacity: 1;
 }
 
 .pagina-patrimonio .duckfy-modal .btn-purple-action {
@@ -567,6 +567,7 @@
 
 #modalTransferirContas input::placeholder {
   color: var(--text-muted);
+  opacity: 1;
 }
 
 #modalTransferirContas .btn-alternar-contas {
