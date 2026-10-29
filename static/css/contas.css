@@ -390,6 +390,65 @@
   transform: translateY(-1px);
 }
 
+.resumo-saldo-conta {
+  padding: 14px 16px;
+  color: var(--text-primary);
+  background: color-mix(in srgb, var(--brand-secondary) 7%, var(--bg-surface-1));
+  border: 1px solid color-mix(in srgb, var(--brand-secondary) 24%, var(--border-color));
+  border-radius: 12px;
+}
+
+.resumo-saldo-conta > .card-subtitle {
+  display: block;
+  margin-bottom: 4px;
+}
+
+.resumo-saldo-conta > strong {
+  font-size: 1.05rem;
+  font-variant-numeric: tabular-nums;
+}
+
+.detalhes-saldo-conta {
+  display: grid;
+  gap: 5px;
+  margin-top: 9px;
+  color: var(--text-muted);
+  font-size: .78rem;
+}
+
+.detalhes-saldo-conta span {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.detalhes-saldo-conta strong {
+  color: var(--text-primary);
+  font-weight: 650;
+  font-variant-numeric: tabular-nums;
+}
+
+.mensagem-validacao-conta {
+  margin: 0 0 12px;
+  padding: 10px 12px;
+  color: #b93838;
+  background: color-mix(in srgb, #ef4444 9%, var(--bg-surface-1));
+  border: 1px solid color-mix(in srgb, #ef4444 28%, var(--border-color));
+  border-radius: 10px;
+  font-size: .84rem;
+  line-height: 1.45;
+}
+
+.mensagem-validacao-conta[hidden] {
+  display: none;
+}
+
+.pagina-patrimonio .duckfy-modal .btn-purple-action:disabled {
+  opacity: .55;
+  cursor: not-allowed;
+  transform: none;
+}
+
 .pagina-patrimonio .duckfy-modal .btn-excluir-conta {
   display: inline-flex;
   align-items: center;
