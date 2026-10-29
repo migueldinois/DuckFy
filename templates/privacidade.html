@@ -1,29 +1,36 @@
-{% if usuario_logado %}
-{% extends 'layout.html' %}
-{% endif %}
+{% extends 'layout.html' if usuario_logado else 'layout_publico.html' %}
+
 
 {% block title %}Política de Privacidade - DuckFy{% endblock %}
+
 
 {% block styles %}
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 <link rel="stylesheet" href="{{ url_for('static', filename='css/privacidade.css') }}">
 {% endblock %}
 
+
 {% block content %}
 
+
 <main class="termos {% if not usuario_logado %}termos-deslogado{% endif %}">
+
 
     <!-- topo da página -->
      <!-- Redirecionamento direto via Jinja2 no href, evitando o acúmulo de etapas do histórico do navegador no botão voltar -->
     <header class="termos-topo">
-        <a class="btn-voltar" href="{{ url_for('perfil') if usuario_logado else url_for('index') }}"
+        <a class="btn-voltar" href="{{ url_for('perfil') if usuario_logado else url_for('cadastro') }}"
+            {% if not usuario_logado %}onclick="return voltarPaginaPublica(event)"{% endif %}
             aria-label="Voltar para a página anterior">
             <i class="fa-solid fa-arrow-left"></i>
         </a>
 
+
         <h1>Política de Privacidade</h1>
 
+
     </header>
+
 
     <!-- abas -->
     <!-- 
@@ -31,11 +38,13 @@
     em vez de empilhar uma nova entrada ao alternar entre as abas de 'termos' e 'privacidade'
     -->
 
+
     <nav class="termos-abas">
         <a href="{{ url_for('termos') }}" class="aba {% if request.endpoint == 'termos' %}aba-ativa{% endif %}"
             onclick="window.location.replace(this.href); return false;">
             Termos de uso
         </a>
+
 
         <a href="{{ url_for('privacidade') }}"
             class="aba {% if request.endpoint == 'privacidade' %}aba-ativa{% endif %}"
@@ -44,8 +53,10 @@
         </a>
     </nav>
 
+
     <!-- conteúdo -->
     <section class="termos-conteudo">
+
 
         <h2>1. Coleta e Finalidade dos Dados</h2>
         <p>
@@ -54,12 +65,14 @@
             cálculo de metas, reservas de emergência e a contabilização do progresso gamificado (streaks e XP).
         </p>
 
+
         <h2>2. Armazenamento e Proteção de Informações</h2>
         <p>
             Todos os dados registrados são armazenados em ambiente seguro. Adotamos medidas técnicas adequadas para
             proteger suas informações contra acessos não autorizados, alteração, divulgação ou destruição imprevista de
             dados pessoais.
         </p>
+
 
         <h2>3. Uso de Imagens de Perfil e Uploads</h2>
         <p>
@@ -68,12 +81,14 @@
             DuckFy.
         </p>
 
+
         <h2>4. Não Compartilhamento com Terceiros</h2>
         <p>
             O DuckFy <strong>não vende, aluga ou compartilha</strong> seus dados financeiros ou pessoais com terceiros
             para fins comerciais ou publicitários. Informações só poderão ser compartilhadas caso haja obrigação
             estritamente legal ou ordem judicial.
         </p>
+
 
         <h2>5. Direitos do Usuário (LGPD)</h2>
         <p>
@@ -82,8 +97,11 @@
             financeiro a qualquer momento na aplicação.
         </p>
 
+
     </section>
 
+
 </main>
+
 
 {% endblock %}
