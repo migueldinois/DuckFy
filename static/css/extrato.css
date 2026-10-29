@@ -1,16 +1,10 @@
-/* ==========================================================
-   PALETA DE CORES (REGRAS DE 60%, 30%, 10%)
-   ========================================================== */
+
 :root {
     /* 60% - Dominante / Fundo Escuro */
     --bg-main: #0F0C1B;
-    /* Fundo geral da aplicação */
     --bg-card: #19191B;
-    /* Card principal */
     --bg-item: #181826;
-    /* Fundo dos itens da timeline */
     --bg-item-hover: #222234;
-    /* Hover do item */
 
     /* 30% - Secundária / Roxo */
     --purple-primary: #7C4DFF;
@@ -19,14 +13,10 @@
 
     /* 10% - Destaque / Verde e Vermelho para Transações */
     --green-accent: #00E676;
-    /* Entradas/Positivo */
     --red-accent: #FF5252;
-    /* Saídas/Negativo */
 }
 
-/* ==========================================================
-   ESTILOS GERAIS
-   ========================================================== */
+
 * {
     box-sizing: border-box;
 }
@@ -40,14 +30,46 @@ body {
     display: flex;
     justify-content: center;
     align-items: center;
+    overflow: hidden; /* Impede a página externa de ter scroll */
 }
 
-/* Container Responsivo (Mobile Padrão) */
+/* Sidebar recolhida */
+.sidebar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 80px;
+    height: 100vh;
+    z-index: 1000;
+    transition: width 0.3s ease;
+}
+
+/* Sidebar ao passar o mouse */
+.sidebar:hover {
+    width: 240px;
+}
+
+/* Container do conteúdo principal da página */
+.main-wrapper {
+    margin-left: 80px;
+    width: calc(100% - 80px);
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 1.5rem;
+}
+
+/* Container Responsivo (Largura e Altura Fixas) */
 .app-container {
     width: 100%;
-    max-width: 480px;
-    min-height: 100vh;
-    transition: all 0.3s ease;
+    max-width: 600px;
+    height: 5vh;
+    max-height: 700px;
+    margin: 0 auto;
+    flex-shrink: 0;
+    display: flex;
+    flex-direction: column;
 }
 
 /* ==========================================================
@@ -67,6 +89,7 @@ body {
     border-radius: 16px;
     border: 1px solid rgba(255, 255, 255, 0.05);
     gap: 8px;
+    flex-shrink: 0;
 }
 
 .tab-btn {
@@ -91,12 +114,34 @@ body {
 }
 
 /* ==========================================================
-   TIMELINE / LISTA DE EXTRATO
+   TIMELINE / LISTA DE EXTRATO (ROLAGEM INTERNA CORRIGIDA)
    ========================================================== */
 .timeline-container {
     display: flex;
     flex-direction: column;
     gap: 12px;
+    overflow-y: auto !important; /* Habilita a rolagem interna */
+    flex-grow: 1;
+    min-height: 0; /* Permite ao Flexbox ativar o scroll corretamente */
+    padding-right: 6px;
+}
+
+/* Estilização da barra de rolagem interna */
+.timeline-container::-webkit-scrollbar {
+    width: 6px;
+}
+
+.timeline-container::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.timeline-container::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.15);
+    border-radius: 10px;
+}
+
+.timeline-container::-webkit-scrollbar-thumb:hover {
+    background: rgba(255, 255, 255, 0.3);
 }
 
 .timeline-item {
@@ -108,6 +153,7 @@ body {
     justify-content: space-between;
     border: 1px solid rgba(255, 255, 255, 0.05);
     transition: transform 0.2s ease, background-color 0.2s ease;
+    flex-shrink: 0;
 }
 
 .timeline-item:hover {
@@ -151,16 +197,23 @@ body {
     color: #ffffff;
 }
 
-/* Valores (Valores Positivos e Negativos) */
+/* Subtítulo (Categoria • Conta) ajustado para BRANCO */
+.info small,
+.info .text-muted {
+    color: rgba(255, 255, 255, 0.85) !important;
+    font-size: 0.78rem;
+    display: block;
+    margin-top: 2px;
+}
+
+/* Valores */
 .amount {
     font-weight: 700;
     font-size: 0.95rem;
     text-align: right;
     color: var(--green-accent);
-    /* Padrão de entrada */
 }
 
-/* Ajuste automático para valores negativos contendo o caractere "-" */
 .amount:has(:first-child),
 .amount {
     letter-spacing: -0.3px;
@@ -171,32 +224,41 @@ body {
    ========================================================== */
 @media (min-width: 992px) {
     .app-container {
+        width: 100%;
         max-width: 850px;
-        /* Largura reduzida para visual minimalista */
-        min-height: auto;
-        padding: 3rem 2rem;
+        height: 82vh;
+        max-height: 720px;
+        padding: 2.5rem 2rem;
+        flex-shrink: 0;
     }
 
     .header {
-        margin-bottom: 2rem !important;
+        margin-bottom: 1.5rem !important;
+        flex-shrink: 0;
     }
 
     main {
+        width: 100%;
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        flex-grow: 1;
+        min-height: 0; /* Garante que o scroll funciona no desktop */
         background-color: var(--bg-card);
         padding: 2rem;
         border-radius: 28px;
         box-shadow: 0 12px 40px rgba(0, 0, 0, 0.4);
         border: 1px solid rgba(255, 255, 255, 0.05);
+        overflow: visible;
     }
 
-    /* Abas de filtro mais elegantes e centradas no Desktop */
     .filter-tabs {
         max-width: 400px;
-        margin-bottom: 2rem !important;
+        margin-bottom: 1.5rem !important;
         background-color: var(--bg-main);
+        flex-shrink: 0;
     }
 
-    /* Container de Timeline em Grade/Lista Espaçada no Desktop */
     .timeline-container {
         gap: 14px;
     }
