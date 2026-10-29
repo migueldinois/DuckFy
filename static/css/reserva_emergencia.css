@@ -250,6 +250,14 @@
 .reserva-custom-select.is-open .custom-select-trigger {
   border-color: var(--brand-primary);
   outline: none;
+  box-shadow: none;
+}
+
+.reserva-custom-select:focus-within,
+.reserva-custom-select.is-open {
+  position: relative;
+  z-index: 2;
+  border-radius: 8px;
   box-shadow: 0 0 0 0.2rem rgba(124, 77, 255, 0.25);
 }
 
