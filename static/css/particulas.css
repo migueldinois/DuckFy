@@ -1,0 +1,29 @@
+#particulas-fundo {
+    position: fixed;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 0;
+    pointer-events: none;
+}
+
+.cadastro,
+.login,
+.container,
+.pagina-publica > main {
+    position: relative;
+    z-index: 1;
+}
+
+#btn-tema {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    cursor: pointer;
+}
+
+#btn-tema i {
+    font-size: 20px;
+    line-height: 1;
+}
