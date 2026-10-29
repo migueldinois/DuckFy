@@ -44,7 +44,7 @@
       </h2>
     </article>
 
-    <article class="card-patrimonio card-reserva">
+    <article class="card-patrimonio">
       <span class="card-rotulo">Reserva de emergência</span>
       <h2 class="card-valor">
         R$ {{ reserva_total|default('0,00', true) }}
@@ -119,10 +119,21 @@
         </div>
 
       </div>
+<div class="saldo-banco text-end">
+    <span class="card-subtitle d-block">Disponível</span>
 
-      <div class="saldo-banco text-end">
-        R$ {{ "%.2f"|format(conta.saldo_atual|float)|replace('.', ',') }}
-      </div>
+    <strong>
+        R$ {{ '%.2f'|format(
+            (conta.saldo_atual|float - conta.valor_alocado|default(0, true)|float)
+        )|replace('.', ',') }}
+    </strong>
+
+    <small class="card-subtitle d-block mt-1">
+        Total: R$ {{ '%.2f'|format(
+            conta.saldo_atual|float
+        )|replace('.', ',') }}
+    </small>
+</div>
 
     </article>
     {% endfor %}
@@ -291,5 +302,52 @@
       formExcluir.submit();
     });
   });
+
+  
+document.addEventListener('DOMContentLoaded', () => {
+    const origem = document.getElementById('conta_origem');
+    const destino = document.getElementById('conta_destino');
+    const saldoOrigem = document.getElementById('saldoContaOrigem');
+    const saldoDestino = document.getElementById('saldoContaDestino');
+    const alternar = document.getElementById('btnAlternarContas');
+
+    function formatarSaldo(valor) {
+        return Number(valor).toLocaleString('pt-BR', {
+            style: 'currency',
+            currency: 'BRL'
+        });
+    }
+
+    function atualizarSaldo(seletor, elemento) {
+        const opcao = seletor.options[seletor.selectedIndex];
+
+        if (!opcao || !opcao.value) {
+            elemento.textContent = '';
+            return;
+        }
+
+        elemento.textContent = formatarSaldo(opcao.dataset.saldo);
+    }
+
+    origem.addEventListener('change', () => {
+        atualizarSaldo(origem, saldoOrigem);
+    });
+
+    destino.addEventListener('change', () => {
+        atualizarSaldo(destino, saldoDestino);
+    });
+
+    alternar.addEventListener('click', () => {
+        const valorOrigem = origem.value;
+        const valorDestino = destino.value;
+
+        origem.value = valorDestino;
+        destino.value = valorOrigem;
+
+        atualizarSaldo(origem, saldoOrigem);
+        atualizarSaldo(destino, saldoDestino);
+    });
+});
+
 </script>
 {% endblock %}
