@@ -17,9 +17,11 @@ body {
     color: #ffffff;
 
     background:
-        radial-gradient(circle at 15% 20%,
+        radial-gradient(
+            circle at 15% 20%,
             rgba(124, 77, 255, 0.12),
-            transparent 35%),
+            transparent 35%
+        ),
         var(--bg-primary, #0F0C1B);
 
     transition: background 0.3s ease, color 0.3s ease;
@@ -27,49 +29,103 @@ body {
 
 /* tela principal */
 .cadastro {
+    position: relative;
     width: 100%;
     min-height: 100vh;
+
     display: flex;
     flex-direction: column;
+    align-items: center;
+
     padding: 0 24px 35px;
 }
 
+
 /* cabeçalho */
 .cadastro-cabecalho {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
     width: 100%;
     min-height: 76px;
+    padding: 4px 8px;
     display: flex;
-    align-items: center;
+    align-items: flex-start;
     justify-content: space-between;
-    gap: 16px;
-    padding: 14px 8px;
+    gap: 10px;
+    z-index: 10;
 }
 
-/* logo da duckfy */
+/* logo da DuckFy */
 .cadastro-logo {
     display: inline-flex;
-    align-items: center;
-    font-family: Arial, Helvetica, sans-serif;
-    font-size: 2rem;
-    font-weight: 400;
-    letter-spacing: -1.5px;
-    line-height: 1;
+    align-items: flex-start;
+    justify-content: center;
+    flex-shrink: 0;
+    margin: 0;
+    padding: 0;
     text-decoration: none;
-    white-space: nowrap;
 }
 
-/* fundo roxo do duck */
-.logo-duck {
-    color: #0F0C1B;
-    background: #7C4DFF;
-    padding: 2px 5px;
-    border-radius: 5px 5px 0 0;
+.cadastro-logo-imagem {
+    display: block;
+    width: 220px;
+    height: auto;
+    max-width: 100%;
+    margin: 0;
+    padding: 0;
+    object-fit: contain;
+    object-position: left top;
+    flex-shrink: 0;
+    transition: none;
 }
 
-/* letras fy */
-.logo-fy {
-    color: #ffffff;
-    padding-left: 1px;
+/* opções do cabeçalho */
+.cadastro-opcoes {
+    margin-left: auto;
+    flex-shrink: 0;
+    padding-top: 8px;
+}
+
+/* mantém o cabeçalho alinhado no topo */
+.cadastro-cabecalho {
+    align-items: flex-start;
+}
+
+/* Ajustes para telas menores */
+@media (max-width: 500px) {
+    .cadastro-cabecalho {
+        min-height: 68px;
+        padding: 4px 5px;
+    }
+
+    .cadastro-logo-imagem {
+        width: 220px;
+        max-width: calc(100vw - 80px);
+    }
+}
+
+
+/* botão de tema */
+#btn-tema {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 42px;
+    height: 42px;
+    min-width: 42px;
+    padding: 0;
+    box-sizing: border-box;
+    line-height: 1;
+    cursor: pointer;
+}
+
+/* ícone do tema */
+#btn-tema i {
+    display: block;
+    font-size: 18px;
+    line-height: 1;
 }
 
 /* opções do cabeçalho */
@@ -83,13 +139,21 @@ body {
 .cadastro-opcoes button {
     min-height: 38px;
     padding: 9px 13px;
+
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
     color: #ffffff;
     background: rgba(255, 255, 255, 0.04);
+
     border: 1px solid rgba(255, 255, 255, 0.12);
     border-radius: 11px;
+
     font-family: inherit;
     font-size: 0.82rem;
     cursor: pointer;
+
     transition: all 0.2s ease;
 }
 
@@ -98,15 +162,26 @@ body {
     border-color: #B093FF;
 }
 
-/* cartão de cadastro */
+/* cartão centralizado */
 .cadastro-conteudo {
-    width: 100%;
-    max-width: 480px;
-    margin: auto;
-    overflow: hidden;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+
+    width: 480px;
+    max-width: calc(100vw - 32px);
+    max-height: calc(100vh - 40px);
+    margin: 0;
+
+    overflow-y: auto;
+    overflow-x: hidden;
+
     background: var(--bg-surface-1, #19191B);
+
     border: 1px solid rgba(255, 255, 255, 0.12);
     border-radius: 20px;
+
     box-shadow:
         0 20px 40px rgba(0, 0, 0, 0.4),
         inset 0 1px 0 rgba(255, 255, 255, 0.08);
@@ -114,8 +189,10 @@ body {
 
 /* formulário */
 .cadastro-formulario {
+    width: 100%;
     min-width: 0;
     padding: 38px;
+
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -129,6 +206,7 @@ body {
 
 .cadastro-topo h1 {
     margin-bottom: 8px;
+
     color: #ffffff;
     font-size: 1.65rem;
     font-weight: 600;
@@ -156,6 +234,7 @@ body {
 .campo label {
     display: block;
     margin-bottom: 8px;
+
     color: #ffffff;
     font-size: 0.85rem;
     font-weight: 500;
@@ -166,13 +245,17 @@ body {
     width: 100%;
     height: 48px;
     padding: 0 14px;
+
     color: #ffffff;
     background: rgba(15, 12, 27, 0.75);
+
     border: 1px solid rgba(255, 255, 255, 0.13);
     border-radius: 12px;
     outline: none;
+
     font-family: inherit;
     font-size: 0.85rem;
+
     transition: border-color 0.2s ease, box-shadow 0.2s ease;
 }
 
@@ -191,23 +274,24 @@ body {
     display: flex;
     align-items: flex-start;
     gap: 10px;
+
     margin: 20px 0;
+
     color: #a0a0b5;
     font-size: 0.85rem;
     line-height: 1.6;
 }
 
-/* checkbox */
 .termos-concordancia input[type="checkbox"] {
     width: 16px;
     height: 16px;
     flex-shrink: 0;
     margin-top: 4px;
+
     accent-color: #7C4DFF;
     cursor: pointer;
 }
 
-/* texto dos termos */
 .termos-concordancia label {
     margin: 0;
     color: inherit;
@@ -217,7 +301,6 @@ body {
     cursor: pointer;
 }
 
-/* links dos termos */
 .termos-concordancia a {
     color: #ffffff;
     text-decoration: underline;
@@ -233,20 +316,26 @@ body {
     width: 100%;
     min-height: 50px;
     padding: 12px 18px;
+
     display: flex;
     align-items: center;
     justify-content: center;
+
     color: #ffffff;
     background: #7C4DFF;
+
     border: 1px solid rgba(255, 255, 255, 0.22);
     border-radius: 13px;
+
     font-family: inherit;
     font-size: 0.92rem;
     font-weight: 600;
     cursor: pointer;
+
     box-shadow:
         0 8px 20px rgba(124, 77, 255, 0.25),
         inset 0 1px 0 rgba(255, 255, 255, 0.15);
+
     transition: all 0.2s ease;
 }
 
@@ -283,7 +372,9 @@ body {
     display: flex;
     align-items: center;
     gap: 12px;
+
     margin: 26px 0 20px;
+
     color: #a0a0b5;
     font-size: 0.8rem;
 }
@@ -303,6 +394,7 @@ body {
     align-items: center;
     flex-wrap: wrap;
     gap: 5px;
+
     color: #a0a0b5;
     font-size: 0.82rem;
     text-align: center;
@@ -392,7 +484,6 @@ body.tema-claro .logo-fy {
     color: #252033;
 }
 
-
 /* patinho flutuando no fundo */
 .patinho-fundo {
     position: fixed;
@@ -404,18 +495,18 @@ body.tema-claro .logo-fy {
     animation: flutuar-patinho 4s ease-in-out infinite;
 }
 
-/* configura a imagem do patinho */
 .patinho-fundo img {
     width: 100%;
     height: auto;
     display: block;
+
     filter:
-        drop-shadow(0 0 12px rgba(124, 77, 255, 0.7)) drop-shadow(0 0 25px rgba(0, 230, 118, 0.25));
+        drop-shadow(0 0 12px rgba(124, 77, 255, 0.7))
+        drop-shadow(0 0 25px rgba(0, 230, 118, 0.25));
 }
 
-/* animação de flutuação */
+/* animação do patinho */
 @keyframes flutuar-patinho {
-
     0%,
     100% {
         transform: translateY(0) rotate(-5deg);
@@ -426,23 +517,6 @@ body.tema-claro .logo-fy {
     }
 }
 
-/* adapta o tamanho para telas menores */
-@media (max-width: 700px) {
-    .patinho-fundo {
-        width: 90px;
-        top: 8%;
-        right: 4%;
-        opacity: 0.7;
-    }
-}
-
-/* respeita quem prefere menos animações */
-@media (prefers-reduced-motion: reduce) {
-    .patinho-fundo {
-        animation: none;
-    }
-}
-
 /* tablet */
 @media (max-width: 800px) {
     .cadastro {
@@ -450,11 +524,21 @@ body.tema-claro .logo-fy {
     }
 
     .cadastro-conteudo {
-        max-width: 520px;
+        width: min(480px, calc(100vw - 32px));
     }
 
     .cadastro-formulario {
         padding: 34px;
+    }
+}
+
+/* patinho em telas menores */
+@media (max-width: 700px) {
+    .patinho-fundo {
+        width: 90px;
+        top: 8%;
+        right: 4%;
+        opacity: 0.7;
     }
 }
 
@@ -466,12 +550,12 @@ body.tema-claro .logo-fy {
 
     .cadastro-cabecalho {
         min-height: 68px;
-        padding: 12px 0;
+        padding: 12px 14px;
         gap: 8px;
     }
 
-    .cadastro-logo {
-        font-size: 1.7rem;
+    .cadastro-logo-imagem {
+        width: 180px;
     }
 
     .cadastro-opcoes button {
@@ -481,6 +565,9 @@ body.tema-claro .logo-fy {
     }
 
     .cadastro-conteudo {
+        width: calc(100vw - 28px);
+        max-width: 480px;
+        max-height: calc(100vh - 100px);
         border-radius: 17px;
     }
 
@@ -507,9 +594,8 @@ body.tema-claro .logo-fy {
     }
 }
 
-/* respeita a preferência por menos animações */
+/* reduz animações */
 @media (prefers-reduced-motion: reduce) {
-
     *,
     *::before,
     *::after {

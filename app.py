@@ -8,13 +8,16 @@ from datetime import datetime, timedelta
 from flask_mail import Mail, Message
 from flask import Flask, render_template, request, redirect, session, flash, url_for
 from decimal import Decimal, InvalidOperation
+
+# essa importação é necessária para lidar com o upload de arquivos de forma segura
+from werkzeug.utils import secure_filename 
+
 from database.conexao import Conexao
 from model.categorias import Categoria
 from model.usuarios import Usuario
 from model.extrato import Extrato
 from model.contas_bancarias import ContaBancaria
 from model.reserva_emergencia import Reserva
-
 load_dotenv()
 
 app = Flask(__name__)
@@ -32,6 +35,172 @@ mail = Mail(app)
 codigos_recuperacao = {}
 
 
+app.config["MAIL_SERVER"] = "smtp-relay.brevo.com"
+app.config["MAIL_PORT"] = 587
+app.config["MAIL_USE_TLS"] = True
+app.config["MAIL_USERNAME"] = "bfb405001@smtp-brevo.com"
+app.config["MAIL_PASSWORD"] = os.getenv("BREVO_SMTP_KEY")
+app.config["MAIL_DEFAULT_SENDER"] = os.getenv("BREVO_EMAIL_REMETENTE")
+
+mail = Mail(app)
+
+codigos_recuperacao = {}
+
+
+
+def parse_valor_monetario(valor):
+    texto = str(valor or "").strip().replace("R$", "").replace(" ", "")
+    if "," in texto:
+        texto = texto.replace(".", "").replace(",", ".")
+    elif texto.count(".") > 1 or ("." in texto and len(texto.rsplit(".", 1)[1]) == 3):
+        texto = texto.replace(".", "")
+    return Decimal(texto)
+
+@app.get("/")
+@app.get("/login")
+def index():
+
+    if "usuario" in session:
+        return redirect("/dashboard")
+    
+    
+    return render_template("tela_login.html")
+
+
+@app.route("/simulador", methods=["GET", "POST"])
+def tela_simulador():
+    aporte_inicial = 0.0
+    aporte_mensal = 0.0
+    anos = 5
+
+    # Tenta capturar dados se for POST
+    if request.method == "POST":
+        try:
+            anos = int(request.form.get("anos", 5))
+            if anos <= 0:
+                anos = 5
+            aporte_inicial = float(request.form.get("aporte_inicial") or 0.0)
+            aporte_mensal = float(request.form.get("aporte_mensal") or 0.0)
+            anos = int(request.form.get("anos") or 5)
+        except (ValueError, TypeError):
+            pass
+
+    taxa_anual = 10.0  # 10% a.a.
+    taxa_mensal = (1 + (taxa_anual / 100)) ** (1 / 12) - 1
+    meses = anos * 12
+
+    labels = []
+    investido_lista = []
+    patrimonio_lista = []
+
+    saldo_total = aporte_inicial
+    for mes in range(1, meses + 1):
+        saldo_total = (saldo_total + aporte_mensal) * (1 + taxa_mensal)
+        investido_acumulado = aporte_inicial + (aporte_mensal * mes)
+
+        labels.append(f"Mês {mes}")
+        investido_lista.append(round(investido_acumulado, 2))
+        patrimonio_lista.append(round(saldo_total, 2))
+
+    total_investido = aporte_inicial + (aporte_mensal * meses)
+    rendimentos = saldo_total - total_investido
+
+    # Dicionário alinhado 100% com as variáveis do seu simulador.html
+    resultado = {
+        "total_investido": round(total_investido, 2),
+        "rendimentos": round(rendimentos, 2),
+        "taxa_anual_aplicada": taxa_anual,
+        "grafico": {
+            "labels": labels,
+            "investido": investido_lista,
+            "patrimonio": patrimonio_lista
+        }
+    }
+
+    return render_template(
+        "simulador.html",
+        aporte_inicial=aporte_inicial,
+        aporte_mensal=aporte_mensal,
+        anos=anos,
+        resultado=resultado
+    )
+
+def parse_valor_monetario(valor):
+    texto = str(valor or "").strip().replace("R$", "").replace(" ", "")
+    if "," in texto:
+        texto = texto.replace(".", "").replace(",", ".")
+    elif texto.count(".") > 1 or ("." in texto and len(texto.rsplit(".", 1)[1]) == 3):
+        texto = texto.replace(".", "")
+    return Decimal(texto)
+
+@app.get("/")
+@app.get("/login")
+def index():
+
+    if "usuario" in session:
+        return redirect("/dashboard")
+    
+    
+    return render_template("tela_login.html")
+
+
+@app.route("/simulador", methods=["GET", "POST"])
+def tela_simulador():
+    aporte_inicial = 0.0
+    aporte_mensal = 0.0
+    anos = 5
+
+    # Tenta capturar dados se for POST
+    if request.method == "POST":
+        try:
+            anos = int(request.form.get("anos", 5))
+            if anos <= 0:
+                anos = 5
+            aporte_inicial = float(request.form.get("aporte_inicial") or 0.0)
+            aporte_mensal = float(request.form.get("aporte_mensal") or 0.0)
+            anos = int(request.form.get("anos") or 5)
+        except (ValueError, TypeError):
+            pass
+
+    taxa_anual = 10.0  # 10% a.a.
+    taxa_mensal = (1 + (taxa_anual / 100)) ** (1 / 12) - 1
+    meses = anos * 12
+
+    labels = []
+    investido_lista = []
+    patrimonio_lista = []
+
+    saldo_total = aporte_inicial
+    for mes in range(1, meses + 1):
+        saldo_total = (saldo_total + aporte_mensal) * (1 + taxa_mensal)
+        investido_acumulado = aporte_inicial + (aporte_mensal * mes)
+
+        labels.append(f"Mês {mes}")
+        investido_lista.append(round(investido_acumulado, 2))
+        patrimonio_lista.append(round(saldo_total, 2))
+
+    total_investido = aporte_inicial + (aporte_mensal * meses)
+    rendimentos = saldo_total - total_investido
+
+    # Dicionário alinhado 100% com as variáveis do seu simulador.html
+    resultado = {
+        "total_investido": round(total_investido, 2),
+        "rendimentos": round(rendimentos, 2),
+        "taxa_anual_aplicada": taxa_anual,
+        "grafico": {
+            "labels": labels,
+            "investido": investido_lista,
+            "patrimonio": patrimonio_lista
+        }
+    }
+
+    return render_template(
+        "simulador.html",
+        aporte_inicial=aporte_inicial,
+        aporte_mensal=aporte_mensal,
+        anos=anos,
+        resultado=resultado
+    )
 
 def obter_estado_fogo(dias_ofensiva):
     dias = int(dias_ofensiva or 0)
@@ -80,16 +249,6 @@ def obter_estado_fogo(dias_ofensiva):
     }
 
 
-@app.get("/")
-@app.get("/login")
-def index():
-
-    if "usuario" in session:
-        return redirect("/dashboard")
-    
-    
-    return render_template("tela_login.html")
-
 @app.post("/login/usuario")
 def logar():
     
@@ -114,30 +273,128 @@ def logout():
 
 @app.get("/termos")
 def termos():
-    return render_template("termos.html")
+    logado = "usuario" in session
+    return render_template("termos.html", usuario_logado=logado)
 
 @app.route('/privacidade')
 def privacidade():
-    return render_template("privacidade.html")
+    logado = "usuario" in session
+    return render_template("privacidade.html", usuario_logado=logado)
 
-@app.route('/contas')
+@app.route("/contas")
 def contas():
-    if "usuario" not in session:
+    if "usuario" not in session or not session.get('id_usuario'):
         flash("Você precisa estar logado para acessar as contas!", "error")
         return redirect('/login')
 
-    id_usuario = session.get('id_usuario')
+    id_usuario = session['id_usuario']
 
-    lista_contas = ContaBancaria.buscar_todas_por_usuario(id_usuario)
+    lista_contas = ContaBancaria.buscar_com_alocacao_reserva(id_usuario)
     total_contas = ContaBancaria.calcular_patrimonio_total(id_usuario)
+    reserva = Reserva.obter_reserva(id_usuario)
+    total_reservado = Decimal(str(reserva['valor_atual'] or 0)) if reserva else Decimal('0')
+    patrimonio = Decimal(str(total_contas or 0))
+    saldo_fora_reserva = patrimonio - total_reservado
+    porcentagem_reservada = (
+        (total_reservado / patrimonio) * 100
+        if patrimonio > 0 else Decimal('0')
+    )
 
-    patrimonio_fmt = f"{total_contas:,.2f}".replace(',', 'X').replace('.', ',').replace('X', '.')
+    def formatar_moeda(valor):
+        return f"{valor:,.2f}".replace(',', 'X').replace('.', ',').replace('X', '.')
 
     return render_template(
         'contas.html',
         contas_bancarias=lista_contas,
-        patrimonio_total=patrimonio_fmt
+        patrimonio_total=formatar_moeda(patrimonio),
+        reserva_total=formatar_moeda(total_reservado),
+        saldo_fora_reserva=formatar_moeda(saldo_fora_reserva),
+        porcentagem_reservada=porcentagem_reservada
     )
+
+
+@app.route('/transferir_dinheiro', methods=['POST'])
+def transferir_dinheiro():
+    if "usuario" not in session or not session.get("id_usuario"):
+        flash("Faça login novamente.", "error")
+        return redirect(url_for('index'))
+
+    id_usuario = session['id_usuario']
+
+    try:
+        id_conta_origem = int(request.form.get('id_conta_origem', ''))
+        id_conta_destino = int(request.form.get('id_conta_destino', ''))
+        valor_transferencia = parse_valor_monetario(request.form.get('valor', ''))
+
+        if not valor_transferencia.is_finite() or valor_transferencia <= 0:
+            raise ValueError
+
+        if id_conta_origem == id_conta_destino:
+            flash("Escolha duas contas diferentes.", "error")
+            return redirect(url_for('contas'))
+
+    except (ValueError, TypeError, InvalidOperation):
+        flash("Informe duas contas válidas e um valor maior que zero.", "error")
+        return redirect(url_for('contas'))
+
+    sucesso = ContaBancaria.transferir_dinheiro(
+        id_conta_origem,
+        id_conta_destino,
+        id_usuario, 
+        valor_transferencia
+    )
+
+    if sucesso:
+        flash(
+            f"Transferência de R$ {valor_transferencia:.2f} realizada com sucesso!",
+            "success"
+        )
+    else:
+        flash(
+            "Não foi possível transferir. Verifique as contas e o saldo disponível.",
+            "error"
+        )
+
+    return redirect(url_for('contas'))
+
+# Adicionar dinheiro a contas bancárias
+@app.route('/contas/adicionar_dinheiro', methods=['POST'])
+def adicionar_dinheiro():
+    if "usuario" not in session or not session.get("id_usuario"):
+        flash("Faça login novamente.", "error")
+        return redirect(url_for('index'))
+
+    id_usuario = session['id_usuario']
+
+    try:
+        id_conta = int(request.form.get('id_conta', ''))
+        valor_adicionar = parse_valor_monetario(request.form.get('valor', ''))
+
+        if not valor_adicionar.is_finite() or valor_adicionar <= 0:
+            raise ValueError
+
+    except (ValueError, TypeError, InvalidOperation):
+        flash("Informe uma conta válida e um valor maior que zero.", "error")
+        return redirect(url_for('contas'))
+
+    sucesso = ContaBancaria.adicionar_dinheiro(
+        id_conta,
+        id_usuario,
+        valor_adicionar
+    )
+
+    if sucesso:
+        flash(
+            f"R$ {valor_adicionar:.2f} adicionados à conta com sucesso!",
+            "success"
+        )
+    else:
+        flash(
+            "Não foi possível adicionar dinheiro. Verifique a conta selecionada.",
+            "error"
+        )
+
+    return redirect(url_for('contas'))
 
 @app.post("/contas/<int:id_conta>/editar")
 def editar_conta(id_conta):
@@ -156,11 +413,11 @@ def editar_conta(id_conta):
     saldo_texto = request.form.get("saldo_atual", "").strip()
 
     try:
-        saldo_atual = float(saldo_texto)
-    except ValueError:
+        saldo_atual = parse_valor_monetario(saldo_texto)
+    except (ValueError, TypeError, InvalidOperation):
         flash("Informe um saldo válido.", "error")
         return redirect('/contas')
-    if not math.isfinite(saldo_atual):
+    if not saldo_atual.is_finite() or saldo_atual < 0:
         flash("Informe um saldo válido.", "error")
         return redirect('/contas')
 
@@ -174,7 +431,7 @@ def editar_conta(id_conta):
     if ContaBancaria.atualizar_conta(id_conta, id_usuario, nome_conta, tipo_conta, saldo_atual):
         flash("Conta atualizada com sucesso!", "success")
     else:
-        flash("Erro ao atualizar a conta. Tente novamente.", "error")
+        flash("O saldo não pode ser menor que o valor já reservado.", "error")
 
     return redirect('/contas')
 
@@ -211,9 +468,9 @@ def criar_conta():
         return redirect(url_for('contas'))
 
     try:
-        saldo_atual = float(saldo_atual.replace(',', '.'))
+        saldo_atual = parse_valor_monetario(saldo_atual)
 
-        if saldo_atual < 0:
+        if not saldo_atual.is_finite() or saldo_atual < 0:
             raise ValueError
 
         sucesso = ContaBancaria.criar_conta(
@@ -228,7 +485,7 @@ def criar_conta():
         else:
             flash("Não foi possível criar a conta bancária.", "error")
 
-    except (ValueError, TypeError):
+    except (ValueError, TypeError, InvalidOperation):
         flash("Informe um saldo válido.", "error")
 
     return redirect(url_for('contas'))
@@ -280,7 +537,7 @@ def guardar_reserva():
     id_usuario = Reserva.obter_id_por_email(email_usuario)
 
     try:
-        valor_guardar = Decimal(request.form.get('valor', '').replace(',', '.'))
+        valor_guardar = parse_valor_monetario(request.form.get('valor', ''))
         id_conta = int(request.form.get('id_conta', ''))
     except (InvalidOperation, ValueError, AttributeError):
         valor_guardar = Decimal('0')
@@ -307,7 +564,7 @@ def retirar_reserva():
         return redirect('/login')
 
     try:
-        valor_retirar = Decimal(request.form.get('valor', '').replace(',', '.'))
+        valor_retirar = parse_valor_monetario(request.form.get('valor', ''))
         id_conta = int(request.form.get('id_conta', ''))
     except (InvalidOperation, ValueError, AttributeError):
         valor_retirar = Decimal('0')
@@ -333,7 +590,7 @@ def alterar_meta_reserva():
         return redirect('/login')
 
     try:
-        nova_meta = Decimal(request.form.get('meta_valor', '').replace(',', '.'))
+        nova_meta = parse_valor_monetario(request.form.get('meta_valor', ''))
     except (InvalidOperation, AttributeError):
         nova_meta = Decimal('0')
 
@@ -367,9 +624,15 @@ def sequencia():
 # Rota para exibir o perfil do usuário
 @app.route("/perfil", methods=["GET", "POST"])
 def perfil():
+    email = session.get("email")
+    if not email:
+        flash("Sua sessão expirou. Entre novamente para acessar seu perfil.", "error")
+        return redirect('/login')
 
-
-    dados_usuario = Usuario.recuperar_dados_usuario(session["email"])
+    dados_usuario = Usuario.recuperar_dados_usuario(email)
+    if not dados_usuario:
+        flash("Não foi possível localizar os dados do seu perfil.", "error")
+        return redirect('/login')
 
     usuario = {
         "nome": dados_usuario["nome"],
@@ -386,13 +649,76 @@ def perfil():
     return render_template("perfil.html", usuario=usuario)
 
 
-@app.get("/editar-perfil")
+@app.route("/editar-perfil", methods=["GET", "POST"])
 def editar_perfil():
-    if "usuario" in session:
-        return render_template("editar_perfil.html")
-    else:
+    if "usuario" not in session:
         flash("Você precisa estar logado para editar o seu perfil!", "error")
         return redirect('/login')
+
+    email_atual = session["email"]
+
+    if request.method == "POST":
+        nome = request.form.get("nome", "").strip()
+        email = request.form.get("email", "").strip()
+        usuario = Usuario.recuperar_dados_usuario(email_atual)
+
+        if not nome or not email or "@" not in email:
+            flash("Informe um nome e um e-mail válido.", "error")
+            return render_template("editar_perfil.html", usuario=usuario), 400
+
+        foto_perfil = usuario["foto_perfil"]
+        arquivo_foto = request.files.get("foto_perfil")
+        if arquivo_foto and arquivo_foto.filename:
+            extensao = os.path.splitext(secure_filename(arquivo_foto.filename))[1].lower()
+            if extensao not in {".jpg", ".jpeg", ".png", ".webp", ".gif"}:
+                flash("Escolha uma imagem JPG, PNG, WEBP ou GIF.", "error")
+                return render_template("editar_perfil.html", usuario=usuario), 400
+
+            nome_arquivo = f"{uuid.uuid4().hex}{extensao}"
+            pasta_uploads = os.path.join(app.static_folder, "uploads", "perfis")
+            os.makedirs(pasta_uploads, exist_ok=True)
+            arquivo_foto.save(os.path.join(pasta_uploads, nome_arquivo))
+            foto_perfil = url_for("static", filename=f"uploads/perfis/{nome_arquivo}")
+
+        if Usuario.atualizar_dados(email_atual, nome, email, foto_perfil):
+            session["email"] = email
+            flash("Perfil atualizado com sucesso!", "success")
+            return redirect(url_for("perfil"))
+
+        usuario = Usuario.recuperar_dados_usuario(email_atual)
+        flash("Não foi possível atualizar. Verifique se o e-mail já está em uso.", "error")
+        return render_template("editar_perfil.html", usuario=usuario), 400
+
+    usuario = Usuario.recuperar_dados_usuario(email_atual)
+    return render_template("editar_perfil.html", usuario=usuario)
+
+@app.post("/excluir-conta")
+def excluir_conta_usuario():
+    id_usuario = session.get("id_usuario")
+    if "usuario" not in session or not id_usuario:
+        flash("Faça login novamente para excluir sua conta.", "error")
+        return redirect(url_for("index"))
+
+    dados_usuario = Usuario.recuperar_dados_usuario(session["email"])
+    if not Usuario.excluir_usuario(id_usuario):
+        flash("Não foi possível excluir sua conta. Tente novamente.", "error")
+        return redirect(url_for("editar_perfil"))
+
+    foto_perfil = (dados_usuario or {}).get("foto_perfil", "")
+    prefixo_upload = "/static/uploads/perfis/"
+    if foto_perfil.startswith(prefixo_upload):
+        caminho_foto = os.path.join(
+            app.static_folder,
+            "uploads",
+            "perfis",
+            os.path.basename(foto_perfil)
+        )
+        if os.path.isfile(caminho_foto):
+            os.remove(caminho_foto)
+
+    session.clear()
+    flash("Sua conta e seus dados foram excluídos.", "success")
+    return redirect(url_for("index"))
 
 @app.get("/extrato")
 def tela_extrato():
@@ -549,10 +875,7 @@ def redefinir():
     
 
 
-    if "usuario" in session:
-        return redirect('/dashboard')
-    else:
-        return render_template("redefinir_senha.html")
+    return render_template("redefinir_senha.html")
     
 
 
@@ -627,4 +950,4 @@ def teste_email():
 
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    app.run(debug=True, host="0.0.0.0", port=8080)

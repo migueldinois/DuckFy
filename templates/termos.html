@@ -1,101 +1,76 @@
+{% if usuario_logado %}
 {% extends 'layout.html' %}
+{% endif %}
 
 {% block title %}Termos de Uso - DuckFy{% endblock %}
 
 {% block styles %}
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 <link rel="stylesheet" href="{{ url_for('static', filename='css/termos.css') }}">
 {% endblock %}
 
 {% block content %}
 
-<main class="termos">
+<main class="termos {% if not usuario_logado %}termos-deslogado{% endif %}">
 
     <header class="termos-topo">
-        <a href="javascript:history.back()" class="btn-voltar" aria-label="Voltar">
-            ←
+        <a class="btn-voltar" href="{{ url_for('perfil') if usuario_logado else url_for('index') }}"
+            aria-label="Voltar para a página anterior">
+            <i class="fa-solid fa-arrow-left"></i>
         </a>
 
         <h1>Termos de Uso</h1>
     </header>
 
     <nav class="termos-abas">
-        <a href="{{ url_for('termos') }}" class="aba aba-ativa">
+        <a href="{{ url_for('termos') }}" class="aba {% if request.endpoint == 'termos' %}aba-ativa{% endif %}"
+            onclick="window.location.replace(this.href); return false;">
             Termos de uso
         </a>
 
-        <a href="{{ url_for('privacidade') }}" class="aba">
+        <a href="{{ url_for('privacidade') }}"
+            class="aba {% if request.endpoint == 'privacidade' %}aba-ativa{% endif %}"
+            onclick="window.location.replace(this.href); return false;">
             Política de privacidade
         </a>
     </nav>
 
     <section class="termos-conteudo">
 
-        <h2>Lorem ipsum</h2>
+        <h2>1. Termos e Aceitação</h2>
         <p>
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-            Etiam porttitor, dui sed consequat pretium, velit eros
-            congue velit, eu ultrices dui massa vitae massa. Nunc eu
-            tincidunt nunc. Quisque eu vehicula arcu. Aliquam eleifend
-            neque vel risus accumsan dictum. Pellentesque consequat
-            nunc id lacinia eleifend.
+            Ao acessar e utilizar o DuckFy, você concorda em cumprir estes termos de serviço, todas as leis e
+            regulamentos aplicáveis. Se você não concordar com qualquer um destes termos, está proibido de usar ou
+            acessar esta plataforma.
         </p>
 
-        <h2>Lorem ipsum</h2>
+        <h2>2. Uso de Licença</h2>
         <p>
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-            Maecenas vitae libero at nunc tincidunt tincidunt. Donec
-            suscipit, justo sit amet consequat consectetur, neque velit
-            posuere massa, eget tincidunt lorem ipsum at nunc.
+            É concedida permissão para acessar e utilizar temporariamente os recursos e ferramentas da plataforma
+            DuckFy, exclusivamente para fins de organização financeira pessoal, controle orçamentário e aprendizado
+            interativo não comercial.
         </p>
 
-        <h2>Lorem ipsum</h2>
+        <h2>3. Isenção de Consultoria Financeira</h2>
         <p>
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-            Integer feugiat, libero sit amet tincidunt consequat, nisl
-            purus tincidunt massa, vitae suscipit neque erat nec ipsum.
-            Vestibulum ante ipsum primis in faucibus orci luctus et
-            ultrices posuere cubilia curae.
+            O DuckFy é uma ferramenta educativa e de gerenciamento pessoal baseada em dados inseridos pelo próprio
+            usuário, gamificação e simulações econômicas públicas (como Selic/CDI). O DuckFy <strong>não é uma
+                instituição financeira ou corretora</strong> e não fornece recomendações oficiais de investimento ou
+            consultoria financeira. As decisões financeiras tomadas são de inteira responsabilidade do usuário.
         </p>
 
-        <h2>Lorem ipsum</h2>
+        <h2>4. Gamificação e Cadastro de Dados</h2>
         <p>
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-            Suspendisse potenti. Morbi eu risus eget turpis consequat
-            suscipit. Nullam feugiat, lacus at consequat tincidunt,
-            sapien neque interdum massa, vitae faucibus lorem purus
-            eget nulla.
+            Para usufruir de recursos de gamificação (como contagem de dias de sequência/streaks, XP e badges) e
+            acompanhamento de metas (como a Reserva de Emergência), o usuário compromete-se a fornecer informações
+            verdadeiras e manter a segurança de sua conta e credenciais de acesso.
         </p>
 
-        <h2>Lorem ipsum</h2>
+        <h2>5. Limitações e Modificações</h2>
         <p>
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-            Sed eget sagittis ligula. Curabitur consequat, neque non
-            consectetur tincidunt, ipsum libero malesuada lorem, vitae
-            tincidunt justo nulla vel nunc.
-        </p>
-
-        <h2>Lorem ipsum</h2>
-        <p>
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-            Pellentesque habitant morbi tristique senectus et netus et
-            malesuada fames ac turpis egestas. Donec euismod, libero
-            quis tincidunt consequat, massa erat malesuada justo.
-        </p>
-
-        <h2>Lorem ipsum</h2>
-        <p>
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-            Vestibulum consectetur, velit eget tincidunt consequat,
-            massa lorem interdum arcu, at tincidunt justo neque vitae
-            lorem. Donec vitae risus sed libero consequat malesuada.
-        </p>
-
-        <h2>Lorem ipsum</h2>
-        <p>
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-            Aenean consequat, libero sed tincidunt malesuada, neque
-            purus elementum massa, vitae tincidunt nisl lorem vel
-            lectus. Sed eget sagittis ligula.
+            Em nenhum caso o DuckFy ou seus desenvolvedores serão responsáveis por quaisquer danos decorrentes do uso ou
+            da incapacidade de usar os serviços da plataforma. Os Termos de Uso podem ser revisados a qualquer momento
+            sem aviso prévio. Ao usar este site, você concorda em ficar vinculado à versão atual desses termos.
         </p>
 
     </section>
@@ -103,4 +78,3 @@
 </main>
 
 {% endblock %}
-
