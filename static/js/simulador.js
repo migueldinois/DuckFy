@@ -5,6 +5,31 @@ document.addEventListener('DOMContentLoaded', () => {
         currency: 'BRL'
     }).format(valor);
 
+    ['aporte-inicial', 'aporte-mensal'].forEach(id => {
+        const input = document.getElementById(id);
+        if (!input) {
+            return;
+        }
+
+        const atualizarValor = () => {
+            const digitos = input.value.replace(/\D/g, '').slice(0, 15);
+            if (!digitos) {
+                input.value = '';
+                return;
+            }
+
+            const valor = Number(digitos) / 100;
+            input.value = `R$ ${valor.toLocaleString('pt-BR', {
+                minimumFractionDigits: 2,
+                maximumFractionDigits: 2
+            })}`;
+        };
+
+        input.addEventListener('focus', () => input.select());
+        input.addEventListener('input', atualizarValor);
+        atualizarValor();
+    });
+
     if (canvas && window.dadosGrafico && window.dadosGrafico.labels && window.dadosGrafico.labels.length > 0) {
 
         if (window.meuGraficoSimulador instanceof Chart) {
