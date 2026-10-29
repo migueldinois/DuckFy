@@ -41,11 +41,12 @@
 
         {% if transacoes %}
         {% for item in transacoes %}
+        {% set eh_entrada = item.tipo|lower in ['receita', 'entradas', 'entrada', 'retirada'] %}
         <div class="timeline-item">
 
             <div
-                class="icon-box {% if item.tipo == 'Receita' or item.tipo == 'Entradas' or item.tipo == 'entrada' %}entrada{% else %}saida{% endif %}">
-                <i class="bi {% if item.tipo in ['Receita', 'Entradas', 'entrada'] %}bi-arrow-down-left{% else %}bi-arrow-up-right{% endif %}"></i>
+                class="icon-box {% if eh_entrada %}entrada{% else %}saida{% endif %}">
+                <i class="bi {% if eh_entrada %}bi-arrow-down-left{% else %}bi-arrow-up-right{% endif %}"></i>
             </div>
 
             <div class="info">
@@ -58,8 +59,8 @@
 
 
             <div
-                class="amount {% if item.tipo in ['Receita', 'Entradas', 'entrada'] %}positive{% else %}negative{% endif %}">
-                {% if item.tipo in ['Receita', 'Entradas', 'entrada'] %}
+                class="amount {% if eh_entrada %}positive{% else %}negative{% endif %}">
+                {% if eh_entrada %}
                 +R$ {{ "%.2f"|format(item.valor|float) }}
                 {% else %}
                 -R$ {{ "%.2f"|format(item.valor|float) }}
