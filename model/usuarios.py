@@ -107,6 +107,7 @@ class Usuario():
 
         return dados_usuario
 
+    # Função para atualizar os dados do usuário no banco de dados
     @staticmethod
     def atualizar_dados(email_atual, nome, email, foto_perfil):
         conexao, cursor = Conexao.conectar()
@@ -119,6 +120,29 @@ class Usuario():
             return True
         except Exception as erro:
             print(f"Erro ao atualizar usuário: {erro}")
+            conexao.rollback()
+            return False
+        finally:
+            cursor.close()
+            conexao.close()
+
+# Função para excluir um usuário do banco de dados
+    @staticmethod
+    def excluir_usuario(id_usuario):
+        conexao, cursor = Conexao.conectar()
+        try:
+            cursor.execute(
+                "DELETE FROM usuarios WHERE id_usuario = %s",
+                [id_usuario]
+            )
+            if cursor.rowcount != 1:
+                conexao.rollback()
+                return False
+
+            conexao.commit()
+            return True
+        except Exception as erro:
+            print(f"Erro ao excluir usuário: {erro}")
             conexao.rollback()
             return False
         finally:

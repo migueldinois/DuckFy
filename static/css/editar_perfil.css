@@ -153,19 +153,6 @@
   transform: translateY(-2px);
 }
 
-.btn-acao-escuro {
-  background: rgba(255, 255, 255, 0.05);
-  color: #ffffff;
-  border: 1px solid var(--border-glass);
-  transition: all 0.25s ease;
-}
-
-.btn-acao-escuro:hover {
-  background: rgba(255, 255, 255, 0.12);
-  border-color: rgba(255, 255, 255, 0.25);
-  color: #ffffff;
-  transform: translateY(-2px);
-}
 
 .btn-acao-vermelho {
   background: rgba(255, 82, 82, 0.12);
@@ -179,4 +166,63 @@
   color: #ffffff;
   box-shadow: 0 0 15px rgba(255, 82, 82, 0.4);
   transform: translateY(-2px);
+}
+
+.modal-excluir-conta {
+  width: min(420px, calc(100% - 32px));
+  padding: 24px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 16px;
+  background: var(--bg-card);
+  color: #ffffff;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+}
+
+.modal-excluir-conta::backdrop {
+  background: rgba(10, 9, 14, 0.75);
+  backdrop-filter: blur(5px);
+}
+
+.modal-excluir-conta h2 {
+  margin: 0 0 12px;
+  font-size: 1.25rem;
+}
+
+.modal-excluir-conta p {
+  margin-bottom: 24px;
+  color: var(--text-muted);
+}
+
+.acoes-modal-excluir {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+}
+
+.acoes-modal-excluir button {
+  min-height: 42px;
+  padding: 8px 14px;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.acoes-modal-excluir form {
+  margin: 0;
+}
+
+.btn-cancelar-exclusao {
+  border: 1px solid var(--border-glass);
+  background: transparent;
+  color: #ffffff;
+}
+
+.btn-confirmar-exclusao {
+  border: 1px solid #ff5252;
+  background: #ff5252;
+  color: #ffffff;
+}
+
+.btn-confirmar-exclusao:hover {
+  background: #e84343;
 }
