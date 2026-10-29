@@ -3,15 +3,15 @@
 {% block title %}Dashboard Financeiro - DuckFy{% endblock %}
 
 {% block styles %}
-<link rel="stylesheet" href="{{ url_for('static', filename='css/extrato.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/extrato.css') }}?v=2.0">
 {% endblock %}
 
 {% block content %}
 
-<main class="flex-grow-1 d-flex flex-column">
+<main class="extrato-page">
 
-    <header class="header mb-4 pt-2">
-        <div class="d-flex align-items-center">
+    <header class="extrato-header">
+        <div class="d-flex align-items-center gap-3">
             <a href="../" class="text-white text-decoration-none fs-4 me-3" aria-label="Voltar">
                 <i class="bi bi-arrow-left"></i>
             </a>
@@ -20,7 +20,7 @@
     </header>
 
     <!-- TABS DE FILTRO -->
-    <div class="filter-tabs d-flex justify-content-start gap-4 text-uppercase mb-4 px-2">
+    <nav class="filter-tabs text-uppercase" aria-label="Filtrar movimentações">
         <a href="/extrato?tipo=tudo"
             class="tab-btn text-decoration-none {% if not tipo_ativo or tipo_ativo == 'tudo' %}active{% endif %}">
             TUDO
@@ -35,9 +35,9 @@
             class="tab-btn text-decoration-none {% if tipo_ativo == 'entrada' %}active{% endif %}">
             ENTRADA
         </a>
-    </div>
+    </nav>
 
-    <div class="timeline-container flex-grow-1 mb-3">
+    <section class="timeline-container" aria-label="Movimentações">
 
         {% if transacoes %}
         {% for item in transacoes %}
@@ -45,7 +45,7 @@
 
             <div
                 class="icon-box {% if item.tipo == 'Receita' or item.tipo == 'Entradas' or item.tipo == 'entrada' %}entrada{% else %}saida{% endif %}">
-                <i class="bi bi-cart-fill"></i>
+                <i class="bi {% if item.tipo in ['Receita', 'Entradas', 'entrada'] %}bi-arrow-down-left{% else %}bi-arrow-up-right{% endif %}"></i>
             </div>
 
             <div class="info">
@@ -76,7 +76,7 @@
         </div>
         {% endif %}
 
-    </div>
+    </section>
 </main>
 
 {% endblock %}
