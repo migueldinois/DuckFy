@@ -13,11 +13,7 @@
     <title>Duckfy - Login</title>
 
     <!-- aplica o tema salvo antes de carregar o css -->
-    <script>
-        if (localStorage.getItem("duckfy-tema") === "claro") {
-            document.documentElement.classList.add("tema-claro");
-        }
-    </script>
+    <script src="{{ url_for('static', filename='js/tema-inicial.js') }}"></script>
 
     <!-- conecta os arquivos css -->
     <link rel="stylesheet" href="{{ url_for('static', filename='css/variables.css') }}">
@@ -26,39 +22,6 @@
     <!-- importa os ícones flaticon -->
     <link rel="stylesheet"
         href="https://cdn-uicons.flaticon.com/3.0.0/uicons-solid-rounded/css/uicons-solid-rounded.css">
-
-    <style>
-        /* posiciona o canvas sobre o fundo da página */
-        #particulas-fundo {
-            position: fixed;
-            inset: 0;
-            width: 100%;
-            height: 100%;
-            z-index: 0;
-            pointer-events: none;
-        }
-
-        /* mantém o login acima das partículas */
-        .login {
-            position: relative;
-            z-index: 1;
-        }
-
-        /* organiza o botão de tema */
-        #btn-tema {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-            cursor: pointer;
-        }
-
-        /* define o tamanho do ícone do tema */
-        #btn-tema i {
-            font-size: 20px;
-            line-height: 1;
-        }
-    </style>
 </head>
 
 <body>
@@ -74,40 +37,27 @@
 
             <!-- logo que direciona para a página inicial -->
             <a href="/" class="login-logo" aria-label="DuckFy - Página inicial">
-                <img src="{{ url_for('static', filename='img/logo_escura.png') }}"
+                <img
+                    src="{{ url_for('static', filename='img/logo_escura.png') }}"
                     data-logo-claro="{{ url_for('static', filename='img/logo_clara.png') }}"
                     data-logo-escuro="{{ url_for('static', filename='img/logo_escura.png') }}"
-                    alt="Logo DuckFy" class="logo-imagem">
+                    alt="Logo DuckFy"
+                    class="logo-imagem">
             </a>
 
             <!-- botão para alternar entre os temas -->
             <nav class="login-opcoes">
-                <button type="button" id="btn-tema"
-                    aria-label="Ativar tema claro" title="Ativar tema claro">
+                <button
+                    type="button"
+                    id="btn-tema"
+                    aria-label="Ativar tema claro"
+                    title="Ativar tema claro">
                     <i class="fi fi-sr-contrast" aria-hidden="true"></i>
                 </button>
             </nav>
 
         </header>
-
-        <!-- aviso exibido ao tentar acessar os termos -->
-        <div class="aviso-termos" id="aviso-termos"
-            role="status" aria-live="polite" hidden>
-
-            <span class="aviso-icone">!</span>
-
-            <div class="aviso-texto">
-                <strong>Faça login primeiro!</strong>
-                <p>Entre na sua conta para acessar os Termos de Uso.</p>
-            </div>
-
-            <!-- botão para fechar o aviso -->
-            <button type="button" class="fechar-aviso"
-                id="fechar-aviso" aria-label="Fechar aviso">
-                &times;
-            </button>
-        </div>
-
+        
         <!-- área que contém o formulário de login -->
         <section class="login-conteudo">
             <div class="login-formulario">
@@ -124,9 +74,13 @@
                     <!-- campo para informar o e-mail -->
                     <div class="campo">
                         <label for="email">E-mail:</label>
-                        <input type="email" id="email" name="email"
+                        <input
+                            type="email"
+                            id="email"
+                            name="email"
                             placeholder="Digite seu e-mail"
-                            autocomplete="email" required>
+                            autocomplete="email"
+                            required>
                     </div>
 
                     <!-- campo para informar a senha -->
@@ -135,9 +89,13 @@
                             <label for="senha">Senha:</label>
                         </div>
 
-                        <input type="password" id="senha" name="senha"
+                        <input
+                            type="password"
+                            id="senha"
+                            name="senha"
                             placeholder="Digite sua senha"
-                            autocomplete="current-password" required>
+                            autocomplete="current-password"
+                            required>
                     </div>
 
                     <!-- envia o formulário -->
@@ -150,9 +108,9 @@
                 <!-- exibe mensagens enviadas pelo flask -->
                 <div class="container__error">
                     {% with mensagens = get_flashed_messages() %}
-                    {% for mensagem in mensagens %}
-                    <p class="text-error">{{ mensagem }}</p>
-                    {% endfor %}
+                        {% for mensagem in mensagens %}
+                            <p class="text-error">{{ mensagem }}</p>
+                        {% endfor %}
                     {% endwith %}
                 </div>
 
@@ -177,229 +135,8 @@
 
     </main>
 
-    <script>
-        // partículas do fundo
-
-        // seleciona o canvas e seu contexto de desenho
-        const canvas = document.getElementById("particulas-fundo");
-        const ctx = canvas.getContext("2d");
-
-        // define as variáveis da animação
-        let particulas = [];
-        let largura = 0;
-        let altura = 0;
-        let animacaoAtiva = true;
-
-        // verifica se o usuário prefere menos animações
-        const movimentoReduzido = window.matchMedia(
-            "(prefers-reduced-motion: reduce)"
-        ).matches;
-
-        // ajusta o canvas ao tamanho da tela
-        function ajustarCanvas() {
-            // melhora a qualidade em telas de alta resolução
-            const proporcao = Math.min(window.devicePixelRatio || 1, 2);
-
-            largura = window.innerWidth;
-            altura = window.innerHeight;
-
-            // define a resolução do canvas
-            canvas.width = largura * proporcao;
-            canvas.height = altura * proporcao;
-
-            // ajusta a escala do desenho
-            ctx.setTransform(proporcao, 0, 0, proporcao, 0, 0);
-
-            // gera novas partículas
-            criarParticulas();
-        }
-
-        // cria partículas com posições aleatórias
-        function criarParticulas() {
-            // calcula a quantidade conforme o tamanho da tela
-            const quantidade = Math.min(
-                100,
-                Math.max(35, Math.floor((largura * altura) / 14000))
-            );
-
-            particulas = [];
-
-            // gera partículas com características próprias
-            for (let i = 0; i < quantidade; i++) {
-                particulas.push({
-                    x: Math.random() * largura,
-                    y: Math.random() * altura,
-                    tamanho: Math.random() * 2 + 0.6,
-                    velocidadeX: (Math.random() - 0.5) * 0.35,
-                    velocidadeY: (Math.random() - 0.5) * 0.35,
-                    opacidade: Math.random() * 0.6 + 0.2,
-                    fase: Math.random() * Math.PI * 2,
-
-                    // escolhe uma cor aleatória para cada partícula
-                    cor: Math.random() > 0.5
-                        ? "124, 77, 255"
-                        : "0, 230, 118"
-                });
-            }
-        }
-
-        // desenha e movimenta as partículas
-        function desenharParticulas() {
-            // limpa o quadro anterior
-            ctx.clearRect(0, 0, largura, altura);
-
-            // obtém o tempo para controlar o brilho
-            const tempo = performance.now() * 0.001;
-
-            // percorre todas as partículas
-            particulas.forEach(function (p) {
-
-                // movimenta as partículas quando permitido
-                if (!movimentoReduzido) {
-                    p.x += p.velocidadeX;
-                    p.y += p.velocidadeY;
-
-                    // reposiciona as partículas ao ultrapassar as bordas
-                    if (p.x < -5) p.x = largura + 5;
-                    if (p.x > largura + 5) p.x = -5;
-                    if (p.y < -5) p.y = altura + 5;
-                    if (p.y > altura + 5) p.y = -5;
-                }
-
-                // calcula a intensidade do brilho
-                const brilho = movimentoReduzido
-                    ? p.opacidade
-                    : p.opacidade * (
-                        0.7 + Math.sin(tempo + p.fase) * 0.3
-                    );
-
-                // salva as configurações atuais do desenho
-                ctx.save();
-
-                // define transparência, cor e brilho
-                ctx.globalAlpha = brilho;
-                ctx.fillStyle = `rgb(${p.cor})`;
-                ctx.shadowColor = `rgb(${p.cor})`;
-                ctx.shadowBlur = p.tamanho * 7;
-
-                // desenha a partícula como um círculo
-                ctx.beginPath();
-                ctx.arc(p.x, p.y, p.tamanho, 0, Math.PI * 2);
-                ctx.fill();
-
-                // restaura as configurações anteriores
-                ctx.restore();
-            });
-
-            // solicita o próximo quadro da animação
-            if (animacaoAtiva && !movimentoReduzido) {
-                requestAnimationFrame(desenharParticulas);
-            }
-        }
-
-        // inicia o canvas e a animação
-        ajustarCanvas();
-        desenharParticulas();
-
-        // reajusta o fundo quando a tela muda de tamanho
-        window.addEventListener("resize", ajustarCanvas);
-
-        // controla a animação ao mudar de aba
-        document.addEventListener("visibilitychange", function () {
-            if (document.hidden) {
-                // pausa a animação quando a página fica oculta
-                animacaoAtiva = false;
-            } else if (!movimentoReduzido && !animacaoAtiva) {
-                // retoma a animação ao voltar para a página
-                animacaoAtiva = true;
-                desenharParticulas();
-            }
-        });
-
-        // tema e logo
-
-        // seleciona o botão de tema e a logo
-        const botaoTema = document.getElementById("btn-tema");
-        const logo = document.querySelector(".logo-imagem");
-
-        // verifica se o tema atual é claro
-        function temaEstaClaro() {
-            return document.documentElement.classList.contains("tema-claro");
-        }
-
-        // atualiza a logo conforme o tema
-        function atualizarLogo() {
-            const logo = document.querySelector(".logo-imagem");
-
-            // encerra a função se a logo não existir
-            if (!logo) return;
-
-            const temaClaro = document.documentElement.classList.contains("tema-claro");
-
-            // escolhe a imagem correspondente ao tema
-            if (temaClaro) {
-                logo.src = logo.dataset.logoEscuro;
-            } else {
-                logo.src = logo.dataset.logoClaro;
-            }
-        }
-
-        // aplica o tema escolhido pelo usuário
-        function aplicarTema(tema) {
-            const claro = tema === "claro";
-
-            // adiciona ou remove a classe do tema claro
-            document.documentElement.classList.toggle("tema-claro", claro);
-            document.body.classList.toggle("tema-claro", claro);
-
-            // salva a preferência no navegador
-            localStorage.setItem("duckfy-tema", tema);
-
-            // atualiza a logo conforme o tema
-            atualizarLogo();
-
-            // atualiza a descrição acessível do botão
-            if (botaoTema) {
-                const descricao = claro
-                    ? "Ativar tema escuro"
-                    : "Ativar tema claro";
-
-                botaoTema.setAttribute("aria-label", descricao);
-                botaoTema.setAttribute("title", descricao);
-            }
-        }
-
-        // aplica o tema salvo ou usa o tema escuro como padrão
-        aplicarTema(localStorage.getItem("duckfy-tema") || "escuro");
-
-        // alterna o tema ao clicar no botão
-        if (botaoTema) {
-            botaoTema.addEventListener("click", function () {
-                aplicarTema(temaEstaClaro() ? "escuro" : "claro");
-            });
-        }
-
-        // aviso dos termos
-
-        // seleciona os elementos do aviso
-        const botaoTermos = document.getElementById("btn-termos-bloqueado");
-        const avisoTermos = document.getElementById("aviso-termos");
-        const fecharAviso = document.getElementById("fechar-aviso");
-
-        // mostra o aviso ao clicar no botão dos termos
-        if (botaoTermos && avisoTermos) {
-            botaoTermos.addEventListener("click", function () {
-                avisoTermos.hidden = false;
-            });
-        }
-
-        // esconde o aviso ao clicar no botão de fechar
-        if (fecharAviso && avisoTermos) {
-            fecharAviso.addEventListener("click", function () {
-                avisoTermos.hidden = true;
-            });
-        }
-    </script>
+    <!-- conecta o javascript da página -->
+    <script src="{{ url_for('static', filename='js/login.js') }}"></script>
 
 </body>
 

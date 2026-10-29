@@ -17,11 +17,9 @@ body {
     color: #ffffff;
 
     background:
-        radial-gradient(
-            circle at 15% 20%,
+        radial-gradient(circle at 15% 20%,
             rgba(124, 77, 255, 0.12),
-            transparent 35%
-        ),
+            transparent 35%),
         var(--bg-primary, #0F0C1B);
 
     transition: background 0.3s ease, color 0.3s ease;
@@ -756,6 +754,7 @@ body.tema-claro .logo-fy {
 
 /* reduz animações se o usuário preferir */
 @media (prefers-reduced-motion: reduce) {
+
     *,
     *::before,
     *::after {
@@ -764,4 +763,35 @@ body.tema-claro .logo-fy {
         animation-iteration-count: 1 !important;
         transition-duration: 0.01ms !important;
     }
+}
+
+/* fundo de partículas */
+#particulas-fundo {
+    position: fixed;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 0;
+    pointer-events: none;
+}
+
+/* mantém o login acima das partículas */
+.login {
+    position: relative;
+    z-index: 1;
+}
+
+/* ajustes do botão de tema */
+#btn-tema {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    cursor: pointer;
+}
+
+/* tamanho do ícone de tema */
+#btn-tema i {
+    font-size: 20px;
+    line-height: 1;
 }
