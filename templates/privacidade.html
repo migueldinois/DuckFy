@@ -1,20 +1,24 @@
+{% if usuario_logado %}
 {% extends 'layout.html' %}
+{% endif %}
 
 {% block title %}Política de Privacidade - DuckFy{% endblock %}
 
 {% block styles %}
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 <link rel="stylesheet" href="{{ url_for('static', filename='css/privacidade.css') }}">
 {% endblock %}
 
 {% block content %}
 
-<main class="termos">
+<main class="termos {% if not usuario_logado %}termos-deslogado{% endif %}">
 
     <!-- topo da página -->
+     <!-- Redirecionamento direto via Jinja2 no href, evitando o acúmulo de etapas do histórico do navegador no botão voltar -->
     <header class="termos-topo">
-
-        <a href="{{ url_for('perfil') }}" class="btn-voltar" aria-label="Voltar para o perfil">
-            ←
+        <a class="btn-voltar" href="{{ url_for('perfil') if usuario_logado else url_for('index') }}"
+            aria-label="Voltar para a página anterior">
+            <i class="fa-solid fa-arrow-left"></i>
         </a>
 
         <h1>Política de Privacidade</h1>
@@ -22,94 +26,60 @@
     </header>
 
     <!-- abas -->
-    <nav class="termos-abas">
+    <!-- 
+    O uso de 'window.location.replace(this.href)' substitui a URL atual no histórico do navegador 
+    em vez de empilhar uma nova entrada ao alternar entre as abas de 'termos' e 'privacidade'
+    -->
 
-        <a href="{{ url_for('termos') }}" class="aba">
+    <nav class="termos-abas">
+        <a href="{{ url_for('termos') }}" class="aba {% if request.endpoint == 'termos' %}aba-ativa{% endif %}"
+            onclick="window.location.replace(this.href); return false;">
             Termos de uso
         </a>
 
-        <a href="{{ url_for('privacidade') }}" class="aba aba-ativa">
+        <a href="{{ url_for('privacidade') }}"
+            class="aba {% if request.endpoint == 'privacidade' %}aba-ativa{% endif %}"
+            onclick="window.location.replace(this.href); return false;">
             Política de privacidade
         </a>
-
     </nav>
 
     <!-- conteúdo -->
     <section class="termos-conteudo">
 
-        <h2>Lorem ipsum</h2>
-
+        <h2>1. Coleta e Finalidade dos Dados</h2>
         <p>
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-            Etiam porttitor, dui sed consequat pretium, velit eros
-            congue velit, eu ultrices dui massa vitae massa. Nunc eu
-            tincidunt nunc. Quisque eu vehicula arcu. Aliquam eleifend
-            neque vel risus accumsan dictum.
+            A sua privacidade é prioridade no DuckFy. Solicitamos informações pessoais (como nome, e-mail e senha
+            cadastrada) e dados de lançamentos financeiros estritamente necessários para permitir a autenticação, o
+            cálculo de metas, reservas de emergência e a contabilização do progresso gamificado (streaks e XP).
         </p>
 
-        <h2>Lorem ipsum</h2>
-
+        <h2>2. Armazenamento e Proteção de Informações</h2>
         <p>
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-            Maecenas vitae libero at nunc tincidunt tincidunt. Donec
-            suscipit, justo sit amet consequat consectetur, neque velit
-            posuere massa, eget tincidunt lorem ipsum at nunc.
+            Todos os dados registrados são armazenados em ambiente seguro. Adotamos medidas técnicas adequadas para
+            proteger suas informações contra acessos não autorizados, alteração, divulgação ou destruição imprevista de
+            dados pessoais.
         </p>
 
-        <h2>Lorem ipsum</h2>
-
+        <h2>3. Uso de Imagens de Perfil e Uploads</h2>
         <p>
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-            Integer feugiat, libero sit amet tincidunt consequat, nisl
-            purus tincidunt massa, vitae suscipit neque erat nec ipsum.
-            Vestibulum ante ipsum primis in faucibus orci luctus et
-            ultrices posuere cubilia curae.
+            Caso você faça upload de uma foto de perfil ou utilize avatares gerados automaticamente pela aplicação,
+            estes arquivos serão mantidos única e exclusivamente para a personalização da sua interface de usuário no
+            DuckFy.
         </p>
 
-        <h2>Lorem ipsum</h2>
-
+        <h2>4. Não Compartilhamento com Terceiros</h2>
         <p>
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-            Suspendisse potenti. Morbi eu risus eget turpis consequat
-            suscipit. Nullam feugiat, lacus at consequat tincidunt,
-            sapien neque interdum massa, vitae faucibus lorem purus
-            eget nulla.
+            O DuckFy <strong>não vende, aluga ou compartilha</strong> seus dados financeiros ou pessoais com terceiros
+            para fins comerciais ou publicitários. Informações só poderão ser compartilhadas caso haja obrigação
+            estritamente legal ou ordem judicial.
         </p>
 
-        <h2>Lorem ipsum</h2>
-
+        <h2>5. Direitos do Usuário (LGPD)</h2>
         <p>
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-            Sed eget sagittis ligula. Curabitur consequat, neque non
-            consectetur tincidunt, ipsum libero malesuada lorem, vitae
-            tincidunt justo nulla vel nunc.
-        </p>
-
-        <h2>Lorem ipsum</h2>
-
-        <p>
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-            Pellentesque habitant morbi tristique senectus et netus et
-            malesuada fames ac turpis egestas. Donec euismod, libero
-            quis tincidunt consequat, massa erat malesuada justo.
-        </p>
-
-        <h2>Lorem ipsum</h2>
-
-        <p>
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-            Vestibulum consectetur, velit eget tincidunt consequat,
-            massa lorem interdum arcu, at tincidunt justo neque vitae
-            lorem. Donec vitae risus sed libero consequat malesuada.
-        </p>
-
-        <h2>Lorem ipsum</h2>
-
-        <p>
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-            Aenean consequat, libero sed tincidunt malesuada, neque
-            purus elementum massa, vitae tincidunt nisl lorem vel
-            lectus. Sed eget sagittis ligula.
+            Você tem total controle sobre suas informações. É garantido ao usuário o direito de atualizar seus dados
+            cadastrais através da página "Editar Perfil" ou solicitar a exclusão definitiva de sua conta e histórico
+            financeiro a qualquer momento na aplicação.
         </p>
 
     </section>

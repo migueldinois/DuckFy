@@ -1,152 +1,228 @@
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
+/* ======================================================
+   DUCKFY - EDITAR PERFIL (DESIGN MODERNO & HARMONIOSO)
+   ====================================================== */
+
+:root {
+  --bg-dark: #0f0c1b;
+  --bg-card: #181826;
+  --bg-card-hover: #222234;
+  --primary-purple: #7c4dff;
+  --purple-glow: rgba(124, 77, 255, 0.35);
+  --border-glass: rgba(255, 255, 255, 0.08);
+  --text-muted: #a0a0b5;
 }
 
-html, body, .bg-app {
-    width: 100%;
-    min-height: 100vh;
-    background-color: var(--bg-primary);
+/* ESTRUTURA E LARGURA PROPORCIONAL */
+.perfil-pagina-container,
+.editar-perfil-container {
+  width: 100% !important;
+  max-width: 980px !important; /* Mesma largura exata do perfil */
+  margin: 0 auto !important;
+  padding: 0 0 40px 0 !important;
+  color: #ffffff;
+  box-sizing: border-box;
 }
 
-.tela-edicao {
-    background-color: var(--bg-primary);
-}
-
-/* 1. TOPO ROXO */
+/* 1. CABEÇALHO COM O DEGRADÊ ROXO E BORDAS SUAVES */
 .cabecalho-perfil {
-    width: 100%;
-    background-color: var(--brand-primary);
+  background: linear-gradient(180deg, rgba(124, 77, 255, 0.25) 0%, rgba(15, 12, 27, 0) 100%);
+  border-radius: 20px;
+  padding: 24px 20px;
+  margin-bottom: 24px;
 }
 
-.link-voltar {
-    top: 28px;
-    left: 28px;
-    transition: transform 0.2s ease;
+/* BOTÃO VOLTAR */
+.btn-voltar-perfil {
+  width: 42px;
+  height: 42px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid var(--border-glass);
+  border-radius: 12px;
+  color: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-decoration: none;
+  font-size: 1.1rem;
+  transition: all 0.25s ease;
+  backdrop-filter: blur(8px);
 }
 
-.link-voltar:hover {
-   transform: translateX(-4px);
+.btn-voltar-perfil:hover {
+  background: var(--primary-purple);
+  box-shadow: 0 0 15px var(--purple-glow);
+  transform: translateX(-3px);
 }
 
-.link-salvar {
-    top: 24px;
-    right: 28px;
-    transition: opacity 0.2s ease;
+/* BOTÃO SALVAR NO TOPO */
+.btn-salvar-topo {
+  background: var(--primary-purple);
+  color: #ffffff;
+  border: none;
+  padding: 10px 24px;
+  border-radius: 12px;
+  font-weight: 600;
+  font-size: 0.95rem;
+  transition: all 0.25s ease;
+  box-shadow: 0 4px 15px var(--purple-glow);
+  cursor: pointer;
 }
 
-.link-salvar:hover {
-    opacity: 0.8;
+.btn-salvar-topo:hover {
+  background: #6c3bfa;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(124, 77, 255, 0.5);
 }
 
-/* Estilo do Avatar */
-.avatar-grande {
-    width: 90px;
-    height: 90px;
-    border-radius: 50%;
-    background-color: var(--bg-primary);
-    position: relative;
-    overflow: hidden;
-    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.3);
+/* 2. CARTÃO DE AVATAR E INPUTS (MESMO ESTILO DO PERFIL) */
+.cartao-usuario-destaque,
+.cartao-formulario {
+  background: var(--bg-card) !important;
+  border: 1px solid var(--border-glass) !important;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4), 0 0 20px rgba(124, 77, 255, 0.08) !important;
+  width: 100% !important;
+  border-radius: 18px !important;
+  backdrop-filter: blur(12px);
+  box-sizing: border-box;
 }
 
-.avatar-cabeca {
-    width: 32px;
-    height: 32px;
-    background-color: var(--brand-primary);
-    border-radius: 50%;
-    position: absolute;
-    top: 18px;
-    left: 50%;
-    transform: translateX(-50%);
+/* AVATAR E ALTERAR FOTO */
+.avatar {
+  width: 80px;
+  height: 80px;
+  border: 2px solid var(--primary-purple);
+  box-shadow: 0 0 15px var(--purple-glow);
 }
 
-.avatar-corpo {
-    width: 58px;
-    height: 38px;
-    background-color: var(--brand-primary);
-    border-radius: 50% 50% 0 0;
-    position: absolute;
-    bottom: 0;
-    left: 50%;
-    transform: translateX(-50%);
+.bg-purple-glow {
+  background: rgba(124, 77, 255, 0.2);
+  width: 80px;
+  height: 80px;
+  border: 2px solid var(--primary-purple);
+}
+
+.link-foto {
+  color: var(--primary-purple);
+  font-size: 0.9rem;
+  transition: all 0.2s ease;
 }
 
 .link-foto:hover {
-    text-decoration: underline !important;
+  color: #b093ff;
+  text-decoration: underline !important;
 }
 
-/* 2. FORMULÁRIO INFERIOR */
-.conteudo-formulario {
-    width: 100%;
-    background-color: var(--bg-primary);
-}
-
-.formulario-perfil {
-    max-width: 550px; /* Largura ideal e confortável para desktop */
-}
-
-/* Customização dos Inputs */
+/* 3. INPUTS / CAMPOS DE TEXTO ILUMINADOS */
 .campo-input {
-    background-color: var(--bg-surface-1);
-    color: #ffffff;
-    border: 1px solid var(--bg-surface-2) !important;
-    transition: border-color 0.2s ease, box-shadow 0.2s ease;
-}
-
-.campo-input:focus {
-    background-color: var(--bg-surface-1);
-    color: #ffffff;
-    border-color: var(--brand-primary) !important;
-    box-shadow: 0 0 0 3px rgba(124, 77, 255, 0.25);
-}
-
-.campo-input.invalido,
-.campo-input.invalido:focus {
-    border: 2px solid #ff4d4d !important;
+  background: rgba(255, 255, 255, 0.05) !important;
+  border: 1px solid var(--border-glass) !important;
+  border-radius: 12px !important;
+  color: #ffffff !important;
+  transition: all 0.25s ease !important;
 }
 
 .campo-input::placeholder {
-    color: #6c6c80;
+  color: rgba(255, 255, 255, 0.35) !important;
 }
 
-/* Estilização dos Botões */
-.btn-roxo {
-    background-color: var(--brand-primary);
-    color: #ffffff;
-    border: none;
-    transition: filter 0.2s ease, transform 0.1s ease;
+.campo-input:focus {
+  background: rgba(255, 255, 255, 0.08) !important;
+  border-color: var(--primary-purple) !important;
+  box-shadow: 0 0 12px var(--purple-glow) !important;
+  color: #ffffff !important;
+  outline: none !important;
 }
 
-.btn-roxo:hover {
-    filter: brightness(1.1);
-    color: #ffffff;
-    transform: translateY(-1px);
+.campo-input.invalido {
+  border-color: #ff5252 !important;
+  box-shadow: 0 0 10px rgba(255, 82, 82, 0.3) !important;
 }
 
-.btn-escuro {
-    background-color: var(--bg-surface-1);
-    color: #ffffff;
-    border: 1px solid var(--bg-surface-2);
-    transition: background-color 0.2s ease, transform 0.1s ease;
+/* 4. BOTÕES DE AÇÃO DESTACADOS E COM BRILHO HOVER */
+.btn-acao-roxo {
+  background: rgba(124, 77, 255, 0.15);
+  color: var(--primary-purple);
+  border: 1px solid rgba(124, 77, 255, 0.35);
+  transition: all 0.25s ease;
 }
 
-.btn-escuro:hover {
-    background-color: var(--bg-surface-2);
-    color: #ffffff;
-    transform: translateY(-1px);
+.btn-acao-roxo:hover {
+  background: var(--primary-purple);
+  color: #ffffff;
+  box-shadow: 0 0 15px var(--purple-glow);
+  transform: translateY(-2px);
 }
 
-.btn-vermelho {
-    background-color: rgba(255, 77, 77, 0.15);
-    color: #ff4d4d;
-    border: 1px solid rgba(255, 77, 77, 0.2);
-    transition: background-color 0.2s ease, transform 0.1s ease;
+
+.btn-acao-vermelho {
+  background: rgba(255, 82, 82, 0.12);
+  color: #ff5252;
+  border: 1px solid rgba(255, 82, 82, 0.3);
+  transition: all 0.25s ease;
 }
 
-.btn-vermelho:hover {
-    background-color: rgba(255, 77, 77, 0.25);
-    color: #ff4d4d;
-    transform: translateY(-1px);
+.btn-acao-vermelho:hover {
+  background: #ff5252;
+  color: #ffffff;
+  box-shadow: 0 0 15px rgba(255, 82, 82, 0.4);
+  transform: translateY(-2px);
+}
+
+.modal-excluir-conta {
+  width: min(420px, calc(100% - 32px));
+  padding: 24px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 16px;
+  background: var(--bg-card);
+  color: #ffffff;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+}
+
+.modal-excluir-conta::backdrop {
+  background: rgba(10, 9, 14, 0.75);
+  backdrop-filter: blur(5px);
+}
+
+.modal-excluir-conta h2 {
+  margin: 0 0 12px;
+  font-size: 1.25rem;
+}
+
+.modal-excluir-conta p {
+  margin-bottom: 24px;
+  color: var(--text-muted);
+}
+
+.acoes-modal-excluir {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+}
+
+.acoes-modal-excluir button {
+  min-height: 42px;
+  padding: 8px 14px;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.acoes-modal-excluir form {
+  margin: 0;
+}
+
+.btn-cancelar-exclusao {
+  border: 1px solid var(--border-glass);
+  background: transparent;
+  color: #ffffff;
+}
+
+.btn-confirmar-exclusao {
+  border: 1px solid #ff5252;
+  background: #ff5252;
+  color: #ffffff;
+}
+
+.btn-confirmar-exclusao:hover {
+  background: #e84343;
 }
