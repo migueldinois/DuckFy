@@ -1,5 +1,5 @@
 {% if usuario_logado %}
-    {% extends 'layout.html' %}
+{% extends 'layout.html' %}
 {% endif %}
 
 {% block title %}Termos de Uso - DuckFy{% endblock %}
@@ -14,7 +14,8 @@
 <main class="termos {% if not usuario_logado %}termos-deslogado{% endif %}">
 
     <header class="termos-topo">
-        <a class="btn-voltar" href="{{ url_for('perfil') if usuario_logado else url_for('index') }}" aria-label="Voltar para a página anterior" onclick="if (window.history.length > 1) { window.history.back(); return false; }">
+        <a class="btn-voltar" href="{{ url_for('perfil') if usuario_logado else url_for('index') }}"
+            aria-label="Voltar para a página anterior">
             <i class="fa-solid fa-arrow-left"></i>
         </a>
 
@@ -22,11 +23,14 @@
     </header>
 
     <nav class="termos-abas">
-        <a href="{{ url_for('termos') }}" class="aba aba-ativa">
+        <a href="{{ url_for('termos') }}" class="aba {% if request.endpoint == 'termos' %}aba-ativa{% endif %}"
+            onclick="window.location.replace(this.href); return false;">
             Termos de uso
         </a>
 
-        <a href="{{ url_for('privacidade') }}" class="aba">
+        <a href="{{ url_for('privacidade') }}"
+            class="aba {% if request.endpoint == 'privacidade' %}aba-ativa{% endif %}"
+            onclick="window.location.replace(this.href); return false;">
             Política de privacidade
         </a>
     </nav>
@@ -35,27 +39,38 @@
 
         <h2>1. Termos e Aceitação</h2>
         <p>
-            Ao acessar e utilizar o DuckFy, você concorda em cumprir estes termos de serviço, todas as leis e regulamentos aplicáveis. Se você não concordar com qualquer um destes termos, está proibido de usar ou acessar esta plataforma.
+            Ao acessar e utilizar o DuckFy, você concorda em cumprir estes termos de serviço, todas as leis e
+            regulamentos aplicáveis. Se você não concordar com qualquer um destes termos, está proibido de usar ou
+            acessar esta plataforma.
         </p>
 
         <h2>2. Uso de Licença</h2>
         <p>
-            É concedida permissão para acessar e utilizar temporariamente os recursos e ferramentas da plataforma DuckFy, exclusivamente para fins de organização financeira pessoal, controle orçamentário e aprendizado interativo não comercial.
+            É concedida permissão para acessar e utilizar temporariamente os recursos e ferramentas da plataforma
+            DuckFy, exclusivamente para fins de organização financeira pessoal, controle orçamentário e aprendizado
+            interativo não comercial.
         </p>
 
         <h2>3. Isenção de Consultoria Financeira</h2>
         <p>
-            O DuckFy é uma ferramenta educativa e de gerenciamento pessoal baseada em dados inseridos pelo próprio usuário, gamificação e simulações econômicas públicas (como Selic/CDI). O DuckFy <strong>não é uma instituição financeira ou corretora</strong> e não fornece recomendações oficiais de investimento ou consultoria financeira. As decisões financeiras tomadas são de inteira responsabilidade do usuário.
+            O DuckFy é uma ferramenta educativa e de gerenciamento pessoal baseada em dados inseridos pelo próprio
+            usuário, gamificação e simulações econômicas públicas (como Selic/CDI). O DuckFy <strong>não é uma
+                instituição financeira ou corretora</strong> e não fornece recomendações oficiais de investimento ou
+            consultoria financeira. As decisões financeiras tomadas são de inteira responsabilidade do usuário.
         </p>
 
         <h2>4. Gamificação e Cadastro de Dados</h2>
         <p>
-            Para usufruir de recursos de gamificação (como contagem de dias de sequência/streaks, XP e badges) e acompanhamento de metas (como a Reserva de Emergência), o usuário compromete-se a fornecer informações verdadeiras e manter a segurança de sua conta e credenciais de acesso.
+            Para usufruir de recursos de gamificação (como contagem de dias de sequência/streaks, XP e badges) e
+            acompanhamento de metas (como a Reserva de Emergência), o usuário compromete-se a fornecer informações
+            verdadeiras e manter a segurança de sua conta e credenciais de acesso.
         </p>
 
         <h2>5. Limitações e Modificações</h2>
         <p>
-            Em nenhum caso o DuckFy ou seus desenvolvedores serão responsáveis por quaisquer danos decorrentes do uso ou da incapacidade de usar os serviços da plataforma. Os Termos de Uso podem ser revisados a qualquer momento sem aviso prévio. Ao usar este site, você concorda em ficar vinculado à versão atual desses termos.
+            Em nenhum caso o DuckFy ou seus desenvolvedores serão responsáveis por quaisquer danos decorrentes do uso ou
+            da incapacidade de usar os serviços da plataforma. Os Termos de Uso podem ser revisados a qualquer momento
+            sem aviso prévio. Ao usar este site, você concorda em ficar vinculado à versão atual desses termos.
         </p>
 
     </section>
