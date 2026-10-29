@@ -89,21 +89,99 @@
     </div>
   </section>
 
-  <!-- Bloco 2: Receitas e barra de categorias -->
-  <section class="dash-card d-flex align-items-center justify-content-between">
-    <div>
-      <span class="card-subtitle d-block mb-1">Resumo do mês</span>
-      <span class="receipt-label">Receitas</span>
-      <div class="amount-large">R$1.909</div>
+
+  <section class="dash-card income-chart-card">
+    <div class="category-carousel-controls" role="group" aria-label="Tipo de movimentação">
+      <button class="category-carousel-tab active" type="button" data-bs-target="#categoryCarousel" data-bs-slide-to="0" aria-label="Ver receitas por categoria" aria-current="true">Entradas</button>
+      <button class="category-carousel-tab" type="button" data-bs-target="#categoryCarousel" data-bs-slide-to="1" aria-label="Ver despesas por categoria">Saídas</button>
     </div>
 
-    <div class="category-bars d-flex gap-2" aria-hidden="true">
-      <div class="cat-bar bar-coral"></div>
-      <div class="cat-bar bar-lightgreen"></div>
-      <div class="cat-bar bar-purple"></div>
-      <div class="cat-bar bar-deepviolet"></div>
-      <div class="cat-bar bar-cyan"></div>
-      <div class="cat-bar bar-yellow"></div>
+    <div id="categoryCarousel" class="carousel slide category-carousel" data-bs-interval="false" data-bs-touch="true">
+      <div class="carousel-inner">
+        <article class="carousel-item active">
+          <div class="category-slide-layout">
+            <div class="income-chart-heading">
+              <span class="chart-eyebrow">RESUMO DE AGOSTO</span>
+              <h3 class="card-section-title m-0">Receitas por categoria</h3>
+              <p class="chart-description">Veja de onde veio seu dinheiro neste mês.</p>
+            </div>
+
+            <div class="income-chart-content">
+              <div class="donut-chart" role="img" aria-label="Distribuição ilustrativa das receitas">
+                <div class="donut-center">
+                  <span>Total recebido</span>
+                  <strong>R$ 1.909</strong>
+                </div>
+              </div>
+
+              <ul class="category-legend" aria-label="Receitas por categoria">
+                <li>
+                  <span class="legend-swatch swatch-salary" aria-hidden="true"></span>
+                  <span class="legend-copy"><span>Salário</span><small>69%</small></span>
+                  <strong>R$ 1.320</strong>
+                </li>
+                <li>
+                  <span class="legend-swatch swatch-extra" aria-hidden="true"></span>
+                  <span class="legend-copy"><span>Renda extra</span><small>16%</small></span>
+                  <strong>R$ 300</strong>
+                </li>
+                <li>
+                  <span class="legend-swatch swatch-investments" aria-hidden="true"></span>
+                  <span class="legend-copy"><span>Investimentos</span><small>10%</small></span>
+                  <strong>R$ 189</strong>
+                </li>
+                <li>
+                  <span class="legend-swatch swatch-other" aria-hidden="true"></span>
+                  <span class="legend-copy"><span>Outros</span><small>5%</small></span>
+                  <strong>R$ 100</strong>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </article>
+
+        <article class="carousel-item">
+          <div class="category-slide-layout">
+            <div class="income-chart-heading">
+              <span class="chart-eyebrow">RESUMO DE AGOSTO</span>
+              <h3 class="card-section-title m-0">Despesas por categoria</h3>
+              <p class="chart-description">Acompanhe para onde seu dinheiro foi.</p>
+            </div>
+
+            <div class="income-chart-content">
+              <div class="donut-chart donut-expense" role="img" aria-label="Distribuição ilustrativa das despesas">
+                <div class="donut-center">
+                  <span>Total gasto</span>
+                  <strong>R$ 1.550</strong>
+                </div>
+              </div>
+
+              <ul class="category-legend" aria-label="Despesas por categoria">
+                <li>
+                  <span class="legend-swatch swatch-housing" aria-hidden="true"></span>
+                  <span class="legend-copy"><span>Moradia</span><small>42%</small></span>
+                  <strong>R$ 650</strong>
+                </li>
+                <li>
+                  <span class="legend-swatch swatch-food" aria-hidden="true"></span>
+                  <span class="legend-copy"><span>Alimentação</span><small>27%</small></span>
+                  <strong>R$ 420</strong>
+                </li>
+                <li>
+                  <span class="legend-swatch swatch-transport" aria-hidden="true"></span>
+                  <span class="legend-copy"><span>Transporte</span><small>18%</small></span>
+                  <strong>R$ 280</strong>
+                </li>
+                <li>
+                  <span class="legend-swatch swatch-leisure" aria-hidden="true"></span>
+                  <span class="legend-copy"><span>Lazer e outros</span><small>13%</small></span>
+                  <strong>R$ 200</strong>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </article>
+      </div>
     </div>
   </section>
 
@@ -114,51 +192,68 @@
   </div>
 
   <!-- Bloco 4: Últimas transações -->
-  <section class="dash-card">
+  <section class="dash-card transactions-card">
     <div class="d-flex justify-content-between align-items-center mb-3">
-      <h3 class="card-section-title m-0">Últimas Transações</h3>
+      <div class="transactions-heading">
+        <span class="chart-eyebrow">MOVIMENTAÇÕES</span>
+        <h3 class="card-section-title m-0">Últimas transações</h3>
+      </div>
 
-      <a href="/" class="extrato-link d-flex align-items-center gap-1">
-        Extrato <i class="bi bi-arrow-right"></i>
+      <a href="/extrato" class="extrato-link d-flex align-items-center gap-1">
+        Ver extrato <i class="bi bi-arrow-right"></i>
       </a>
     </div>
 
-    <div class="transaction-list d-flex flex-column gap-3">
-
-      <!-- Transação 1 -->
-      <div class="transaction-item d-flex align-items-center justify-content-between">
-        <div class="d-flex align-items-center gap-3">
-          <div class="tx-icon icon-plus">
-            <i class="bi bi-plus"></i>
+    <div class="transaction-list">
+      <div class="transaction-item">
+        <div class="transaction-main">
+          <div class="tx-icon icon-plus" aria-hidden="true">
+            <i class="bi bi-arrow-down-left"></i>
           </div>
-
-          <div>
-            <div class="tx-time">16:20</div>
-            <div class="tx-title">Transferência</div>
+          <div class="tx-details">
+            <div class="tx-title">Projeto freelance</div>
+            <div class="tx-meta">Hoje, 16:20 <span aria-hidden="true">·</span> Renda extra</div>
           </div>
         </div>
-
-        <div class="tx-amount text-green-bright">-R$ 19,99</div>
+        <div class="tx-amount tx-income">+ R$ 850,00</div>
       </div>
 
-      <!-- Transação 2 -->
-      <div class="transaction-item d-flex align-items-center justify-content-between">
-        <div class="d-flex align-items-center gap-3">
-          <div class="tx-icon icon-minus">
-            <i class="bi bi-dash"></i>
+      <div class="transaction-item">
+        <div class="transaction-main">
+          <div class="tx-icon icon-minus" aria-hidden="true">
+            <i class="bi bi-arrow-up-right"></i>
           </div>
-
-          <div>
-            <div class="tx-time">16:19</div>
-            <div class="tx-title">Recebido</div>
+          <div class="tx-details">
+            <div class="tx-title">Mercado</div>
+            <div class="tx-meta">Hoje, 15:48 <span aria-hidden="true">·</span> Alimentação</div>
           </div>
         </div>
-
-        <div class="tx-amount text-red">-R$ 19,99</div>
+        <div class="tx-amount tx-expense">− R$ 126,40</div>
       </div>
-
     </div>
   </section>
 
 </div>
 {% endblock %}
+
+{% block extra_js %}
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const carousel = document.getElementById('categoryCarousel');
+    const tabs = document.querySelectorAll('.category-carousel-tab');
+
+    carousel?.addEventListener('slid.bs.carousel', (event) => {
+      tabs.forEach((tab, index) => {
+        const active = index === event.to;
+        tab.classList.toggle('active', active);
+        if (active) {
+          tab.setAttribute('aria-current', 'true');
+        } else {
+          tab.removeAttribute('aria-current');
+        }
+      });
+    });
+  });
+</script>
+{% endblock %}
+
