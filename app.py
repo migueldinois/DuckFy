@@ -860,16 +860,49 @@ def solicitar_codigo():
         return {
             "message": "Não foi possível enviar o e-mail. Tente novamente."
         }, 500
+    
 
+@app.post("/api/recuperacao/verificar-codigo")
+def verificar_codigo():
+    dados = request.get_json(silent=True) or {}
 
+    email = dados.get("email", "").strip()
+    codigo_digitado = dados.get("codigo", "").strip()
 
+    if not email or not codigo_digitado:
+        return {"message": "Informe o código recebido."}, 400
+
+    recuperacao = codigos_recuperacao.get(email)
+
+    if not recuperacao:
+        return {"message": "Solicite um novo código de recuperação."}, 400
+
+    # Verifica se o código expirou
+    if datetime.now() > recuperacao["expira_em"]:
+        codigos_recuperacao.pop(email, None)
+        return {"message": "O código expirou. Solicite um novo."}, 400
+
+    # Confere o código digitado
+    if not secrets.compare_digest(codigo_digitado, recuperacao["codigo"]):
+        return {"message": "Código incorreto. Tente novamente."}, 400
+
+    # Gera um token para autorizar a próxima etapa
+    token = secrets.token_urlsafe(32)
+
+    recuperacao["token"] = token
+    recuperacao["token_expira_em"] = datetime.now() + timedelta(minutes=10)
+
+    return {
+    "message": "Código verificado com sucesso!",
+    "reset_token": token
+}, 200
 
 @app.get("/teste-email")
 def teste_email():
     try:
         mensagem = Message(
             subject="Teste de e-mail - Duckfy",
-            recipients=[os.getenv("BREVO_EMAIL_REMETENTE")],
+            recipients=[os.getenv("EMAIL_REMETENTE")],
             body="Teste de envio do Duckfy."
         )
 
