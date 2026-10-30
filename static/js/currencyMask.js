@@ -62,6 +62,39 @@ function formatarValorMonetario(input, pontoDecimal = false, completarCentavos =
       : '');
 }
 
+function formatarCentavosDigitados(input) {
+  const valorOriginal = input.value;
+  const posicaoOriginal = input.selectionStart ?? valorOriginal.length;
+  const digitosAntesDoCursor = valorOriginal.slice(0, posicaoOriginal).replace(/\D/g, '').length;
+  const digitos = valorOriginal.replace(/\D/g, '').replace(/^0+(?=\d)/, '') || '0';
+  const valorEmCentavos = digitos.padStart(3, '0');
+  const parteInteira = valorEmCentavos.slice(0, -2).replace(/^0+(?=\d)/, '') || '0';
+  const parteDecimal = valorEmCentavos.slice(-2);
+  const inteiroFormatado = parteInteira.replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+  input.value = `${inteiroFormatado},${parteDecimal}`;
+
+  const zerosDePreenchimento = Math.max(0, 3 - digitos.length);
+  const digitosAlvo = zerosDePreenchimento + digitosAntesDoCursor;
+  let novaPosicao = 0;
+  let digitosEncontrados = 0;
+  while (novaPosicao < input.value.length && digitosEncontrados < digitosAlvo) {
+    if (/\d/.test(input.value[novaPosicao])) digitosEncontrados += 1;
+    novaPosicao += 1;
+  }
+  input.setSelectionRange(novaPosicao, novaPosicao);
+
+  const valor = lerValorMonetario(input.value, true);
+  const minimo = input.getAttribute('min');
+  const maximo = input.getAttribute('max');
+  const minimoInvalido = minimo !== null && valor.decimal < lerValorMonetario(minimo, true).decimal;
+  const maximoInvalido = maximo !== null && valor.decimal > lerValorMonetario(maximo, true).decimal;
+  input.setCustomValidity(minimoInvalido
+    ? 'O valor deve ser maior ou igual ao mínimo permitido.'
+    : maximoInvalido
+      ? 'O valor excede o limite permitido.'
+      : '');
+}
+
 function normalizarPontoDecimalDigitado(input, event) {
   const textoInserido = event.data;
   if (!textoInserido?.includes('.') || textoInserido.includes(',') || input.value.includes(',')) return;
@@ -84,7 +117,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
     input.addEventListener('input', (event) => {
       normalizarPontoDecimalDigitado(input, event);
-      formatarValorMonetario(input);
+      const colagemComSeparador = event.inputType === 'insertFromPaste'
+        && /[.,]/.test(event.data || '');
+      if (colagemComSeparador) formatarValorMonetario(input, true, true);
+      else formatarCentavosDigitados(input);
     });
     input.addEventListener('blur', () => formatarValorMonetario(input, false, true));
     input.addEventListener('focus', () => {
