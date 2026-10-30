@@ -6,7 +6,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>DuckFy - Recuperação de Senha</title>
+    <title>DuckFy - Recuperação de Senha</title> 
 
     <!-- conecta os estilos -->
     <link rel="stylesheet" href="{{ url_for('static', filename='css/variables.css') }}">
@@ -38,34 +38,41 @@
     <!-- tela de redefinicao de senha -->
     <main class="container">
 
-        <!-- logo -->
-        <a href="{{ url_for('index') }}" class="logo-link" aria-label="DuckFy - Página inicial">
-            <img
-                src="{{ url_for('static', filename='img/logo_duckfy04.png') }}"
-                alt="Logo DuckFy"
-                class="logo-imagem"
-            >
-        </a>
+        <p class="etapa-atual" id="etapa-atual">ETAPA 1 DE 3</p>
+        <h1 class="logo" id="titulo-etapa">Confirme seu e-mail</h1>
+        <p class="descricao" id="descricao-etapa">Vamos enviar um código para o e-mail associado à sua conta.</p>
 
-        <!-- titulo -->
-        <h1 class="logo">Recuperação de senha</h1>
+        <div class="progresso" aria-label="Progresso da recuperação de senha">
+            <span class="progresso-ponto ativo"></span>
+            <span class="progresso-linha"></span>
+            <span class="progresso-ponto"></span>
+            <span class="progresso-linha"></span>
+            <span class="progresso-ponto"></span>
+        </div>
 
-        <!-- formulario -->
-        <form action="{{ url_for('redefinir') }}" method="POST">
+        <div class="mensagem-status" id="mensagem-status" role="status" aria-live="polite" hidden></div>
 
-            <!-- nova senha -->
+        <form id="form-email" class="form-etapa" action="/redefinir/solicitar" method="POST">
             <div class="campo">
-                <label for="senha">Digite sua nova senha</label>
+                <label for="email">E-mail da sua conta</label>
+                <input type="email" id="email" name="email" autocomplete="email" placeholder="voce@exemplo.com" required>
+            </div>
+            <button type="submit">ENVIAR CÓDIGO</button>
+        </form>
 
-                <input
-                    type="password"
-                    id="senha"
-                    name="senha"
-                    minlength="8"
-                    autocomplete="new-password"
-                    required
-                >
+        <form id="form-codigo" class="form-etapa" hidden>
+            <div class="campo">
+                <label for="codigo">Código de confirmação</label>
+                <input type="text" id="codigo" name="codigo" inputmode="numeric" pattern="[0-9]{6}" maxlength="6" autocomplete="one-time-code" placeholder="000000" required>
+            </div>
+            <button type="submit">CONFIRMAR CÓDIGO</button>
+            <button type="button" class="botao-secundario" id="reenviar-codigo">Reenviar código</button>
+        </form>
 
+        <form id="form-senha" class="form-etapa" hidden>
+            <div class="campo">
+                <label for="senha">Nova senha</label>
+                <input type="password" id="senha" name="senha" minlength="8" autocomplete="new-password" required>
                 <div class="regras">
                     <p>Tamanho mínimo: pelo menos 8 caracteres.</p>
                     <p>Letras maiúsculas: no mínimo 1 letra maiúscula (A-Z).</p>
@@ -75,145 +82,18 @@
                     </p>
                 </div>
             </div>
-
             <!-- confirmacao da senha -->
             <div class="campo campo-confirmacao">
-                <label for="confirmar_senha">Digite novamente sua senha</label>
-
-                <input
-                    type="password"
-                    id="confirmar_senha"
-                    name="confirmar_senha"
-                    minlength="8"
-                    autocomplete="new-password"
-                    required
-                >
+                <label for="confirmar_senha">Confirme a nova senha</label>
+                 <input type="password" id="confirmar_senha" name="confirmar_senha" minlength="8" autocomplete="new-password" required>
             </div>
-
-            <!-- botao de confirmacao -->
-            <button type="submit">CONFIRMAR</button>
-
+            <button type="submit">REDEFINIR SENHA</button>
         </form>
+
+        <a class="voltar-login" href="{{ url_for('index') }}">Voltar para o login</a>
 
     </main>
 
-    <!-- anima as particulas roxas e verdes -->
-    <script>
-        const canvas = document.getElementById("particulas-fundo");
-        const ctx = canvas.getContext("2d");
-
-        let particulas = [];
-        let largura = window.innerWidth;
-        let altura = window.innerHeight;
-        let animacaoAtiva = true;
-
-        // cria uma particula
-        function criarParticula() {
-            return {
-                x: Math.random() * largura,
-                y: Math.random() * altura,
-                tamanho: Math.random() * 2 + 0.6,
-                velocidadeX: (Math.random() - 0.5) * 0.35,
-                velocidadeY: (Math.random() - 0.5) * 0.35,
-                opacidade: Math.random() * 0.65 + 0.2,
-                cor: Math.random() > 0.5
-                    ? "124, 77, 255"
-                    : "0, 230, 118"
-            };
-        }
-
-        // ajusta o fundo ao tamanho da tela
-        function ajustarCanvas() {
-            largura = window.innerWidth;
-            altura = window.innerHeight;
-
-            const escala = window.devicePixelRatio || 1;
-
-            canvas.width = largura * escala;
-            canvas.height = altura * escala;
-
-            canvas.style.width = largura + "px";
-            canvas.style.height = altura + "px";
-
-            ctx.setTransform(escala, 0, 0, escala, 0, 0);
-
-            const quantidade = Math.min(
-                100,
-                Math.max(35, Math.floor((largura * altura) / 18000))
-            );
-
-            particulas = Array.from(
-                { length: quantidade },
-                criarParticula
-            );
-        }
-
-        // desenha e movimenta as particulas
-        function desenharParticulas() {
-            if (!animacaoAtiva) {
-                return;
-            }
-
-            ctx.clearRect(0, 0, largura, altura);
-
-            particulas.forEach(function (particula) {
-                particula.x += particula.velocidadeX;
-                particula.y += particula.velocidadeY;
-
-                // reaparece do outro lado da tela
-                if (particula.x < 0) particula.x = largura;
-                if (particula.x > largura) particula.x = 0;
-                if (particula.y < 0) particula.y = altura;
-                if (particula.y > altura) particula.y = 0;
-
-                // desenha o brilho
-                ctx.beginPath();
-
-                ctx.arc(
-                    particula.x,
-                    particula.y,
-                    particula.tamanho,
-                    0,
-                    Math.PI * 2
-                );
-
-                ctx.fillStyle = `rgba(${particula.cor}, ${particula.opacidade})`;
-                ctx.shadowBlur = 12;
-                ctx.shadowColor = `rgba(${particula.cor}, 0.8)`;
-
-                ctx.fill();
-            });
-
-            ctx.shadowBlur = 0;
-
-            requestAnimationFrame(desenharParticulas);
-        }
-
-        // inicia o fundo
-        ajustarCanvas();
-
-        // respeita a preferencia por menos movimento
-        const prefereMenosMovimento = window.matchMedia(
-            "(prefers-reduced-motion: reduce)"
-        ).matches;
-
-        if (!prefereMenosMovimento) {
-            desenharParticulas();
-        }
-
-        // atualiza ao redimensionar a tela
-        window.addEventListener("resize", ajustarCanvas);
-
-        // pausa quando a pagina fica oculta
-        document.addEventListener("visibilitychange", function () {
-            if (document.hidden) {
-                animacaoAtiva = false;
-            } else if (!prefereMenosMovimento) {
-                animacaoAtiva = true;
-                desenharParticulas();
-            }
-        });
-    </script>
-
+    <script src="{{ url_for('static', filename='js/redefinir_senha.js') }}" defer></script>
 </body>
 </html>

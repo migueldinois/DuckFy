@@ -1,6 +1,4 @@
 
-
-
 {% extends 'layout.html' %}
 
 {% block extra_css %}
@@ -84,6 +82,7 @@
         <button type="button" class="btn-editar-conta" title="Editar {{ conta.nome_conta }}"
           aria-label="Editar {{ conta.nome_conta }}" data-editar-conta data-id="{{ conta.id_conta }}"
           data-nome="{{ conta.nome_conta }}" data-tipo="{{ conta.tipo_conta }}" data-saldo="{{ conta.saldo_atual }}"
+          data-reservado="{{ conta.valor_alocado|default(0, true) }}"
           data-url="{{ url_for('editar_conta', id_conta=conta.id_conta) }}"
           data-url-excluir="{{ url_for('excluir_conta', id_conta=conta.id_conta) }}">
           <i class="bi bi-pencil-square" aria-hidden="true"></i>
@@ -138,53 +137,6 @@
 
   </section>
 
-  <!-- Modal de edição -->
-  <div id="modalEditarConta" class="duckfy-modal" role="dialog" aria-modal="true"
-    aria-labelledby="tituloModalEditarConta" aria-hidden="true">
-
-    <div class="dash-card modal-content">
-
-      <div class="d-flex justify-content-between align-items-center mb-4">
-        <h2 id="tituloModalEditarConta" class="card-section-title m-0">
-          Editar conta
-        </h2>
-
-        <button type="button" class="btn-close-custom" data-close-modal aria-label="Fechar modal">
-          &times;
-        </button>
-      </div>
-
-      <form id="formEditarConta" method="POST">
-
-        <div class="mb-3">
-          <label for="editarNomeConta" class="card-subtitle d-block mb-2">
-            Nome do banco
-          </label>
-          <input id="editarNomeConta" name="nome_conta" class="search-input" type="text" maxlength="50" required>
-        </div>
-
-        <div class="mb-3">
-          <label for="editarTipoConta" class="card-subtitle d-block mb-2">
-            Tipo de conta
-          </label>
-          <input id="editarTipoConta" name="tipo_conta" class="search-input" type="text" maxlength="40" required>
-        </div>
-
-        <div class="mb-4">
-          <label for="editarSaldoConta" class="card-subtitle d-block mb-2">
-            Saldo atual (R$)
-          </label>
-          <input id="editarSaldoConta" name="saldo_atual" class="search-input" type="text" inputmode="decimal" data-currency-input min="0" required>
-        </div>
-
-        <button type="submit" class="btn-purple-action w-100">
-          Salvar alterações
-        </button>
-
-      </form>
-    </div>
-  </div>
-
 </main>
 {% endblock %}
 
@@ -217,6 +169,13 @@
         nome.value = botao.dataset.nome || '';
         tipo.value = botao.dataset.tipo || '';
         saldo.value = botao.dataset.saldo || '0';
+        const totalAtual = Number(botao.dataset.saldo || 0);
+        const reservadoAtual = Number(botao.dataset.reservado || 0);
+        document.getElementById('totalContaEditada').textContent = formatarMoeda(totalAtual);
+        document.getElementById('reservadoContaEditada').textContent = formatarMoeda(reservadoAtual);
+        document.getElementById('disponivelContaEditada').textContent = formatarMoeda(
+          Math.max(0, totalAtual - reservadoAtual)
+        );
         saldo.dataset.currencyInitialValue = 'true';
         form.action = botao.dataset.url || '';
         urlExcluir = botao.dataset.urlExcluir || '';
@@ -284,54 +243,139 @@
     });
   });
 
-  
-document.addEventListener('DOMContentLoaded', () => {
-    const origem = document.getElementById('conta_origem');
-    const destino = document.getElementById('conta_destino');
-    const saldoOrigem = document.getElementById('saldoContaOrigem');
-    const saldoDestino = document.getElementById('saldoContaDestino');
+  function formatarMoeda(valor) {
+    return Number(valor || 0).toLocaleString('pt-BR', {
+      style: 'currency',
+      currency: 'BRL'
+    });
+  }
+
+  function lerMoeda(valor) {
+    const texto = String(valor || '').trim();
+    if (!texto) return 0;
+    return texto.includes(',')
+      ? Number(texto.replace(/\./g, '').replace(',', '.')) || 0
+      : Number(texto) || 0;
+  }
+
+  function lerValorDigitado(valor) {
+    const texto = String(valor || '').trim();
+    if (!texto) return 0;
+    if (texto.includes(',')) {
+      return Number(texto.replace(/\./g, '').replace(',', '.')) || 0;
+    }
+    if (/\.\d{1,2}$/.test(texto)) return Number(texto) || 0;
+    return Number(texto.replace(/\./g, '')) || 0;
+  }
+
+  document.addEventListener('DOMContentLoaded', () => {
+    const saldoInicial = document.getElementById('saldo_atual');
+    const previaSaldoNovoBanco = document.getElementById('previaSaldoNovoBanco');
+    saldoInicial?.addEventListener('input', () => {
+      previaSaldoNovoBanco.textContent = formatarMoeda(lerMoeda(saldoInicial.value));
+    });
+
+    const contaAdicionar = document.getElementById('contaAdicionarDinheiro');
+    const valorAdicionar = document.getElementById('valorAdicionarDinheiro');
+    const detalhesAdicionar = document.getElementById('detalhesSaldoAdicionar');
+    const resumoAdicionar = document.getElementById('resumoAdicionarDinheiro');
+    const atualizarAdicao = () => {
+      const conta = contaAdicionar?.selectedOptions[0];
+      const selecionada = Boolean(conta?.value);
+      detalhesAdicionar.hidden = !selecionada;
+      resumoAdicionar.hidden = !selecionada;
+      if (!selecionada) return;
+
+      const total = lerMoeda(conta.dataset.saldo);
+      const reservado = lerMoeda(conta.dataset.reservado);
+      const valor = lerValorDigitado(valorAdicionar.value);
+      document.getElementById('totalAdicionar').textContent = formatarMoeda(total);
+      document.getElementById('reservadoAdicionar').textContent = formatarMoeda(reservado);
+      document.getElementById('disponivelAdicionar').textContent = formatarMoeda(total - reservado);
+      document.getElementById('saldoFinalAdicionar').textContent = formatarMoeda(total + valor);
+      resumoAdicionar.hidden = valor <= 0;
+    };
+    contaAdicionar?.addEventListener('change', atualizarAdicao);
+    valorAdicionar?.addEventListener('input', atualizarAdicao);
+
+    const origem = document.getElementById('contaOrigemTransferencia');
+    const destino = document.getElementById('contaDestinoTransferencia');
+    const valorTransferencia = document.getElementById('valorTransferenciaContas');
+    const formTransferencia = document.getElementById('formTransferirContas');
+    const resumoTransferencia = document.getElementById('resumoTransferenciaContas');
+    const erroTransferencia = document.getElementById('erroTransferenciaContas');
+    const botaoTransferir = formTransferencia?.querySelector('[type="submit"]');
     const alternar = document.getElementById('btnAlternarContas');
 
-    function formatarSaldo(valor) {
-        return Number(valor).toLocaleString('pt-BR', {
-            style: 'currency',
-            currency: 'BRL'
-        });
+    function atualizarDetalheConta(select, prefixo, containerId) {
+      const conta = select.selectedOptions[0];
+      const detalhes = document.getElementById(containerId);
+      const selecionada = Boolean(conta?.value);
+      detalhes.hidden = !selecionada;
+      if (!selecionada) return null;
+
+      const total = lerMoeda(conta.dataset.saldo);
+      const reservado = lerMoeda(conta.dataset.reservado);
+      const disponivel = Math.max(0, total - reservado);
+      document.getElementById(`total${prefixo}`).textContent = formatarMoeda(total);
+      document.getElementById(`reservado${prefixo}`).textContent = formatarMoeda(reservado);
+      document.getElementById(`disponivel${prefixo}`).textContent = formatarMoeda(disponivel);
+      return { total, disponivel };
     }
 
-    function atualizarSaldo(seletor, elemento) {
-        const opcao = seletor.options[seletor.selectedIndex];
+    const validarTransferencia = () => {
+      if (!origem || !destino || !valorTransferencia || !formTransferencia) return;
 
-        if (!opcao || !opcao.value) {
-            elemento.textContent = '';
-            return;
-        }
+      const dadosOrigem = atualizarDetalheConta(origem, 'Origem', 'detalhesSaldoOrigem');
+      const dadosDestino = atualizarDetalheConta(destino, 'Destino', 'detalhesSaldoDestino');
+      const valor = lerValorDigitado(valorTransferencia.value);
+      let mensagem = '';
 
+<<<<<<< HEAD
         const saldo = seletor.id === 'conta_origem'
           ? opcao.dataset.saldoDisponivel
           : opcao.dataset.saldo;
         elemento.textContent = formatarSaldo(saldo);
     }
+=======
+      if (origem.value && destino.value && origem.value === destino.value) {
+        mensagem = 'Escolha contas diferentes para origem e destino.';
+      } else if (dadosOrigem && valor > dadosOrigem.disponivel) {
+        mensagem = `Valor acima do disponível na origem. Máximo: ${formatarMoeda(dadosOrigem.disponivel)}.`;
+      }
+>>>>>>> ad5fe6106928845d9f8d9258f124061fad1fadbe
 
-    origem.addEventListener('change', () => {
-        atualizarSaldo(origem, saldoOrigem);
+      erroTransferencia.textContent = mensagem;
+      erroTransferencia.hidden = !mensagem;
+      const invalida = Boolean(mensagem);
+      botaoTransferir.disabled = invalida;
+
+      const podeMostrarResumo = dadosOrigem && dadosDestino && valor > 0 && !invalida;
+      resumoTransferencia.hidden = !podeMostrarResumo;
+      if (podeMostrarResumo) {
+        document.getElementById('disponivelFinalOrigem').textContent =
+          formatarMoeda(dadosOrigem.disponivel - valor);
+        document.getElementById('saldoFinalDestino').textContent =
+          formatarMoeda(dadosDestino.total + valor);
+      }
+    };
+
+    origem?.addEventListener('change', validarTransferencia);
+    destino?.addEventListener('change', validarTransferencia);
+    valorTransferencia?.addEventListener('input', validarTransferencia);
+    alternar?.addEventListener('click', () => {
+      const valorOrigem = origem.value;
+      origem.value = destino.value;
+      destino.value = valorOrigem;
+      origem.dispatchEvent(new Event('change', { bubbles: true }));
+      destino.dispatchEvent(new Event('change', { bubbles: true }));
+      validarTransferencia();
     });
-
-    destino.addEventListener('change', () => {
-        atualizarSaldo(destino, saldoDestino);
+    formTransferencia?.addEventListener('submit', (event) => {
+      validarTransferencia();
+      if (erroTransferencia && !erroTransferencia.hidden) event.preventDefault();
     });
-
-    alternar.addEventListener('click', () => {
-        const valorOrigem = origem.value;
-        const valorDestino = destino.value;
-
-        origem.value = valorDestino;
-        destino.value = valorOrigem;
-
-        atualizarSaldo(origem, saldoOrigem);
-        atualizarSaldo(destino, saldoDestino);
-    });
-});
+  });
 
 </script>
 {% endblock %}

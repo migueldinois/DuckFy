@@ -1,7 +1,7 @@
 
 document.addEventListener("DOMContentLoaded", function () {
     const botaoTema = document.getElementById("btn-tema");
-    const logo = document.querySelector(".logo-imagem");
+    const logos = document.querySelectorAll(".logo-imagem, .sidebar-logo");
     const iconeTema = document.getElementById("icone-tema");
     const textoTema = document.getElementById("texto-tema");
 
@@ -12,18 +12,15 @@ document.addEventListener("DOMContentLoaded", function () {
 
     // atualiza a logo de acordo com o tema
     function atualizarLogo() {
-        if (!logo) return;
+        logos.forEach((logo) => {
+            const caminhoCorreto = temaEstaClaro()
+                ? logo.dataset.logoClaro
+                : logo.dataset.logoEscuro;
 
-        const logoClara = logo.dataset.logoClaro;
-        const logoEscura = logo.dataset.logoEscuro;
-
-        const caminhoCorreto = temaEstaClaro()
-            ? logoClara
-            : logoEscura;
-
-        if (caminhoCorreto && logo.getAttribute("src") !== caminhoCorreto) {
-            logo.src = caminhoCorreto;
-        }
+            if (caminhoCorreto && logo.getAttribute("src") !== caminhoCorreto) {
+                logo.src = caminhoCorreto;
+            }
+        });
     }
 
     // aplica o tema e atualiza os elementos

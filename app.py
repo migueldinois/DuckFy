@@ -1,8 +1,11 @@
 import math
-import json
-import os
-import uuid
 
+import random
+import os
+import secrets
+from dotenv import load_dotenv
+from datetime import datetime, timedelta
+from flask_mail import Mail, Message
 import requests
 from flask import Flask, render_template, request, redirect, session, flash, url_for
 from decimal import Decimal, InvalidOperation
@@ -18,9 +21,25 @@ from model.contas_bancarias import ContaBancaria
 from model.reserva_emergencia import Reserva
 from model.simulador import SimuladorPatrimonio
 
+load_dotenv()
+
 
 app = Flask(__name__)
 app.secret_key = "duckfy999"
+
+app.config["MAIL_SERVER"] = "smtp.gmail.com"
+app.config["MAIL_PORT"] = 587
+app.config["MAIL_USE_TLS"] = True
+app.config["MAIL_USERNAME"] = "duckfy67@gmail.com"
+app.config["MAIL_PASSWORD"] = os.getenv("SMTP_KEY")
+app.config["MAIL_DEFAULT_SENDER"] = os.getenv("EMAIL_REMETENTE")
+app.config["MAIL_TIMEOUT"] = 10
+
+mail = Mail(app)
+
+codigos_recuperacao = {}
+
+
 
 
 def parse_valor_monetario(valor):
@@ -55,6 +74,41 @@ def index():
     
     return render_template("tela_login.html")
 
+
+
+
+def parse_valor_monetario(valor):
+    texto = str(valor or "").strip().replace("R$", "").replace(" ", "")
+    if "," in texto:
+        texto = texto.replace(".", "").replace(",", ".")
+    elif texto.count(".") > 1 or ("." in texto and len(texto.rsplit(".", 1)[1]) == 3):
+        texto = texto.replace(".", "")
+    return Decimal(texto)
+
+
+def formatar_moeda_brl(valor):
+    """Converte valores numéricos para a pontuação brasileira R$ X.XXX,XX"""
+    return f"{valor:,.2f}".replace(",", "X").replace(".", ",").replace("X", ".")
+
+
+
+def parse_valor_monetario(valor):
+    texto = str(valor or "").strip().replace("R$", "").replace(" ", "")
+    if "," in texto:
+        texto = texto.replace(".", "").replace(",", ".")
+    elif texto.count(".") > 1 or ("." in texto and len(texto.rsplit(".", 1)[1]) == 3):
+        texto = texto.replace(".", "")
+    return Decimal(texto)
+
+@app.get("/login")
+def login():
+
+    if "usuario" in session:
+        return redirect("/dashboard")
+    
+    
+    return render_template("tela_login.html")
+
 def formatar_moeda_brl(valor):
     """Converte valores numéricos para a pontuação brasileira R$ X.XXX,XX"""
     return f"{valor:,.2f}".replace(",", "X").replace(".", ",").replace("X", ".")
@@ -68,6 +122,11 @@ def tela_simulador():
     # 1. Captura de dados do formulário POST
     if request.method == "POST":
         try:
+            anos = int(request.form.get("anos", 5))
+            if anos <= 0:
+                anos = 5
+            aporte_inicial = float(request.form.get("aporte_inicial") or 0.0)
+            aporte_mensal = float(request.form.get("aporte_mensal") or 0.0)
             anos = int(request.form.get("anos") or 5)
             aporte_inicial = float(parse_valor_monetario(request.form.get("aporte_inicial")))
             aporte_mensal = float(parse_valor_monetario(request.form.get("aporte_mensal")))
@@ -204,15 +263,18 @@ def logout():
     flash("Você saiu da sua conta!", "success")
     return redirect("/login")
 
+# se o usuário estiver logado, renderiza a página de termos com o layout padrão; caso contrário, renderiza com o layout público
 @app.get("/termos")
 def termos():
     logado = "usuario" in session
-    return render_template("termos.html", usuario_logado=logado)
+    layout_base = "layout.html" if logado else "layout_publico.html"
+    return render_template("termos.html", usuario_logado=logado, layout_base=layout_base)
 
 @app.route('/privacidade')
 def privacidade():
     logado = "usuario" in session
-    return render_template("privacidade.html", usuario_logado=logado)
+    layout_base = "layout.html" if logado else "layout_publico.html"
+    return render_template("privacidade.html", usuario_logado=logado, layout_base=layout_base)
 
 @app.route("/contas")
 def contas():
@@ -805,9 +867,118 @@ def cadastrar():
         flash("Erro ao cadastrar usuário. Tente novamente.", "error")
         return redirect('/cadastro')
     
+    
 @app.get("/redefinir")
 def redefinir():
+    
+
+
     return render_template("redefinir_senha.html")
+    
+
+
+
+@app.post("/api/recuperacao/enviar-codigo")
+def solicitar_codigo():
+    dados = request.get_json(silent=True) or {}
+    email = dados.get("email", "").strip()
+
+    if not email:
+        return {"message": "Informe seu e-mail."}, 400
+
+    usuario = Usuario.buscar_por_email(email)
+
+
+    if not usuario:
+        return {
+            "message": "Se o e-mail estiver cadastrado, você receberá um código."
+        }, 200
+
+    codigo = f"{secrets.randbelow(1000000):06d}"
+
+    mensagem = Message(
+        subject="Código de recuperação - Duckfy",
+        recipients=[email],
+        sender=os.getenv("BREVO_EMAIL_REMETENTE"),
+        body=(
+            f"Olá!\n\n"
+            f"Seu código de recuperação de senha do Duckfy é: {codigo}\n\n"
+            f"Ele expira em 10 minutos.\n"
+            f"Se você não solicitou essa alteração, ignore este e-mail."
+        )
+    )
+
+    try:
+        mail.send(mensagem)
+
+        codigos_recuperacao[email] = {
+            "codigo": codigo,
+            "expira_em": datetime.now() + timedelta(minutes=10)
+        }
+
+        return {
+            "message": "Se o e-mail estiver cadastrado, você receberá um código."
+        }, 200
+
+    except Exception as erro:
+        print(f"Erro ao enviar e-mail pela Brevo: {erro}")
+        return {
+            "message": "Não foi possível enviar o e-mail. Tente novamente."
+        }, 500
+    
+
+@app.post("/api/recuperacao/verificar-codigo")
+def verificar_codigo():
+    dados = request.get_json(silent=True) or {}
+
+    email = dados.get("email", "").strip()
+    codigo_digitado = dados.get("codigo", "").strip()
+
+    if not email or not codigo_digitado:
+        return {"message": "Informe o código recebido."}, 400
+
+    recuperacao = codigos_recuperacao.get(email)
+
+    if not recuperacao:
+        return {"message": "Solicite um novo código de recuperação."}, 400
+
+    # Verifica se o código expirou
+    if datetime.now() > recuperacao["expira_em"]:
+        codigos_recuperacao.pop(email, None)
+        return {"message": "O código expirou. Solicite um novo."}, 400
+
+    # Confere o código digitado
+    if not secrets.compare_digest(codigo_digitado, recuperacao["codigo"]):
+        return {"message": "Código incorreto. Tente novamente."}, 400
+
+    # gera token para autorizar a próxima etapa
+    token = secrets.token_urlsafe(32)
+
+    recuperacao["token"] = token
+    recuperacao["token_expira_em"] = datetime.now() + timedelta(minutes=10)
+
+    return {
+    "message": "Código verificado com sucesso!",
+    "reset_token": token
+}, 200
+
+@app.get("/teste-email")
+def teste_email():
+    try:
+        mensagem = Message(
+            subject="Teste de e-mail - Duckfy",
+            recipients=[os.getenv("EMAIL_REMETENTE")],
+            body="Teste de envio do Duckfy."
+        )
+
+        mail.send(mensagem)
+        return "E-mail de teste enviado!"
+
+    except Exception as erro:
+        print(f"Erro ao enviar e-mail: {erro}")
+        return f"Falha no envio: {erro}", 500
+
+
 
 
 

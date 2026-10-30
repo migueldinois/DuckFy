@@ -137,35 +137,11 @@ class ContaBancaria:
 
     @staticmethod
     def deletar_conta(id_conta, id_usuario):
-        """Apaga uma conta bancária e sincroniza o saldo da reserva."""
+        """Apaga uma conta bancária do utilizador."""
         conexao, cursor = Conexao.conectar()
         try:
-            cursor.execute(
-                'SELECT id_conta FROM contas_bancarias WHERE id_conta = %s AND id_usuario = %s FOR UPDATE',
-                (id_conta, id_usuario)
-            )
-            if not cursor.fetchone():
-                conexao.rollback()
-                return False
-
-            cursor.execute(
-                'DELETE FROM contas_bancarias WHERE id_conta = %s AND id_usuario = %s',
-                (id_conta, id_usuario)
-            )
-
-            cursor.execute(
-                '''
-                UPDATE reserva_emergencia re
-                LEFT JOIN (
-                    SELECT id_reserva, SUM(valor_alocado) AS total_alocado
-                    FROM reserva_contas
-                    GROUP BY id_reserva
-                ) aloc ON aloc.id_reserva = re.id_reserva
-                SET re.valor_atual = COALESCE(aloc.total_alocado, 0)
-                WHERE re.id_usuario = %s
-                ''',
-                (id_usuario,)
-            )
+            sql = "DELETE FROM contas_bancarias WHERE id_conta = %s AND id_usuario = %s"
+            cursor.execute(sql, (id_conta, id_usuario))
             conexao.commit()
             return True
         except Exception as e:

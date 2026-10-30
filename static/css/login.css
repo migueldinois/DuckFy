@@ -775,6 +775,68 @@ body.tema-claro .logo-fy {
     pointer-events: none;
 }
 
+.login-cabecalho {
+    top: max(8px, env(safe-area-inset-top));
+    left: 0;
+    right: 0;
+    width: auto;
+    min-height: clamp(64px, 10vw, 84px);
+    padding: 0 max(12px, env(safe-area-inset-right)) 0 max(12px, env(safe-area-inset-left));
+    align-items: center;
+}
+
+.login-cabecalho .login-logo {
+    --logo-area-width: clamp(110px, 24vw, 170px);
+    position: relative;
+    display: block;
+    flex: 0 1 var(--logo-area-width);
+    width: var(--logo-area-width);
+    height: clamp(50px, 10vw, 72px);
+    overflow: hidden;
+}
+
+.login-cabecalho .logo-imagem {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: calc(var(--logo-area-width) * 1.25);
+    max-width: none;
+    height: auto;
+    margin: 0;
+    object-fit: contain;
+    object-position: center;
+    transform: translate(-49.48%, -46.85%);
+}
+
+.login-cabecalho .logo-imagem[src$="logo_clara.png"] {
+    width: calc(var(--logo-area-width) * 1.23);
+    transform: translate(-52.60%, -49.07%);
+}
+
+@media (max-width: 500px) {
+    .login-cabecalho {
+        min-height: 62px;
+        padding: 0 max(12px, env(safe-area-inset-right)) 0 max(12px, env(safe-area-inset-left));
+        gap: 8px;
+    }
+
+    .login-cabecalho .login-logo {
+        --logo-area-width: clamp(108px, 32vw, 140px);
+        height: 54px;
+    }
+}
+
+@media (max-width: 800px) and (orientation: landscape) {
+    .login-cabecalho {
+        min-height: 54px;
+    }
+
+    .login-cabecalho .login-logo {
+        --logo-area-width: clamp(104px, 24vw, 150px);
+        height: 46px;
+    }
+}
+
 /* mantém o login acima das partículas */
 .login {
     position: relative;

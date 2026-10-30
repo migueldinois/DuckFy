@@ -181,28 +181,30 @@
 .pagina-patrimonio .btn-purple-action:hover {
   color: #fff;
   background: var(--brand-dark);
-  box-shadow: 0 5px 18px rgba(120, 86, 232, .2);
+
+  border-color: var(--brand-primary);
 }
 
 .pagina-patrimonio .btn-adicionar-dinheiro {
   color: #fff;
-  background: #5d3dc4;
-  border-color: #7655e8;
+  background: var(--brand-primary);
+
 }
 
 .pagina-patrimonio .btn-adicionar-dinheiro:hover {
-  background: #6d49dc;
-  border-color: #8a6af3;
+  background: var(--brand-dark);
+  border-color: var(--brand-primary);
+
 }
 
 .pagina-patrimonio .btn-transferir-dinheiro {
   color: var(--text-primary);
-  background: var(--bg-surface-1);
-  border-color: var(--border-color);
+  background: var(--brand-primary);
+
 }
 
 .pagina-patrimonio .btn-transferir-dinheiro:hover {
-  background: var(--bg-surface-2);
+  background: var(--brand-dark);
   border-color: var(--brand-primary);
 }
 
@@ -388,6 +390,99 @@
 
 .pagina-patrimonio .duckfy-modal .btn-purple-action:hover {
   transform: translateY(-1px);
+}
+
+.resumo-saldo-conta {
+  padding: 14px 16px;
+  color: var(--text-primary);
+  background: color-mix(in srgb, var(--brand-secondary) 7%, var(--bg-surface-1));
+  border: 1px solid color-mix(in srgb, var(--brand-secondary) 24%, var(--border-color));
+  border-radius: 12px;
+}
+
+.resumo-saldo-conta > .card-subtitle {
+  display: block;
+  margin-bottom: 4px;
+}
+
+.resumo-saldo-conta > strong {
+  font-size: 1.05rem;
+  font-variant-numeric: tabular-nums;
+}
+
+.detalhes-saldo-conta {
+  display: grid;
+  gap: 5px;
+  margin-top: 9px;
+  color: var(--text-muted);
+  font-size: .78rem;
+}
+
+.detalhes-saldo-conta span {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.detalhes-saldo-conta strong {
+  color: var(--text-primary);
+  font-weight: 650;
+  font-variant-numeric: tabular-nums;
+}
+
+.mensagem-validacao-conta {
+  margin: 0 0 12px;
+  padding: 10px 12px;
+  color: #b93838;
+  background: color-mix(in srgb, #ef4444 9%, var(--bg-surface-1));
+  border: 1px solid color-mix(in srgb, #ef4444 28%, var(--border-color));
+  border-radius: 10px;
+  font-size: .84rem;
+  line-height: 1.45;
+}
+
+.mensagem-validacao-conta[hidden] {
+  display: none;
+}
+
+.pagina-patrimonio .duckfy-modal .btn-purple-action:disabled {
+  opacity: .55;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.pagina-patrimonio .duckfy-modal .btn-excluir-conta {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 9px;
+  min-height: 46px;
+  padding: 10px 16px;
+  color: #ef6262;
+  background: color-mix(in srgb, #ef4444 8%, var(--bg-surface-1));
+  border: 1px solid color-mix(in srgb, #ef4444 34%, var(--border-color));
+  border-radius: 12px;
+  font: inherit;
+  font-size: .9rem;
+  font-weight: 650;
+  cursor: pointer;
+  transition: color .2s, background .2s, border-color .2s, transform .2s, box-shadow .2s;
+}
+
+.pagina-patrimonio .duckfy-modal .btn-excluir-conta i {
+  font-size: 1rem;
+}
+
+.pagina-patrimonio .duckfy-modal .btn-excluir-conta:hover {
+  color: #fff;
+  background: #d94343;
+  border-color: #d94343;
+  box-shadow: 0 5px 16px rgba(217, 67, 67, .2);
+  transform: translateY(-1px);
+}
+
+.pagina-patrimonio .duckfy-modal .btn-excluir-conta:active {
+  transform: translateY(0);
 }
 
 .pagina-patrimonio .duckfy-modal .btn-close-custom.w-100 {
@@ -685,6 +780,7 @@
   .pagina-patrimonio .nome-banco {
     font-size: .86rem;
   }
+
 
   .pagina-patrimonio .tipo-banco {
     font-size: .75rem;
