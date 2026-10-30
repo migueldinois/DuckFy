@@ -1,0 +1,325 @@
+body.app-body.tema-claro {
+  --bg-main: var(--bg-primary);
+  --bg-dark: var(--bg-primary);
+  --bg-card: var(--bg-surface-1);
+  --bg-card-hover: var(--bg-surface-2);
+  --bg-input: var(--bg-surface-1);
+  --primary-purple: var(--brand-primary);
+  --purple-primary: var(--brand-primary);
+  --purple-hover: var(--brand-dark);
+  --purple-glow: rgba(112, 66, 200, 0.16);
+  --border-glass: var(--border-color);
+
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
+}
+
+body.app-body.tema-claro .main-content {
+  color: var(--text-primary);
+}
+
+body.app-body.tema-claro .sidebar,
+body.app-body.tema-claro .bottom-bar,
+body.app-body.tema-claro .dropdown-menu {
+  background-color: var(--bg-surface-1);
+  border-color: var(--border-color);
+  box-shadow: 0 8px 24px var(--shadow-color);
+}
+
+body.app-body.tema-claro .sidebar-link,
+body.app-body.tema-claro .sidebar-logout,
+body.app-body.tema-claro .dropdown-menu a:not(.logout-btn),
+body.app-body.tema-claro .nav-icon-btn {
+  color: var(--text-muted);
+}
+
+body.app-body.tema-claro .sidebar-logout,
+body.app-body.tema-claro .dropdown-menu .logout-btn {
+  color: #c43d4d;
+}
+
+body.app-body.tema-claro .sidebar-divider {
+  border-color: var(--border-color);
+}
+
+body.app-body.tema-claro .sidebar-link:hover,
+body.app-body.tema-claro .dropdown-menu a:not(.logout-btn):hover {
+  color: var(--text-primary);
+  background-color: var(--bg-surface-2);
+}
+
+body.app-body.tema-claro .sidebar-link.active,
+body.app-body.tema-claro .nav-icon-btn.active,
+body.app-body.tema-claro .dropdown-menu a:hover {
+  color: #ffffff;
+}
+
+body.app-body.tema-claro .main-content .btn-purple-action,
+body.app-body.tema-claro .main-content .btn-purple,
+body.app-body.tema-claro .main-content .btn-adicionar-banco,
+body.app-body.tema-claro .main-content .btn-adicionar-dinheiro,
+body.app-body.tema-claro .main-content .btn-salvar-topo,
+body.app-body.tema-claro .main-content .btn-editar-perfil,
+body.app-body.tema-claro .main-content .btn-editar {
+  color: #ffffff;
+}
+
+body.app-body.tema-claro .main-content .btn-purple-action:hover {
+  color: var(--text-primary);
+}
+
+body.app-body.tema-claro .main-content .lancamento-block .btn-check:checked + .btn-tipo-switch,
+body.app-body.tema-claro .main-content .lancamento-block .btn-check:checked + .btn-categoria-icon,
+body.app-body.tema-claro .main-content .simulador-page-wrapper .btn-periodo.active {
+  color: #ffffff;
+}
+
+body.app-body.tema-claro .main-content .dash-card,
+body.app-body.tema-claro .main-content .card-painel,
+body.app-body.tema-claro .main-content .extrato-page,
+body.app-body.tema-claro .main-content .cartao-usuario,
+body.app-body.tema-claro .main-content .cartao-usuario-destaque,
+body.app-body.tema-claro .main-content .cartao-formulario,
+body.app-body.tema-claro .main-content .lancamento-block,
+body.app-body.tema-claro .main-content .reserva-block,
+body.app-body.tema-claro .main-content .card-patrimonio,
+body.app-body.tema-claro .main-content .card-lista-contas,
+body.app-body.tema-claro .main-content .previa-conta,
+body.app-body.tema-claro .main-content .sequencia-card,
+body.app-body.tema-claro .main-content .modal-content,
+body.app-body.tema-claro .main-content .modal-excluir-conta {
+  background-color: var(--bg-surface-1) !important;
+  border-color: var(--border-color) !important;
+  color: var(--text-primary);
+  box-shadow: 0 12px 32px var(--shadow-color);
+}
+
+body.app-body.tema-claro .main-content .inner-card,
+body.app-body.tema-claro .main-content .metric-box,
+body.app-body.tema-claro .main-content .grafic-container,
+body.app-body.tema-claro .main-content .tabela-container,
+body.app-body.tema-claro .main-content .reserva-inner-card,
+body.app-body.tema-claro .main-content .category-item,
+body.app-body.tema-claro .main-content .type-switcher,
+body.app-body.tema-claro .main-content .filter-tabs,
+body.app-body.tema-claro .main-content .item-lista-config:not(.sair),
+body.app-body.tema-claro .main-content .inner-card,
+body.app-body.tema-claro .main-content .estatistica,
+body.app-body.tema-claro .main-content .semana-circulo {
+  background-color: var(--bg-surface-2) !important;
+  border-color: var(--border-color) !important;
+  color: var(--text-primary);
+  box-shadow: 0 8px 20px var(--shadow-color);
+}
+
+body.app-body.tema-claro .main-content .cabecalho-perfil {
+  background: linear-gradient(180deg, rgba(112, 66, 200, 0.12), transparent 100%);
+}
+
+body.app-body.tema-claro .main-content .item-lista-config:not(.sair):hover,
+body.app-body.tema-claro .main-content .item-conta:hover {
+  background-color: #e8e0f7 !important;
+  border-color: var(--brand-secondary) !important;
+}
+
+body.app-body.tema-claro .main-content .page-title,
+body.app-body.tema-claro .main-content .card-main-title,
+body.app-body.tema-claro .main-content .sequence-label,
+body.app-body.tema-claro .main-content .sequence-value,
+body.app-body.tema-claro .main-content .amount-large,
+body.app-body.tema-claro .main-content .card-valor,
+body.app-body.tema-claro .main-content .cat-name,
+body.app-body.tema-claro .main-content .nome-usuario,
+body.app-body.tema-claro .main-content .texto-item,
+body.app-body.tema-claro .main-content .description,
+body.app-body.tema-claro .main-content .metric-value,
+body.app-body.tema-claro .main-content .card-section-title,
+body.app-body.tema-claro .main-content .sequencia-header h1,
+body.app-body.tema-claro .main-content .sequencia-numero strong,
+body.app-body.tema-claro .main-content .card-titulo {
+  color: var(--text-primary) !important;
+}
+
+body.app-body.tema-claro .main-content .card-subtitle,
+body.app-body.tema-claro .main-content .inner-title,
+body.app-body.tema-claro .main-content .cat-subs,
+body.app-body.tema-claro .main-content .email-usuario,
+body.app-body.tema-claro .main-content .date-time,
+body.app-body.tema-claro .main-content .info small,
+body.app-body.tema-claro .main-content .info .text-muted,
+body.app-body.tema-claro .main-content .card-rotulo,
+body.app-body.tema-claro .main-content .card-detalhe-reserva,
+body.app-body.tema-claro .main-content .aviso-reserva,
+body.app-body.tema-claro .main-content .sequencia-header p,
+body.app-body.tema-claro .main-content .card-descricao {
+  color: var(--text-muted) !important;
+}
+
+body.app-body.tema-claro .main-content .termos {
+  color: var(--text-primary);
+}
+
+body.app-body.tema-claro .main-content .termos-conteudo {
+  background-color: var(--bg-surface-1);
+  border-color: var(--border-color);
+  color: var(--text-primary);
+}
+
+body.app-body.tema-claro .main-content .termos-conteudo h2 {
+  color: var(--brand-primary);
+}
+
+body.app-body.tema-claro .main-content .termos-conteudo p {
+  color: var(--text-muted);
+}
+
+body.app-body.tema-claro .main-content .text-white:not(.btn):not(.btn-close):not(.icon-circle):not(.badge):not(.alert):not(.btn-purple-action):not(.btn-adicionar-banco):not(.btn-adicionar-dinheiro):not(.btn-salvar-topo):not(.btn-editar-perfil):not(.btn-editar):not(.btn-acao-roxo):not(.btn-acao-vermelho) {
+  color: var(--text-primary) !important;
+}
+
+body.app-body.tema-claro .main-content .text-white-50 {
+  color: var(--text-muted) !important;
+}
+
+body.app-body.tema-claro .main-content h1,
+body.app-body.tema-claro .main-content h2,
+body.app-body.tema-claro .main-content h3,
+body.app-body.tema-claro .main-content h4,
+body.app-body.tema-claro .main-content h5,
+body.app-body.tema-claro .main-content h6 {
+  color: var(--text-primary);
+}
+
+body.app-body.tema-claro .main-content .extrato-page {
+  --extrato-card: var(--bg-surface-1);
+  --extrato-item: var(--bg-surface-2);
+  --extrato-green: var(--accent-primary);
+  color: var(--text-primary);
+  border-color: var(--border-color);
+}
+
+body.app-body.tema-claro .main-content .filter-tabs {
+  background-color: var(--bg-surface-2);
+}
+
+body.app-body.tema-claro .main-content .tab-btn:not(.active),
+body.app-body.tema-claro .main-content .date-time,
+body.app-body.tema-claro .main-content .table-hint {
+  color: var(--text-muted);
+}
+
+body.app-body.tema-claro .main-content .tab-btn.active,
+body.app-body.tema-claro .main-content .type-switcher .tab-btn.active {
+  color: #ffffff;
+  background-color: var(--brand-primary);
+}
+
+body.app-body.tema-claro .main-content .category-item:hover {
+  border-color: var(--brand-secondary) !important;
+}
+
+body.app-body.tema-claro .main-content input:not([type="radio"]):not([type="checkbox"]):not([type="hidden"]),
+body.app-body.tema-claro .main-content select,
+body.app-body.tema-claro .main-content textarea,
+body.app-body.tema-claro .main-content .form-control,
+body.app-body.tema-claro .main-content .form-select,
+body.app-body.tema-claro .main-content .custom-select-trigger,
+body.app-body.tema-claro .main-content .custom-select-options {
+  background-color: var(--bg-surface-1) !important;
+  border-color: var(--border-color) !important;
+  color: var(--text-primary) !important;
+  -webkit-text-fill-color: var(--text-primary);
+  caret-color: var(--text-primary);
+}
+
+body.app-body.tema-claro .main-content input::placeholder,
+body.app-body.tema-claro .main-content textarea::placeholder,
+body.app-body.tema-claro .main-content .custom-select-trigger.has-placeholder {
+  color: var(--text-muted) !important;
+  -webkit-text-fill-color: var(--text-muted);
+  opacity: 1;
+}
+
+body.app-body.tema-claro .main-content input:focus,
+body.app-body.tema-claro .main-content select:focus,
+body.app-body.tema-claro .main-content textarea:focus {
+  border-color: var(--brand-primary) !important;
+  box-shadow: 0 0 0 0.2rem rgba(112, 66, 200, 0.16) !important;
+}
+
+body.app-body.tema-claro .main-content .lancamento-block .tipo-switch-container,
+body.app-body.tema-claro .main-content .lancamento-block .btn-categoria-icon,
+body.app-body.tema-claro .main-content .simulador-page-wrapper .btn-periodo:not(.active),
+body.app-body.tema-claro .main-content .simulador-page-wrapper .btn-edit {
+  background-color: var(--bg-surface-2) !important;
+  border-color: var(--border-color) !important;
+  color: var(--text-primary);
+}
+
+body.app-body.tema-claro .main-content .custom-select-option {
+  color: var(--text-primary);
+}
+
+body.app-body.tema-claro .main-content .custom-select-option:hover,
+body.app-body.tema-claro .main-content .custom-select-option.is-active {
+  background-color: rgba(112, 66, 200, 0.12);
+}
+
+body.app-body.tema-claro .main-content .custom-select-option[aria-selected="true"] {
+  background-color: var(--brand-primary);
+  color: #ffffff;
+}
+
+body.app-body.tema-claro .main-content table,
+body.app-body.tema-claro .main-content th,
+body.app-body.tema-claro .main-content td {
+  color: var(--text-primary);
+  border-color: var(--border-color);
+}
+
+body.app-body.tema-claro .main-content th {
+  color: var(--text-muted);
+}
+
+body.app-body.tema-claro .main-content .timeline-item {
+  border-bottom-color: var(--border-color);
+}
+
+body.app-body.tema-claro .main-content .timeline-item:hover {
+  background-color: rgba(112, 66, 200, 0.045);
+}
+
+body.app-body.tema-claro .main-content .modal-content,
+body.app-body.tema-claro .main-content .modal-excluir-conta {
+  color: var(--text-primary) !important;
+}
+
+body.app-body.tema-claro .main-content .btn-close-white {
+  filter: invert(1) grayscale(100%) brightness(45%);
+}
+
+body.app-body.tema-claro .main-content .btn-outline-light {
+  color: var(--text-primary);
+  border-color: var(--border-color);
+}
+
+body.app-body.tema-claro .main-content .btn-outline-light:hover {
+  color: #ffffff;
+  background-color: var(--brand-primary);
+  border-color: var(--brand-primary);
+}
+
+body.app-body.tema-claro .main-content .btn-voltar-perfil,
+body.app-body.tema-claro .main-content .btn-icon-add,
+body.app-body.tema-claro .main-content .extrato-header a,
+body.app-body.tema-claro .main-content .arrow-link {
+  background-color: var(--bg-surface-2);
+  border-color: var(--border-color);
+  color: var(--brand-primary);
+}
+
+body.app-body.tema-claro .main-content .btn-voltar-perfil,
+body.app-body.tema-claro .main-content .pagina-patrimonio .btn-voltar {
+  color: var(--text-primary);
+}
+
