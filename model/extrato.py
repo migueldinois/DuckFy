@@ -47,15 +47,9 @@ class Extrato:
             params = [id_usuario]
 
             if tipo == 'entrada':
-<<<<<<< HEAD
-                query += " AND (LOWER(t.tipo) IN ('receita', 'entrada') OR (t.id_reserva IS NOT NULL AND LOWER(t.tipo) IN ('crédito', 'credito')))"
+                query += " AND (LOWER(t.tipo) IN ('receita', 'entrada', 'entradas') OR (t.id_reserva IS NOT NULL AND LOWER(t.tipo) IN ('crédito', 'credito')))"
             elif tipo == 'saida':
-                query += " AND (LOWER(t.tipo) IN ('despesa', 'saida', 'saída') OR (t.id_reserva IS NOT NULL AND LOWER(t.tipo) IN ('débito', 'debito')))"
-=======
-                query += " AND LOWER(t.tipo) IN ('receita', 'entrada', 'entradas', 'retirada')"
-            elif tipo == 'saida':
-                query += " AND LOWER(t.tipo) IN ('despesa', 'saida', 'saída', 'transferência', 'transferencia')"
->>>>>>> ad5fe6106928845d9f8d9258f124061fad1fadbe
+                query += " AND (LOWER(t.tipo) IN ('despesa', 'saida', 'saída', 'transferência', 'transferencia') OR (t.id_reserva IS NOT NULL AND LOWER(t.tipo) IN ('débito', 'debito')))"
 
             if id_conta:
                 query += " AND t.id_conta = %s"

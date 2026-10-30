@@ -4,5 +4,4 @@ bcrypt
 requests
 python-dotenv
 gunicorn
-dotenv
 Flask-Mail

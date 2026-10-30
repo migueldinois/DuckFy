@@ -12,20 +12,13 @@
                 </label>
 
                 <div class="input-icon-wrapper">
-<<<<<<< HEAD
-                    <select name="id_conta" id="conta_origem" class="search-input" required>
+                    <select name="id_conta" id="contaAdicionarDinheiro" class="search-input" required>
                         <option value="" disabled {% if not request.args.get('conta_id')|int %}selected{% endif %}>Selecione onde adicionar</option>
 
                         {% for conta in contas_bancarias %}
-                        <option value="{{ conta.id_conta }}" data-saldo="{{ conta.saldo_atual }}" {% if (request.args.get('conta_id')|int) == conta.id_conta %}selected{% endif %}>
-=======
-                    <select name="id_conta" id="contaAdicionarDinheiro" class="search-input" required>
-                        <option value="" disabled selected>Selecione onde adicionar</option>
-
-                        {% for conta in contas_bancarias %}
                         <option value="{{ conta.id_conta }}" data-saldo="{{ conta.saldo_atual }}"
-                            data-reservado="{{ conta.valor_alocado|default(0, true) }}">
->>>>>>> ad5fe6106928845d9f8d9258f124061fad1fadbe
+                            data-reservado="{{ conta.valor_alocado|default(0, true) }}"
+                            {% if (request.args.get('conta_id')|int) == conta.id_conta %}selected{% endif %}>
                             {{ conta.nome_conta }}
                         </option>
                         {% endfor %}
