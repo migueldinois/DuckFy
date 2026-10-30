@@ -1,6 +1,7 @@
 from decimal import Decimal
 
 from database.conexao import Conexao
+from model.progresso import Progresso
 
 class Reserva:
 
@@ -151,6 +152,7 @@ class Reserva:
                 ''',
                 [id_usuario, id_conta, descricao, valor_guardar, id_reserva]
             )
+            Progresso.conceder_xp(cursor, id_usuario, f"reserva:{cursor.lastrowid}", 10)
 
             conexao.commit()
             return True

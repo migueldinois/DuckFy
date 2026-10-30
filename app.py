@@ -3,6 +3,7 @@ import math
 import random
 import os
 import secrets
+import uuid
 from dotenv import load_dotenv
 from datetime import datetime, timedelta
 from flask_mail import Mail, Message
@@ -16,6 +17,7 @@ from werkzeug.utils import secure_filename
 from database.conexao import Conexao
 from model.categorias import Categoria
 from model.usuarios import Usuario
+from model.usuarios_badges import UsuarioBadge
 from model.extrato import Extrato
 from model.contas_bancarias import ContaBancaria
 from model.reserva_emergencia import Reserva
@@ -613,8 +615,29 @@ def dashboard():
 def sequencia():
     if "usuario" in session:
         usuario = Usuario.recuperar_dados_usuario(session["email"])
+        if not usuario:
+            flash("Não foi possível localizar os dados da sua conta.", "error")
+            return redirect('/login')
+
         info_fogo = obter_estado_fogo(usuario["dias_ofensiva"])
-        return render_template("sequencia.html", usuario=usuario, info_fogo=info_fogo)
+        conquistas = UsuarioBadge.listar_conquistas_usuario(session["id_usuario"])
+        conquistas_desbloqueadas = sum(
+            conquista["data_conquista"] is not None for conquista in conquistas
+        )
+        pontos_xp = int(usuario["pontos_xp"] or 0)
+        nivel = pontos_xp // 100 + 1
+        xp_no_nivel = pontos_xp % 100
+        titulo_nivel = "Aprendiz" if nivel == 1 else "Organizador" if nivel < 5 else "Estrategista"
+        return render_template(
+            "sequencia.html",
+            usuario=usuario,
+            info_fogo=info_fogo,
+            conquistas=conquistas,
+            conquistas_desbloqueadas=conquistas_desbloqueadas,
+            nivel=nivel,
+            titulo_nivel=titulo_nivel,
+            xp_no_nivel=xp_no_nivel,
+        )
     else:
         flash("Você precisa estar logado para acessar a sequência!", "error")
         return redirect('/login')

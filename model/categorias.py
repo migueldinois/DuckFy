@@ -1,5 +1,6 @@
 import bcrypt
 from database.conexao import Conexao
+from model.progresso import Progresso
 
 class Categoria():
     @staticmethod
@@ -33,10 +34,12 @@ class Categoria():
         
         try:
             cursor.execute(sql, (id_usuario, nome, tipo, emoji, cor))
+            Progresso.conceder_xp(cursor, id_usuario, f"categoria:{cursor.lastrowid}", 10)
             conexao.commit()
             return True
         except Exception as erro:
             print(f"Erro ao criar categoria: {erro}")
+            conexao.rollback()
             return False
         finally:
             cursor.close()
