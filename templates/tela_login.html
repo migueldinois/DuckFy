@@ -105,14 +105,7 @@
 
                 </form>
 
-                <!-- exibe mensagens enviadas pelo flask -->
-                <div class="container__error">
-                    {% with mensagens = get_flashed_messages() %}
-                        {% for mensagem in mensagens %}
-                            <p class="text-error">{{ mensagem }}</p>
-                        {% endfor %}
-                    {% endwith %}
-                </div>
+                {% include 'components/sweetalert_messages.html' %}
 
                 <!-- separa visualmente as opções de acesso -->
                 <div class="separador">
@@ -136,6 +129,8 @@
     </main>
 
     <!-- conecta o javascript da página -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="{{ url_for('static', filename='js/sweetalert-messages.js') }}"></script>
     <script src="{{ url_for('static', filename='js/login.js') }}"></script>
 
 </body>

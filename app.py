@@ -272,6 +272,7 @@ def logar():
         session["usuario"] = usuario_logado
         session["email"] = input_email
         session["id_usuario"] = Usuario.buscar_id_por_email(input_email)
+        flash("Login realizado com sucesso!", "success")
         return redirect(url_for("dashboard"))
     else:
         flash("Usuario ou senha invalidos!", "error")
@@ -600,15 +601,17 @@ def guardar_reserva():
         id_conta = None
 
     descricao = request.form.get('descricao', 'Depósito na Reserva')
-
-    # verifica os dados antes de guardar
     if not valor_guardar.is_finite() or valor_guardar <= 0 or id_conta is None:
         flash("Informe uma conta e um valor válido maior que zero!", "error")
         return redirect(url_for('reserva_emergencia'))
 
-    if not Reserva.guardar_dinheiro(id_usuario, id_conta, valor_guardar, descricao):
-        flash("A conta selecionada não existe ou não tem saldo suficiente.", "error")
-        return redirect(url_for('reserva_emergencia'))
+    if not Reserva.guardar_dinheiro(id_usuario, id_conta, valor_guardar):
+        return redirect(url_for(
+            'reserva_emergencia',
+            erro_saldo=1,
+            abrir_guardar=1,
+            conta_id=id_conta
+        ))
 
     flash(f'R$ {valor_guardar:.2f} guardados na reserva com sucesso!', 'success')
     return redirect(url_for('reserva_emergencia'))
@@ -633,8 +636,7 @@ def retirar_reserva():
         flash("Informe uma conta e um valor válido maior que zero.", "error")
         return redirect(url_for('reserva_emergencia'))
 
-    descricao = request.form.get('descricao', '').strip() or 'Retirada da reserva'
-    if not Reserva.retirar_dinheiro(session['id_usuario'], id_conta, valor_retirar, descricao):
+    if not Reserva.retirar_dinheiro(session['id_usuario'], id_conta, valor_retirar):
         flash("Não foi possível retirar: confira o saldo da reserva e a conta selecionada.", "error")
         return redirect(url_for('reserva_emergencia'))
 
@@ -1051,6 +1053,7 @@ def cadastrar():
     usuario_criado = Usuario.criar_usuario(nome, email, senha, foto_perfil)
 
     if usuario_criado:
+        flash("Cadastro realizado com sucesso! Agora você já pode entrar.", "success")
         return redirect('/login')
     else:
         flash("Erro ao cadastrar usuário. Tente novamente.", "error")

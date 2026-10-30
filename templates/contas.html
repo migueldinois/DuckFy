@@ -2,8 +2,8 @@
 {% extends 'layout.html' %}
 
 {% block extra_css %}
-<link rel="stylesheet" href="{{ url_for('static', filename='css/contas.css') }}">
-<link rel="stylesheet" href="{{ url_for('static', filename='css/duckfy-modal.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/contas.css') }}?v=2">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/duckfy-modal.css') }}?v=2">
 {% endblock %}
 
 
@@ -21,17 +21,6 @@
     </a>
     <h1 class="titulo-pagina m-0">Patrimônio Total</h1>
   </header>
-
-  <!-- Mensagens -->
-  {% with mensagens = get_flashed_messages(with_categories=true) %}
-  {% if mensagens %}
-  {% for categoria, mensagem in mensagens %}
-  <div class="alert {{ 'alert-success' if categoria == 'success' else 'alert-danger' }} mb-3" role="alert">
-    {{ mensagem }}
-  </div>
-  {% endfor %}
-  {% endif %}
-  {% endwith %}
 
   <!-- Resumo -->
   <section class="patrimonio-resumo" aria-label="Resumo financeiro">
@@ -163,6 +152,13 @@
 {% block extra_js %}
 <script>
   document.addEventListener('DOMContentLoaded', () => {
+    const parametros = new URLSearchParams(window.location.search);
+    if (parametros.get('adicionar_saldo') === '1') {
+      ModalManager.abrir('modalAdicionarDinheiro');
+    } else if (parametros.get('adicionar') === '1') {
+      ModalManager.abrir('modalAdicionarBanco');
+    }
+
     const form = document.getElementById('formEditarConta');
     const nome = document.getElementById('editarNomeConta');
     const tipo = document.getElementById('editarTipoConta');
@@ -173,8 +169,6 @@
     const btnConfirmar = document.getElementById('confirmarExcluirConta');
     const btnCancelar = document.getElementById('cancelarExcluirConta');
     const btnCopiar = document.getElementById('copiarPalavraDeletar');
-    const mensagem = document.getElementById('mensagemConfirmacaoExcluir');
-
     let urlExcluir = '';
 
     if (!form || !nome || !tipo || !saldo) return;
@@ -198,7 +192,6 @@
         if (confirmacao) confirmacao.hidden = true;
         if (palavra) palavra.value = '';
         if (btnConfirmar) btnConfirmar.disabled = true;
-        if (mensagem) mensagem.textContent = '';
 
         ModalManager.abrir('modalEditarConta');
       });
@@ -209,23 +202,17 @@
 
       if (btnConfirmar) btnConfirmar.disabled = !valido;
 
-      if (mensagem) {
-        mensagem.textContent = valido
-          ? 'Palavra correta. Você já pode confirmar.'
-          : '';
-      }
     });
 
     btnExcluir?.addEventListener('click', () => {
       if (!urlExcluir) {
-        alert('Não foi possível identificar a conta selecionada.');
+        window.DuckFyAlert.error('Não foi possível identificar a conta selecionada.');
         return;
       }
 
       confirmacao.hidden = false;
       palavra.value = '';
       btnConfirmar.disabled = true;
-      mensagem.textContent = '';
       palavra.focus();
     });
 
@@ -233,13 +220,11 @@
       confirmacao.hidden = true;
       palavra.value = '';
       btnConfirmar.disabled = true;
-      mensagem.textContent = '';
     });
 
     btnCopiar?.addEventListener('click', async () => {
       try {
         await navigator.clipboard.writeText('Deletar');
-        mensagem.textContent = 'Palavra copiada!';
       } catch {
         const temporario = document.createElement('textarea');
         temporario.value = 'Deletar';
@@ -248,12 +233,8 @@
         document.body.appendChild(temporario);
         temporario.select();
 
-        const copiado = document.execCommand('copy');
+        document.execCommand('copy');
         temporario.remove();
-
-        mensagem.textContent = copiado
-          ? 'Palavra copiada!'
-          : 'Não foi possível copiar. Digite Deletar manualmente.';
       }
     });
 
@@ -299,8 +280,8 @@
   document.addEventListener('DOMContentLoaded', () => {
     const saldoInicial = document.getElementById('saldo_atual');
     const previaSaldoNovoBanco = document.getElementById('previaSaldoNovoBanco');
-    saldoInicial?.addEventListener('input', () => {
-      previaSaldoNovoBanco.textContent = formatarMoeda(lerMoeda(saldoInicial.value));
+    saldoInicial?.addEventListener('currency:formatted', () => {
+      previaSaldoNovoBanco.textContent = `R$ ${saldoInicial.value || '0,00'}`;
     });
 
     const contaAdicionar = document.getElementById('contaAdicionarDinheiro');

@@ -53,37 +53,22 @@
                 <div class="grupo-campo d-flex flex-column gap-1">
                     <label for="nome" class="form-label text-white fw-semibold small mb-1">Alterar Nome</label>
                     <input id="nome" name="nome" type="text" class="form-control campo-input p-3 text-white" placeholder="Digite seu nome" value="{{ usuario.nome if usuario else '' }}">
-                    <span id="erro-nome" class="text-danger small mt-1 d-none">Por favor, insira um nome.</span>
                 </div>
 
                 <div class="grupo-campo d-flex flex-column gap-1">
                     <label for="email" class="form-label text-white fw-semibold small mb-1">Alterar E-mail</label>
                     <input id="email" name="email" type="email" class="form-control campo-input p-3 text-white" placeholder="seuemail@exemplo.com" value="{{ usuario.email if usuario else '' }}">
-                    <span id="erro-email" class="text-danger small mt-1 d-none">Por favor, insira um e-mail válido (ex: usuario@dominio.com).</span>
                 </div>
 
                 <!-- AÇÕES ADICIONAIS -->
                 <div class="d-flex flex-column gap-2 mt-4">
-                    <button class="btn btn-acao-vermelho p-3 rounded-3 fw-semibold" type="button" id="abrir-modal-excluir-conta">Excluir conta</button>
+                    <button class="btn btn-acao-vermelho p-3 rounded-3 fw-semibold" type="button" id="abrir-modal-excluir-conta" data-delete-url="{{ url_for('excluir_conta_usuario') }}">Excluir conta</button>
                 </div>
 
             </div>
         </section>
 
     </form>
-
-    <!-- MODAL DE EXCLUSÃO DE CONTA -->
-     <!-- dialog: serve para criar um modal, oque é um modal? é uma janela de diálogo que aparece sobre a página principal -->
-    <dialog id="modal-excluir-conta" class="modal-excluir-conta" aria-labelledby="titulo-excluir-conta">
-        <h2 id="titulo-excluir-conta">Excluir conta</h2>
-        <p>Tem certeza que deseja excluir sua conta?</p>
-        <div class="acoes-modal-excluir">
-            <button type="button" class="btn-cancelar-exclusao" id="cancelar-exclusao-conta">Cancelar</button>
-            <form action="{{ url_for('excluir_conta_usuario') }}" method="POST">
-                <button type="submit" class="btn-confirmar-exclusao">Sim, excluir</button>
-            </form>
-        </div>
-    </dialog>
 
 </div>
 {% endblock %}
@@ -112,35 +97,38 @@
     const formularioPerfil = document.getElementById('form-editar-perfil');
     const campoNome = document.getElementById('nome');
     const campoEmail = document.getElementById('email');
-    const mensagemErroNome = document.getElementById('erro-nome');
-    const mensagemErroEmail = document.getElementById('erro-email');
     const regexEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
-    function atualizarErro(campo, mensagem, invalido) {
-        mensagem.classList.toggle('d-none', !invalido);
-        campo.classList.toggle('invalido', invalido);
-    }
-
-    // Validação do formulário antes de enviar
     formularioPerfil.addEventListener('submit', function(event) {
         const nomeInvalido = campoNome.value.trim() === '';
         const emailInvalido = !regexEmail.test(campoEmail.value.trim());
 
-        atualizarErro(campoNome, mensagemErroNome, nomeInvalido);
-        atualizarErro(campoEmail, mensagemErroEmail, emailInvalido);
-
         if (nomeInvalido || emailInvalido) {
             event.preventDefault();
+            const campoInvalido = nomeInvalido ? campoNome : campoEmail;
+            const texto = nomeInvalido
+                ? 'Por favor, insira um nome.'
+                : 'Por favor, insira um e-mail válido.';
+            window.DuckFyAlert.error(texto, 'Verifique seus dados');
+            campoInvalido.focus();
         }
     });
 
 
-    const modalExcluirConta = document.getElementById('modal-excluir-conta');
-    document.getElementById('abrir-modal-excluir-conta').addEventListener('click', function() {
-        modalExcluirConta.showModal();
-    });
-    document.getElementById('cancelar-exclusao-conta').addEventListener('click', function() {
-        modalExcluirConta.close();
+    const botaoExcluirConta = document.getElementById('abrir-modal-excluir-conta');
+    botaoExcluirConta.addEventListener('click', async function() {
+        const confirmado = await window.DuckFyAlert.confirm({
+            title: 'Excluir sua conta?',
+            text: 'Essa ação é permanente e não poderá ser desfeita.',
+            confirmButtonText: 'Sim, excluir conta'
+        });
+        if (!confirmado) return;
+
+        const formulario = document.createElement('form');
+        formulario.method = 'POST';
+        formulario.action = botaoExcluirConta.dataset.deleteUrl;
+        document.body.appendChild(formulario);
+        formulario.submit();
     });
 </script>
 {% endblock %}

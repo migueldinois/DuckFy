@@ -10,7 +10,6 @@ document.addEventListener('DOMContentLoaded', () => {
     ];
     const formSimulador = document.getElementById('form-simulador');
     const campoAnos = document.getElementById('input_anos');
-    const avisoAporte = document.getElementById('aviso-periodo');
     const campoAnosPersonalizado = document.getElementById('inputModalAnos');
     const elementoModal = document.getElementById('modalEditarPeriodo');
     const modalPeriodo = elementoModal ? new bootstrap.Modal(elementoModal) : null;
@@ -22,12 +21,16 @@ document.addEventListener('DOMContentLoaded', () => {
     function validarAportes() {
         const camposVazios = inputsAporte.filter(input => !campoTemValor(input));
         if (camposVazios.length > 0) {
-            avisoAporte?.classList.remove('d-none');
             camposVazios[0]?.focus();
+            window.DuckFyAlert.show({
+                icon: 'warning',
+                title: 'Complete os aportes',
+                text: 'Preencha os campos de aporte inicial e mensal antes de continuar.',
+                confirmButtonText: 'Corrigir'
+            });
             return false;
         }
 
-        avisoAporte?.classList.add('d-none');
         return true;
     }
 
@@ -73,11 +76,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
         inputsAporte.forEach(input => {
             configurarMascaraMonetaria(input);
-            input?.addEventListener('input', () => {
-                if (inputsAporte.every(campoTemValor)) {
-                    avisoAporte?.classList.add('d-none');
-                }
-            });
         });
 
         document.querySelectorAll('[data-anos]').forEach(botao => {

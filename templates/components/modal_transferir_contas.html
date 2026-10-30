@@ -16,8 +16,12 @@
                         <option value="" disabled selected>Selecione de onde retirar</option>
 
                         {% for conta in contas_bancarias %}
+<<<<<<< HEAD
+                        <option value="{{ conta.id_conta }}" data-saldo="{{ conta.saldo_atual }}" data-saldo-disponivel="{{ conta.saldo_atual|float - conta.valor_alocado|default(0, true)|float }}">
+=======
                         <option value="{{ conta.id_conta }}" data-saldo="{{ conta.saldo_atual }}"
                             data-reservado="{{ conta.valor_alocado|default(0, true) }}">
+>>>>>>> ad5fe6106928845d9f8d9258f124061fad1fadbe
                             {{ conta.nome_conta }}
                         </option>
                         {% endfor %}
@@ -48,8 +52,12 @@
                     <select name="id_conta_destino" id="contaDestinoTransferencia" class="search-input" required>
                         <option value="" disabled selected>Selecione para onde enviar</option>
                         {% for conta in contas_bancarias %}
+<<<<<<< HEAD
+                        <option value="{{ conta.id_conta }}" data-saldo="{{ conta.saldo_atual }}" data-saldo-disponivel="{{ conta.saldo_atual|float - conta.valor_alocado|default(0, true)|float }}">
+=======
                         <option value="{{ conta.id_conta }}" data-saldo="{{ conta.saldo_atual }}"
                             data-reservado="{{ conta.valor_alocado|default(0, true) }}">
+>>>>>>> ad5fe6106928845d9f8d9258f124061fad1fadbe
                             {{ conta.nome_conta }}
                         </option>
                         {% endfor %}

@@ -69,6 +69,13 @@
             {{ categorias_despesa|length }} categorias
         </span>
     </div>
+<<<<<<< HEAD
+    <!-- Alternador de Abas -->
+    <div class="type-switcher mb-3">
+        <button type="button" class="tab-btn active" id="btnSaidas" onclick="alternarAba('SAIDA')">Saídas</button>
+        <button type="button" class="tab-btn" id="btnEntradas" onclick="alternarAba('ENTRADA')">Entradas</button>
+    </div>
+=======
 
     <!-- notificações -->
     {% with messages = get_flashed_messages(with_categories=true) %}
@@ -114,6 +121,7 @@
             <span class="aba-icone despesas-icone">
                 <i class="bi bi-arrow-up-right"></i>
             </span>
+>>>>>>> ad5fe6106928845d9f8d9258f124061fad1fadbe
 
             <span class="aba-texto">
                 <strong>Despesas</strong>

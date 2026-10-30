@@ -18,6 +18,10 @@
   z-index: 9999;
 }
 
+body > .swal2-container {
+  z-index: 10000 !important;
+}
+
 .duckfy-modal.active {
   opacity: 1;
   visibility: visible; 

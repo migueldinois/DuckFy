@@ -1,23 +1,13 @@
 {% extends 'layout.html' %}
 
 {% block extra_css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/extrato.css') }}?v=2.0">
 <link rel="stylesheet" href="{{ url_for('static', filename='css/reserva_emergencia.css') }}">
 {% endblock %}
 
 {% block content %}
 <div id="page-reserva" class="py-3">
   <div class="style-reserva-container">
-
-    <!-- Mensagens Flash -->
-    {% set messages = get_flashed_messages(with_categories=true) %}
-    {% if messages %}
-      {% for category, message in messages %}
-        <div class="alert alert-{{ 'success' if category == 'success' else 'danger' }} bg-{{ 'success' if category == 'success' else 'danger' }} alert-dismissible fade show text-white border-0 mb-3" role="alert">
-          {{ message }}
-          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="alert" aria-label="Close"></button>
-        </div>
-      {% endfor %}
-    {% endif %}
 
     <!-- Header superior -->
     <header class="d-flex align-items-center mb-3">
@@ -72,7 +62,7 @@
       <button type="button" class="btn-purple-action border-0" data-bs-toggle="modal" data-bs-target="#modalGuardarDinheiro">
         Guardar
       </button>
-      <button type="button" class="btn-purple-action border-0" data-bs-toggle="modal" data-bs-target="#modalRetirarDinheiro">
+      <button type="button" class="btn-purple-action border-0" {% if total_guardado > 0 %}data-bs-toggle="modal" data-bs-target="#modalRetirarDinheiro"{% else %}data-no-reserve-balance="true"{% endif %}>
         Retirar
       </button>
       <button type="button" class="btn-purple-action border-0" data-bs-toggle="modal" data-bs-target="#modalAlterarMeta">
@@ -87,28 +77,32 @@
         <a href="/extrato" class="text-white text-decoration-none fs-7 fw-semibold">Ver Extrato Completo <i class="bi bi-arrow-right"></i></a>
       </div>
 
-      <div class="d-flex flex-column gap-3">
+      <section class="timeline-container reserva-history" aria-label="Movimentações da reserva">
         {% for item in historico_movimentacoes %}
-        <div class="d-flex justify-content-between align-items-center">
-          <div class="d-flex align-items-center gap-3">
-            {% if item.tipo == 'Entrada' %}
-              <div class="icon-circle bg-success text-dark d-flex align-items-center justify-content-center fw-bold">+</div>
-            {% else %}
-              <div class="icon-circle bg-danger text-white d-flex align-items-center justify-content-center fw-bold">-</div>
-            {% endif %}
-            <div>
-              <span class="d-block text-white fw-medium fs-6">{{ item.descricao }}</span>
-              <span class="text-white-50 fs-7">{{ item.horario }} • {{ item.tipo }}</span>
-            </div>
+        <div class="timeline-item">
+          <div class="icon-box {% if item.tipo == 'Crédito' %}entrada{% else %}saida{% endif %}">
+            <i class="bi {% if item.tipo == 'Crédito' %}bi-arrow-down-left{% else %}bi-arrow-up-right{% endif %}" aria-hidden="true"></i>
           </div>
-          <span class="{% if item.tipo == 'Entrada' %}text-success{% else %}text-danger{% endif %} fw-bold fs-6">
-            {% if item.tipo == 'Entrada' %}+{% else %}-{% endif %} R$ {{ "%.2f"|format(item.valor)|replace('.', ',') }}
-          </span>
+
+          <div class="info">
+            <div class="date-time">
+              <span class="date">{{ item.horario }}</span>
+            </div>
+            <div class="description fw-bold">{% if item.tipo == 'Crédito' %}Aporte na Reserva de Emergência{% else %}Retirada da Reserva de Emergência{% endif %}</div>
+            <small class="text-muted">Reserva de Emergência</small>
+          </div>
+
+          <div class="amount {% if item.tipo == 'Crédito' %}positive{% else %}negative{% endif %}">
+            {% if item.tipo == 'Crédito' %}+{% else %}-{% endif %} R$ {{ "%.2f"|format(item.valor)|replace('.', ',') }}
+          </div>
         </div>
         {% else %}
-        <p class="text-white-50 fs-7 mb-0 text-center py-2">Nenhuma movimentação registrada.</p>
+        <div class="text-center text-white-50 py-5">
+          <i class="bi bi-inbox fs-1 d-block mb-2" aria-hidden="true"></i>
+          <p class="mb-0">Nenhuma movimentação registrada.</p>
+        </div>
         {% endfor %}
-      </div>
+      </section>
     </div>
 
   </div>
@@ -126,16 +120,36 @@
 
       <form action="{{ url_for('guardar_reserva') }}" method="POST">
         <div class="modal-body">
+          {% if request.args.get('erro_saldo') == '1' %}
+            <span hidden data-swal-modal="#modalGuardarDinheiro" data-swal-message="O saldo disponível desta conta é insuficiente. Adicione dinheiro à conta para continuar." data-swal-type="error"></span>
+            <a class="btn btn-reserva-primary btn-reserva-add-account mb-3" href="{{ url_for('contas', adicionar_saldo=1, conta_id=request.args.get('conta_id')|int) }}">
+              <i class="bi bi-plus-lg me-1" aria-hidden="true"></i>Adicionar saldo à conta
+            </a>
+          {% endif %}
           <div class="mb-3">
-            <label for="id_conta" class="form-label text-white-50 fs-7 fw-medium mb-1">Conta de origem</label>
-            <select class="form-select bg-black bg-opacity-40 border-secondary border-opacity-25 text-white" id="id_conta" name="id_conta" required {% if not contas_usuario %}disabled{% endif %}>
-              <option value="" selected disabled>Selecione uma conta</option>
-              {% for conta in contas_usuario %}
-                <option value="{{ conta.id_conta }}">{{ conta.nome_conta }} • R$ {{ '%.2f'|format(conta.saldo_atual)|replace('.', ',') }}</option>
-              {% endfor %}
-            </select>
+            <label id="id_conta-label" for="id_conta" class="form-label text-white-50 fs-7 fw-medium mb-1">Conta de origem</label>
+            <div class="reserva-custom-select" data-reserva-select>
+              <select class="custom-select-native" id="id_conta" name="id_conta" aria-hidden="true" tabindex="-1" {% if not contas_usuario %}disabled{% endif %}>
+
+                {% for conta in contas_usuario %}
+                  <option value="{{ conta.id_conta }}" {% if (request.args.get('conta_id')|int) == conta.id_conta %}selected{% endif %}>{{ conta.nome_conta }} • Disponível: R$ {{ '%.2f'|format(conta.saldo_atual|float - conta.valor_alocado|float)|replace('.', ',') }}</option>
+                {% endfor %}
+              </select>
+              <button type="button" class="custom-select-trigger has-placeholder" id="id_conta-trigger" role="combobox" aria-haspopup="listbox" aria-expanded="false" aria-controls="id_conta-options" aria-autocomplete="none" aria-labelledby="id_conta-label id_conta-value" aria-required="true" {% if not contas_usuario %}disabled{% endif %}>
+                <span id="id_conta-value">Selecione uma conta</span>
+                <span class="custom-select-chevron" aria-hidden="true"></span>
+              </button>
+              <div class="custom-select-options" id="id_conta-options" role="listbox" aria-labelledby="id_conta-label" hidden>
+                {% for conta in contas_usuario %}
+                  <div class="custom-select-option" role="option" aria-selected="false" data-value="{{ conta.id_conta }}" {% if (request.args.get('conta_id')|int) == conta.id_conta %}data-selected="true"{% endif %}>{{ conta.nome_conta }} • Disponível: R$ {{ '%.2f'|format(conta.saldo_atual|float - conta.valor_alocado|float)|replace('.', ',') }}</div>
+                {% endfor %}
+              </div>
+            </div>
             {% if not contas_usuario %}
-              <small class="text-warning d-block mt-2">Cadastre uma conta bancária para guardar dinheiro na reserva.</small>
+              <span hidden data-swal-modal="#modalGuardarDinheiro" data-swal-message="Cadastre uma conta bancária para guardar dinheiro na reserva." data-swal-type="warning"></span>
+              <a class="btn btn-reserva-primary btn-reserva-add-account text-white mt-2" href="{{ url_for('contas', adicionar=1) }}">
+                <i class="bi bi-plus-lg me-1" aria-hidden="true"></i>Cadastrar conta bancária
+              </a>
             {% endif %}
           </div>
 
@@ -143,19 +157,15 @@
             <label for="valor" class="form-label text-white-50 fs-7 fw-medium mb-1">Valor a Guardar</label>
             <div class="input-group">
               <span class="input-group-text bg-black bg-opacity-40 border-secondary border-opacity-25 text-white-50">R$</span>
-              <input type="text" inputmode="decimal" data-currency-input min="0.01" class="form-control bg-black bg-opacity-40 border-secondary border-opacity-25 text-white" id="valor" name="valor" placeholder="0,00" required>
+              <input type="text" inputmode="numeric" data-currency-input data-currency-cents min="0.01" class="form-control bg-black bg-opacity-40 border-secondary border-opacity-25 text-white" id="valor" name="valor" placeholder="0,00" required>
             </div>
           </div>
 
-          <div class="mb-3">
-            <label for="descricao" class="form-label text-white-50 fs-7 fw-medium mb-1">Descrição / Origem</label>
-            <input type="text" class="form-control bg-black bg-opacity-40 border-secondary border-opacity-25 text-white" id="descricao" name="descricao" placeholder="Ex: Sobra do salário, PIX..." required>
-          </div>
         </div>
 
         <div class="modal-footer border-0 pt-0">
-          <button type="button" class="btn btn-outline-light rounded-3 px-3" data-bs-dismiss="modal">Cancelar</button>
-          <button type="submit" class="btn-purple-action style-btn-sm px-4" {% if not contas_usuario %}disabled{% endif %}>Confirmar</button>
+          <button type="button" class="btn btn-reserva-secondary" data-bs-dismiss="modal">Cancelar</button>
+          <button type="submit" class="btn btn-reserva-primary" {% if not contas_usuario %}disabled{% endif %}>Confirmar</button>
         </div>
       </form>
 
@@ -174,36 +184,48 @@
 
       <form action="{{ url_for('retirar_reserva') }}" method="POST">
         <div class="modal-body">
+          {% if not contas_usuario %}
+            <span hidden data-swal-modal="#modalRetirarDinheiro" data-swal-message="Cadastre uma conta bancária para receber a retirada." data-swal-type="warning"></span>
+          {% endif %}
           <div class="mb-3">
-            <label for="conta_destino_retirada" class="form-label text-white-50 fs-7 fw-medium mb-1">Conta de destino</label>
-            <select class="form-select bg-black bg-opacity-40 border-secondary border-opacity-25 text-white" id="conta_destino_retirada" name="id_conta" required {% if not contas_usuario %}disabled{% endif %}>
-              <option value="" selected disabled>Selecione uma conta</option>
-              {% for conta in contas_usuario %}
-                <option value="{{ conta.id_conta }}">{{ conta.nome_conta }}</option>
-              {% endfor %}
-            </select>
+            <label id="conta_destino_retirada-label" for="conta_destino_retirada" class="form-label text-white-50 fs-7 fw-medium mb-1">Conta de destino</label>
+            <div class="reserva-custom-select" data-reserva-select>
+              <select class="custom-select-native" id="conta_destino_retirada" name="id_conta" aria-hidden="true" tabindex="-1" {% if not contas_usuario %}disabled{% endif %}>
+
+                {% for conta in contas_usuario %}
+                  <option value="{{ conta.id_conta }}" data-valor-alocado="{{ conta.valor_alocado }}">{{ conta.nome_conta }} • Na reserva: R$ {{ '%.2f'|format(conta.valor_alocado|float)|replace('.', ',') }}</option>
+                {% endfor %}
+              </select>
+              <button type="button" class="custom-select-trigger has-placeholder" id="conta_destino_retirada-trigger" role="combobox" aria-haspopup="listbox" aria-expanded="false" aria-controls="conta_destino_retirada-options" aria-autocomplete="none" aria-labelledby="conta_destino_retirada-label conta_destino_retirada-value" aria-required="true" {% if not contas_usuario %}disabled{% endif %}>
+                <span id="conta_destino_retirada-value">Selecione uma conta</span>
+                <span class="custom-select-chevron" aria-hidden="true"></span>
+              </button>
+              <div class="custom-select-options" id="conta_destino_retirada-options" role="listbox" aria-labelledby="conta_destino_retirada-label" hidden>
+                {% for conta in contas_usuario %}
+                  <div class="custom-select-option" role="option" aria-selected="false" data-value="{{ conta.id_conta }}" data-valor-alocado="{{ conta.valor_alocado }}">{{ conta.nome_conta }} • Na reserva: R$ {{ '%.2f'|format(conta.valor_alocado|float)|replace('.', ',') }}</div>
+                {% endfor %}
+              </div>
+            </div>
             {% if not contas_usuario %}
-              <small class="text-warning d-block mt-2">Cadastre uma conta bancária para receber a retirada.</small>
+              <a class="btn btn-reserva-primary btn-reserva-add-account text-white mt-2" href="{{ url_for('contas', adicionar=1) }}">
+                <i class="bi bi-plus-lg me-1" aria-hidden="true"></i>Cadastrar conta bancária
+              </a>
             {% endif %}
           </div>
 
           <div class="mb-3">
-            <label for="valor_retirada" class="form-label text-white-50 fs-7 fw-medium mb-1">Valor a retirar (disponível: R$ {{ '%.2f'|format(total_guardado)|replace('.', ',') }})</label>
+            <label for="valor_retirada" class="form-label text-white-50 fs-7 fw-medium mb-1">Valor a retirar</label>
             <div class="input-group">
               <span class="input-group-text bg-black bg-opacity-40 border-secondary border-opacity-25 text-white-50">R$</span>
-              <input type="text" inputmode="decimal" data-currency-input min="0.01" max="{{ '%.2f'|format(total_guardado) }}" class="form-control bg-black bg-opacity-40 border-secondary border-opacity-25 text-white" id="valor_retirada" name="valor" placeholder="0,00" required {% if total_guardado <= 0 %}disabled{% endif %}>
+              <input type="text" inputmode="numeric" data-currency-input data-currency-cents min="0.01" max="{{ '%.2f'|format(total_guardado) }}" class="form-control bg-black bg-opacity-40 border-secondary border-opacity-25 text-white" id="valor_retirada" name="valor" placeholder="0,00" required {% if total_guardado <= 0 %}disabled{% endif %}>
             </div>
           </div>
 
-          <div class="mb-3">
-            <label for="descricao_retirada" class="form-label text-white-50 fs-7 fw-medium mb-1">Descrição</label>
-            <input type="text" class="form-control bg-black bg-opacity-40 border-secondary border-opacity-25 text-white" id="descricao_retirada" name="descricao" placeholder="Retirada da reserva" maxlength="100">
-          </div>
         </div>
 
         <div class="modal-footer border-0 pt-0">
-          <button type="button" class="btn btn-outline-light rounded-3 px-3" data-bs-dismiss="modal">Cancelar</button>
-          <button type="submit" class="btn-purple-action style-btn-sm px-4" {% if not contas_usuario or total_guardado <= 0 %}disabled{% endif %}>Retirar</button>
+          <button type="button" class="btn btn-reserva-secondary" data-bs-dismiss="modal">Cancelar</button>
+          <button type="submit" class="btn btn-reserva-primary" {% if not contas_usuario or total_guardado <= 0 %}disabled{% endif %}>Retirar</button>
         </div>
       </form>
     </div>
@@ -224,16 +246,20 @@
           <label for="meta_valor" class="form-label text-white-50 fs-7 fw-medium mb-1">Nova meta</label>
           <div class="input-group">
             <span class="input-group-text bg-black bg-opacity-40 border-secondary border-opacity-25 text-white-50">R$</span>
-            <input type="text" inputmode="decimal" data-currency-input min="0.01" max="99999999.99" class="form-control bg-black bg-opacity-40 border-secondary border-opacity-25 text-white" id="meta_valor" name="meta_valor" value="{{ '%.2f'|format(meta_total) }}" required>
+            <input type="text" inputmode="numeric" data-currency-input data-currency-cents min="0.01" max="99999999.99" class="form-control bg-black bg-opacity-40 border-secondary border-opacity-25 text-white" id="meta_valor" name="meta_valor" value="0,00" required>
           </div>
         </div>
 
         <div class="modal-footer border-0 pt-0">
-          <button type="button" class="btn btn-outline-light rounded-3 px-3" data-bs-dismiss="modal">Cancelar</button>
-          <button type="submit" class="btn-purple-action style-btn-sm px-4">Salvar meta</button>
+          <button type="button" class="btn btn-reserva-secondary" data-bs-dismiss="modal">Cancelar</button>
+          <button type="submit" class="btn btn-reserva-primary">Salvar meta</button>
         </div>
       </form>
     </div>
   </div>
   </div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="{{ url_for('static', filename='js/reserva_emergencia.js') }}" defer></script>
 {% endblock %}

@@ -41,6 +41,21 @@ const ModalManager = {
       if (btnExcluir) {
         e.preventDefault();
         const id = document.getElementById('edit_id_categoria')?.value;
+
+        if (!id) return;
+
+        window.DuckFyAlert.confirm({
+          title: 'Excluir categoria?',
+          text: 'Essa ação não pode ser desfeita.',
+          confirmButtonText: 'Excluir categoria'
+        }).then((confirmado) => {
+          if (!confirmado) return;
+          const formDeletar = document.getElementById('formDeletarCategoria');
+          if (formDeletar) {
+            formDeletar.action = `/categorias/deletar/${id}`;
+            formDeletar.submit();
+          }
+        });
       }
     });
   }

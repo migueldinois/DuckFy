@@ -178,7 +178,11 @@
 }
 
 .custom-select-trigger.has-placeholder {
+<<<<<<< HEAD
+  color: color-mix(in srgb, var(--text-muted) 82%, transparent);
+=======
   color: var(--text-muted);
+>>>>>>> b14abae577dbd3a7d05ea0cbe8faba012b3aba70
 }
 
 .custom-select-chevron {
@@ -256,8 +260,13 @@
 .lancamento-block input::placeholder,
 .lancamento-block textarea::placeholder {
   color: var(--text-muted) !important;
+<<<<<<< HEAD
+  -webkit-text-fill-color: var(--text-muted) !important;
+  opacity: 1 !important;
+=======
   -webkit-text-fill-color: var(--text-muted);
   opacity: 1;
+>>>>>>> b14abae577dbd3a7d05ea0cbe8faba012b3aba70
 }
 
 /* Ícones de Categoria */

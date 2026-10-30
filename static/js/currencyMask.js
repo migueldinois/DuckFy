@@ -62,6 +62,33 @@ function formatarValorMonetario(input, pontoDecimal = false, completarCentavos =
       : '');
 }
 
+function formatarValorEmCentavos(input) {
+  const digitos = input.value.replace(/\D/g, '').slice(0, 10);
+  if (!digitos) {
+    input.value = '';
+    input.setCustomValidity('');
+    return;
+  }
+
+  const valor = Number(digitos) / 100;
+  input.value = valor.toLocaleString('pt-BR', {
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2
+  });
+
+  const minimo = input.getAttribute('min');
+  const maximo = input.getAttribute('max');
+  const abaixoDoMinimo = minimo !== null && valor < lerValorMonetario(minimo, true).decimal;
+  const acimaDoMaximo = maximo !== null && valor > lerValorMonetario(maximo, true).decimal;
+  input.setCustomValidity(abaixoDoMinimo
+    ? 'O valor deve ser maior ou igual ao mínimo permitido.'
+    : acimaDoMaximo
+      ? 'O valor excede o limite permitido.'
+      : '');
+
+  input.setSelectionRange(input.value.length, input.value.length);
+}
+
 function formatarCentavosDigitados(input) {
   const valorOriginal = input.value;
   const posicaoOriginal = input.selectionStart ?? valorOriginal.length;
@@ -113,6 +140,22 @@ function normalizarPontoDecimalDigitado(input, event) {
 
 document.addEventListener('DOMContentLoaded', () => {
   document.querySelectorAll('[data-currency-input]').forEach((input) => {
+    if (input.hasAttribute('data-currency-cents')) {
+      if (input.value) formatarValorMonetario(input, true, true);
+
+      input.addEventListener('input', () => {
+        formatarValorEmCentavos(input);
+        input.dispatchEvent(new Event('currency:formatted', { bubbles: true }));
+      });
+      input.addEventListener('focus', () => {
+        input.setSelectionRange(input.value.length, input.value.length);
+      });
+      input.addEventListener('blur', () => {
+        if (input.value) formatarValorMonetario(input, true, true);
+      });
+      return;
+    }
+
     if (input.value) formatarValorMonetario(input, true, true);
 
     input.addEventListener('input', (event) => {
@@ -121,6 +164,7 @@ document.addEventListener('DOMContentLoaded', () => {
         && /[.,]/.test(event.data || '');
       if (colagemComSeparador) formatarValorMonetario(input, true, true);
       else formatarCentavosDigitados(input);
+      input.dispatchEvent(new Event('currency:formatted', { bubbles: true }));
     });
     input.addEventListener('blur', () => formatarValorMonetario(input, false, true));
     input.addEventListener('focus', () => {

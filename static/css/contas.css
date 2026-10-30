@@ -417,7 +417,7 @@
 
 .pagina-patrimonio .search-input::placeholder {
   color: var(--text-muted);
-  opacity: .8;
+  opacity: 1;
 }
 
 .pagina-patrimonio .duckfy-modal .btn-purple-action {
@@ -594,13 +594,6 @@
   border-color: var(--brand-primary);
 }
 
-.mensagem-confirmacao-exclusao {
-  min-height: 18px;
-  margin: 8px 0;
-  color: var(--text-muted);
-  font-size: .82rem;
-}
-
 .acoes-confirmacao-exclusao {
   display: flex;
   flex-direction: column;
@@ -706,6 +699,7 @@
 
 #modalTransferirContas input::placeholder {
   color: var(--text-muted);
+  opacity: 1;
 }
 
 #modalTransferirContas .btn-alternar-contas {
@@ -880,4 +874,56 @@
   .pagina-patrimonio *::after {
     transition: none !important;
   }
+}
+
+.main-content .duckfy-modal .btn-confirm-action {
+  color: #fff !important;
+  background-color: var(--confirmation-primary, #16834a) !important;
+  border-color: var(--confirmation-primary, #16834a) !important;
+}
+
+.main-content .duckfy-modal .btn-confirm-action:hover {
+  color: #fff !important;
+  background-color: var(--confirmation-secondary, #1b9b57) !important;
+  border-color: var(--confirmation-secondary, #1b9b57) !important;
+}
+
+.main-content .duckfy-modal .btn-purple-action {
+  color: #fff !important;
+  background-color: var(--brand-primary, #7c4dff) !important;
+  border-color: var(--brand-primary, #7c4dff) !important;
+}
+
+.main-content .duckfy-modal .btn-purple-action:hover {
+  color: #fff !important;
+  background-color: var(--brand-dark, #4300ff) !important;
+  border-color: var(--brand-dark, #4300ff) !important;
+}
+
+.main-content .duckfy-modal .btn-danger-action {
+  color: #fff !important;
+  background-color: var(--danger-primary, #c62828) !important;
+  border-color: var(--danger-primary, #c62828) !important;
+}
+
+.main-content .duckfy-modal .btn-danger-action:hover {
+  color: #fff !important;
+  background-color: var(--danger-secondary, #b71c1c) !important;
+  border-color: var(--danger-secondary, #b71c1c) !important;
+}
+
+.main-content .duckfy-modal .btn-confirmar-exclusao {
+  color: #fff !important;
+  background-color: #e54848 !important;
+  border-color: #e54848 !important;
+}
+
+.main-content .duckfy-modal .btn-confirmar-exclusao:disabled {
+  opacity: .4;
+  cursor: not-allowed;
+}
+
+.main-content .duckfy-modal .btn-confirmar-exclusao:not(:disabled):hover {
+  background-color: #c93636 !important;
+  border-color: #c93636 !important;
 }
