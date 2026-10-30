@@ -1,25 +1,27 @@
 {% extends 'layout.html' %}
 
+{% macro moeda_br(valor) -%}
+{{ "{:,.2f}".format(valor)|replace(",", "X")|replace(".", ",")|replace("X", ".") }}
+{%- endmacro %}
+
 {% block title %}Simulador Patrimônio - DuckFy{% endblock %}
 
 {% block extra_css %}
-<link rel="stylesheet" href="{{ url_for('static', filename='css/simulador_patrimonio.css') }}?v=5.0">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/simulador_patrimonio.css') }}?v=7.0">
 {% endblock %}
 
 {% block content %}
-<div class="simulador-page-wrapper">
-    <div class="row g-4 align-items-stretch h-100">
+<div class="simulador-page-wrapper container-fluid px-2 px-md-4 py-3">
+    <div class="row g-4 align-items-stretch">
 
         <!-- CARTÃO DA ESQUERDA: FORMULÁRIO -->
         <div class="col-12 col-lg-4 d-flex">
-            <div class="card-painel w-100 d-flex flex-column justify-content-between">
+            <div class="card-painel w-100 d-flex flex-column justify-content-between p-3 p-md-4">
                 <div>
-
-                    <a href="/dashboard" class="text-white text-decoration-none fs-4 me-3" aria-label="Voltar">
-                        <i class="bi bi-arrow-left"></i>
-                    </a>
                     <div class="d-flex align-items-center mb-4">
-
+                        <a href="/dashboard" class="text-white text-decoration-none fs-4 me-3" aria-label="Voltar">
+                            <i class="bi bi-arrow-left"></i>
+                        </a>
                         <h1 class="h5 mb-0 fw-bold text-white">Simulador Investimentos</h1>
                     </div>
 
@@ -28,38 +30,78 @@
 
                         <div class="mb-3">
                             <label class="form-label text-white-50 fw-semibold">Aporte Inicial (R$)</label>
-                            <input type="number" step="0.01" class="form-control input-custom" id="aporte-inicial"
-                                name="aporte_inicial" value="{{ aporte_inicial if aporte_inicial else '' }}"
-                                placeholder="0,00">
+                            <input type="text" inputmode="decimal" autocomplete="off"
+                                class="form-control input-custom" id="aporte-inicial" name="aporte_inicial"
+                                value="{{ 'R$ ' ~ moeda_br(aporte_inicial) if aporte_inicial else '' }}"
+                                placeholder="R$ 0,00" aria-label="Aporte inicial em reais">
                         </div>
 
                         <div class="mb-4">
                             <label class="form-label text-white-50 fw-semibold">Aporte Mensal (R$)</label>
-                            <input type="number" step="0.01" class="form-control input-custom" id="aporte-mensal"
-                                name="aporte_mensal" value="{{ aporte_mensal if aporte_mensal else '' }}"
-                                placeholder="0,00">
+                            <input type="text" inputmode="decimal" autocomplete="off"
+                                class="form-control input-custom" id="aporte-mensal" name="aporte_mensal"
+                                value="{{ 'R$ ' ~ moeda_br(aporte_mensal) if aporte_mensal else '' }}"
+                                placeholder="R$ 0,00" aria-label="Aporte mensal em reais">
                         </div>
 
-                        <button type="submit" class="btn btn-purple w-100 fw-bold">Simular</button>
+                        <div id="aviso-periodo" class="alert alert-warning py-2 small d-none" role="alert"
+                            aria-live="polite">
+                            Preencha os campos de aporte inicial e mensal antes de continuar.
+                        </div>
+
+                        <button type="submit" class="btn btn-purple w-100 fw-bold py-20">Simular</button>
+
+                        <div class="mt-4 pt-3 border-top border-secondary border-opacity-25">
+
+                            <!-- Métrica de Percentual de Lucro -->
+                            {% if resultado %}
+                            <div class="simulador-info-card p-3 rounded-3 mb-3">
+                                <div class="d-flex align-items-center mb-1">
+                                    <i class="bi bi-graph-up-arrow text-destaque-verde me-2"></i>
+                                    <small class="text-white-50 text-uppercase fw-semibold"
+                                        style="font-size: 0.75rem;">Multiplicador</small>
+                                </div>
+                                <div class="fw-bold text-white fs-5">
+                                    +{{ "%.1f"|format((resultado.rendimentos / resultado.total_investido) * 100) if
+                                    resultado.total_investido > 0 else "0.0" }}%
+                                </div>
+                                <small class="text-white-50" style="font-size: 0.75rem;">
+                                    Rendimento extra gerado sobre o capital aportado.
+                                </small>
+                            </div>
+                            {% endif %}
+
+                            <!-- Dica de Educação Financeira -->
+                            <div class="simulador-info-card p-3 rounded-3">
+                                <div class="d-flex align-items-center mb-2">
+                                    <i class="bi bi-lightbulb-fill text-warning me-2"></i>
+                                    <strong class="text-white small">O Poder da Constância</strong>
+                                </div>
+                                <p class="text-white-50 mb-0" style="font-size: 0.78rem; line-height: 1.3;">
+                                    Aportar todos os meses faz mais diferença a longo prazo do que um valor alto
+                                    aplicado apenas no início.
+                                </p>
+                            </div>
+
+                        </div>
                     </form>
                 </div>
             </div>
         </div>
 
-        <!-- CARTÃO DA DIREITA: MÉTRICAS E GRÁFICO -->
+        <!-- CARTÃO DA DIREITA: MÉTRICAS, GRÁFICO E TABELA -->
         <div class="col-12 col-lg-8 d-flex">
-            <div class="card-painel w-100 d-flex flex-column justify-content-between">
+            <div class="card-painel w-100 d-flex flex-column justify-content-between p-3 p-md-4">
 
                 <div>
                     <!-- FILTROS DE PERÍODO -->
-                    <div class="d-flex justify-content-between align-items-center mb-4">
-                        <div class="d-flex gap-2 align-items-center">
+                    <div class="d-flex flex-wrap justify-content-between align-items-center gap-2 mb-4">
+                        <div class="d-flex gap-2 align-items-center flex-wrap">
                             <button type="button" class="btn-periodo {% if anos == 5 %}active{% endif %}"
-                                onclick="alterarAnos(5)">5 anos</button>
+                                data-anos="5">5 anos</button>
                             <button type="button" class="btn-periodo {% if anos == 10 %}active{% endif %}"
-                                onclick="alterarAnos(10)">10 anos</button>
+                                data-anos="10">10 anos</button>
 
-                            <!-- Exibe badge com valor personalizado se não for 5 nem 10 -->
                             {% if anos and anos != 5 and anos != 10 %}
                             <span class="badge bg-purple px-3 py-2 fs-6 style-custom-badge">{{ anos }} anos</span>
                             {% endif %}
@@ -71,38 +113,140 @@
                     </div>
 
                     <!-- MÉTRICAS -->
-                    <div class="row text-center mb-3 g-3">
-                        <div class="col-6">
-                            <div class="metric-box">
-                                <h3 class="fw-bold text-white mb-1 fs-3">R$ {{ "%.2f"|format(resultado.total_investido)
-                                    if resultado else "0.00" }}</h3>
-                                <small class="text-white-50 text-uppercase fw-semibold">Investido</small>
+                    <div class="row text-center mb-3 g-2 g-md-3">
+                        <div class="col-12 col-sm-6 col-md-4">
+                            <div class="metric-box p-3">
+                                <h3 class="metric-value fw-bold text-white mb-1">
+                                    R$ {{ moeda_br(resultado.total_investido) if resultado else "0,00" }}
+                                </h3>
+                                <small class="text-white-50 text-uppercase fw-semibold d-block">Investido</small>
                             </div>
                         </div>
 
-                        <div class="col-6">
-                            <div class="metric-box">
-                                <h3 class="fw-bold mb-1 fs-3 text-destaque-verde">R$ {{
-                                    "%.2f"|format(resultado.rendimentos) if resultado else "0.00" }}</h3>
-                                <small class="text-white-50 text-uppercase fw-semibold">Rendimentos</small>
+                        <div class="col-12 col-sm-6 col-md-4">
+                            <div class="metric-box p-3">
+                                <h3 class="metric-value fw-bold mb-1 text-destaque-verde">
+                                    R$ {{ moeda_br(resultado.rendimentos) if resultado else "0,00" }}
+                                </h3>
+                                <small class="text-white-50 text-uppercase fw-semibold d-block">Juros Acumulados</small>
+                            </div>
+                        </div>
+
+                        <div class="col-12 col-md-4">
+                            <div class="metric-box p-3">
+                                <h3 class="metric-value fw-bold mb-1 text-destaque-verde">
+                                    R$ {{ moeda_br(resultado.valor_total_final) if resultado else "0,00" }}
+                                </h3>
+                                <small class="text-white-50 text-uppercase fw-semibold d-block">Valor Final</small>
                             </div>
                         </div>
                     </div>
 
-                    <p class="text-center text-white-50 small mb-3">
+                    <p class="text-center text-white-50 small mb-4">
                         Taxa utilizada: <strong>{{ resultado.taxa_anual_aplicada if resultado else "10.0" }}%
-                            a.a.</strong> (Fonte: Banco Central do Brasil)
+                            a.a.</strong>
+                        (Fonte: Banco Central do Brasil)
                     </p>
                 </div>
 
-                <!-- CONTAINER DO CANVAS -->
-                <div class="grafic-container flex-grow-1">
+                <!-- CANVAS DO GRÁFICO -->
+                <div class="grafic-container flex-grow-1 w-100 mb-2 position-relative">
                     <canvas id="graficoSimulador"></canvas>
                 </div>
+
+                <!-- LEGENDA EXPLICATIVA ABAIXO DO GRÁFICO -->
+                <div class="grafico-legenda d-flex flex-wrap gap-4 align-items-start mt-2 mb-4 px-2">
+                    <div class="legenda-item d-flex align-items-start gap-2">
+                        <span
+                            style="width: 12px; height: 12px; background-color: #7C4DFF; border-radius: 50%; display: inline-block; margin-top: 4px; flex-shrink: 0;"></span>
+                        <div class="legenda-texto">
+                            <div class="fw-bold text-white small">CDI (Benchmark)</div>
+                            <div class="text-white-50" style="font-size: 0.75rem; line-height: 1.2;">
+                                Taxa de referência do mercado (Selic). Funciona como uma régua para você comparar se o
+                                investimento está rendendo bem.
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="legenda-item d-flex align-items-start gap-2">
+                        <span
+                            style="width: 12px; height: 12px; background-color: #00E676; border: 2px solid #FFFFFF; border-radius: 50%; display: inline-block; margin-top: 4px; flex-shrink: 0;"></span>
+                        <div class="legenda-texto">
+                            <div class="fw-bold text-white small">Rentabilidade</div>
+                            <div class="text-white-50" style="font-size: 0.75rem; line-height: 1.2;">
+                                Evolução real do seu patrimônio acumulado mês a mês (seus aportes somados aos juros
+                                compostos).
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- TABELA DE RESULTADOS -->
+                {% if simulado and resultado and resultado.tabela_anual %}
+                <div class="tabela-container">
+                    <p class="table-hint">Deslize a tabela para o lado para ver todas as colunas.</p>
+                    <div class="table-responsive">
+                        <table class="table table-dark table-borderless align-middle mb-0">
+                            <thead>
+                                <tr>
+                                    <th scope="col">Ano</th>
+                                    <th scope="col">Capital Inicial (R$)</th>
+                                    <th scope="col">Juros Ganhos no Ano (R$)</th>
+                                    <th scope="col">Montante Final (R$)</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for linha in resultado.tabela_anual %}
+                                <tr>
+                                    <td class="fw-semibold text-nowrap">Ano {{ linha.ano }}</td>
+                                    <td class="text-nowrap">R$ {{ moeda_br(linha.capital_inicial) }}</td>
+                                    <td class="text-nowrap text-destaque-verde">R$ {{ moeda_br(linha.juros_ano) }}
+                                    </td>
+                                    <td class="fw-bold text-nowrap">R$ {{ moeda_br(linha.montante_final) }}</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                {% endif %}
 
             </div>
         </div>
 
+    </div>
+</div>
+
+<!-- MODAL SELEÇÃO DE PERÍODO (ATÉ 50 ANOS) -->
+<div class="modal fade" id="modalEditarPeriodo" tabindex="-1" aria-labelledby="modalEditarPeriodoLabel"
+    aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content text-white"
+            style="background-color: #15141E; border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 12px;">
+            <div class="modal-header border-bottom-0 pb-0">
+                <h5 class="modal-title fw-bold" id="modalEditarPeriodoLabel">Personalizar Período</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"
+                    aria-label="Fechar"></button>
+            </div>
+            <div class="modal-body py-3">
+                <label for="inputModalAnos" class="form-label text-white-50 fw-semibold">Informe o tempo de investimento
+                    (em anos):</label>
+
+                <input type="number" class="form-control text-white border-0 py-2 px-3" id="inputModalAnos" min="1"
+                    max="50" placeholder="Digite o número de anos"
+                    style="background-color: #0B0A12; border-radius: 8px;">
+
+                <div class="form-text text-white-50 mt-2 small">
+                    * O período máximo permitido para simulação é de <strong>50 anos</strong>.
+                </div>
+            </div>
+            <div class="modal-footer border-top-0 pt-0">
+                <button type="button" class="btn text-white" data-bs-dismiss="modal"
+                    style="background-color: rgba(255, 255, 255, 0.1); border-radius: 8px;">Cancelar</button>
+                <button type="button" class="btn text-white fw-bold px-4" id="btnConfirmarAnosModal"
+                    style="background-color: #7C4DFF; border-radius: 8px;">Aplicar</button>
+            </div>
+        </div>
     </div>
 </div>
 {% endblock %}
@@ -112,39 +256,7 @@
 
 <script>
     window.dadosGrafico = {{ (resultado.grafico if resultado else { }) | tojson | safe }};
-
-    function alterarAnos(anos) {
-        const inputAnos = document.getElementById('input_anos');
-        const formSimulador = document.getElementById('form-simulador');
-
-        if (inputAnos && formSimulador) {
-            inputAnos.value = anos;
-            formSimulador.submit();
-        }
-    }
-
-    // Lógica para o botão de lápis (editar período livremente)
-    document.addEventListener('DOMContentLoaded', () => {
-        const btnEditar = document.getElementById('btn-editar-periodo');
-
-        if (btnEditar) {
-            btnEditar.addEventListener('click', () => {
-                const anosAtuais = document.getElementById('input_anos').value || 5;
-                const entrada = prompt("Informe o período desejado em anos (ex: 1 a 30):", anosAtuais);
-
-                if (entrada !== null) {
-                    const anosPersonalizados = parseInt(entrada, 10);
-
-                    if (!isNaN(anosPersonalizados) && anosPersonalizados > 0 && anosPersonalizados <= 50) {
-                        alterarAnos(anosPersonalizados);
-                    } else {
-                        alert("Por favor, insira um número válido de anos entre 1 e 50.");
-                    }
-                }
-            });
-        }
-    });
 </script>
 
-<script src="{{ url_for('static', filename='js/simulador.js') }}?v=5.0"></script>
+<script src="{{ url_for('static', filename='js/simulador.js') }}?v=7.0"></script>
 {% endblock %}
