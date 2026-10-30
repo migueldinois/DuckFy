@@ -4,4 +4,3 @@ bcrypt
 requests
 python-dotenv
 gunicorn
-Flask-Mail
