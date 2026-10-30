@@ -114,13 +114,30 @@ body.app-body.tema-claro .main-content .semana-circulo {
 }
 
 body.app-body.tema-claro .main-content .cabecalho-perfil {
-  background: linear-gradient(180deg, rgba(112, 66, 200, 0.12), transparent 100%);
+  background: linear-gradient(180deg, #e4d8f5 0%, #eee7f8 58%, rgba(238, 231, 248, 0) 100%);
+}
+
+body.app-body.tema-claro .main-content .item-lista-config:not(.sair) {
+  background-color: #e8def5 !important;
+  border-color: #d7c8ec !important;
+}
+
+body.app-body.tema-claro .main-content .item-lista-config:not(.sair) .icone-box,
+body.app-body.tema-claro .main-content .item-lista-config:not(.sair) .icone-lista {
+  background-color: #d8c5f0;
+  color: #6036a8;
 }
 
 body.app-body.tema-claro .main-content .item-lista-config:not(.sair):hover,
 body.app-body.tema-claro .main-content .item-conta:hover {
-  background-color: #e8e0f7 !important;
-  border-color: var(--brand-secondary) !important;
+  background-color: #ddd0ef !important;
+  border-color: #bda2e2 !important;
+}
+
+body.app-body.tema-claro .main-content .item-lista-config:not(.sair):hover .icone-box,
+body.app-body.tema-claro .main-content .item-lista-config:not(.sair):hover .icone-lista {
+  background-color: #cbb4e9;
+  color: #512b9b;
 }
 
 body.app-body.tema-claro .main-content .page-title,
