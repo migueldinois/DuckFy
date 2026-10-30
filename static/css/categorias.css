@@ -1034,6 +1034,44 @@ body.tema-claro .duckfy-color-picker {
     outline-offset: 3px;
 }
 
+
+/* histórico de cores */
+.color-history-container {
+    margin-top: 16px;
+}
+
+.color-history-title {
+    display: block;
+    margin-bottom: 9px;
+    color: var(--text-muted);
+    font-size: 12px;
+    font-weight: 600;
+}
+
+.color-history-options {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.color-history-option {
+    flex-shrink: 0;
+}
+
+/* mantém a cor visível nas bolinhas do pickr */
+.pcr-app .pcr-swatches > button {
+    background-image: none !important;
+}
+
+.pcr-app .pcr-swatches > button::before {
+    content: none !important;
+    background-image: none !important;
+}
+
+.pcr-app .pcr-swatches > button::after {
+    background-image: none !important;
+}
+
 @media (prefers-reduced-motion: reduce) {
     .color-option {
         transition: none;

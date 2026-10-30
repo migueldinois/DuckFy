@@ -605,11 +605,51 @@ if (!window.duckfyCategoriasInicializado) {
                     JSON.stringify(coresAtualizadas)
                 );
 
+                renderizarHistoricoCores();
+
             } catch (erro) {
 
                 console.error('Erro ao salvar histórico de cores:', erro);
             }
         }
+
+
+        function renderizarHistoricoCores() {
+
+            const historicoContainer = document.getElementById('historicoCores');
+
+            if (!historicoContainer) return;
+
+            const opcoesHistorico = historicoContainer.querySelector(
+                '.color-history-options'
+            );
+
+            const historico = carregarHistoricoCores();
+
+            opcoesHistorico.innerHTML = '';
+
+            historicoContainer.hidden = historico.length === 0;
+
+            historico.forEach(cor => {
+
+                const botao = document.createElement('button');
+
+                botao.type = 'button';
+                botao.className = 'color-option color-history-option';
+                botao.dataset.color = cor;
+                botao.style.setProperty('--cor-opcao', cor);
+                botao.setAttribute('aria-label', `Selecionar cor ${cor}`);
+
+                botao.classList.toggle(
+                    'selecionada',
+                    campoCor?.value.toUpperCase() === cor
+                );
+
+                opcoesHistorico.appendChild(botao);
+            });
+        }
+
+
 
         // adiciona a cor confirmada ao histórico visual do Pickr
         function atualizarHistoricoPickr(cor) {
@@ -649,6 +689,22 @@ if (!window.duckfyCategoriasInicializado) {
         // ========================================
 
         function atualizarCorPreview(cor) {
+
+            // atualiza a bolinha de cor personalizada
+            if (botaoCorPersonalizada) {
+                const iconeMais = botaoCorPersonalizada.querySelector('i');
+                const corAtual = cor.toUpperCase();
+
+                const ehCorPredefinida = coresPredefinidas.includes(corAtual);
+
+                if (ehCorPredefinida) {
+                    botaoCorPersonalizada.style.backgroundColor = '';
+                    if (iconeMais) iconeMais.style.display = '';
+                } else {
+                    botaoCorPersonalizada.style.backgroundColor = corAtual;
+                    if (iconeMais) iconeMais.style.display = 'none';
+                }
+            }
 
             if (!campoCor || !colorBox || !colorValue || !cor) return;
 
@@ -704,10 +760,7 @@ if (!window.duckfyCategoriasInicializado) {
                 padding: 8,
 
                 // cores predefinidas e histórico
-                swatches: [
-                    ...coresPredefinidas,
-                    ...historicoInicial.reverse()
-                ],
+                swatches: [],
 
                 components: {
                     preview: false,
@@ -747,8 +800,6 @@ if (!window.duckfyCategoriasInicializado) {
                 corConfirmada = hexadecimal;
 
                 salvarHistoricoCor(hexadecimal);
-
-                atualizarHistoricoPickr(hexadecimal);
 
                 atualizarCorPreview(hexadecimal);
 
@@ -797,10 +848,38 @@ if (!window.duckfyCategoriasInicializado) {
         });
 
         // ========================================
+        // SELECIONAR CORES DO HISTÓRICO
+        // ========================================
+
+        const historicoContainer = document.getElementById('historicoCores');
+
+        if (historicoContainer) {
+
+            historicoContainer.addEventListener('click', event => {
+
+                const botao = event.target.closest('[data-color]');
+
+                if (!botao) return;
+
+                const cor = botao.dataset.color.toUpperCase();
+
+                corConfirmada = cor;
+
+                atualizarCorPreview(cor);
+
+                if (seletorPickr) {
+                    seletorPickr.setColor(cor);
+                }
+
+                renderizarHistoricoCores();
+            });
+        }
+        // ========================================
         // APLICAR COR INICIAL
         // ========================================
 
         atualizarCorPreview(corConfirmada);
+        renderizarHistoricoCores();
 
     });
 }

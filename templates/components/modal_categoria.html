@@ -61,6 +61,7 @@
             <link rel="stylesheet"
                 href="https://cdn.jsdelivr.net/npm/@simonwep/pickr@1.10.2/dist/themes/classic.min.css">
 
+
             <!-- campo cor -->
             <div class="mb-3">
                 <label class="card-subtitle d-block mb-2">Cor</label>
@@ -71,14 +72,19 @@
                     <div class="color-options">
                         <button type="button" class="color-option selecionada" data-color="#7C4DFF"
                             style="--cor-opcao: #7C4DFF;" aria-label="Roxo"></button>
+
                         <button type="button" class="color-option" data-color="#00E676" style="--cor-opcao: #00E676;"
                             aria-label="Verde"></button>
+
                         <button type="button" class="color-option" data-color="#58A6FF" style="--cor-opcao: #58A6FF;"
                             aria-label="Azul"></button>
+
                         <button type="button" class="color-option" data-color="#FFB547" style="--cor-opcao: #FFB547;"
                             aria-label="Laranja"></button>
+
                         <button type="button" class="color-option" data-color="#FF758F" style="--cor-opcao: #FF758F;"
                             aria-label="Rosa"></button>
+
                         <button type="button" class="color-option" data-color="#A0A0B0" style="--cor-opcao: #A0A0B0;"
                             aria-label="Cinza"></button>
 
@@ -86,6 +92,12 @@
                             aria-label="Escolher outra cor">
                             <i class="bi bi-plus-lg"></i>
                         </button>
+                    </div>
+
+                    <!-- histórico de cores -->
+                    <div id="historicoCores" class="color-history-container" hidden>
+                        <span class="color-history-title">Cores recentes</span>
+                        <div class="color-history-options"></div>
                     </div>
 
                     <div class="color-preview">
