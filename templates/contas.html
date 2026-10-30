@@ -3,7 +3,7 @@
 
 {% block extra_css %}
 <link rel="stylesheet" href="{{ url_for('static', filename='css/contas.css') }}">
-<link rel="stylesheet" href="{{ url_for('static', filename='css/duckfy-modal.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/duckfy-modal.css') }}?v=2">
 {% endblock %}
 
 
@@ -280,8 +280,8 @@
   document.addEventListener('DOMContentLoaded', () => {
     const saldoInicial = document.getElementById('saldo_atual');
     const previaSaldoNovoBanco = document.getElementById('previaSaldoNovoBanco');
-    saldoInicial?.addEventListener('input', () => {
-      previaSaldoNovoBanco.textContent = formatarMoeda(lerMoeda(saldoInicial.value));
+    saldoInicial?.addEventListener('currency:formatted', () => {
+      previaSaldoNovoBanco.textContent = `R$ ${saldoInicial.value || '0,00'}`;
     });
 
     const contaAdicionar = document.getElementById('contaAdicionarDinheiro');
@@ -340,19 +340,11 @@
       const valor = lerValorDigitado(valorTransferencia.value);
       let mensagem = '';
 
-<<<<<<< HEAD
-        const saldo = seletor.id === 'conta_origem'
-          ? opcao.dataset.saldoDisponivel
-          : opcao.dataset.saldo;
-        elemento.textContent = formatarSaldo(saldo);
-    }
-=======
       if (origem.value && destino.value && origem.value === destino.value) {
         mensagem = 'Escolha contas diferentes para origem e destino.';
       } else if (dadosOrigem && valor > dadosOrigem.disponivel) {
         mensagem = `Valor acima do disponível na origem. Máximo: ${formatarMoeda(dadosOrigem.disponivel)}.`;
       }
->>>>>>> ad5fe6106928845d9f8d9258f124061fad1fadbe
 
       erroTransferencia.textContent = mensagem;
       erroTransferencia.hidden = !mensagem;

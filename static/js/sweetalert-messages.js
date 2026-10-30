@@ -74,7 +74,7 @@
     mostrar({
       icon: 'warning',
       title: 'Verifique os dados',
-      text: campo.validationMessage || 'Confira os campos obrigatórios.',
+      text: campo.dataset.invalidMessage || campo.validationMessage || 'Confira os campos obrigatórios.',
       confirmButtonText: 'Corrigir'
     }).then(() => {
       campo.focus({ preventScroll: true });

@@ -143,7 +143,10 @@ document.addEventListener('DOMContentLoaded', () => {
     if (input.hasAttribute('data-currency-cents')) {
       if (input.value) formatarValorMonetario(input, true, true);
 
-      input.addEventListener('input', () => formatarValorEmCentavos(input));
+      input.addEventListener('input', () => {
+        formatarValorEmCentavos(input);
+        input.dispatchEvent(new Event('currency:formatted', { bubbles: true }));
+      });
       input.addEventListener('focus', () => {
         input.setSelectionRange(input.value.length, input.value.length);
       });
@@ -161,6 +164,7 @@ document.addEventListener('DOMContentLoaded', () => {
         && /[.,]/.test(event.data || '');
       if (colagemComSeparador) formatarValorMonetario(input, true, true);
       else formatarCentavosDigitados(input);
+      input.dispatchEvent(new Event('currency:formatted', { bubbles: true }));
     });
     input.addEventListener('blur', () => formatarValorMonetario(input, false, true));
     input.addEventListener('focus', () => {
