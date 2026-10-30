@@ -4,39 +4,42 @@ if (!window.duckfyCategoriasInicializado) {
 
     document.addEventListener('DOMContentLoaded', () => {
 
+        // ========================================
+        // SELEÇÃO DO TIPO DE CATEGORIA
+        // ========================================
 
-        // seleção do tipo de categoria
-        const campoTipo = document.getElementById('tipo');
-        const botoesTipo = document.querySelectorAll('.tipo-categoria-btn');
+        document.querySelectorAll('.tipo-categoria-opcoes').forEach(container => {
 
-        botoesTipo.forEach(botao => {
-            botao.addEventListener('click', () => {
+            const campoTipo = container.parentElement.querySelector('input[name="tipo"]');
+            const botoesTipo = container.querySelectorAll('.tipo-categoria-btn');
 
-                const tipoSelecionado = botao.dataset.tipo;
+            botoesTipo.forEach(botao => {
+                botao.addEventListener('click', () => {
 
-                campoTipo.value = tipoSelecionado;
+                    const tipoSelecionado = botao.dataset.tipo;
 
-                botoesTipo.forEach(item => {
-                    const selecionado = item === botao;
+                    campoTipo.value = tipoSelecionado;
 
-                    item.classList.toggle('selecionado', selecionado);
-                    item.setAttribute('aria-pressed', selecionado);
+                    botoesTipo.forEach(item => {
+                        const selecionado = item === botao;
+
+                        item.classList.toggle('selecionado', selecionado);
+                        item.setAttribute('aria-pressed', selecionado);
+                    });
                 });
             });
         });
-
 
         // ========================================
         // CONFIGURAÇÃO DO SELETOR DE EMOJIS
         // ========================================
 
-
-        // impede digitação manual no campo de emoji
         document.querySelectorAll('.emoji-input').forEach(campo => {
             campo.setAttribute('readonly', true);
             campo.setAttribute('placeholder', 'Selecione um emoji');
             campo.style.cursor = 'pointer';
         });
+
         const picker = document.createElement('div');
 
         picker.id = 'emojiPicker';
@@ -143,9 +146,8 @@ if (!window.duckfyCategoriasInicializado) {
         }
 
         // ========================================
-        // CARREGAMENTO DO NOVO SELETOR DE EMOJIS
+        // CARREGAMENTO DO SELETOR DE EMOJIS
         // ========================================
-
 
         const carregarSeletorEmoji = async () => {
 
@@ -166,7 +168,6 @@ if (!window.duckfyCategoriasInicializado) {
                     'https://cdn.jsdelivr.net/npm/emoji-picker-element-data@1.8.0/en/emojibase/data.json'
                 );
 
-                // tradução da interface
                 emojiPickerElement.i18n = {
                     categories: {
                         custom: 'Personalizados',
@@ -239,14 +240,13 @@ if (!window.duckfyCategoriasInicializado) {
                 console.error('Erro ao carregar o seletor de emojis:', erro);
 
                 container.innerHTML = `
-            <p class="emoji-picker-error">
-                Não foi possível carregar os emojis.
-                Verifique o console para identificar o erro.
-            </p>
-        `;
+                    <p class="emoji-picker-error">
+                        Não foi possível carregar os emojis.
+                        Verifique o console para identificar o erro.
+                    </p>
+                `;
             }
         };
-
 
         const emojiPickerPronto = carregarSeletorEmoji();
 
@@ -574,23 +574,6 @@ if (!window.duckfyCategoriasInicializado) {
         });
 
         // ========================================
-        // SELETOR DE CORES PERSONALIZADO
-        // ========================================
-
-        const campoCor = document.getElementById('cor');
-        const colorBox = document.getElementById('colorBox');
-        const colorValue = document.getElementById('colorValue');
-
-        const opcoesCores = document.querySelectorAll(
-            '.color-option[data-color]'
-        );
-
-        const botaoCorPersonalizada = document.getElementById('corPersonalizada');
-
-        let corConfirmada = campoCor?.value || '#7C4DFF';
-        let seletorPickr = null;
-
-        // ========================================
         // HISTÓRICO DE CORES
         // ========================================
 
@@ -654,6 +637,23 @@ if (!window.duckfyCategoriasInicializado) {
             }
         }
 
+        // ========================================
+        // SELETOR DE CORES DO MODAL DE CRIAÇÃO
+        // ========================================
+
+        const campoCor = document.getElementById('cor');
+        const colorBox = document.getElementById('colorBox');
+        const colorValue = document.getElementById('colorValue');
+
+        const opcoesCores = document.querySelectorAll(
+            '.color-option[data-color]'
+        );
+
+        const botaoCorPersonalizada = document.getElementById('corPersonalizada');
+
+        let corConfirmada = campoCor?.value || '#7C4DFF';
+        let seletorPickr = null;
+
         function renderizarHistoricoCores() {
 
             const historicoContainer = document.getElementById('historicoCores');
@@ -689,48 +689,17 @@ if (!window.duckfyCategoriasInicializado) {
             });
         }
 
-        // adiciona a cor confirmada ao histórico visual do Pickr
-        function atualizarHistoricoPickr(cor) {
-
-            if (!seletorPickr) return;
-
-            const historico = carregarHistoricoCores();
-
-            const indiceExistente = historico.findIndex(
-                item => item === cor.toUpperCase()
-            );
-
-            if (indiceExistente !== -1) {
-
-                const indiceSwatch =
-                    coresPredefinidas.length +
-                    (historico.length - 1 - indiceExistente);
-
-                seletorPickr.removeSwatch(indiceSwatch);
-            }
-
-            if (
-                historico.length >= limiteHistorico &&
-                indiceExistente === -1
-            ) {
-                seletorPickr.removeSwatch(coresPredefinidas.length);
-            }
-
-            seletorPickr.addSwatch(cor.toUpperCase());
-        }
-
-        // ========================================
-        // ATUALIZAR PRÉVIA DA COR
-        // ========================================
-
         function atualizarCorPreview(cor) {
+
+            if (!cor) return;
+
+            cor = cor.toUpperCase();
 
             if (botaoCorPersonalizada) {
 
                 const iconeMais = botaoCorPersonalizada.querySelector('i');
-                const corAtual = cor.toUpperCase();
 
-                const ehCorPredefinida = coresPredefinidas.includes(corAtual);
+                const ehCorPredefinida = coresPredefinidas.includes(cor);
 
                 if (ehCorPredefinida) {
                     botaoCorPersonalizada.style.backgroundColor = '';
@@ -740,7 +709,7 @@ if (!window.duckfyCategoriasInicializado) {
                     }
 
                 } else {
-                    botaoCorPersonalizada.style.backgroundColor = corAtual;
+                    botaoCorPersonalizada.style.backgroundColor = cor;
 
                     if (iconeMais) {
                         iconeMais.style.display = 'none';
@@ -748,9 +717,7 @@ if (!window.duckfyCategoriasInicializado) {
                 }
             }
 
-            if (!campoCor || !colorBox || !colorValue || !cor) return;
-
-            cor = cor.toUpperCase();
+            if (!campoCor || !colorBox || !colorValue) return;
 
             campoCor.value = cor;
             colorBox.style.backgroundColor = cor;
@@ -777,17 +744,12 @@ if (!window.duckfyCategoriasInicializado) {
             }
         }
 
-        // ========================================
-        // INICIAR O PICKR
-        // ========================================
-
+        // inicia o Pickr da criação
         if (
             campoCor &&
             botaoCorPersonalizada &&
             window.Pickr
         ) {
-
-            const historicoInicial = carregarHistoricoCores();
 
             seletorPickr = Pickr.create({
 
@@ -829,7 +791,6 @@ if (!window.duckfyCategoriasInicializado) {
                 }
             });
 
-            // confirma a cor escolhida
             seletorPickr.on('save', cor => {
 
                 if (!cor) return;
@@ -839,21 +800,17 @@ if (!window.duckfyCategoriasInicializado) {
                 corConfirmada = hexadecimal;
 
                 salvarHistoricoCor(hexadecimal);
-
                 atualizarCorPreview(hexadecimal);
 
                 seletorPickr.hide();
             });
 
-            // restaura a última cor confirmada ao cancelar
             seletorPickr.on('cancel', () => {
 
                 atualizarCorPreview(corConfirmada);
-
                 seletorPickr.setColor(corConfirmada);
             });
 
-            // atualiza a prévia enquanto o usuário escolhe
             seletorPickr.on('change', cor => {
 
                 if (!cor) return;
@@ -861,33 +818,31 @@ if (!window.duckfyCategoriasInicializado) {
                 atualizarCorPreview(cor.toHEXA().toString());
             });
 
-        } else if (botaoCorPersonalizada) {
+        } else if (botaoCorPersonalizada && !window.Pickr) {
 
             console.error('A biblioteca Pickr não foi carregada.');
         }
 
         // ========================================
-        // SELECIONAR CORES PREDEFINIDAS
+        // SELECIONAR CORES DA CRIAÇÃO
         // ========================================
 
         opcoesCores.forEach(opcao => {
 
             opcao.addEventListener('click', () => {
 
-                const cor = opcao.dataset.color;
+                const cor = opcao.dataset.color.toUpperCase();
 
-                corConfirmada = cor.toUpperCase();
+                corConfirmada = cor;
 
                 atualizarCorPreview(cor);
 
-                if (seletorPickr) {
-                    seletorPickr.setColor(cor);
-                }
+                seletorPickr?.setColor(cor);
             });
         });
 
         // ========================================
-        // SELECIONAR CORES DO HISTÓRICO
+        // HISTÓRICO DE CORES DA CRIAÇÃO
         // ========================================
 
         const historicoContainer = document.getElementById('historicoCores');
@@ -906,20 +861,224 @@ if (!window.duckfyCategoriasInicializado) {
 
                 atualizarCorPreview(cor);
 
-                if (seletorPickr) {
-                    seletorPickr.setColor(cor);
-                }
+                seletorPickr?.setColor(cor);
 
                 renderizarHistoricoCores();
             });
         }
 
         // ========================================
-        // APLICAR COR INICIAL
+        // SELETOR DE CORES DO MODAL DE EDIÇÃO
+        // ========================================
+
+        const editCampoCor = document.getElementById('edit_cor');
+        const editColorBox = document.getElementById('editColorBox');
+        const editColorValue = document.getElementById('editColorValue');
+        const editBotaoPersonalizada = document.getElementById('editCorPersonalizada');
+        const editHistoricoContainer = document.getElementById('editHistoricoCores');
+
+        const editOpcoesCores = document.querySelectorAll('[data-edit-color]');
+
+        let editCorConfirmada = editCampoCor?.value || '#7C4DFF';
+        let editSeletorPickr = null;
+
+        function editAtualizarCorPreview(cor) {
+
+            if (!editCampoCor || !editColorBox || !editColorValue || !cor) return;
+
+            cor = cor.toUpperCase();
+
+            editCampoCor.value = cor;
+            editColorBox.style.backgroundColor = cor;
+            editColorValue.textContent = cor;
+
+            editOpcoesCores.forEach(opcao => {
+
+                opcao.classList.toggle(
+                    'selecionada',
+                    opcao.dataset.editColor.toUpperCase() === cor
+                );
+            });
+
+            const ehPredefinida = Array.from(editOpcoesCores).some(
+                opcao => opcao.dataset.editColor.toUpperCase() === cor
+            );
+
+            editBotaoPersonalizada?.classList.toggle('selecionada', !ehPredefinida);
+
+            const icone = editBotaoPersonalizada?.querySelector('i');
+
+            if (editBotaoPersonalizada) {
+
+                editBotaoPersonalizada.style.backgroundColor =
+                    ehPredefinida ? '' : cor;
+
+                if (icone) {
+                    icone.style.display = ehPredefinida ? '' : 'none';
+                }
+            }
+        }
+
+        function editRenderizarHistorico() {
+
+            if (!editHistoricoContainer) return;
+
+            const opcoes = editHistoricoContainer.querySelector(
+                '.color-history-options'
+            );
+
+            const historico = carregarHistoricoCores();
+
+            opcoes.innerHTML = '';
+            editHistoricoContainer.hidden = historico.length === 0;
+
+            historico.forEach(cor => {
+
+                const botao = document.createElement('button');
+
+                botao.type = 'button';
+                botao.className = 'color-option color-history-option';
+                botao.dataset.editColor = cor;
+                botao.style.setProperty('--cor-opcao', cor);
+                botao.setAttribute('aria-label', `Selecionar cor ${cor}`);
+
+                botao.classList.toggle(
+                    'selecionada',
+                    editCampoCor.value.toUpperCase() === cor
+                );
+
+                opcoes.appendChild(botao);
+            });
+        }
+
+        // inicia o Pickr da edição
+        if (
+            editCampoCor &&
+            editBotaoPersonalizada &&
+            window.Pickr
+        ) {
+
+            editSeletorPickr = Pickr.create({
+
+                el: editBotaoPersonalizada,
+                theme: 'classic',
+                useAsButton: true,
+                container: 'body',
+                appClass: 'duckfy-color-picker',
+                default: editCorConfirmada,
+                position: 'bottom-middle',
+                padding: 8,
+
+                swatches: [],
+
+                components: {
+                    preview: false,
+                    opacity: false,
+                    hue: true,
+
+                    interaction: {
+                        hex: false,
+                        rgba: false,
+                        hsla: false,
+                        hsva: false,
+                        cmyk: false,
+                        input: false,
+                        clear: false,
+                        save: true
+                    }
+                },
+
+                i18n: {
+                    'btn:save': 'Confirmar',
+                    'btn:cancel': 'Cancelar',
+                    'btn:clear': 'Limpar',
+                    'aria:btn:save': 'Confirmar e fechar',
+                    'aria:btn:cancel': 'Cancelar e fechar',
+                    'aria:btn:clear': 'Limpar seleção'
+                }
+            });
+
+            editSeletorPickr.on('save', cor => {
+
+                if (!cor) return;
+
+                const hexadecimal = cor.toHEXA().toString().toUpperCase();
+
+                editCorConfirmada = hexadecimal;
+
+                salvarHistoricoCor(hexadecimal);
+                editAtualizarCorPreview(hexadecimal);
+                editRenderizarHistorico();
+
+                editSeletorPickr.hide();
+            });
+
+            editSeletorPickr.on('cancel', () => {
+
+                editAtualizarCorPreview(editCorConfirmada);
+                editSeletorPickr.setColor(editCorConfirmada);
+            });
+
+            editSeletorPickr.on('change', cor => {
+
+                if (!cor) return;
+
+                editAtualizarCorPreview(cor.toHEXA().toString());
+            });
+
+        } else if (editBotaoPersonalizada && !window.Pickr) {
+
+            console.error('A biblioteca Pickr não foi carregada para a edição.');
+        }
+
+        // ========================================
+        // SELECIONAR CORES PREDEFINIDAS DA EDIÇÃO
+        // ========================================
+
+        editOpcoesCores.forEach(opcao => {
+
+            opcao.addEventListener('click', () => {
+
+                const cor = opcao.dataset.editColor.toUpperCase();
+
+                editCorConfirmada = cor;
+
+                editAtualizarCorPreview(cor);
+
+                editSeletorPickr?.setColor(cor);
+            });
+        });
+
+        // ========================================
+        // HISTÓRICO DE CORES DA EDIÇÃO
+        // ========================================
+
+        editHistoricoContainer?.addEventListener('click', event => {
+
+            const botao = event.target.closest('[data-edit-color]');
+
+            if (!botao) return;
+
+            const cor = botao.dataset.editColor.toUpperCase();
+
+            editCorConfirmada = cor;
+
+            editAtualizarCorPreview(cor);
+
+            editSeletorPickr?.setColor(cor);
+
+            editRenderizarHistorico();
+        });
+
+        // ========================================
+        // APLICAR CORES INICIAIS
         // ========================================
 
         atualizarCorPreview(corConfirmada);
         renderizarHistoricoCores();
+
+        editAtualizarCorPreview(editCorConfirmada);
+        editRenderizarHistorico();
 
     });
 }
