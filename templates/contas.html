@@ -36,28 +36,34 @@
   <!-- Resumo -->
   <section class="patrimonio-resumo" aria-label="Resumo financeiro">
     <article class="card-patrimonio">
-      <span class="card-rotulo">Saldo total das contas</span>
+      <span class="card-rotulo">Patrimônio total</span>
       <h2 class="card-valor">
         R$ {{ patrimonio_total|default('0,00', true) }}
       </h2>
+      <p class="card-descricao">Soma dos saldos de todas as contas, incluindo a reserva.</p>
     </article>
 
-    <article class="card-patrimonio">
+    <article class="card-patrimonio card-reserva">
       <span class="card-rotulo">Reserva de emergência</span>
       <h2 class="card-valor">
         R$ {{ reserva_total|default('0,00', true) }}
       </h2>
+      <p class="card-descricao">Valor separado para imprevistos, já incluído no patrimônio total.</p>
       <span class="card-detalhe-reserva">
         {{ '%.1f'|format(porcentagem_reservada|default(0, true))|replace('.', ',') }}% do patrimônio
       </span>
-      <p class="aviso-reserva mb-0">Este valor já está incluído no seu patrimônio total</p>
+      <a class="link-reserva" href="{{ url_for('reserva_emergencia') }}">
+        Ir para reserva de emergência
+        <i class="bi bi-arrow-up-right" aria-hidden="true"></i>
+      </a>
     </article>
 
     <article class="card-patrimonio">
-      <span class="card-rotulo">Saldo fora da reserva</span>
+      <span class="card-rotulo">Dinheiro disponível</span>
       <h2 class="card-valor">
         R$ {{ saldo_fora_reserva|default('0,00', true) }}
       </h2>
+      <p class="card-descricao">Valor que não está separado para a reserva de emergência.</p>
     </article>
   </section>
 
@@ -66,12 +72,12 @@
   <section class="acoes-patrimonio mb-4">
     <button type="button" class="btn-acao-patrimonio btn-adicionar-banco" data-open-modal="modalAdicionarBanco">
       <i class="bi bi-plus-lg" aria-hidden="true"></i>
-      <span>Adicionar banco</span>
+      <span>Adicionar conta</span>
     </button>
     
     <button type="button" class="btn-acao-patrimonio btn-adicionar-dinheiro" data-open-modal="modalAdicionarDinheiro">
       <i class="bi bi-plus-lg" aria-hidden="true"></i>
-      <span>Adicionar dinheiro</span>
+      <span>Depositar dinheiro</span>
     </button>
 
     <button type="button" class="btn-acao-patrimonio btn-transferir-dinheiro" data-open-modal="modalTransferirContas">
@@ -88,17 +94,7 @@
     {% for conta in contas_bancarias %}
     <article class="item-conta">
 
-      <div class="d-flex align-items-center gap-3">
-
-        <button type="button" class="btn-editar-conta" title="Editar {{ conta.nome_conta }}"
-          aria-label="Editar {{ conta.nome_conta }}" data-editar-conta data-id="{{ conta.id_conta }}"
-          data-nome="{{ conta.nome_conta }}" data-tipo="{{ conta.tipo_conta }}" data-saldo="{{ conta.saldo_atual }}"
-          data-reservado="{{ conta.valor_alocado|default(0, true) }}"
-          data-url="{{ url_for('editar_conta', id_conta=conta.id_conta) }}"
-          data-url-excluir="{{ url_for('excluir_conta', id_conta=conta.id_conta) }}">
-          <i class="bi bi-pencil-square" aria-hidden="true"></i>
-        </button>
-
+      <div class="conta-identificacao">
         <div class="avatar-banco" aria-hidden="true">
           <i class="bi bi-bank"></i>
         </div>
@@ -118,31 +114,44 @@
         </div>
 
       </div>
-<div class="saldo-banco text-end">
-    <span class="card-subtitle d-block">Disponível</span>
 
-    <strong>
-        R$ {{ '%.2f'|format(
-            (conta.saldo_atual|float - conta.valor_alocado|default(0, true)|float)
-        )|replace('.', ',') }}
-    </strong>
+      <div class="resumo-conta">
+        <div class="saldo-banco">
+          <span class="card-subtitle d-block">Disponível</span>
+          <strong>
+            R$ {{ '%.2f'|format(
+                (conta.saldo_atual|float - conta.valor_alocado|default(0, true)|float)
+            )|replace('.', ',') }}
+          </strong>
+          <small class="card-subtitle d-block mt-1">
+            Saldo total: R$ {{ '%.2f'|format(conta.saldo_atual|float)|replace('.', ',') }}
+          </small>
+        </div>
 
-    <small class="card-subtitle d-block mt-1">
-        Total: R$ {{ '%.2f'|format(
-            conta.saldo_atual|float
-        )|replace('.', ',') }}
-    </small>
-</div>
+        <button type="button" class="btn-editar-conta" title="Editar {{ conta.nome_conta }}"
+          aria-label="Editar {{ conta.nome_conta }}" data-editar-conta data-id="{{ conta.id_conta }}"
+          data-nome="{{ conta.nome_conta }}" data-tipo="{{ conta.tipo_conta }}" data-saldo="{{ conta.saldo_atual }}"
+          data-reservado="{{ conta.valor_alocado|default(0, true) }}"
+          data-url="{{ url_for('editar_conta', id_conta=conta.id_conta) }}"
+          data-url-excluir="{{ url_for('excluir_conta', id_conta=conta.id_conta) }}">
+          <i class="bi bi-pencil-square" aria-hidden="true"></i>
+        </button>
+      </div>
 
     </article>
     {% endfor %}
     {% else %}
-    <div class="p-4 text-center">
-      <i class="bi bi-bank fs-2 d-block mb-3" aria-hidden="true"></i>
-      <p class="mb-1 fw-semibold">Nenhuma conta cadastrada</p>
-      <p class="tipo-banco mb-0">
-        Adicione uma conta para visualizar seu patrimônio.
-      </p>
+    <div class="estado-vazio">
+      <div class="icone-estado-vazio" aria-hidden="true">
+        <i class="bi bi-bank"></i>
+      </div>
+      <h2 class="estado-vazio-titulo m-0">Nenhuma conta cadastrada</h2>
+      <p class="estado-vazio-descricao mb-0">Suas contas aparecerão aqui assim que você cadastrar a primeira.</p>
+
+      <button type="button" class="btn-acao-patrimonio btn-adicionar-banco" data-open-modal="modalAdicionarBanco">
+        <i class="bi bi-plus-lg" aria-hidden="true"></i>
+        <span>Adicionar primeira conta</span>
+      </button>
     </div>
     {% endif %}
 
