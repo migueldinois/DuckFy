@@ -1,4 +1,3 @@
-
 .categorias-container {
     --cor-roxo: var(--brand-primary, #7c4dff);
     --cor-roxo-claro: var(--brand-secondary, #b093ff);
@@ -120,11 +119,9 @@
     border: 1px solid rgba(160, 125, 255, 0.17);
     border-radius: 18px;
     background:
-        radial-gradient(
-            ellipse at 0% 0%,
+        radial-gradient(ellipse at 0% 0%,
             rgba(124, 77, 255, 0.15),
-            transparent 60%
-        ),
+            transparent 60%),
         var(--cor-painel);
 }
 
@@ -496,17 +493,13 @@
     height: 49px;
     flex-shrink: 0;
     overflow: hidden;
-    border: 1px solid color-mix(
-        in srgb,
-        var(--cor-categoria, #7c4dff) 32%,
-        transparent
-    );
+    border: 1px solid color-mix(in srgb,
+            var(--cor-categoria, #7c4dff) 32%,
+            transparent);
     border-radius: 15px;
-    background: color-mix(
-        in srgb,
-        var(--cor-categoria, #7c4dff) 15%,
-        transparent
-    );
+    background: color-mix(in srgb,
+            var(--cor-categoria, #7c4dff) 15%,
+            transparent);
     box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.06);
 }
 
@@ -623,11 +616,9 @@ html.tema-claro .categorias-resumo,
 body.tema-claro .categorias-resumo {
     border-color: rgba(124, 77, 255, 0.13);
     background:
-        radial-gradient(
-            ellipse at 0% 0%,
+        radial-gradient(ellipse at 0% 0%,
             rgba(124, 77, 255, 0.09),
-            transparent 65%
-        ),
+            transparent 65%),
         var(--cor-painel);
 }
 
@@ -646,6 +637,27 @@ body.tema-claro .tab-btn.active {
 html.tema-claro .tab-count,
 body.tema-claro .tab-count {
     background: rgba(124, 77, 255, 0.04);
+}
+
+
+/* ajuste da lupa na barra de pesquisa */
+.search-box {
+    position: relative;
+}
+
+.search-box .search-icon {
+    position: absolute;
+    left: 16px;
+    right: auto;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 2;
+}
+
+.search-box .search-input {
+    padding: 12px 43px 12px 46px;
+    text-align: left;
+    direction: ltr;
 }
 
 /* telas menores */
@@ -804,6 +816,7 @@ body.tema-claro .tab-count {
 }
 
 @media (prefers-reduced-motion: reduce) {
+
     .btn-nova-categoria,
     .tab-btn,
     .category-item,
