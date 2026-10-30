@@ -1,0 +1,121 @@
+{% extends 'layout.html' %}
+
+{% block title %}Acessibilidade - DuckFy{% endblock %}
+
+{% block content %}
+<main class="acessibilidade-page" id="assistente-acessibilidade" data-step="1">
+	<header class="acessibilidade-header">
+		<a class="acessibilidade-voltar" href="{{ url_for('perfil') }}" aria-label="Voltar ao perfil">
+			<i class="bi bi-arrow-left" aria-hidden="true"></i>
+		</a>
+		<div class="acessibilidade-titulo">
+			<span class="acessibilidade-marca"><span>DUCK</span>FY</span>
+			<p>Acessibilidade</p>
+		</div>
+		<span class="acessibilidade-contador" id="contador-etapas" aria-live="polite">Etapa 1 de 4</span>
+	</header>
+
+	<div class="acessibilidade-progresso" role="progressbar" aria-label="Progresso das configurações" aria-valuemin="1" aria-valuemax="4" aria-valuenow="1">
+		<span id="barra-progresso"></span>
+	</div>
+
+	<section class="acessibilidade-etapa" data-access-step="1" aria-labelledby="titulo-boas-vindas">
+		<div class="acessibilidade-etapa-conteudo boas-vindas">
+			<span class="acessibilidade-kicker">Personalize sua experiência</span>
+			<h1 id="titulo-boas-vindas">Torne o DuckFy mais confortável para você.</h1>
+			<p>Escolha como prefere ler e visualizar as cores. Você pode revisar tudo antes de aplicar.</p>
+			<button type="button" class="acessibilidade-botao primario" data-next>Começar <i class="bi bi-arrow-right" aria-hidden="true"></i></button>
+		</div>
+	</section>
+
+	<section class="acessibilidade-etapa" data-access-step="2" aria-labelledby="titulo-tamanho" hidden>
+		<div class="acessibilidade-etapa-conteudo">
+			<span class="acessibilidade-kicker">Leitura</span>
+			<h1 id="titulo-tamanho">Qual tamanho de texto funciona melhor?</h1>
+			<p class="acessibilidade-instrucao">A escolha será aplicada às páginas depois que você concluir.</p>
+
+			<fieldset class="opcoes-tamanho" aria-describedby="preview-ajuda">
+				<legend class="visually-hidden">Tamanho do texto</legend>
+				<label class="opcao-tamanho">
+					<input type="radio" name="tamanho-texto" value="small">
+					<span class="amostra-texto pequena" aria-hidden="true">Aa</span>
+					<span>Pequeno</span>
+				</label>
+				<label class="opcao-tamanho">
+					<input type="radio" name="tamanho-texto" value="medium" checked>
+					<span class="amostra-texto media" aria-hidden="true">Aa</span>
+					<span>Médio</span>
+				</label>
+				<label class="opcao-tamanho">
+					<input type="radio" name="tamanho-texto" value="large">
+					<span class="amostra-texto grande" aria-hidden="true">Aa</span>
+					<span>Grande</span>
+				</label>
+			</fieldset>
+			<p class="preview-ajuda" id="preview-ajuda">Prévia do texto: <span id="preview-tamanho">Este é o tamanho selecionado.</span></p>
+		</div>
+	</section>
+
+	<section class="acessibilidade-etapa" data-access-step="3" aria-labelledby="titulo-cores" hidden>
+		<div class="acessibilidade-etapa-conteudo">
+			<span class="acessibilidade-kicker">Acessibilidade visual</span>
+			<h1 id="titulo-cores">Daltonismo</h1>
+			<p class="acessibilidade-instrucao">Escolha a paleta que facilita distinguir as cores. A alteração será aplicada quando você concluir.</p>
+
+			<fieldset class="opcoes-visao">
+				<legend class="visually-hidden">Adaptação de cores para daltonismo</legend>
+				<label class="opcao-visao">
+					<input type="radio" name="visao-cores" value="none" checked>
+					<span class="radio-personalizado" aria-hidden="true"></span>
+					<span class="opcao-visao-texto"><strong>Padrão</strong><small>Manter as cores atuais</small></span>
+					<span class="amostra-cores padrao" aria-hidden="true"><i></i><i></i><i></i></span>
+				</label>
+				<label class="opcao-visao">
+					<input type="radio" name="visao-cores" value="protanopia">
+					<span class="radio-personalizado" aria-hidden="true"></span>
+					<span class="opcao-visao-texto"><strong>Protanopia</strong><small>Reforça a distinção entre vermelho e verde</small></span>
+					<span class="amostra-cores protanopia" aria-hidden="true"><i></i><i></i><i></i></span>
+				</label>
+				<label class="opcao-visao">
+					<input type="radio" name="visao-cores" value="deuteranopia">
+					<span class="radio-personalizado" aria-hidden="true"></span>
+					<span class="opcao-visao-texto"><strong>Deuteranopia</strong><small>Usa cores mais fáceis de diferenciar</small></span>
+					<span class="amostra-cores deuteranopia" aria-hidden="true"><i></i><i></i><i></i></span>
+				</label>
+				<label class="opcao-visao">
+					<input type="radio" name="visao-cores" value="tritanopia">
+					<span class="radio-personalizado" aria-hidden="true"></span>
+					<span class="opcao-visao-texto"><strong>Tritanopia</strong><small>Ajusta os contrastes entre azul e amarelo</small></span>
+					<span class="amostra-cores tritanopia" aria-hidden="true"><i></i><i></i><i></i></span>
+				</label>
+			</fieldset>
+		</div>
+	</section>
+
+	<section class="acessibilidade-etapa" data-access-step="4" aria-labelledby="titulo-resumo" hidden>
+		<div class="acessibilidade-etapa-conteudo">
+			<span class="acessibilidade-kicker">Revisão final</span>
+			<h1 id="titulo-resumo">Suas preferências</h1>
+			<p class="acessibilidade-instrucao">Nada foi alterado ainda. Confira as escolhas e conclua para aplicar.</p>
+
+			<dl class="resumo-acessibilidade">
+				<div><dt>Tamanho do texto</dt><dd id="resumo-tamanho">Médio</dd></div>
+				<div><dt>Paleta de cores</dt><dd id="resumo-cores">Padrão</dd></div>
+			</dl>
+			<p class="acessibilidade-confirmacao" id="mensagem-concluida" role="status" hidden>Preferências aplicadas. Você pode alterá-las novamente quando quiser.</p>
+		</div>
+	</section>
+
+	<footer class="acessibilidade-controles">
+		<button type="button" class="acessibilidade-botao secundario" id="botao-voltar-etapa" data-previous hidden><i class="bi bi-arrow-left" aria-hidden="true"></i> Voltar</button>
+		<span class="controles-espacador"></span>
+		<button type="button" class="acessibilidade-botao primario" id="botao-proxima-etapa" data-next hidden>Continuar <i class="bi bi-arrow-right" aria-hidden="true"></i></button>
+		<button type="button" class="acessibilidade-botao primario" id="botao-concluir" hidden>Aplicar e concluir <i class="bi bi-check2" aria-hidden="true"></i></button>
+		<a href="{{ url_for('perfil') }}" class="acessibilidade-botao primario" id="botao-voltar-perfil" hidden>Voltar ao perfil</a>
+	</footer>
+</main>
+{% endblock %}
+
+{% block extra_js %}
+<script src="{{ url_for('static', filename='js/acessibilidade.js') }}" defer></script>
+{% endblock %}

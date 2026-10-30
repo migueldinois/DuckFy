@@ -643,6 +643,15 @@ def perfil():
     return render_template("perfil.html", usuario=usuario)
 
 
+@app.get("/acessibilidade")
+def acessibilidade():
+    if "usuario" not in session:
+        flash("Você precisa estar logado para ajustar a acessibilidade.", "error")
+        return redirect(url_for("login"))
+
+    return render_template("acessibilidade.html")
+
+
 @app.route("/editar-perfil", methods=["GET", "POST"])
 def editar_perfil():
     if "usuario" not in session:

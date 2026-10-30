@@ -5,11 +5,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="{{ url_for('static', filename='js/acessibilidade-inicial.js') }}"></script>
     <title>{% block title %}DuckFy{% endblock %}</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/variables.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/termos_publico.css') }}">
     {% block styles %}{% endblock %}
     <link rel="stylesheet" href="{{ url_for('static', filename='css/tema-claro.css') }}?v=2.2">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/acessibilidade.css') }}">
     <script>
         if (localStorage.getItem("duckfy-tema") === "claro") {
             document.documentElement.classList.add("tema-claro");

@@ -12,6 +12,7 @@
             }
         } catch {}
     </script>
+    <script src="{{ url_for('static', filename='js/acessibilidade-inicial.js') }}"></script>
 
     <title>{% block title %}DuckFy{% endblock %}</title>
 
@@ -31,6 +32,8 @@
     {% block extra_css %}{% endblock %}
     {% block styles %}{% endblock %}
     <link rel="stylesheet" href="{{ url_for('static', filename='css/tema-claro.css') }}?v=2.6">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/acessibilidade.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/acessibilidade.css') }}">
 </head>
 
 <body class="app-body">
