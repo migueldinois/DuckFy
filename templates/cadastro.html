@@ -1,11 +1,14 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
+
     <title>DuckFy - Cadastro</title>
+
 
     <!-- aplica o tema salvo antes de carregar o CSS -->
     <script>
@@ -14,13 +17,16 @@
         }
     </script>
 
+
     <!-- conecta os estilos -->
     <link rel="stylesheet" href="{{ url_for('static', filename='css/variables.css') }}">
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/cadastro.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/cadastro.css') }}?v=2.2">
+
 
     <!-- biblioteca de ícones -->
     <link rel="stylesheet"
         href="https://cdn-uicons.flaticon.com/3.0.0/uicons-solid-rounded/css/uicons-solid-rounded.css">
+
 
     <!-- posiciona o fundo das partículas -->
     <style>
@@ -33,6 +39,7 @@
             pointer-events: none;
         }
 
+
         .cadastro {
             position: relative;
             z-index: 1;
@@ -40,16 +47,21 @@
     </style>
 </head>
 
+
 <body>
+
 
     <!-- fundo animado -->
     <canvas id="particulas-fundo" aria-hidden="true"></canvas>
 
+
     <!-- tela de cadastro -->
     <main class="cadastro">
 
+
         <!-- cabeçalho -->
         <header class="cadastro-cabecalho">
+
 
             <!-- logo -->
             <a href="{{ url_for('index') }}" class="cadastro-logo" aria-label="DuckFy - Página inicial">
@@ -61,6 +73,7 @@
                     class="cadastro-logo-imagem">
             </a>
 
+
             <!-- opções do cabeçalho -->
             <nav class="cadastro-opcoes">
                 <button type="button" id="btn-tema" aria-label="Ativar tema claro" title="Alternar tema">
@@ -68,12 +81,16 @@
                 </button>
             </nav>
 
+
         </header>
+
 
         <!-- cartão de cadastro -->
         <section class="cadastro-conteudo">
 
+
             <div class="cadastro-formulario">
+
 
                 <!-- título -->
                 <section class="cadastro-topo">
@@ -81,8 +98,10 @@
                     <p>Comece a organizar sua vida financeira com a DuckFy.</p>
                 </section>
 
+
                 <!-- formulário -->
                 <form action="{{ url_for('cadastrar') }}" method="POST" id="form-cadastro">
+
 
                     <div class="campo">
                         <label for="nome">Nome completo:</label>
@@ -90,46 +109,69 @@
                             autocomplete="name" required>
                     </div>
 
+
                     <div class="campo">
                         <label for="email">E-mail:</label>
                         <input type="email" id="email" name="email" placeholder="Digite seu e-mail"
                             autocomplete="email" required>
                     </div>
 
+
                     <div class="campo">
                         <label for="senha">Senha:</label>
-                        <input type="password" id="senha" name="senha" placeholder="Crie uma senha"
-                            autocomplete="new-password" required>
+                        <div class="campo-senha-controle">
+                            <input type="password" id="senha" name="senha" placeholder="Crie uma senha"
+                                autocomplete="new-password" minlength="8" aria-describedby="senha-requisitos" required>
+                            <button type="button" class="btn-olho-senha" data-target="senha"
+                                aria-label="Mostrar senha" title="Mostrar senha">
+                                <i class="fi fi-sr-eye" aria-hidden="true"></i>
+                            </button>
+                        </div>
+                        <p class="senha-requisitos" id="senha-requisitos">
+                            Use pelo menos 8 caracteres, 1 letra maiúscula e 1 caractere especial.
+                        </p>
                     </div>
+
 
                     <div class="campo">
                         <label for="confirmar_senha">Confirmar senha:</label>
-                        <input type="password" id="confirmar_senha" name="confirmar_senha"
-                            placeholder="Digite a senha novamente" autocomplete="new-password" required>
+                        <div class="campo-senha-controle">
+                            <input type="password" id="confirmar_senha" name="confirmar_senha"
+                                placeholder="Digite a senha novamente" autocomplete="new-password" required>
+                            <button type="button" class="btn-olho-senha" data-target="confirmar_senha"
+                                aria-label="Mostrar confirmação da senha" title="Mostrar confirmação da senha">
+                                <i class="fi fi-sr-eye" aria-hidden="true"></i>
+                            </button>
+                        </div>
                     </div>
+
 
                     <!-- concordância com os termos -->
                     <div class="termos-concordancia">
                         <input type="checkbox" id="aceitar-termos" name="aceitar_termos"
                             value="sim" required>
 
+
                         <label for="aceitar-termos">
                             Ao criar conta, concordo com os
-                            <a href="{{ url_for('termos') }}" target="_blank" rel="noopener noreferrer">
+                            <a href="{{ url_for('termos') }}">
                                 Termos de Uso
                             </a>
                             e a
-                            <a href="{{ url_for('privacidade') }}" target="_blank" rel="noopener noreferrer">
+                            <a href="{{ url_for('privacidade') }}">
                                 Política de Privacidade
                             </a>.
                         </label>
                     </div>
 
+
                     <button type="submit" class="btn-cadastrar">
                         Criar conta
                     </button>
 
+
                 </form>
+
 
                 <!-- mensagens do Flask -->
                 <div class="container__error" aria-live="polite">
@@ -140,28 +182,34 @@
                     {% endwith %}
                 </div>
 
+
                 <div class="separador">
                     <span>ou</span>
                 </div>
+
 
                 <div class="login">
                     <span>Já tem uma conta?</span>
                     <a href="{{ url_for('index') }}">Entrar</a>
                 </div>
 
+
             </div>
         </section>
     </main>
+
 
     <!-- anima as partículas -->
     <script>
         const canvas = document.getElementById("particulas-fundo");
         const ctx = canvas.getContext("2d");
 
+
         let particulas = [];
         let largura = window.innerWidth;
         let altura = window.innerHeight;
         let animacaoAtiva = true;
+
 
         function criarParticula() {
             return {
@@ -177,40 +225,51 @@
             };
         }
 
+
         function ajustarCanvas() {
             largura = window.innerWidth;
             altura = window.innerHeight;
 
+
             const escala = window.devicePixelRatio || 1;
+
 
             canvas.width = largura * escala;
             canvas.height = altura * escala;
             canvas.style.width = largura + "px";
             canvas.style.height = altura + "px";
 
+
             ctx.setTransform(escala, 0, 0, escala, 0, 0);
+
 
             const quantidade = Math.min(
                 100,
                 Math.max(35, Math.floor((largura * altura) / 18000))
             );
 
+
             particulas = Array.from({ length: quantidade }, criarParticula);
         }
+
 
         function desenharParticulas() {
             if (!animacaoAtiva) return;
 
+
             ctx.clearRect(0, 0, largura, altura);
+
 
             particulas.forEach(function (particula) {
                 particula.x += particula.velocidadeX;
                 particula.y += particula.velocidadeY;
 
+
                 if (particula.x < 0) particula.x = largura;
                 if (particula.x > largura) particula.x = 0;
                 if (particula.y < 0) particula.y = altura;
                 if (particula.y > altura) particula.y = 0;
+
 
                 ctx.beginPath();
                 ctx.arc(
@@ -221,27 +280,34 @@
                     Math.PI * 2
                 );
 
+
                 ctx.fillStyle = `rgba(${particula.cor}, ${particula.opacidade})`;
                 ctx.shadowBlur = 12;
                 ctx.shadowColor = `rgba(${particula.cor}, 0.8)`;
                 ctx.fill();
             });
 
+
             ctx.shadowBlur = 0;
             requestAnimationFrame(desenharParticulas);
         }
 
+
         ajustarCanvas();
+
 
         const prefereMenosMovimento = window.matchMedia(
             "(prefers-reduced-motion: reduce)"
         ).matches;
 
+
         if (!prefereMenosMovimento) {
             desenharParticulas();
         }
 
+
         window.addEventListener("resize", ajustarCanvas);
+
 
         document.addEventListener("visibilitychange", function () {
             if (document.hidden) {
@@ -253,50 +319,64 @@
         });
     </script>
 
+
     <!-- alterna o tema e atualiza a logo -->
     <script>
         const botaoTema = document.getElementById("btn-tema");
         const logoCadastro = document.querySelector(".cadastro-logo-imagem");
 
+
         function temaEstaClaro() {
             return document.documentElement.classList.contains("tema-claro");
         }
 
+
         function atualizarLogo() {
             if (!logoCadastro) return;
+
 
             const caminho = temaEstaClaro()
                 ? logoCadastro.dataset.logoClaro
                 : logoCadastro.dataset.logoEscuro;
+
 
             if (caminho) {
                 logoCadastro.src = caminho;
             }
         }
 
+
         function atualizarAcessibilidadeTema(temaClaro) {
             if (!botaoTema) return;
 
+
             const texto = temaClaro ? "Ativar tema escuro" : "Ativar tema claro";
+
 
             botaoTema.setAttribute("aria-label", texto);
             botaoTema.setAttribute("title", texto);
         }
 
+
         function aplicarTema(tema) {
             const temaClaro = tema === "claro";
+
 
             document.documentElement.classList.toggle("tema-claro", temaClaro);
             document.body.classList.toggle("tema-claro", temaClaro);
 
+
             localStorage.setItem("duckfy-tema", tema);
+
 
             atualizarLogo();
             atualizarAcessibilidadeTema(temaClaro);
         }
 
+
         // recupera o tema salvo
         aplicarTema(localStorage.getItem("duckfy-tema") || "escuro");
+
 
         // alterna o tema
         if (botaoTema) {
@@ -306,20 +386,68 @@
         }
     </script>
 
+
     <!-- confere se as senhas são iguais -->
     <script>
         const formulario = document.getElementById("form-cadastro");
         const senha = document.getElementById("senha");
         const confirmarSenha = document.getElementById("confirmar_senha");
 
+        function senhaAtendeRequisitos(valor) {
+            const temOitoCaracteres = Array.from(valor).length >= 8;
+            const temLetraMaiuscula = /\p{Lu}/u.test(valor);
+            const temCaractereEspecial = Array.from(valor).some((caractere) =>
+                /[^\p{L}\p{N}\s]/u.test(caractere)
+            );
+
+            return temOitoCaracteres && temLetraMaiuscula && temCaractereEspecial;
+        }
+
+        function validarSenha() {
+            if (senha.value && !senhaAtendeRequisitos(senha.value)) {
+                senha.setCustomValidity(
+                    "A senha deve ter pelo menos 8 caracteres, 1 letra maiúscula e 1 caractere especial."
+                );
+            } else {
+                senha.setCustomValidity("");
+            }
+        }
+
+        document.querySelectorAll(".btn-olho-senha").forEach((botao) => {
+            botao.addEventListener("click", function () {
+                const campoSenha = document.getElementById(botao.dataset.target);
+                const icone = botao.querySelector("i");
+                const mostrar = campoSenha.type === "password";
+
+                campoSenha.type = mostrar ? "text" : "password";
+                icone.classList.toggle("fi-sr-eye", !mostrar);
+                icone.classList.toggle("fi-sr-eye-crossed", mostrar);
+                botao.setAttribute("aria-label", mostrar ? "Ocultar senha" : "Mostrar senha");
+                botao.title = mostrar ? "Ocultar senha" : "Mostrar senha";
+            });
+        });
+
+
         if (formulario && senha && confirmarSenha) {
+            senha.addEventListener("input", validarSenha);
+
             formulario.addEventListener("submit", function (evento) {
+                validarSenha();
+
+                if (!senha.checkValidity()) {
+                    evento.preventDefault();
+                    senha.reportValidity();
+                    return;
+                }
+
                 if (senha.value !== confirmarSenha.value) {
                     evento.preventDefault();
+
 
                     confirmarSenha.setCustomValidity(
                         "As senhas precisam ser iguais."
                     );
+
 
                     confirmarSenha.reportValidity();
                 } else {
@@ -327,11 +455,13 @@
                 }
             });
 
+
             confirmarSenha.addEventListener("input", function () {
                 confirmarSenha.setCustomValidity("");
             });
         }
     </script>
+
 
 </body>
 </html>

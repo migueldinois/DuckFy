@@ -16,7 +16,7 @@
 .perfil-pagina-container,
 .editar-perfil-container {
   width: 100% !important;
-  max-width: 850px !important; /* Mesma largura exata do perfil */
+  max-width: 980px !important; /* Mesma largura exata do perfil */
   margin: 0 auto !important;
   padding: 0 0 40px 0 !important;
   color: #ffffff;

@@ -1,61 +1,62 @@
 <div id="modalAdicionarDinheiro" class="duckfy-modal">
     <div class="dash-card modal-content">
         <div class="d-flex justify-content-between align-items-center mb-3">
-            <h3 class="card-section-title m-0">Adicionar dinheiro</h3>
+            <h3 class="card-section-title m-0">Depositar dinheiro</h3>
             <button type="button" class="btn-close-custom" data-close-modal>&times;</button>
         </div>
 
         <form action="{{ url_for('adicionar_dinheiro') }}" method="POST" id="formAdicionarDinheiro">
             <div class="mb-3">
-                <label for="conta_origem" class="card-subtitle d-block mb-1">
+                    <label for="contaAdicionarDinheiro" class="card-subtitle d-block mb-1">
                     Conta a adicionar  
                 </label>
 
                 <div class="input-icon-wrapper">
-                    <select name="id_conta" id="conta_origem" class="search-input" required>
+                    <select name="id_conta" id="contaAdicionarDinheiro" class="search-input" required>
                         <option value="" disabled selected>Selecione onde adicionar</option>
 
                         {% for conta in contas_bancarias %}
-                        <option value="{{ conta.id_conta }}" data-saldo="{{ conta.saldo_atual }}">
+                        <option value="{{ conta.id_conta }}" data-saldo="{{ conta.saldo_atual }}"
+                            data-reservado="{{ conta.valor_alocado|default(0, true) }}">
                             {{ conta.nome_conta }}
                         </option>
                         {% endfor %}
                     </select>
                 </div>
 
-                <small class="card-subtitle d-block mt-1" id="saldoContaOrigem"></small>
+                <div class="detalhes-saldo-conta" id="detalhesSaldoAdicionar" aria-live="polite" hidden>
+                    <span>Total <strong id="totalAdicionar">R$ 0,00</strong></span>
+                    <span>Na reserva <strong id="reservadoAdicionar">R$ 0,00</strong></span>
+                    <span>Disponível <strong id="disponivelAdicionar">R$ 0,00</strong></span>
+                </div>
             </div>
 
             <div class="mb-3">
-                <label for="valor_transferencia" class="card-subtitle d-block mb-1">
+                <label for="valorAdicionarDinheiro" class="card-subtitle d-block mb-1">
                     Valor a adicionar (R$)
                 </label>
 
                 <div class="input-icon-wrapper">
-                    <input type="text" name="valor" id="valor_transferencia" class="search-input" placeholder="0,00"
+                    <input type="text" name="valor" id="valorAdicionarDinheiro" class="search-input" placeholder="0,00"
                         inputmode="decimal" data-currency-input min="0.01" required>
                 </div>
             </div>
 
-            <div class="dash-card mb-3" id="resumoTransferencia" hidden>
+            <div class="resumo-saldo-conta mb-3" id="resumoAdicionarDinheiro" hidden aria-live="polite">
                 <div class="d-flex justify-content-between align-items-center mb-2">
-                    <span class="card-subtitle">Saldo restante na origem</span>
-                    <strong id="novoSaldoOrigem">R$ 0,00</strong>
+                    <span class="card-subtitle">Saldo total após adicionar</span>
+                    <strong id="saldoFinalAdicionar">R$ 0,00</strong>
                 </div>
-
-                <div class="d-flex justify-content-between align-items-center">
-                    <span class="card-subtitle">Saldo final no destino</span>
-                    <strong id="novoSaldoDestino">R$ 0,00</strong>
-                </div>
+                <small class="card-subtitle">O valor reservado permanece separado do saldo disponível.</small>
             </div>
 
             <div class="d-flex gap-2 mt-3">
-                <button type="button" class="btn-close-custom w-100" data-close-modal>
+                <button type="button" class="btn-danger-action w-100" data-close-modal>
                     Cancelar
                 </button>
 
-                <button type="submit" class="btn-purple-action w-100">
-                    Adicionar Dinheiro
+                <button type="submit" class="btn-confirm-action w-100">
+                    Depositar dinheiro
                 </button>
             </div>
         </form>
