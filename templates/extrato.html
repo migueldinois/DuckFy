@@ -3,7 +3,7 @@
 {% block title %}Dashboard Financeiro - DuckFy{% endblock %}
 
 {% block styles %}
-<link rel="stylesheet" href="{{ url_for('static', filename='css/extrato.css') }}?v=2.0">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/extrato.css') }}?v=2.3">
 {% endblock %}
 
 {% block content %}
@@ -22,30 +22,54 @@
     <!-- TABS DE FILTRO -->
     <nav class="filter-tabs text-uppercase" aria-label="Filtrar movimentações">
         <a href="/extrato?tipo=tudo"
+            data-tipo="tudo"
             class="tab-btn text-decoration-none {% if not tipo_ativo or tipo_ativo == 'tudo' %}active{% endif %}">
             TUDO
         </a>
 
         <a href="/extrato?tipo=saida"
+            data-tipo="saida"
             class="tab-btn text-decoration-none {% if tipo_ativo == 'saida' %}active{% endif %}">
             SAÍDA
         </a>
 
         <a href="/extrato?tipo=entrada"
+            data-tipo="entrada"
             class="tab-btn text-decoration-none {% if tipo_ativo == 'entrada' %}active{% endif %}">
             ENTRADA
         </a>
     </nav>
 
+    <div class="advanced-controls">
+        <!-- Campo de Busca -->
+        <div class="search-box">
+            <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="11" cy="11" r="8"></circle>
+                <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+            </svg>
+            <input type="search" id="searchInput" placeholder="Buscar movimentação..."
+                aria-label="Buscar por descrição, categoria ou conta" />
+        </div>
+
+        <!-- Seletor de Período -->
+        <select id="periodSelect" class="custom-select" aria-label="Filtrar por período">
+            <option value="all">Todo o período</option>
+            <option value="current_month" selected>Este Mês</option>
+            <option value="last_month">Mês Anterior</option>
+            <option value="7_days">Últimos 7 dias</option>
+            <option value="30_days">Últimos 30 dias</option>
+        </select>
+    </div>
+
     <section class="timeline-container" aria-label="Movimentações">
 
         {% if transacoes %}
         {% for item in transacoes %}
+        {% set eh_entrada = item.tipo|lower in ['receita', 'entradas', 'entrada', 'retirada'] %}
         <div class="timeline-item">
 
-            <div
-                class="icon-box {% if item.tipo == 'Receita' or item.tipo == 'Entradas' or item.tipo == 'entrada' %}entrada{% else %}saida{% endif %}">
-                <i class="bi {% if item.tipo in ['Receita', 'Entradas', 'entrada'] %}bi-arrow-down-left{% else %}bi-arrow-up-right{% endif %}"></i>
+            <div class="icon-box {% if eh_entrada %}entrada{% else %}saida{% endif %}">
+                <i class="bi {% if eh_entrada %}bi-arrow-down-left{% else %}bi-arrow-up-right{% endif %}"></i>
             </div>
 
             <div class="info">
@@ -57,9 +81,8 @@
             </div>
 
 
-            <div
-                class="amount {% if item.tipo in ['Receita', 'Entradas', 'entrada'] %}positive{% else %}negative{% endif %}">
-                {% if item.tipo in ['Receita', 'Entradas', 'entrada'] %}
+            <div class="amount {% if eh_entrada %}positive{% else %}negative{% endif %}">
+                {% if eh_entrada %}
                 +R$ {{ "%.2f"|format(item.valor|float) }}
                 {% else %}
                 -R$ {{ "%.2f"|format(item.valor|float) }}
@@ -76,7 +99,16 @@
         </div>
         {% endif %}
 
+        <div id="no-filter-results" class="empty-filter-message" role="status" hidden>
+            <i class="bi bi-search fs-1 d-block mb-2"></i>
+            <p>Nenhuma movimentação corresponde aos filtros.</p>
+        </div>
+
     </section>
 </main>
 
+{% endblock %}
+
+{% block extra_js %}
+<script src="{{ url_for('static', filename='js/extrato.js') }}" defer></script>
 {% endblock %}

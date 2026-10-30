@@ -68,8 +68,8 @@
   position: relative;
   display: flex;
   flex-direction: column;
-  justify-content: center;
-  min-height: 158px;
+  justify-content: flex-start;
+  min-height: 178px;
   padding: 24px;
   overflow: hidden;
   transition: border-color .2s, transform .2s;
@@ -99,6 +99,13 @@
   font-variant-numeric: tabular-nums;
 }
 
+.pagina-patrimonio .card-descricao {
+  margin: 9px 0 0;
+  color: var(--text-muted);
+  font-size: .8rem;
+  line-height: 1.5;
+}
+
 .pagina-patrimonio .card-reserva {
   border-color: rgba(34, 197, 94, .45);
   background: linear-gradient(
@@ -116,7 +123,7 @@
   display: inline-flex;
   align-items: center;
   width: fit-content;
-  margin-top: 12px;
+  margin-top: 10px;
   padding: 5px 9px;
   color: var(--brand-secondary);
   background: color-mix(in srgb, var(--brand-secondary) 10%, transparent);
@@ -126,11 +133,22 @@
   font-variant-numeric: tabular-nums;
 }
 
-.pagina-patrimonio .aviso-reserva {
-  margin-top: 8px;
-  color: var(--text-muted);
-  font-size: .75rem;
-  line-height: 1.5;
+.pagina-patrimonio .link-reserva {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  width: fit-content;
+  margin-top: 10px;
+  color: var(--brand-secondary);
+  font-size: .78rem;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.pagina-patrimonio .link-reserva:hover {
+  color: var(--brand-primary);
+  text-decoration: underline;
+  text-underline-offset: 3px;
 }
 
 .acoes-patrimonio {
@@ -171,38 +189,20 @@
 }
 
 .pagina-patrimonio .btn-adicionar-banco,
+.pagina-patrimonio .btn-adicionar-dinheiro,
+.pagina-patrimonio .btn-transferir-dinheiro,
 .pagina-patrimonio .btn-purple-action {
-  color: #fff;
+  color: var(--text-primary);
   background: var(--brand-primary);
-  border-color: transparent;
+  border-color: var(--brand-primary);
 }
 
 .pagina-patrimonio .btn-adicionar-banco:hover,
+.pagina-patrimonio .btn-adicionar-dinheiro:hover,
+.pagina-patrimonio .btn-transferir-dinheiro:hover,
 .pagina-patrimonio .btn-purple-action:hover {
-  color: #fff;
-  background: var(--brand-dark);
-  box-shadow: 0 5px 18px rgba(120, 86, 232, .2);
-}
-
-.pagina-patrimonio .btn-adicionar-dinheiro {
-  color: #fff;
-  background: #5d3dc4;
-  border-color: #7655e8;
-}
-
-.pagina-patrimonio .btn-adicionar-dinheiro:hover {
-  background: #6d49dc;
-  border-color: #8a6af3;
-}
-
-.pagina-patrimonio .btn-transferir-dinheiro {
   color: var(--text-primary);
-  background: var(--bg-surface-1);
-  border-color: var(--border-color);
-}
-
-.pagina-patrimonio .btn-transferir-dinheiro:hover {
-  background: var(--bg-surface-2);
+  background: var(--brand-dark);
   border-color: var(--brand-primary);
 }
 
@@ -229,9 +229,19 @@
   background: var(--bg-surface-2);
 }
 
-.pagina-patrimonio .item-conta > .d-flex {
+.pagina-patrimonio .conta-identificacao {
+  display: flex;
+  align-items: center;
+  gap: 14px;
   flex: 1;
   min-width: 0;
+}
+
+.pagina-patrimonio .resumo-conta {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  flex-shrink: 0;
 }
 
 .pagina-patrimonio .btn-editar-conta,
@@ -312,6 +322,42 @@
   overflow-wrap: anywhere;
 }
 
+.pagina-patrimonio .estado-vazio {
+  display: grid;
+  justify-items: center;
+  gap: 10px;
+  width: min(100%, 520px);
+  margin: 0 auto;
+  padding: 24px 20px;
+  text-align: center;
+}
+
+.pagina-patrimonio .icone-estado-vazio {
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  margin-bottom: 2px;
+  color: var(--brand-secondary);
+  background: color-mix(in srgb, var(--brand-primary) 14%, var(--bg-surface-1));
+  border: 1px solid color-mix(in srgb, var(--brand-primary) 28%, var(--border-color));
+  border-radius: 13px;
+  font-size: 1.15rem;
+}
+
+.pagina-patrimonio .estado-vazio-titulo {
+  color: var(--text-primary);
+  font-size: 1rem;
+  font-weight: 700;
+}
+
+.pagina-patrimonio .estado-vazio-descricao {
+  max-width: 380px;
+  color: var(--text-muted);
+  font-size: .82rem;
+  line-height: 1.45;
+}
+
 .pagina-patrimonio .duckfy-modal .modal-content {
   width: min(100% - 32px, 500px);
   max-width: 100%;
@@ -388,6 +434,99 @@
 
 .pagina-patrimonio .duckfy-modal .btn-purple-action:hover {
   transform: translateY(-1px);
+}
+
+.resumo-saldo-conta {
+  padding: 14px 16px;
+  color: var(--text-primary);
+  background: color-mix(in srgb, var(--brand-secondary) 7%, var(--bg-surface-1));
+  border: 1px solid color-mix(in srgb, var(--brand-secondary) 24%, var(--border-color));
+  border-radius: 12px;
+}
+
+.resumo-saldo-conta > .card-subtitle {
+  display: block;
+  margin-bottom: 4px;
+}
+
+.resumo-saldo-conta > strong {
+  font-size: 1.05rem;
+  font-variant-numeric: tabular-nums;
+}
+
+.detalhes-saldo-conta {
+  display: grid;
+  gap: 5px;
+  margin-top: 9px;
+  color: var(--text-muted);
+  font-size: .78rem;
+}
+
+.detalhes-saldo-conta span {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.detalhes-saldo-conta strong {
+  color: var(--text-primary);
+  font-weight: 650;
+  font-variant-numeric: tabular-nums;
+}
+
+.mensagem-validacao-conta {
+  margin: 0 0 12px;
+  padding: 10px 12px;
+  color: #b93838;
+  background: color-mix(in srgb, #ef4444 9%, var(--bg-surface-1));
+  border: 1px solid color-mix(in srgb, #ef4444 28%, var(--border-color));
+  border-radius: 10px;
+  font-size: .84rem;
+  line-height: 1.45;
+}
+
+.mensagem-validacao-conta[hidden] {
+  display: none;
+}
+
+.pagina-patrimonio .duckfy-modal .btn-purple-action:disabled {
+  opacity: .55;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.pagina-patrimonio .duckfy-modal .btn-excluir-conta {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 9px;
+  min-height: 46px;
+  padding: 10px 16px;
+  color: #ef6262;
+  background: color-mix(in srgb, #ef4444 8%, var(--bg-surface-1));
+  border: 1px solid color-mix(in srgb, #ef4444 34%, var(--border-color));
+  border-radius: 12px;
+  font: inherit;
+  font-size: .9rem;
+  font-weight: 650;
+  cursor: pointer;
+  transition: color .2s, background .2s, border-color .2s, transform .2s, box-shadow .2s;
+}
+
+.pagina-patrimonio .duckfy-modal .btn-excluir-conta i {
+  font-size: 1rem;
+}
+
+.pagina-patrimonio .duckfy-modal .btn-excluir-conta:hover {
+  color: #fff;
+  background: #d94343;
+  border-color: #d94343;
+  box-shadow: 0 5px 16px rgba(217, 67, 67, .2);
+  transform: translateY(-1px);
+}
+
+.pagina-patrimonio .duckfy-modal .btn-excluir-conta:active {
+  transform: translateY(0);
 }
 
 .pagina-patrimonio .duckfy-modal .btn-close-custom.w-100 {
@@ -618,7 +757,7 @@
   }
 
   .pagina-patrimonio .card-patrimonio {
-    min-height: 145px;
+    min-height: 165px;
   }
 }
 
@@ -652,7 +791,7 @@
   }
 
   .pagina-patrimonio .card-patrimonio {
-    min-height: 125px;
+    min-height: 145px;
     padding: 20px;
   }
 
@@ -668,12 +807,15 @@
   }
 
   .pagina-patrimonio .item-conta {
-    gap: 10px;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: 14px 10px;
     padding: 16px 12px;
   }
 
-  .pagina-patrimonio .item-conta > .d-flex {
-    gap: 8px !important;
+  .pagina-patrimonio .conta-identificacao {
+    grid-column: 1 / -1;
+    gap: 10px;
   }
 
   .pagina-patrimonio .btn-editar-conta {
@@ -692,13 +834,34 @@
     font-size: .86rem;
   }
 
+
   .pagina-patrimonio .tipo-banco {
     font-size: .75rem;
   }
 
   .pagina-patrimonio .saldo-banco {
-    max-width: 110px;
+    min-width: 0;
     font-size: .82rem;
+    text-align: left;
+  }
+
+  .pagina-patrimonio .resumo-conta {
+    display: contents;
+  }
+
+  .pagina-patrimonio .resumo-conta .saldo-banco {
+    grid-column: 1;
+  }
+
+  .pagina-patrimonio .resumo-conta .btn-editar-conta {
+    grid-column: 2;
+    grid-row: 2;
+    align-self: center;
+  }
+
+  .pagina-patrimonio .estado-vazio {
+    gap: 9px;
+    padding: 22px 16px;
   }
 
   .pagina-patrimonio .duckfy-modal .modal-content,

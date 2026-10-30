@@ -3,6 +3,7 @@ from decimal import Decimal
 from database.conexao import Conexao
 
 class ContaBancaria:
+    SALDO_MAXIMO = Decimal("99999999.99")
 
     @staticmethod
     def buscar_todas_por_usuario(id_usuario):
@@ -70,7 +71,7 @@ class ContaBancaria:
         conexao, cursor = Conexao.conectar()
         try:
             saldo_atual = Decimal(str(saldo_atual))
-            if not saldo_atual.is_finite() or saldo_atual < 0:
+            if not saldo_atual.is_finite() or saldo_atual < 0 or saldo_atual > ContaBancaria.SALDO_MAXIMO:
                 return False
 
             sql = """
@@ -94,7 +95,7 @@ class ContaBancaria:
         conexao, cursor = Conexao.conectar()
         try:
             saldo_atual = Decimal(str(saldo_atual))
-            if not saldo_atual.is_finite() or saldo_atual < 0:
+            if not saldo_atual.is_finite() or saldo_atual < 0 or saldo_atual > ContaBancaria.SALDO_MAXIMO:
                 return False
 
             cursor.execute(
@@ -136,11 +137,45 @@ class ContaBancaria:
 
     @staticmethod
     def deletar_conta(id_conta, id_usuario):
-        """Apaga uma conta bancária do utilizador."""
+        """Apaga uma conta e remove da reserva o valor alocado nela."""
         conexao, cursor = Conexao.conectar()
         try:
-            sql = "DELETE FROM contas_bancarias WHERE id_conta = %s AND id_usuario = %s"
-            cursor.execute(sql, (id_conta, id_usuario))
+            cursor.execute(
+                "SELECT id_conta FROM contas_bancarias WHERE id_conta = %s AND id_usuario = %s FOR UPDATE",
+                (id_conta, id_usuario)
+            )
+            if not cursor.fetchone():
+                conexao.rollback()
+                return False
+
+            cursor.execute(
+                """
+                SELECT rc.id_reserva, rc.valor_alocado
+                FROM reserva_contas rc
+                INNER JOIN reserva_emergencia re ON re.id_reserva = rc.id_reserva
+                WHERE rc.id_conta = %s AND re.id_usuario = %s
+                FOR UPDATE
+                """,
+                (id_conta, id_usuario)
+            )
+            alocacoes_por_reserva = {}
+            for alocacao in cursor.fetchall():
+                id_reserva = alocacao["id_reserva"]
+                alocacoes_por_reserva[id_reserva] = (
+                    alocacoes_por_reserva.get(id_reserva, Decimal("0"))
+                    + Decimal(str(alocacao["valor_alocado"] or 0))
+                )
+
+            for id_reserva, valor_alocado in alocacoes_por_reserva.items():
+                cursor.execute(
+                    "UPDATE reserva_emergencia SET valor_atual = valor_atual - %s WHERE id_reserva = %s AND id_usuario = %s",
+                    (valor_alocado, id_reserva, id_usuario)
+                )
+
+            cursor.execute(
+                "DELETE FROM contas_bancarias WHERE id_conta = %s AND id_usuario = %s",
+                (id_conta, id_usuario)
+            )
             conexao.commit()
             return True
         except Exception as e:

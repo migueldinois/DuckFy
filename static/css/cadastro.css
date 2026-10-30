@@ -269,6 +269,50 @@ body {
     box-shadow: 0 0 0 3px rgba(124, 77, 255, 0.18);
 }
 
+.campo-senha-controle {
+    position: relative;
+}
+
+.campo-senha-controle input {
+    padding-right: 52px;
+}
+
+.btn-olho-senha {
+    position: absolute;
+    top: 50%;
+    right: 8px;
+    width: 36px;
+    height: 36px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    transform: translateY(-50%);
+    color: #a0a0b5;
+    background: transparent;
+    border: 0;
+    border-radius: 8px;
+    cursor: pointer;
+}
+
+.btn-olho-senha:hover,
+.btn-olho-senha:focus-visible {
+    color: #B093FF;
+    outline: none;
+    background: rgba(124, 77, 255, 0.14);
+}
+
+.btn-olho-senha i {
+    font-size: 16px;
+    line-height: 1;
+}
+
+.senha-requisitos {
+    margin-top: 7px;
+    color: #a0a0b5;
+    font-size: 0.75rem;
+    line-height: 1.4;
+}
+
 /* concordância com os termos */
 .termos-concordancia {
     display: flex;
@@ -459,6 +503,19 @@ body.tema-claro .campo input:focus {
     border-color: #7C4DFF;
 }
 
+body.tema-claro .btn-olho-senha {
+    color: #706a80;
+}
+
+body.tema-claro .btn-olho-senha:hover,
+body.tema-claro .btn-olho-senha:focus-visible {
+    color: #7C4DFF;
+}
+
+body.tema-claro .senha-requisitos {
+    color: #706a80;
+}
+
 body.tema-claro .termos-concordancia a {
     color: #302744;
 }
@@ -602,5 +659,67 @@ body.tema-claro .logo-fy {
         animation-duration: 0.01ms !important;
         animation-iteration-count: 1 !important;
         transition-duration: 0.01ms !important;
+    }
+}
+
+.cadastro-cabecalho {
+    top: max(8px, env(safe-area-inset-top));
+    left: 0;
+    right: 0;
+    width: auto;
+    min-height: clamp(64px, 10vw, 84px);
+    padding: 0 max(12px, env(safe-area-inset-right)) 0 max(12px, env(safe-area-inset-left));
+    align-items: center;
+}
+
+.cadastro-cabecalho .cadastro-logo {
+    --logo-area-width: clamp(110px, 24vw, 170px);
+    position: relative;
+    display: block;
+    flex: 0 1 var(--logo-area-width);
+    width: var(--logo-area-width);
+    height: clamp(50px, 10vw, 72px);
+    overflow: hidden;
+}
+
+.cadastro-cabecalho .cadastro-logo-imagem {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: calc(var(--logo-area-width) * 1.25);
+    max-width: none;
+    height: auto;
+    margin: 0;
+    object-fit: contain;
+    object-position: center;
+    transform: translate(-49.48%, -46.85%);
+}
+
+.cadastro-cabecalho .cadastro-logo-imagem[src$="logo_clara.png"] {
+    width: calc(var(--logo-area-width) * 1.23);
+    transform: translate(-52.60%, -49.07%);
+}
+
+@media (max-width: 500px) {
+    .cadastro-cabecalho {
+        min-height: 62px;
+        padding: 0 max(12px, env(safe-area-inset-right)) 0 max(12px, env(safe-area-inset-left));
+        gap: 8px;
+    }
+
+    .cadastro-cabecalho .cadastro-logo {
+        --logo-area-width: clamp(108px, 32vw, 140px);
+        height: 54px;
+    }
+}
+
+@media (max-width: 800px) and (orientation: landscape) {
+    .cadastro-cabecalho {
+        min-height: 54px;
+    }
+
+    .cadastro-cabecalho .cadastro-logo {
+        --logo-area-width: clamp(104px, 24vw, 150px);
+        height: 46px;
     }
 }

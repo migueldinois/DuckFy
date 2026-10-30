@@ -1,0 +1,204 @@
+
+/* ========================================
+   ÍCONE ORIGINAL DE EMOJI
+======================================== */
+
+.emoji-field-wrapper {
+    position: relative;
+}
+
+.emoji-input {
+    padding-right: 12px !important;
+}
+
+.emoji-icon-trigger {
+    cursor: pointer;
+    pointer-events: auto !important;
+    z-index: 3;
+    transition: 0.2s ease;
+}
+
+.emoji-icon-trigger:hover,
+.emoji-icon-trigger.active {
+    opacity: 0.75;
+    transform: scale(1.1);
+}
+
+.emoji-icon-trigger:focus-visible {
+    outline: 2px solid var(--brand-primary);
+    outline-offset: 3px;
+    border-radius: 4px;
+}
+
+
+/* ========================================
+   PAINEL DE EMOJIS
+======================================== */
+
+.emoji-picker {
+    position: fixed;
+    z-index: 99999;
+
+    width: 350px;
+    max-width: calc(100vw - 24px);
+    max-height: calc(100vh - 24px);
+
+    padding: 14px;
+
+    box-sizing: border-box;
+    overflow: hidden;
+
+    background-color: var(--bg-surface-1);
+    color: var(--text-primary);
+
+    border: 1px solid var(--border-color);
+    border-radius: 14px;
+
+    box-shadow: 0 12px 35px var(--shadow-color);
+
+    opacity: 1;
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+}
+
+.emoji-picker[hidden] {
+    display: none !important;
+}
+
+
+/* ========================================
+   CABEÇALHO
+======================================== */
+
+.emoji-picker-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    margin-bottom: 12px;
+
+    cursor: grab;
+    touch-action: none;
+    user-select: none;
+    -webkit-user-select: none;
+}
+
+.emoji-picker-header:active {
+    cursor: grabbing;
+}
+
+.emoji-picker-header strong {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--text-primary);
+}
+
+.emoji-picker-header button {
+    width: 28px;
+    height: 28px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border: none;
+    border-radius: 7px;
+
+    background-color: transparent;
+    color: var(--text-muted);
+
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+.emoji-picker-header button:hover {
+    background-color: var(--bg-surface-2);
+    color: var(--text-primary);
+}
+
+
+/* ========================================
+   COMPONENTE DE EMOJIS
+======================================== */
+
+#emojiPickerContainer {
+    width: 100%;
+    min-height: 250px;
+}
+
+#emojiPickerContainer emoji-picker {
+    display: block;
+
+    width: 100%;
+    height: 390px;
+    max-height: calc(100vh - 100px);
+
+    border: none;
+    border-radius: 9px;
+
+    --background: var(--bg-surface-1);
+    --border-color: var(--border-color);
+    --button-hover-background: var(--bg-surface-2);
+    --button-active-background: var(--bg-surface-2);
+    --indicator-color: var(--brand-primary);
+    --input-border-color: var(--border-color);
+    --input-font-color: var(--text-primary);
+    --input-placeholder-color: var(--text-muted);
+    --outline-color: var(--brand-primary);
+    --category-font-color: var(--text-muted);
+    --emoji-size: 1.45rem;
+    --num-columns: 8;
+}
+
+
+/* ========================================
+   CARREGAMENTO E ERROS
+======================================== */
+
+.emoji-picker-loading,
+.emoji-picker-error {
+    padding: 20px 10px;
+
+    color: var(--text-muted);
+    font-size: 12px;
+    text-align: center;
+}
+
+.emoji-picker-error {
+    color: var(--text-muted);
+}
+
+
+/* ========================================
+   TECLADO ARRASTÁVEL
+======================================== */
+
+.emoji-picker.arrastando {
+    cursor: grabbing;
+    user-select: none;
+    -webkit-user-select: none;
+}
+
+.emoji-picker.arrastando * {
+    user-select: none;
+    -webkit-user-select: none;
+}
+
+
+/* ========================================
+   RESPONSIVIDADE
+======================================== */
+
+@media (max-width: 480px) {
+
+    .emoji-picker {
+        width: 310px;
+        max-width: calc(100vw - 24px);
+    }
+
+    #emojiPickerContainer emoji-picker {
+        height: 360px;
+        --num-columns: 7;
+        --emoji-size: 1.35rem;
+    }
+}
