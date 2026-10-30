@@ -5,6 +5,14 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
+    <script>
+        try {
+            if (localStorage.getItem("duckfy-tema") === "claro") {
+                document.documentElement.classList.add("tema-claro");
+            }
+        } catch {}
+    </script>
+
     <title>{% block title %}DuckFy{% endblock %}</title>
 
     <!-- bootstrap -->
@@ -22,10 +30,15 @@
     <!-- estilos especificos da pagina -->
     {% block extra_css %}{% endblock %}
     {% block styles %}{% endblock %}
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/tema-claro.css') }}?v=2.2">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/tema-claro.css') }}?v=2.6">
 </head>
 
 <body class="app-body">
+    <script>
+        if (document.documentElement.classList.contains("tema-claro")) {
+            document.body.classList.add("tema-claro");
+        }
+    </script>
 
     <div class="app-container">
 

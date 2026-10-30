@@ -58,10 +58,11 @@ body.app-body.tema-claro .main-content .btn-purple-action,
 body.app-body.tema-claro .main-content .btn-purple,
 body.app-body.tema-claro .main-content .btn-adicionar-banco,
 body.app-body.tema-claro .main-content .btn-adicionar-dinheiro,
+body.app-body.tema-claro .main-content .btn-transferir-dinheiro,
 body.app-body.tema-claro .main-content .btn-salvar-topo,
 body.app-body.tema-claro .main-content .btn-editar-perfil,
 body.app-body.tema-claro .main-content .btn-editar {
-  color: #ffffff;
+  color: #ffffff !important;
 }
 
 body.app-body.tema-claro .main-content .btn-purple-action:hover {
@@ -276,6 +277,20 @@ body.app-body.tema-claro .main-content .simulador-page-wrapper .btn-edit {
   color: var(--text-primary);
 }
 
+body.app-body.tema-claro .main-content .lancamento-block .input-group-text {
+  background-color: #eee8f8 !important;
+  border-color: #d7c8f2 !important;
+  color: #512b9b !important;
+  -webkit-text-fill-color: #512b9b;
+}
+
+body.app-body.tema-claro .main-content .simulador-info-card {
+  background: linear-gradient(135deg, #f3edfc, #ffffff 78%) !important;
+  border-color: #ded0f3 !important;
+  color: var(--text-primary);
+  box-shadow: 0 6px 18px rgba(83, 47, 145, 0.08);
+}
+
 body.app-body.tema-claro .main-content .custom-select-option {
   color: var(--text-primary);
 }
@@ -312,6 +327,17 @@ body.app-body.tema-claro .main-content .timeline-item:hover {
 body.app-body.tema-claro .main-content .modal-content,
 body.app-body.tema-claro .main-content .modal-excluir-conta {
   color: var(--text-primary) !important;
+}
+
+body.app-body.tema-claro .main-content .modal-excluir-conta .btn-cancelar-exclusao {
+  color: #512b9b !important;
+  background-color: #eee8f8 !important;
+  border-color: #d7c8f2 !important;
+}
+
+body.app-body.tema-claro .main-content .modal-excluir-conta .btn-cancelar-exclusao:hover {
+  color: #39206f !important;
+  background-color: #e2d7f4 !important;
 }
 
 body.app-body.tema-claro .main-content .btn-close-white {
