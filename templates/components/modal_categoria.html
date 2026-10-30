@@ -1,4 +1,3 @@
-
 <!-- links -->
 <link rel="stylesheet" href="{{ url_for('static', filename='css/duckfy-modal.css') }}">
 <link rel="stylesheet" href="{{ url_for('static', filename='css/emoji-picker.css') }}">
@@ -22,70 +21,46 @@
                 <label for="nome" class="card-subtitle d-block mb-1">Nome</label>
 
                 <div class="input-icon-wrapper">
-                    <img
-                        src="{{ url_for('static', filename='img/icons/nome.svg') }}"
-                        class="input-icon"
-                        alt="Nome"
-                    >
+                    <img src="{{ url_for('static', filename='img/icons/nome.svg') }}" class="input-icon" alt="Nome">
 
-                    <input
-                        type="text"
-                        name="nome"
-                        id="nome"
-                        class="search-input input-with-icon"
-                        placeholder="Ex: Alimentação"
-                        required
-                    >
+                    <input type="text" name="nome" id="nome" class="search-input input-with-icon"
+                        placeholder="Ex: Alimentação" required>
                 </div>
             </div>
 
             <!-- campo tipo -->
             <div class="mb-3">
-                <label for="tipo" class="card-subtitle d-block mb-1">Tipo</label>
+                <label class="card-subtitle d-block mb-2">Tipo</label>
 
-                <div class="input-icon-wrapper">
-                    <img
-                        src="{{ url_for('static', filename='img/icons/tipo.svg') }}"
-                        class="input-icon"
-                        alt="Tipo"
-                    >
+                <input type="hidden" name="tipo" id="tipo" value="SAIDA">
 
-                    <select
-                        name="tipo"
-                        id="tipo"
-                        class="search-input input-with-icon"
-                        required
-                    >
-                        <option value="SAIDA">Saída</option>
-                        <option value="ENTRADA">Entrada</option>
-                    </select>
+                <div class="tipo-categoria-opcoes">
+                    <button type="button" class="tipo-categoria-btn tipo-saida selecionado" data-tipo="SAIDA"
+                        aria-pressed="true">
+                        <i class="bi bi-arrow-up-right-circle"></i>
+                        <span>Saída</span>
+                    </button>
+
+                    <button type="button" class="tipo-categoria-btn tipo-entrada" data-tipo="ENTRADA"
+                        aria-pressed="false">
+                        <i class="bi bi-arrow-down-left-circle"></i>
+                        <span>Entrada</span>
+                    </button>
                 </div>
             </div>
+
 
             <!-- campo emoji -->
             <div class="mb-3">
                 <label for="emoji" class="card-subtitle d-block mb-1">Emoji</label>
 
                 <div class="input-icon-wrapper emoji-field-wrapper">
-                    <img
-                        src="{{ url_for('static', filename='img/icons/emoji.svg') }}"
-                        class="input-icon emoji-icon-trigger"
-                        alt="Abrir seletor de emojis"
-                        data-emoji-trigger="emoji"
-                        role="button"
-                        tabindex="0"
-                        aria-label="Abrir seletor de emojis"
-                    >
+                    <img src="{{ url_for('static', filename='img/icons/emoji.svg') }}"
+                        class="input-icon emoji-icon-trigger" alt="Abrir seletor de emojis" data-emoji-trigger="emoji"
+                        role="button" tabindex="0" aria-label="Abrir seletor de emojis">
 
-                    <input
-                        type="text"
-                        name="emoji"
-                        id="emoji"
-                        class="search-input input-with-icon emoji-input"
-                        placeholder="Ex: 🍔"
-                        required
-                        autocomplete="off"
-                    >
+                    <input type="text" name="emoji" id="emoji" class="search-input input-with-icon emoji-input"
+                        placeholder="Ex: 🍔" required autocomplete="off">
                 </div>
             </div>
 
@@ -97,60 +72,26 @@
                     <input type="hidden" name="cor" id="cor" value="#7C4DFF">
 
                     <div class="color-options">
-                        <button
-                            type="button"
-                            class="color-option selecionada"
-                            data-color="#7C4DFF"
-                            style="--cor-opcao: #7C4DFF;"
-                            aria-label="Roxo"
-                        ></button>
+                        <button type="button" class="color-option selecionada" data-color="#7C4DFF"
+                            style="--cor-opcao: #7C4DFF;" aria-label="Roxo"></button>
 
-                        <button
-                            type="button"
-                            class="color-option"
-                            data-color="#00E676"
-                            style="--cor-opcao: #00E676;"
-                            aria-label="Verde"
-                        ></button>
+                        <button type="button" class="color-option" data-color="#00E676" style="--cor-opcao: #00E676;"
+                            aria-label="Verde"></button>
 
-                        <button
-                            type="button"
-                            class="color-option"
-                            data-color="#58A6FF"
-                            style="--cor-opcao: #58A6FF;"
-                            aria-label="Azul"
-                        ></button>
+                        <button type="button" class="color-option" data-color="#58A6FF" style="--cor-opcao: #58A6FF;"
+                            aria-label="Azul"></button>
 
-                        <button
-                            type="button"
-                            class="color-option"
-                            data-color="#FFB547"
-                            style="--cor-opcao: #FFB547;"
-                            aria-label="Laranja"
-                        ></button>
+                        <button type="button" class="color-option" data-color="#FFB547" style="--cor-opcao: #FFB547;"
+                            aria-label="Laranja"></button>
 
-                        <button
-                            type="button"
-                            class="color-option"
-                            data-color="#FF758F"
-                            style="--cor-opcao: #FF758F;"
-                            aria-label="Rosa"
-                        ></button>
+                        <button type="button" class="color-option" data-color="#FF758F" style="--cor-opcao: #FF758F;"
+                            aria-label="Rosa"></button>
 
-                        <button
-                            type="button"
-                            class="color-option"
-                            data-color="#A0A0B0"
-                            style="--cor-opcao: #A0A0B0;"
-                            aria-label="Cinza"
-                        ></button>
+                        <button type="button" class="color-option" data-color="#A0A0B0" style="--cor-opcao: #A0A0B0;"
+                            aria-label="Cinza"></button>
 
-                        <button
-                            type="button"
-                            id="corPersonalizada"
-                            class="color-option color-custom"
-                            aria-label="Escolher outra cor"
-                        >
+                        <button type="button" id="corPersonalizada" class="color-option color-custom"
+                            aria-label="Escolher outra cor">
                             <i class="bi bi-plus-lg"></i>
                         </button>
                     </div>

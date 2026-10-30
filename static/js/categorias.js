@@ -4,10 +4,39 @@ if (!window.duckfyCategoriasInicializado) {
 
     document.addEventListener('DOMContentLoaded', () => {
 
+
+        // seleção do tipo de categoria
+        const campoTipo = document.getElementById('tipo');
+        const botoesTipo = document.querySelectorAll('.tipo-categoria-btn');
+
+        botoesTipo.forEach(botao => {
+            botao.addEventListener('click', () => {
+
+                const tipoSelecionado = botao.dataset.tipo;
+
+                campoTipo.value = tipoSelecionado;
+
+                botoesTipo.forEach(item => {
+                    const selecionado = item === botao;
+
+                    item.classList.toggle('selecionado', selecionado);
+                    item.setAttribute('aria-pressed', selecionado);
+                });
+            });
+        });
+
+
         // ========================================
         // CONFIGURAÇÃO DO SELETOR DE EMOJIS
         // ========================================
 
+
+        // impede digitação manual no campo de emoji
+        document.querySelectorAll('.emoji-input').forEach(campo => {
+            campo.setAttribute('readonly', true);
+            campo.setAttribute('placeholder', 'Selecione um emoji');
+            campo.style.cursor = 'pointer';
+        });
         const picker = document.createElement('div');
 
         picker.id = 'emojiPicker';
