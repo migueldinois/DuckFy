@@ -1,0 +1,233 @@
+
+/* ========================================
+   ÍCONE ORIGINAL DE EMOJI
+======================================== */
+
+.emoji-field-wrapper {
+    position: relative;
+}
+
+.emoji-input {
+    padding-right: 12px !important;
+}
+
+.emoji-icon-trigger {
+    cursor: pointer;
+    pointer-events: auto !important;
+    z-index: 3;
+    transition: 0.2s ease;
+}
+
+.emoji-icon-trigger:hover,
+.emoji-icon-trigger.active {
+    opacity: 0.75;
+    transform: scale(1.1);
+}
+
+.emoji-icon-trigger:focus-visible {
+    outline: 2px solid var(--brand-primary);
+    outline-offset: 3px;
+    border-radius: 4px;
+}
+
+
+/* ========================================
+   PAINEL DE EMOJIS
+======================================== */
+
+.emoji-picker {
+    position: fixed;
+    z-index: 99999;
+
+    width: 310px;
+    max-width: calc(100vw - 24px);
+    padding: 14px;
+
+    background-color: var(--bg-surface-1);
+    color: var(--text-primary);
+
+    border: 1px solid var(--border-color);
+    border-radius: 14px;
+
+    box-shadow: 0 12px 35px var(--shadow-color);
+
+    opacity: 1;
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+}
+
+.emoji-picker[hidden],
+.emoji-sem-resultado[hidden] {
+    display: none !important;
+}
+
+
+/* ========================================
+   CABEÇALHO
+======================================== */
+
+.emoji-picker-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    margin-bottom: 12px;
+}
+
+.emoji-picker-header strong {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--text-primary);
+}
+
+.emoji-picker-header button {
+    width: 28px;
+    height: 28px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border: none;
+    border-radius: 7px;
+
+    background-color: transparent;
+    color: var(--text-muted);
+
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+.emoji-picker-header button:hover {
+    background-color: var(--bg-surface-2);
+    color: var(--text-primary);
+}
+
+
+/* ========================================
+   PESQUISA
+======================================== */
+
+.emoji-search {
+    width: 100%;
+    padding: 10px 12px;
+
+    margin-bottom: 12px;
+
+    border: 1px solid var(--border-color);
+    border-radius: 9px;
+
+    outline: none;
+
+    background-color: var(--bg-primary);
+    color: var(--text-primary);
+
+    font-size: 13px;
+    transition: 0.2s;
+}
+
+.emoji-search::placeholder {
+    color: var(--text-muted);
+}
+
+.emoji-search:focus {
+    border-color: var(--brand-primary);
+    box-shadow: 0 0 0 3px rgba(124, 77, 255, 0.12);
+}
+
+
+/* ========================================
+   GRADE DE EMOJIS
+======================================== */
+
+.emoji-picker-grid {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 5px;
+
+    max-height: 225px;
+    overflow-y: auto;
+
+    scrollbar-width: thin;
+    scrollbar-color: var(--brand-primary) transparent;
+}
+
+.emoji-option {
+    width: 36px;
+    height: 36px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border: none;
+    border-radius: 8px;
+
+    background-color: transparent;
+    color: var(--text-primary);
+
+    font-size: 23px;
+
+    cursor: pointer;
+    transition: 0.15s;
+}
+
+.emoji-option:hover {
+    background-color: var(--bg-surface-2);
+    transform: scale(1.12);
+}
+
+.emoji-option:focus-visible {
+    outline: 2px solid var(--brand-primary);
+    outline-offset: 1px;
+}
+
+
+/* ========================================
+   MENSAGEM SEM RESULTADO
+======================================== */
+
+.emoji-sem-resultado {
+    padding: 14px 0 4px;
+
+    color: var(--text-muted);
+    font-size: 12px;
+    text-align: center;
+}
+
+
+/* ========================================
+   TECLADO DE EMOJIS ARRASTÁVEL
+======================================== */
+
+.emoji-picker {
+    touch-action: none;
+}
+
+.emoji-picker.arrastando {
+    cursor: grabbing;
+    user-select: none;
+    -webkit-user-select: none;
+}
+
+.emoji-picker.arrastando * {
+    user-select: none;
+    -webkit-user-select: none;
+}
+
+
+
+/* ========================================
+   RESPONSIVIDADE
+======================================== */
+
+@media (max-width: 480px) {
+    .emoji-picker {
+        width: 290px;
+    }
+
+    .emoji-option {
+        width: 34px;
+        height: 34px;
+    }
+}
