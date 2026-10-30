@@ -173,6 +173,26 @@ body.app-body.tema-claro .main-content .termos-conteudo p {
   color: var(--text-muted);
 }
 
+body.app-body.tema-claro .main-content .termos-abas > a.aba:not(.aba-ativa),
+body.app-body.tema-claro .main-content .termos-abas > a.aba:not(.aba-ativa):visited {
+  color: #292238 !important;
+}
+
+body.app-body.tema-claro .main-content .termos-abas > a.aba:not(.aba-ativa):hover {
+  color: #292238 !important;
+  background-color: #e8e0f7 !important;
+}
+
+body.app-body.tema-claro .main-content .termos-topo > a.btn-voltar,
+body.app-body.tema-claro .main-content .termos-topo > a.btn-voltar i {
+  color: #292238 !important;
+}
+
+body.app-body.tema-claro .main-content .termos-topo > a.btn-voltar {
+  background-color: #e8e0f7 !important;
+  border-color: #d7c8f2 !important;
+}
+
 body.app-body.tema-claro .main-content .text-white:not(.btn):not(.btn-close):not(.icon-circle):not(.badge):not(.alert):not(.btn-purple-action):not(.btn-adicionar-banco):not(.btn-adicionar-dinheiro):not(.btn-salvar-topo):not(.btn-editar-perfil):not(.btn-editar):not(.btn-acao-roxo):not(.btn-acao-vermelho) {
   color: var(--text-primary) !important;
 }
@@ -321,5 +341,96 @@ body.app-body.tema-claro .main-content .arrow-link {
 body.app-body.tema-claro .main-content .btn-voltar-perfil,
 body.app-body.tema-claro .main-content .pagina-patrimonio .btn-voltar {
   color: var(--text-primary);
+}
+
+body.app-body.tema-claro .confirmar-logout-dialog {
+  color: var(--text-primary);
+  background:
+    radial-gradient(ellipse at top left, rgba(112, 66, 200, 0.18), transparent 42%),
+    radial-gradient(ellipse at bottom right, rgba(176, 147, 255, 0.2), transparent 38%),
+    var(--bg-surface-1);
+  border-color: #d7c8f2;
+  box-shadow: 0 24px 70px rgba(45, 29, 76, 0.2);
+}
+
+body.app-body.tema-claro .confirmar-logout-titulo {
+  color: var(--text-primary);
+}
+
+body.app-body.tema-claro .confirmar-logout-texto {
+  color: var(--text-muted);
+}
+
+body.app-body.tema-claro .confirmar-logout-cancelar {
+  color: #512b9b;
+  background: #eee8f8;
+  border-color: #d7c8f2;
+}
+
+body.app-body.tema-claro .confirmar-logout-cancelar:hover {
+  background: #e2d7f4;
+}
+
+body.app-body.tema-claro .confirmar-logout-confirmar {
+  color: #ffffff;
+  background: #c43d4d;
+}
+
+body.app-body.tema-claro .confirmar-logout-confirmar:hover {
+  background: #a92f40;
+}
+
+html.tema-claro body.pagina-publica {
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
+}
+
+html.tema-claro body.pagina-publica .termos {
+  color: var(--text-primary);
+}
+
+html.tema-claro body.pagina-publica .termos-deslogado {
+  background-color: var(--bg-surface-1);
+  border-color: var(--border-color);
+  box-shadow: 0 12px 32px var(--shadow-color);
+}
+
+html.tema-claro body.pagina-publica .termos-topo h1,
+html.tema-claro body.pagina-publica .termos-conteudo p {
+  color: var(--text-primary);
+}
+
+html.tema-claro body.pagina-publica .termos-conteudo {
+  background-color: transparent;
+  border-color: var(--border-color);
+  color: var(--text-primary);
+}
+
+html.tema-claro body.pagina-publica .termos-conteudo h2 {
+  color: var(--brand-primary);
+}
+
+html.tema-claro body.pagina-publica .termos-abas {
+  border-bottom-color: var(--border-color);
+}
+
+html.tema-claro body.pagina-publica nav.termos-abas > a.aba:not(.aba-ativa),
+html.tema-claro body.pagina-publica nav.termos-abas > a.aba:not(.aba-ativa):visited {
+  color: #292238 !important;
+}
+
+html.tema-claro body.pagina-publica nav.termos-abas > a.aba:not(.aba-ativa):hover {
+  color: #292238 !important;
+  background-color: #e8e0f7 !important;
+}
+
+html.tema-claro body.pagina-publica .termos-topo > a.btn-voltar,
+html.tema-claro body.pagina-publica .termos-topo > a.btn-voltar i {
+  color: #292238 !important;
+}
+
+html.tema-claro body.pagina-publica .termos-topo > a.btn-voltar {
+  background-color: #e8e0f7 !important;
+  border-color: #d7c8f2 !important;
 }
 
