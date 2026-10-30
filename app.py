@@ -3,6 +3,7 @@ import json
 import os
 import uuid
 
+import requests
 from flask import Flask, render_template, request, redirect, session, flash, url_for
 from decimal import Decimal, InvalidOperation
 
@@ -15,6 +16,7 @@ from model.usuarios import Usuario
 from model.extrato import Extrato
 from model.contas_bancarias import ContaBancaria
 from model.reserva_emergencia import Reserva
+from model.simulador import SimuladorPatrimonio
 
 
 app = Flask(__name__)
@@ -29,6 +31,20 @@ def parse_valor_monetario(valor):
         texto = texto.replace(".", "")
     return Decimal(texto)
 
+def obter_taxa_selic_bcb():
+    """Busca a taxa Selic/CDI na API do Banco Central (SGS 1178)"""
+    url = "https://api.bcb.gov.br/dados/serie/bcdata.sgs.1178/dados/ultimos/1?formato=json"
+    try:
+        response = requests.get(url, timeout=3)
+        if response.status_code == 200:
+            dados = response.json()
+            if dados and len(dados) > 0:
+                return float(dados[0]["valor"])
+    except Exception as e:
+        print(f"Erro ao buscar taxa do BCB: {e}")
+    
+    return 10.0  
+
 @app.get("/")
 @app.get("/login")
 def index():
@@ -39,6 +55,9 @@ def index():
     
     return render_template("tela_login.html")
 
+def formatar_moeda_brl(valor):
+    """Converte valores numéricos para a pontuação brasileira R$ X.XXX,XX"""
+    return f"{valor:,.2f}".replace(",", "X").replace(".", ",").replace("X", ".")
 
 @app.route("/simulador", methods=["GET", "POST"])
 def tela_simulador():
@@ -46,43 +65,58 @@ def tela_simulador():
     aporte_mensal = 0.0
     anos = 5
 
-    # Tenta capturar dados se for POST
+    # 1. Captura de dados do formulário POST
     if request.method == "POST":
         try:
-            anos = int(request.form.get("anos", 5))
-            if anos <= 0:
-                anos = 5
-            aporte_inicial = float(request.form.get("aporte_inicial") or 0.0)
-            aporte_mensal = float(request.form.get("aporte_mensal") or 0.0)
             anos = int(request.form.get("anos") or 5)
-        except (ValueError, TypeError):
-            pass
+            aporte_inicial = float(parse_valor_monetario(request.form.get("aporte_inicial")))
+            aporte_mensal = float(parse_valor_monetario(request.form.get("aporte_mensal")))
+        except (ValueError, TypeError, InvalidOperation):
+            anos, aporte_inicial, aporte_mensal = 5, 0.0, 0.0
 
-    taxa_anual = 10.0  # 10% a.a.
-    taxa_mensal = (1 + (taxa_anual / 100)) ** (1 / 12) - 1
+    simulado = request.method == "POST" and (aporte_inicial > 0 or aporte_mensal > 0)
+
+    if anos <= 0:
+        anos = 5
+
+    taxa_anual_pct = obter_taxa_selic_bcb()
+    taxa_anual = taxa_anual_pct / 100
+    taxa_mensal = ((1 + taxa_anual) ** (1 / 12)) - 1
     meses = anos * 12
 
     labels = []
     investido_lista = []
     patrimonio_lista = []
+    tabela_anual = []
+    saldo_atual = aporte_inicial
+    capital_inicial_ano = saldo_atual
 
-    saldo_total = aporte_inicial
     for mes in range(1, meses + 1):
-        saldo_total = (saldo_total + aporte_mensal) * (1 + taxa_mensal)
-        investido_acumulado = aporte_inicial + (aporte_mensal * mes)
+        saldo_atual = saldo_atual * (1 + taxa_mensal) + aporte_mensal
+        total_investido = aporte_inicial + aporte_mensal * mes
 
         labels.append(f"Mês {mes}")
-        investido_lista.append(round(investido_acumulado, 2))
-        patrimonio_lista.append(round(saldo_total, 2))
+        investido_lista.append(round(total_investido, 2))
+        patrimonio_lista.append(round(saldo_atual, 2))
 
-    total_investido = aporte_inicial + (aporte_mensal * meses)
-    rendimentos = saldo_total - total_investido
+        if mes % 12 == 0:
+            ano = mes // 12
+            juros_ganhos_ano = saldo_atual - capital_inicial_ano - aporte_mensal * 12
+            tabela_anual.append({
+                "ano": ano,
+                "capital_inicial": round(capital_inicial_ano, 2),
+                "juros_ano": round(juros_ganhos_ano, 2),
+                "montante_final": round(saldo_atual, 2)
+            })
+            capital_inicial_ano = saldo_atual
 
-    # Dicionário alinhado 100% com as variáveis do seu simulador.html
+    rendimentos_totais = saldo_atual - total_investido
     resultado = {
+        "valor_total_final": round(saldo_atual, 2),
         "total_investido": round(total_investido, 2),
-        "rendimentos": round(rendimentos, 2),
-        "taxa_anual_aplicada": taxa_anual,
+        "rendimentos": round(rendimentos_totais, 2),
+        "taxa_anual_aplicada": taxa_anual_pct,
+        "tabela_anual": tabela_anual,
         "grafico": {
             "labels": labels,
             "investido": investido_lista,
@@ -95,8 +129,10 @@ def tela_simulador():
         aporte_inicial=aporte_inicial,
         aporte_mensal=aporte_mensal,
         anos=anos,
-        resultado=resultado
+        resultado=resultado,
+        simulado=simulado
     )
+
 
 def obter_estado_fogo(dias_ofensiva):
     dias = int(dias_ofensiva or 0)
@@ -167,15 +203,18 @@ def logout():
     flash("Você saiu da sua conta!", "success")
     return redirect("/login")
 
+# se o usuário estiver logado, renderiza a página de termos com o layout padrão; caso contrário, renderiza com o layout público
 @app.get("/termos")
 def termos():
     logado = "usuario" in session
-    return render_template("termos.html", usuario_logado=logado)
+    layout_base = "layout.html" if logado else "layout_publico.html"
+    return render_template("termos.html", usuario_logado=logado, layout_base=layout_base)
 
 @app.route('/privacidade')
 def privacidade():
     logado = "usuario" in session
-    return render_template("privacidade.html", usuario_logado=logado)
+    layout_base = "layout.html" if logado else "layout_publico.html"
+    return render_template("privacidade.html", usuario_logado=logado, layout_base=layout_base)
 
 @app.route("/contas")
 def contas():
