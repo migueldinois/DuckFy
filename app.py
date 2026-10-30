@@ -20,6 +20,7 @@ from model.categorias import Categoria
 from model.usuarios import Usuario
 from model.usuarios_badges import UsuarioBadge
 from model.extrato import Extrato
+from model.transacoes import Transacao
 from model.contas_bancarias import ContaBancaria
 from model.reserva_emergencia import Reserva
 from model.simulador import SimuladorPatrimonio
@@ -853,11 +854,71 @@ def tela_extrato():
 # exibe a página de lançamentos
 @app.get("/lancamento")
 def lancamento():
-    if "usuario" in session:
-        return render_template("lancamentos.html")
+    if "usuario" in session and session.get("id_usuario"):
+        id_usuario = session["id_usuario"]
+        categorias_despesa = Categoria.recuperar_categorias_por_tipo(id_usuario, "Despesa")
+        categorias_receita = Categoria.recuperar_categorias_por_tipo(id_usuario, "Receita")
+        contas = ContaBancaria.buscar_todas_por_usuario(id_usuario)
+        return render_template(
+            "lancamentos.html",
+            categorias_despesa=categorias_despesa,
+            categorias_receita=categorias_receita,
+            contas=contas,
+        )
     else:
-        flash("Você precisa estar logado para editar o seu perfil!", "error")
-        return redirect('/login')
+        flash("Você precisa estar logado para lançar uma transação.", "error")
+        return redirect(url_for("index"))
+
+
+@app.post("/salvar_lancamento")
+def salvar_lancamento():
+    if "usuario" not in session or not session.get("id_usuario"):
+        flash("Faça login para lançar uma transação.", "error")
+        return redirect(url_for("index"))
+
+    id_usuario = session["id_usuario"]
+    tipo_formulario = request.form.get("tipo_transacao", "").strip().lower()
+    tipos = {"entrada": "Receita", "saida": "Despesa"}
+
+    try:
+        tipo = tipos.get(tipo_formulario)
+        if not tipo:
+            raise ValueError("Selecione entrada ou saída.")
+
+        descricao = request.form.get("local", "").strip()
+        if not descricao:
+            raise ValueError("Informe o local ou a descrição da transação.")
+
+        id_conta = int(request.form.get("id_conta", ""))
+        id_categoria_raw = request.form.get("categoria", "").strip()
+        id_categoria = int(id_categoria_raw) if id_categoria_raw else None
+        valor = parse_valor_monetario(request.form.get("valor", ""))
+
+        detalhes = [descricao]
+        observacao = request.form.get("observacao", "").strip()
+        if observacao:
+            detalhes.append(observacao)
+
+        if Transacao.registrar(
+            id_usuario=id_usuario,
+            id_conta=id_conta,
+            id_categoria=id_categoria,
+            descricao=" - ".join(detalhes)[:100],
+            valor=valor,
+            tipo=tipo,
+        ):
+            flash("Transação lançada com sucesso.", "success")
+            return redirect(url_for("tela_extrato"))
+    except ValueError as erro:
+        flash(str(erro), "error")
+        return redirect(url_for("lancamento"))
+    except Exception as erro:
+        print(f"Erro ao salvar lançamento: {erro}")
+        flash("Não foi possível salvar a transação. Tente novamente.", "error")
+        return redirect(url_for("lancamento"))
+
+    flash("Não foi possível salvar a transação.", "error")
+    return redirect(url_for("lancamento"))
 
 
 # exibe as categorias de despesas e receitas
