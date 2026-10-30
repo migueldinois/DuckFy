@@ -958,6 +958,53 @@ def verificar_codigo():
     "reset_token": token
 }, 200
 
+@app.post("/api/recuperacao/redefinir-senha")
+def redefinir_senha_api():
+    dados = request.get_json(silent=True) or {}
+    reset_token = dados.get("reset_token")
+    senha = dados.get("senha")
+
+    if not isinstance(reset_token, str) or not reset_token or not isinstance(senha, str):
+        return {"message": "Dados inválidos para redefinir a senha."}, 400
+
+    if (
+        len(senha) < 8
+        or not any(caractere.isupper() for caractere in senha)
+        or not any(caractere in "!@#$%^&*_ -+=?" for caractere in senha)
+    ):
+        return {
+            "message": "A senha deve ter 8 caracteres, uma letra maiúscula e um caractere especial."
+        }, 400
+
+    email = next(
+        (
+            email_cadastrado
+            for email_cadastrado, recuperacao in codigos_recuperacao.items()
+            if recuperacao.get("token")
+            and secrets.compare_digest(reset_token, recuperacao["token"])
+        ),
+        None,
+    )
+    if email is None:
+        return {"message": "Token inválido. Solicite uma nova recuperação."}, 400
+
+    recuperacao = codigos_recuperacao[email]
+    if datetime.now() > recuperacao.get("token_expira_em", datetime.min):
+        codigos_recuperacao.pop(email, None)
+        return {"message": "O prazo para redefinir a senha expirou. Solicite um novo código."}, 400
+
+    try:
+        senha_atualizada = Usuario.atualizar_senha(email, senha)
+    except Exception as erro:
+        print(f"Erro ao redefinir senha: {erro}")
+        senha_atualizada = False
+
+    if not senha_atualizada:
+        return {"message": "Não foi possível atualizar a senha. Tente novamente."}, 500
+
+    codigos_recuperacao.pop(email, None)
+    return {"message": "Senha redefinida com sucesso."}, 200
+
 @app.get("/teste-email")
 def teste_email():
     try:
