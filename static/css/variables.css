@@ -17,6 +17,12 @@
     --accent-secondary: #58E4A0;
     --accent-dark: #00E374;
 
+    --confirmation-primary: #16834A;
+    --confirmation-secondary: #1b9b57;
+    --danger-primary: #c62828;
+    --danger-secondary: #b71c1c;
+
+
     --text-primary: #FFFFFF;
     --text-muted: #A0A0B0;
     --border-color: rgba(255, 255, 255, 0.15);
@@ -47,6 +53,12 @@ body.tema-claro {
     --accent-primary: #128653;
     --accent-secondary: #269B68;
     --accent-dark: #0B6B41;
+
+
+    --confirmation-primary: #16834A;
+    --confirmation-secondary: #1b9b57;
+    --danger-primary: #c62828;
+    --danger-secondary: #b71c1c;
 
     /* Tipografia */
     --text-primary: #292238;
