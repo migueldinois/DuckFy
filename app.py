@@ -2,6 +2,7 @@ import math
 import json
 import os
 import uuid
+from datetime import date, timedelta
 
 import requests
 from flask import Flask, render_template, request, redirect, session, flash, url_for
@@ -674,12 +675,46 @@ def tela_extrato():
             data_fim=data_fim
         )
 
-        return render_template('extrato.html', transacoes=lista_transacoes, tipo_ativo=tipo_ativo)
+        primeiro_dia_mes_atual = date.today().replace(day=1)
+        ultimo_dia_mes_anterior = primeiro_dia_mes_atual - timedelta(days=1)
+        primeiro_dia_mes_anterior = ultimo_dia_mes_anterior.replace(day=1)
+        resumo_mes = Extrato.obter_resumo_periodo(
+            id_usuario,
+            primeiro_dia_mes_anterior,
+            ultimo_dia_mes_anterior
+        )
+        total_movimentado = resumo_mes['entradas'] + resumo_mes['saidas']
+        percentual_entradas = (
+            resumo_mes['entradas'] / total_movimentado * 100
+            if total_movimentado else 0
+        )
+        periodo_resumo = (
+            f"{primeiro_dia_mes_anterior:%d/%m/%Y} a "
+            f"{ultimo_dia_mes_anterior:%d/%m/%Y}"
+        )
+
+        return render_template(
+            'extrato.html',
+            transacoes=lista_transacoes,
+            tipo_ativo=tipo_ativo,
+            resumo_mes=resumo_mes,
+            total_movimentado=total_movimentado,
+            percentual_entradas=percentual_entradas,
+            periodo_resumo=periodo_resumo
+        )
 
     except Exception as e:
         print(f"Erro na rota /extrato: {e}")
         # Retorno de segurança em caso de exceção para não quebrar o Flask
-        return render_template('extrato.html', transacoes=[], tipo_ativo='tudo')
+        return render_template(
+            'extrato.html',
+            transacoes=[],
+            tipo_ativo='tudo',
+            resumo_mes={'entradas': 0, 'saidas': 0},
+            total_movimentado=0,
+            percentual_entradas=0,
+            periodo_resumo='Mês anterior'
+        )
 
     
     
