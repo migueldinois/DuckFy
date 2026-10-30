@@ -8,6 +8,7 @@
 
 {% block content %}
 
+<!-- modais -->
 {% include 'components/modal_categoria.html' %}
 {% include 'components/modal_editar_categoria.html' %}
 
@@ -40,8 +41,7 @@
         </div>
 
         <div class="resumo-texto">
-            <span class="resumo-legenda">Visão geral</span>
-            <strong class="resumo-titulo">Tudo organizado</strong>
+            <strong class="resumo-titulo">Visão Geral</strong>
         </div>
 
         <div class="resumo-divisor"></div>
@@ -70,12 +70,37 @@
         </span>
     </div>
 
+    <!-- notificações -->
     {% with messages = get_flashed_messages(with_categories=true) %}
     {% if messages %}
-    <div class="alert-container">
+    <div class="alert-container" aria-live="polite">
         {% for category, message in messages %}
-        <div class="alert alert-{{ category }}" role="alert">
-            {{ message }}
+        <div class="alert notificacao notificacao-{{ category }}" role="alert">
+
+            <div class="notificacao-icone">
+                {% if category == 'success' %}
+                <i class="bi bi-check-lg"></i>
+                {% elif category == 'error' %}
+                <i class="bi bi-exclamation-lg"></i>
+                {% else %}
+                <i class="bi bi-info-lg"></i>
+                {% endif %}
+            </div>
+
+            <div class="notificacao-conteudo">
+                <strong>
+                    {% if category == 'success' %}
+                    Sucesso!
+                    {% elif category == 'error' %}
+                    Atenção!
+                    {% else %}
+                    Aviso
+                    {% endif %}
+                </strong>
+
+                <span>{{ message }}</span>
+            </div>
+
         </div>
         {% endfor %}
     </div>
@@ -139,11 +164,12 @@
                     <div class="category-text">
                         <h3 class="cat-name">{{ despesa.nome }}</h3>
                         <p class="cat-subs">
-                            {{ despesa.descricao or 'Sem descrição adicionada' }}
+                            {{ despesa.descricao or '' }}
                         </p>
                     </div>
                 </div>
 
+                <!-- botão de edição -->
                 <button type="button" class="arrow-link" aria-label="Editar categoria {{ despesa.nome }}"
                     data-id="{{ despesa.id_categoria }}" data-nome="{{ despesa.nome }}" data-tipo="SAIDA"
                     data-emoji="{{ despesa.emoji }}" data-cor="{{ despesa.cor }}"
@@ -181,11 +207,12 @@
                     <div class="category-text">
                         <h3 class="cat-name">{{ receita.nome }}</h3>
                         <p class="cat-subs">
-                            {{ receita.descricao or 'Sem descrição adicionada' }}
+                            {{ receita.descricao or '' }}
                         </p>
                     </div>
                 </div>
 
+                <!-- botão de edição -->
                 <button type="button" class="arrow-link" aria-label="Editar categoria {{ receita.nome }}"
                     data-id="{{ receita.id_categoria }}" data-nome="{{ receita.nome }}" data-tipo="ENTRADA"
                     data-emoji="{{ receita.emoji }}" data-cor="{{ receita.cor }}"
@@ -197,6 +224,7 @@
         </div>
     </section>
 
+    <!-- mensagem sem resultados -->
     <div class="categorias-vazio d-none" id="mensagemSemResultados">
         <div class="vazio-icone">
             <i class="bi bi-search"></i>
@@ -207,6 +235,7 @@
 
 </div>
 
+<!-- funções das abas e pesquisa -->
 <script>
     // alterna entre despesas e receitas.
     function alternarAba(tipo) {
@@ -232,6 +261,7 @@
         atualizarPesquisa();
     }
 
+    // atualiza os resultados da pesquisa.
     function atualizarPesquisa() {
         const input = document.getElementById('inputBusca');
         const termo = input.value.trim().toLocaleLowerCase('pt-BR');
@@ -265,6 +295,7 @@
             }`;
     }
 
+    // configura a pesquisa e os emojis.
     document.addEventListener('DOMContentLoaded', () => {
         const input = document.getElementById('inputBusca');
         const limpar = document.getElementById('limparBusca');
@@ -309,15 +340,35 @@
             el.replaceChildren(img);
         });
     }
+
+    // fecha as notificações automaticamente.
+    document.querySelectorAll('.alert-container .notificacao').forEach(notificacao => {
+        setTimeout(() => {
+            notificacao.classList.add('notificacao-saindo');
+
+            setTimeout(() => {
+                notificacao.remove();
+
+                const container = document.querySelector('.alert-container');
+
+                if (container && !container.querySelector('.notificacao')) {
+                    container.remove();
+                }
+            }, 350);
+
+        }, 2000);
+    });
+
 </script>
 
-
+<!-- biblioteca de emojis -->
 <script>
     window.emojiMartDataUrl = 'https://cdn.jsdelivr.net/npm/@emoji-mart/data';
 </script>
 
 <script src="https://cdn.jsdelivr.net/npm/emoji-mart@5.6.0/dist/browser.js"></script>
 
+<!-- javascript das categorias -->
 <script src="{{ url_for('static', filename='js/categorias.js') }}"></script>
 
 {% endblock %}

@@ -3,6 +3,7 @@
 <link rel="stylesheet" href="{{ url_for('static', filename='css/emoji-picker.css') }}">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@simonwep/pickr@1.10.2/dist/themes/classic.min.css">
 
+<!-- modal de edição -->
 <div id="modalEditarCategoria" class="duckfy-modal">
     <div class="dash-card modal-content">
 
@@ -103,6 +104,7 @@
                         <div class="color-history-options"></div>
                     </div>
 
+                    <!-- prévia da cor -->
                     <div class="color-preview">
                         <span id="editColorBox"></span>
                         <span id="editColorValue">#7C4DFF</span>
@@ -110,11 +112,13 @@
                 </div>
             </div>
 
+            <!-- acesso às subcategorias -->
             <a id="btnIrSubcategorias" href="#"
                 class="btn-secondary-action w-100 mb-2 text-center text-decoration-none d-block">
                 Ver Subcategorias
             </a>
 
+            <!-- ações da categoria -->
             <div class="d-flex gap-2 mt-3">
                 <button type="submit" class="btn-purple-action w-50">
                     Salvar Alterações
@@ -127,6 +131,7 @@
 
         </form>
 
+        <!-- formulário de exclusão -->
         <form id="formDeletarCategoria" method="POST" class="d-none"></form>
 
     </div>
@@ -136,8 +141,6 @@
 <div id="modalConfirmarExclusao" class="duckfy-modal">
     <div class="dash-card modal-content modal-confirmacao">
 
-        <div class="confirmacao-icone">!</div>
-
         <h3 class="card-section-title text-center">Excluir categoria?</h3>
 
         <p class="card-subtitle text-center">
@@ -146,6 +149,7 @@
             Essa ação não poderá ser desfeita.
         </p>
 
+        <!-- botões de confirmação -->
         <div class="d-flex gap-2 mt-4">
             <button type="button" class="btn-secondary-action w-50" data-fechar-exclusao>
                 Cancelar
@@ -160,36 +164,44 @@
 </div>
 
 <script>
-    // exclusão da categoria
-    const btnExcluirCategoria = document.getElementById('btnExcluirCategoria');
-    const modalEditarCategoria = document.getElementById('modalEditarCategoria');
-    const modalConfirmarExclusao = document.getElementById('modalConfirmarExclusao');
-    const nomeCategoriaExclusao = document.getElementById('nomeCategoriaExclusao');
-    const confirmarExclusaoCategoria = document.getElementById('confirmarExclusaoCategoria');
-    const formDeletarCategoria = document.getElementById('formDeletarCategoria');
+    (() => {
+        // elementos da exclusão
+        const btnExcluirCategoria = document.getElementById('btnExcluirCategoria');
+        const modalEditarCategoria = document.getElementById('modalEditarCategoria');
+        const modalConfirmarExclusao = document.getElementById('modalConfirmarExclusao');
+        const nomeCategoriaExclusao = document.getElementById('nomeCategoriaExclusao');
+        const confirmarExclusaoCategoria = document.getElementById('confirmarExclusaoCategoria');
+        const formDeletarCategoria = document.getElementById('formDeletarCategoria');
 
-    btnExcluirCategoria?.addEventListener('click', function () {
-        const nome = document.getElementById('edit_nome').value.trim();
+        // abre a confirmação
+        btnExcluirCategoria?.addEventListener('click', function () {
+            if (!modalEditarCategoria || !modalConfirmarExclusao || !nomeCategoriaExclusao) return;
 
-        nomeCategoriaExclusao.textContent = nome || 'esta categoria';
+            const campoNome = document.getElementById('edit_nome');
+            const nome = campoNome?.value.trim();
 
-        modalEditarCategoria.classList.remove('active');
-        modalConfirmarExclusao.classList.add('active');
-    });
+            nomeCategoriaExclusao.textContent = nome || 'esta categoria';
 
-    document.querySelectorAll('[data-fechar-exclusao]').forEach(function (botao) {
-        botao.addEventListener('click', function () {
-            modalConfirmarExclusao.classList.remove('active');
-            modalEditarCategoria.classList.add('active');
+            modalEditarCategoria.classList.remove('active');
+            modalConfirmarExclusao.classList.add('active');
         });
-    });
 
-    confirmarExclusaoCategoria?.addEventListener('click', function () {
-        const id = document.getElementById('edit_id_categoria').value;
+        // cancela a exclusão
+        document.querySelectorAll('[data-fechar-exclusao]').forEach(function (botao) {
+            botao.addEventListener('click', function () {
+                modalConfirmarExclusao?.classList.remove('active');
+                modalEditarCategoria?.classList.add('active');
+            });
+        });
 
-        if (!id) return;
+        // confirma a exclusão
+        confirmarExclusaoCategoria?.addEventListener('click', function () {
+            const id = document.getElementById('edit_id_categoria')?.value;
 
-        formDeletarCategoria.action = `/categorias/excluir/${id}`;
-        formDeletarCategoria.submit();
-    });
+            if (!id || !formDeletarCategoria) return;
+
+            formDeletarCategoria.action = `/categorias/deletar/${id}`;
+            formDeletarCategoria.submit();
+        });
+    })();
 </script>

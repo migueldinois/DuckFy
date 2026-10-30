@@ -1,4 +1,6 @@
+// controle dos modais
 const ModalManager = {
+  // abre o modal.
   abrir(idModal) {
     const modal = document.getElementById(idModal);
     if (modal) {
@@ -7,6 +9,7 @@ const ModalManager = {
     }
   },
 
+  // fecha o modal.
   fechar(idModal) {
     const modal = document.getElementById(idModal);
     if (modal) {
@@ -15,6 +18,7 @@ const ModalManager = {
     }
   },
 
+  // configura os eventos dos modais.
   inicializar() {
     document.addEventListener('click', (e) => {
       const btnAbrir = e.target.closest('[data-open-modal]');
@@ -37,19 +41,12 @@ const ModalManager = {
       if (btnExcluir) {
         e.preventDefault();
         const id = document.getElementById('edit_id_categoria')?.value;
-
-        if (id && confirm('Deseja realmente excluir esta categoria?')) {
-          const formDeletar = document.getElementById('formDeletarCategoria');
-          if (formDeletar) {
-            formDeletar.action = `/categorias/deletar/${id}`;
-            formDeletar.submit();
-          }
-        }
       }
     });
   }
 };
 
+// preenche os dados e abre o modal de edição.
 function abrirModalEditarCategoria(dados) {
   if (!dados) return;
 
@@ -75,6 +72,7 @@ function abrirModalEditarCategoria(dados) {
   ModalManager.abrir('modalEditarCategoria');
 }
 
+// valida se o campo possui apenas um emoji.
 function validarApenasUmEmoji(input) {
   const regexEmoji = /[\p{Extended_Pictographic}\p{Emoji_Presentation}\p{Regional_Indicator}\u20E3]/u;
   const segmenter = new Intl.Segmenter('pt', { granularity: 'grapheme' });
@@ -92,16 +90,19 @@ function validarApenasUmEmoji(input) {
   }
 }
 
+// atualiza a prévia da cor.
 function atualizarCorPreview(corHex) {
   const box = document.getElementById('colorBox');
   if (box) box.style.backgroundColor = corHex;
 }
 
+// atualiza a prévia da cor na edição.
 function atualizarCorPreviewEdit(corHex) {
   const box = document.getElementById('editColorBox');
   if (box) box.style.backgroundColor = corHex;
 }
 
+// coleta os dados da categoria selecionada.
 function preencherEAbrirModalEdit(event, elemento) {
   event.preventDefault();
   const dados = {
@@ -114,4 +115,5 @@ function preencherEAbrirModalEdit(event, elemento) {
   abrirModalEditarCategoria(dados);
 }
 
+// inicia o controle dos modais.
 document.addEventListener('DOMContentLoaded', () => ModalManager.inicializar());

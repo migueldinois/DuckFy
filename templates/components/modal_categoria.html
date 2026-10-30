@@ -3,9 +3,11 @@
 <link rel="stylesheet" href="{{ url_for('static', filename='css/emoji-picker.css') }}">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@simonwep/pickr@1.10.2/dist/themes/classic.min.css">
 
+<!-- modal de nova categoria -->
 <div id="modalNovaCategoria" class="duckfy-modal">
     <div class="dash-card modal-content">
 
+        <!-- cabeçalho -->
         <div class="d-flex justify-content-between align-items-center mb-3">
             <h3 class="card-section-title m-0">Nova Categoria</h3>
 
@@ -14,6 +16,7 @@
             </button>
         </div>
 
+        <!-- formulário -->
         <form action="/categorias/criar" method="POST">
 
             <!-- campo nome -->
@@ -49,7 +52,6 @@
                 </div>
             </div>
 
-
             <!-- campo emoji -->
             <div class="mb-3">
                 <label for="emoji" class="card-subtitle d-block mb-1">Emoji</label>
@@ -71,6 +73,7 @@
                 <div class="color-picker-wrapper">
                     <input type="hidden" name="cor" id="cor" value="#7C4DFF">
 
+                    <!-- cores disponíveis -->
                     <div class="color-options">
                         <button type="button" class="color-option selecionada" data-color="#7C4DFF"
                             style="--cor-opcao: #7C4DFF;" aria-label="Roxo"></button>
@@ -102,6 +105,7 @@
                         <div class="color-history-options"></div>
                     </div>
 
+                    <!-- prévia da cor -->
                     <div class="color-preview">
                         <span id="colorBox"></span>
                         <span id="colorValue">#7C4DFF</span>
@@ -109,6 +113,7 @@
                 </div>
             </div>
 
+            <!-- botão de criação -->
             <button type="submit" class="btn-purple-action w-100 mt-2">
                 Criar Categoria
             </button>
