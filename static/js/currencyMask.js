@@ -62,7 +62,6 @@ function formatarValorMonetario(input, pontoDecimal = false, completarCentavos =
       : '');
 }
 
-<<<<<<< HEAD
 function formatarValorEmCentavos(input) {
   const digitos = input.value.replace(/\D/g, '').slice(0, 10);
   if (!digitos) {
@@ -88,7 +87,8 @@ function formatarValorEmCentavos(input) {
       : '');
 
   input.setSelectionRange(input.value.length, input.value.length);
-=======
+}
+
 function formatarCentavosDigitados(input) {
   const valorOriginal = input.value;
   const posicaoOriginal = input.selectionStart ?? valorOriginal.length;
@@ -136,7 +136,6 @@ function normalizarPontoDecimalDigitado(input, event) {
   if (input.value[indiceNoCampo] === '.') {
     input.setRangeText(',', indiceNoCampo, indiceNoCampo + 1, 'end');
   }
->>>>>>> bf854edcf1f1a74baa0b0ae47bcb78c9d2043cea
 }
 
 document.addEventListener('DOMContentLoaded', () => {

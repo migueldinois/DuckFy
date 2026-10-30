@@ -112,6 +112,14 @@ document.querySelectorAll('[data-reserva-select]').forEach((container, selectInd
   syncSelection();
 });
 
+const modalAlterarMeta = document.getElementById('modalAlterarMeta');
+const inputMeta = document.getElementById('meta_valor');
+modalAlterarMeta?.addEventListener('show.bs.modal', () => {
+  if (!inputMeta) return;
+  inputMeta.value = '0,00';
+  inputMeta.dispatchEvent(new Event('input', { bubbles: true }));
+});
+
 const botaoRetirar = document.querySelector('[data-no-reserve-balance="true"]');
 botaoRetirar?.addEventListener('click', async (event) => {
   event.preventDefault();

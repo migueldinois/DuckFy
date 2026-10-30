@@ -3,6 +3,7 @@ from decimal import Decimal
 from database.conexao import Conexao
 
 class ContaBancaria:
+    SALDO_MAXIMO = Decimal("99999999.99")
 
     @staticmethod
     def buscar_todas_por_usuario(id_usuario):
@@ -70,7 +71,11 @@ class ContaBancaria:
         conexao, cursor = Conexao.conectar()
         try:
             saldo_atual = Decimal(str(saldo_atual))
-            if not saldo_atual.is_finite() or saldo_atual < 0:
+            if (
+                not saldo_atual.is_finite()
+                or saldo_atual < 0
+                or saldo_atual > ContaBancaria.SALDO_MAXIMO
+            ):
                 return False
 
             sql = """
@@ -94,7 +99,11 @@ class ContaBancaria:
         conexao, cursor = Conexao.conectar()
         try:
             saldo_atual = Decimal(str(saldo_atual))
-            if not saldo_atual.is_finite() or saldo_atual < 0:
+            if (
+                not saldo_atual.is_finite()
+                or saldo_atual < 0
+                or saldo_atual > ContaBancaria.SALDO_MAXIMO
+            ):
                 return False
 
             cursor.execute(
