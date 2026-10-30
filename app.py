@@ -203,15 +203,18 @@ def logout():
     flash("Você saiu da sua conta!", "success")
     return redirect("/login")
 
+# se o usuário estiver logado, renderiza a página de termos com o layout padrão; caso contrário, renderiza com o layout público
 @app.get("/termos")
 def termos():
     logado = "usuario" in session
-    return render_template("termos.html", usuario_logado=logado)
+    layout_base = "layout.html" if logado else "layout_publico.html"
+    return render_template("termos.html", usuario_logado=logado, layout_base=layout_base)
 
 @app.route('/privacidade')
 def privacidade():
     logado = "usuario" in session
-    return render_template("privacidade.html", usuario_logado=logado)
+    layout_base = "layout.html" if logado else "layout_publico.html"
+    return render_template("privacidade.html", usuario_logado=logado, layout_base=layout_base)
 
 @app.route("/contas")
 def contas():
