@@ -29,6 +29,11 @@
   border: 1px solid var(--border-color, rgba(255, 255, 255, 0.1));
 }
 
+.reserva-history {
+  --extrato-green: #69dfa3;
+  --extrato-red: #ff887d;
+}
+
 /* Barra de Progresso - Usando !important para não ficar azul */
 .progress-reserva {
   height: 14px;
@@ -135,7 +140,7 @@
 
 .btn-reserva-secondary {
   border: 0;
-  background: #c62828;
+  background: var(--danger-primary, #c62828);
   color: var(--text-primary, #fff);
   box-shadow: 0 8px 20px rgba(198, 40, 40, 0.3),
               inset 0 1px 0 rgba(255, 255, 255, 0.2);
@@ -143,7 +148,7 @@
 }
 
 .btn-reserva-secondary:hover {
-  background: #b71c1c;
+  background: var(--danger-secondary, #b71c1c);
   color: var(--text-primary, #fff);
   box-shadow: 0 12px 25px rgba(198, 40, 40, 0.4),
               inset 0 1px 0 rgba(255, 255, 255, 0.3);
@@ -156,14 +161,15 @@
   padding: 0.5rem 1rem;
   border: 0;
   border-radius: 12px;
-  background: #16834a;
+  background: var(--confirmation-primary, #16834a);
+  color: var(--text-primary, #fff);
   box-shadow: 0 8px 20px rgba(22, 131, 74, 0.35),
               inset 0 1px 0 rgba(255, 255, 255, 0.2);
 }
 
 .btn-reserva-primary:hover {
-  background: #1b9b57;
-  color: #fff;
+  background: var(--confirmation-secondary, #1b9b57);
+  color: var(--text-primary, #fff);
   box-shadow: 0 12px 25px rgba(22, 131, 74, 0.45),
               inset 0 1px 0 rgba(255, 255, 255, 0.3);
   transform: translateY(-2px);
@@ -174,6 +180,15 @@
   box-shadow: none;
   transform: none;
   cursor: not-allowed;
+}
+
+.modal .btn-reserva-primary:disabled {
+  background: var(--confirmation-primary, #16834a);
+  border-color: var(--confirmation-primary, #16834a);
+  color: var(--text-primary, #fff);
+  opacity: 1;
+  box-shadow: 0 8px 20px rgba(22, 131, 74, 0.35),
+              inset 0 1px 0 rgba(255, 255, 255, 0.2);
 }
 
 #modalGuardarDinheiro .modal-footer > *,
@@ -197,6 +212,12 @@
 #modalAlterarMeta .input-group:focus-within .form-control {
   border-color: var(--brand-primary);
   box-shadow: none;
+}
+
+#modalGuardarDinheiro #valor::placeholder,
+#modalRetirarDinheiro #valor_retirada::placeholder {
+  color: rgba(255, 255, 255, 0.6);
+  opacity: 1;
 }
 
 #modalGuardarDinheiro .modal-body > .mb-3 > input:focus,

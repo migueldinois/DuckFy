@@ -25,6 +25,8 @@
 
 <body class="app-body">
 
+    {% include 'components/sweetalert_messages.html' %}
+
     <div class="app-container">
 
         <!-- sidebar -->
@@ -171,6 +173,8 @@
 
     <!-- bootstrap javascript -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="{{ url_for('static', filename='js/sweetalert-messages.js') }}"></script>
 
     <!-- tema -->
     <script src="{{ url_for('static', filename='js/tema.js') }}" defer></script>

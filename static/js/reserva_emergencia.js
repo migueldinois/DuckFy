@@ -3,7 +3,6 @@ document.querySelectorAll('[data-reserva-select]').forEach((container, selectInd
   const trigger = container.querySelector('.custom-select-trigger');
   const valueLabel = container.querySelector('[id$="-value"]');
   const listbox = container.querySelector('[role="listbox"]');
-  const errorMessage = container.querySelector('.reserva-select-error');
   const options = Array.from(listbox.querySelectorAll('[role="option"]'));
   const enabledOptions = options.filter((option) => option.getAttribute('aria-disabled') !== 'true');
   let activeIndex = -1;
@@ -21,7 +20,6 @@ document.querySelectorAll('[data-reserva-select]').forEach((container, selectInd
     });
     if (select.value) {
       trigger.removeAttribute('aria-invalid');
-      errorMessage.hidden = true;
     }
   };
 
@@ -103,8 +101,8 @@ document.querySelectorAll('[data-reserva-select]').forEach((container, selectInd
     if (!select.disabled && !select.value) {
       event.preventDefault();
       trigger.setAttribute('aria-invalid', 'true');
-      errorMessage.hidden = false;
       trigger.focus();
+      window.DuckFyAlert.error('Selecione uma conta para continuar.', 'Conta obrigatória');
     }
   });
   document.addEventListener('click', (event) => {
@@ -114,23 +112,19 @@ document.querySelectorAll('[data-reserva-select]').forEach((container, selectInd
   syncSelection();
 });
 
-const contaRetirada = document.querySelector('#conta_destino_retirada');
-const valorRetirada = document.querySelector('#valor_retirada');
+const botaoRetirar = document.querySelector('[data-no-reserve-balance="true"]');
+botaoRetirar?.addEventListener('click', async (event) => {
+  event.preventDefault();
+  event.stopPropagation();
 
-const atualizarLimiteRetirada = () => {
-  if (!contaRetirada || !valorRetirada) return;
-
-  const opcaoSelecionada = contaRetirada.selectedOptions[0];
-  const valorAlocado = Number(opcaoSelecionada?.dataset.valorAlocado || 0);
-  valorRetirada.max = valorAlocado.toFixed(2);
-
-  if (valorRetirada.value) {
-    valorRetirada.dispatchEvent(new Event('input', { bubbles: true }));
-  }
-};
-
-contaRetirada?.addEventListener('change', atualizarLimiteRetirada);
-atualizarLimiteRetirada();
+  await window.DuckFyAlert.show({
+    icon: 'error',
+    title: 'Saldo insuficiente',
+    text: 'Não há saldo na reserva para realizar uma retirada.',
+    confirmButtonText: 'OK',
+    showCancelButton: false
+  });
+});
 
 if (new URLSearchParams(window.location.search).get('abrir_guardar') === '1') {
   const modalGuardar = document.getElementById('modalGuardarDinheiro');

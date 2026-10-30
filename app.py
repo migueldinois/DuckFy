@@ -192,6 +192,7 @@ def logar():
         session["usuario"] = usuario_logado
         session["email"] = input_email
         session["id_usuario"] = Usuario.buscar_id_por_email(input_email)
+        flash("Login realizado com sucesso!", "success")
         return redirect(url_for("dashboard"))
     else:
         flash("Usuario ou senha invalidos!", "error")
@@ -798,6 +799,7 @@ def cadastrar():
     usuario_criado = Usuario.criar_usuario(nome, email, senha, foto_perfil)
 
     if usuario_criado:
+        flash("Cadastro realizado com sucesso! Agora você já pode entrar.", "success")
         return redirect('/login')
     else:
         flash("Erro ao cadastrar usuário. Tente novamente.", "error")

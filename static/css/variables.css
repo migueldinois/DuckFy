@@ -1,69 +1,86 @@
-
 /* ==========================
    TEMA ESCURO (PADRÃO)
 ========================== */
 :root {
     color-scheme: dark;
 
+
     --bg-primary: #0F0C1B;
     --bg-surface-1: #19191B;
     --bg-surface-2: #181826;
+
 
     --brand-primary: #7C4DFF;
     --brand-secondary: #B093FF;
     --brand-dark: #4300FF;
 
+
     --accent-primary: #00E676;
     --accent-secondary: #58E4A0;
     --accent-dark: #00E374;
+
+
+    --confirmation-primary: #16834A;
+    --confirmation-secondary: #1b9b57;
+    --danger-primary: #c62828;
+    --danger-secondary: #b71c1c;
+
+
+
 
     --text-primary: #FFFFFF;
     --text-muted: #A0A0B0;
     --border-color: rgba(255, 255, 255, 0.15);
 
+
     --shadow-color: rgba(0, 0, 0, 0.25);
 }
+
+
 
 
 /* ==========================
    TEMA CLARO DUCKFY
 ========================== */
 
+
 html.tema-claro,
 body.tema-claro {
     color-scheme: light;
+
 
     /* Fundos */
     --bg-primary: #F7F5FC;
     --bg-surface-1: #FFFFFF;
     --bg-surface-2: #F0ECF8;
 
+
     /* Identidade visual roxa */
     --brand-primary: #7042C8;
     --brand-secondary: #8B68D5;
     --brand-dark: #512B9B;
+
 
     /* Destaques verdes */
     --accent-primary: #128653;
     --accent-secondary: #269B68;
     --accent-dark: #0B6B41;
 
+
+
+
+    --confirmation-primary: #16834A;
+    --confirmation-secondary: #1b9b57;
+    --danger-primary: #c62828;
+    --danger-secondary: #b71c1c;
+
+
     /* Tipografia */
     --text-primary: #292238;
     --text-muted: #746B84;
 
+
     /* Bordas e profundidade */
     --border-color: #E6E0F0;
     --shadow-color: rgba(45, 29, 76, 0.08);
-}
-
-input::placeholder,
-textarea::placeholder {
-    color: var(--text-muted) !important;
-    opacity: 1 !important;
-    -webkit-text-fill-color: var(--text-muted) !important;
-}
-
-select:invalid {
-    color: color-mix(in srgb, var(--text-muted) 82%, transparent) !important;
 }

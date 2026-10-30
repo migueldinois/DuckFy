@@ -23,17 +23,6 @@
         <i class="bi bi-search search-icon"></i>
         <input type="text" id="inputBusca" class="form-control search-input" placeholder="Buscar categoria...">
     </div>
-    <!-- Flash mensagens -->
-    {% with messages = get_flashed_messages(with_categories=true) %}
-    {% if messages %}
-    <div class="alert-container">
-        {% for category, message in messages %}
-        <div class="alert alert-{{ category }}">{{ message }}</div>
-        {% endfor %}
-    </div>
-    {% endif %}
-    {% endwith %}
-
     <!-- Alternador de Abas -->
     <div class="type-switcher mb-3">
         <button type="button" class="tab-btn active" id="btnSaidas" onclick="alternarAba('SAIDA')">Saídas</button>

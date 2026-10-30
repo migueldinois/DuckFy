@@ -10,19 +10,6 @@
 {% block content %}
 <div class="perfil-pagina-container w-100">
 
-        <!-- MENSAGENS DE SUCESSO OU ERRO -->
-    {% with mensagens = get_flashed_messages(with_categories=true) %}
-        {% if mensagens %}
-            <div aria-live="polite" aria-atomic="true">
-                {% for categoria, mensagem in mensagens %}
-                    <div class="alert {{ 'alert-success' if categoria == 'success' else 'alert-danger' }} {{ 'perfil-mensagem-sucesso' if categoria == 'success' else '' }} mb-3" role="status">
-                        {{ mensagem }}
-                    </div>
-                {% endfor %}
-            </div>
-        {% endif %}
-    {% endwith %}
-
     <!-- TOPO / CABEÇALHO DA PÁGINA -->
     <header class="cabecalho-perfil mb-4">
         <div class="d-flex align-items-center justify-content-between mb-4">
@@ -120,17 +107,3 @@
 </div>
 {% endblock %}
 
-{% block extra_js %}
-<script>
-    // Função para exibir a mensagem de sucesso e removê-la após 3 segundos
-    document.querySelectorAll('.perfil-mensagem-sucesso').forEach(function(mensagem) {
-        window.setTimeout(function() {
-            mensagem.style.transition = 'opacity 300ms ease';
-            mensagem.style.opacity = '0';
-            window.setTimeout(function() {
-                mensagem.remove();
-            }, 300);
-        }, 3000);
-    });
-</script>
-{% endblock %}

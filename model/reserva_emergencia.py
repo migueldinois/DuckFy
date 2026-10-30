@@ -6,19 +6,36 @@ class Reserva:
 
     @staticmethod
     def obter_reserva(id_usuario: int):
-        '''Busca o valor atual e a meta da reserva do usuário'''
+        '''Sincroniza e busca o valor atual e a meta da reserva do usuário.'''
         conexao, cursor = Conexao.conectar()
 
-        cursor.execute(
-            'SELECT valor_atual, meta_valor FROM reserva_emergencia WHERE id_usuario = %s',
-            [id_usuario]
-        )
-        reserva = cursor.fetchone()
-
-        cursor.close()
-        conexao.close()
-
-        return reserva
+        try:
+            cursor.execute(
+                '''
+                UPDATE reserva_emergencia re
+                LEFT JOIN (
+                    SELECT id_reserva, SUM(valor_alocado) AS total_alocado
+                    FROM reserva_contas
+                    GROUP BY id_reserva
+                ) aloc ON aloc.id_reserva = re.id_reserva
+                SET re.valor_atual = COALESCE(aloc.total_alocado, 0)
+                WHERE re.id_usuario = %s
+                ''',
+                [id_usuario]
+            )
+            cursor.execute(
+                'SELECT valor_atual, meta_valor FROM reserva_emergencia WHERE id_usuario = %s LIMIT 1',
+                [id_usuario]
+            )
+            reserva = cursor.fetchone()
+            conexao.commit()
+            return reserva
+        except Exception:
+            conexao.rollback()
+            raise
+        finally:
+            cursor.close()
+            conexao.close()
 
     @staticmethod
     def obter_id_por_email(email: str):
@@ -210,28 +227,42 @@ class Reserva:
             id_reserva = reserva['id_reserva']
             cursor.execute(
                 '''
-                SELECT
-                    COALESCE(SUM(CASE WHEN id_conta = %s THEN valor_alocado ELSE 0 END), 0) AS alocado_conta,
-                    COALESCE(SUM(valor_alocado), 0) AS alocado_total
-                FROM reserva_contas rc
-                WHERE rc.id_reserva = %s
+                SELECT id_conta, valor_alocado
+                FROM reserva_contas
+                WHERE id_reserva = %s AND valor_alocado > 0
+                ORDER BY CASE WHEN id_conta = %s THEN 0 ELSE 1 END, id_conta
+                FOR UPDATE
                 ''',
-                [id_conta, id_reserva]
+                [id_reserva, id_conta]
             )
-            alocacao = cursor.fetchone()
-            valor_alocado_conta = Decimal(str(alocacao['alocado_conta'] or 0))
-            if valor_alocado_conta < valor_retirar:
+            alocacoes = cursor.fetchall()
+            valor_restante = valor_retirar
+            for alocacao in alocacoes:
+                valor_alocado = Decimal(str(alocacao['valor_alocado'] or 0))
+                valor_deduzir = min(valor_alocado, valor_restante)
+                if valor_deduzir <= 0:
+                    break
+
+                cursor.execute(
+                    '''
+                    UPDATE reserva_contas
+                    SET valor_alocado = valor_alocado - %s
+                    WHERE id_reserva = %s AND id_conta = %s AND valor_alocado >= %s
+                    ''',
+                    [valor_deduzir, id_reserva, alocacao['id_conta'], valor_deduzir]
+                )
+                if cursor.rowcount != 1:
+                    conexao.rollback()
+                    return False
+                valor_restante -= valor_deduzir
+
+            if valor_restante > 0:
                 conexao.rollback()
                 return False
 
             cursor.execute(
-                'UPDATE reserva_emergencia SET valor_atual = valor_atual - %s WHERE id_reserva = %s',
-                [valor_retirar, id_reserva]
-            )
-
-            cursor.execute(
-                'UPDATE reserva_contas SET valor_alocado = valor_alocado - %s WHERE id_reserva = %s AND id_conta = %s AND valor_alocado >= %s',
-                [valor_retirar, id_reserva, id_conta, valor_retirar]
+                'UPDATE reserva_emergencia SET valor_atual = valor_atual - %s WHERE id_reserva = %s AND valor_atual >= %s',
+                [valor_retirar, id_reserva, valor_retirar]
             )
             if cursor.rowcount != 1:
                 conexao.rollback()

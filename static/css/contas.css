@@ -455,13 +455,6 @@
   border-color: var(--brand-primary);
 }
 
-.mensagem-confirmacao-exclusao {
-  min-height: 18px;
-  margin: 8px 0;
-  color: var(--text-muted);
-  font-size: .82rem;
-}
-
 .acoes-confirmacao-exclusao {
   display: flex;
   flex-direction: column;
