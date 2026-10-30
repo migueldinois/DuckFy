@@ -14,14 +14,6 @@ if (!window.duckfyCategoriasInicializado) {
         picker.className = 'emoji-picker';
         picker.hidden = true;
 
-        picker.style.position = 'fixed';
-        picker.style.zIndex = '99999';
-        picker.style.width = '350px';
-        picker.style.maxWidth = 'calc(100vw - 24px)';
-        picker.style.maxHeight = 'calc(100vh - 24px)';
-        picker.style.boxSizing = 'border-box';
-        picker.style.overflow = 'hidden';
-
         picker.innerHTML = `
             <div class="emoji-picker-header">
                 <strong>Escolha um emoji</strong>
@@ -35,17 +27,20 @@ if (!window.duckfyCategoriasInicializado) {
                 </button>
             </div>
 
-            <div id="emojiMartContainer"></div>
+            <div id="emojiPickerContainer">
+                <p class="emoji-picker-loading">Carregando emojis...</p>
+            </div>
         `;
 
         document.body.appendChild(picker);
 
         const fechar = document.getElementById('fecharEmojiPicker');
-        const container = document.getElementById('emojiMartContainer');
+        const header = picker.querySelector('.emoji-picker-header');
+        const container = document.getElementById('emojiPickerContainer');
 
         let campoAtual = null;
         let iconeAtual = null;
-        let emojiMartPicker = null;
+        let emojiPickerElement = null;
 
         // ========================================
         // CORES DO DUCKFY
@@ -108,62 +103,87 @@ if (!window.duckfyCategoriasInicializado) {
             picker.style.setProperty('--rgb-input', fundoInput);
             picker.style.setProperty('--rgb-accent', destaque);
             picker.style.setProperty('--rgb-border', borda);
-            picker.style.setProperty('--rgb-primary', destaque);
+
+            if (emojiPickerElement) {
+
+                const temaClaro = document.documentElement.classList.contains('tema-claro');
+
+                emojiPickerElement.classList.toggle('light', temaClaro);
+                emojiPickerElement.classList.toggle('dark', !temaClaro);
+            }
         }
 
         // ========================================
-        // CARREGAMENTO DO EMOJI MART
+        // CARREGAMENTO DO NOVO SELETOR DE EMOJIS
         // ========================================
 
-        const carregarEmojiMart = async () => {
+
+        const carregarSeletorEmoji = async () => {
 
             try {
 
-                if (!window.EmojiMart || !window.EmojiMart.Picker) {
-                    throw new Error('Biblioteca Emoji Mart não encontrada.');
-                }
+                await import(
+                    'https://cdn.jsdelivr.net/npm/emoji-picker-element@1.29.1/index.js'
+                );
 
-                const enderecoDados = window.emojiMartDataUrl;
+                await customElements.whenDefined('emoji-picker');
 
-                if (!enderecoDados) {
-                    throw new Error('Endereço dos dados dos emojis não encontrado.');
-                }
+                emojiPickerElement = document.createElement('emoji-picker');
 
-                const resposta = await fetch(enderecoDados);
+                emojiPickerElement.setAttribute('locale', 'en');
 
-                if (!resposta.ok) {
-                    throw new Error('Não foi possível carregar os emojis.');
-                }
+                emojiPickerElement.setAttribute(
+                    'data-source',
+                    'https://cdn.jsdelivr.net/npm/emoji-picker-element-data@1.8.0/en/emojibase/data.json'
+                );
 
-                const dadosEmojis = await resposta.json();
+                // tradução da interface
+                emojiPickerElement.i18n = {
+                    categories: {
+                        custom: 'Personalizados',
+                        'smileys-emotion': 'Expressões e emoções',
+                        'people-body': 'Pessoas e corpo',
+                        'animals-nature': 'Animais e natureza',
+                        'food-drink': 'Comidas e bebidas',
+                        'travel-places': 'Viagens e lugares',
+                        activities: 'Atividades',
+                        objects: 'Objetos',
+                        symbols: 'Símbolos',
+                        flags: 'Bandeiras'
+                    },
+                    categoriesLabel: 'Categorias',
+                    emojiUnsupportedMessage: 'Seu navegador não oferece suporte a emojis coloridos.',
+                    favoritesLabel: 'Favoritos',
+                    loadingMessage: 'Carregando...',
+                    networkErrorMessage: 'Não foi possível carregar os emojis.',
+                    regionLabel: 'Seletor de emojis',
+                    searchDescription: 'Pesquise um emoji',
+                    searchLabel: 'Pesquisar',
+                    searchResultsLabel: 'Resultados da pesquisa',
+                    skinToneDescription: 'Escolha um tom de pele',
+                    skinToneLabel: 'Escolher tom de pele',
+                    skinTones: [
+                        'Padrão',
+                        'Claro',
+                        'Médio-claro',
+                        'Médio',
+                        'Médio-escuro',
+                        'Escuro'
+                    ],
+                    skinTonesLabel: 'Tons de pele'
+                };
 
-                // inicializa os dados da biblioteca
-                await window.EmojiMart.init({
-                    data: dadosEmojis
-                });
-
-                // cria o componente como elemento HTML personalizado
-                emojiMartPicker = document.createElement('em-emoji-picker');
-
-                emojiMartPicker.setAttribute('locale', 'pt');
-                emojiMartPicker.setAttribute('theme', 'light');
-                emojiMartPicker.setAttribute('preview-position', 'none');
-                emojiMartPicker.setAttribute('nav-position', 'top');
-                emojiMartPicker.setAttribute('search-position', 'sticky');
-                emojiMartPicker.setAttribute('per-line', '8');
-                emojiMartPicker.setAttribute('max-frequent-rows', '2');
-
-                // recebe o emoji selecionado
-                emojiMartPicker.addEventListener('emoji-click', event => {
+                emojiPickerElement.addEventListener('emoji-click', event => {
 
                     if (!campoAtual) return;
 
-                    const emoji = event.detail;
+                    const emojiSelecionado = event.detail?.unicode;
+
+                    if (!emojiSelecionado) return;
+
                     const campoSelecionado = campoAtual;
 
-                    if (!emoji || !emoji.native) return;
-
-                    campoSelecionado.value = emoji.native;
+                    campoSelecionado.value = emojiSelecionado;
 
                     campoSelecionado.dispatchEvent(
                         new Event('input', { bubbles: true })
@@ -178,20 +198,28 @@ if (!window.duckfyCategoriasInicializado) {
                     campoSelecionado.focus();
                 });
 
-                container.appendChild(emojiMartPicker);
+                container.innerHTML = '';
+                container.appendChild(emojiPickerElement);
 
                 aplicarTemaEmoji();
 
+                console.log('Seletor de emojis carregado com sucesso!');
+
             } catch (erro) {
 
-                console.error('Erro ao carregar Emoji Mart:', erro);
+                console.error('Erro ao carregar o seletor de emojis:', erro);
 
-                container.textContent =
-                    'Não foi possível carregar os emojis. Verifique sua conexão.';
+                container.innerHTML = `
+            <p class="emoji-picker-error">
+                Não foi possível carregar os emojis.
+                Verifique o console para identificar o erro.
+            </p>
+        `;
             }
         };
 
-        const emojiMartPronto = carregarEmojiMart();
+
+        const emojiPickerPronto = carregarSeletorEmoji();
 
         // ========================================
         // CONTROLE DA POSIÇÃO MANUAL
@@ -258,7 +286,7 @@ if (!window.duckfyCategoriasInicializado) {
 
         const distanciaMinima = 3;
 
-        picker.addEventListener('pointerdown', event => {
+        header.addEventListener('pointerdown', event => {
 
             if (picker.hidden) return;
 
@@ -268,7 +296,7 @@ if (!window.duckfyCategoriasInicializado) {
 
                 return elemento instanceof Element &&
                     elemento.matches(
-                        'button, input, select, textarea, a, [role="button"], [contenteditable="true"]'
+                        'button, input, select, textarea, a, [role="button"]'
                     );
             });
 
@@ -284,10 +312,10 @@ if (!window.duckfyCategoriasInicializado) {
 
             ponteiroAtual = event.pointerId;
 
-            picker.setPointerCapture(event.pointerId);
+            header.setPointerCapture(event.pointerId);
         });
 
-        picker.addEventListener('pointermove', event => {
+        header.addEventListener('pointermove', event => {
 
             if (ponteiroAtual !== event.pointerId) return;
 
@@ -337,9 +365,9 @@ if (!window.duckfyCategoriasInicializado) {
             picker.classList.remove('arrastando');
         }
 
-        picker.addEventListener('pointerup', finalizarArraste);
-        picker.addEventListener('pointercancel', finalizarArraste);
-        picker.addEventListener('lostpointercapture', finalizarArraste);
+        header.addEventListener('pointerup', finalizarArraste);
+        header.addEventListener('pointercancel', finalizarArraste);
+        header.addEventListener('lostpointercapture', finalizarArraste);
 
         // ========================================
         // ABRIR SELETOR
@@ -373,18 +401,11 @@ if (!window.duckfyCategoriasInicializado) {
 
             try {
 
-                await emojiMartPronto;
+                await emojiPickerPronto;
 
                 if (picker.hidden || iconeAtual !== icone) return;
 
-                if (emojiMartPicker) {
-
-                    const tema = document.documentElement.classList.contains('tema-claro')
-                        ? 'light'
-                        : 'dark';
-
-                    emojiMartPicker.setAttribute('theme', tema);
-                }
+                aplicarTemaEmoji();
 
                 posicionarPicker(icone);
 
@@ -516,15 +537,6 @@ if (!window.duckfyCategoriasInicializado) {
             if (picker.hidden) return;
 
             aplicarTemaEmoji();
-
-            if (emojiMartPicker) {
-
-                const tema = document.documentElement.classList.contains('tema-claro')
-                    ? 'light'
-                    : 'dark';
-
-                emojiMartPicker.setAttribute('theme', tema);
-            }
         });
 
         observadorTema.observe(document.documentElement, {
@@ -613,7 +625,6 @@ if (!window.duckfyCategoriasInicializado) {
             }
         }
 
-
         function renderizarHistoricoCores() {
 
             const historicoContainer = document.getElementById('historicoCores');
@@ -649,8 +660,6 @@ if (!window.duckfyCategoriasInicializado) {
             });
         }
 
-
-
         // adiciona a cor confirmada ao histórico visual do Pickr
         function atualizarHistoricoPickr(cor) {
 
@@ -662,7 +671,6 @@ if (!window.duckfyCategoriasInicializado) {
                 item => item === cor.toUpperCase()
             );
 
-            // remove a cor antiga da posição anterior
             if (indiceExistente !== -1) {
 
                 const indiceSwatch =
@@ -672,7 +680,6 @@ if (!window.duckfyCategoriasInicializado) {
                 seletorPickr.removeSwatch(indiceSwatch);
             }
 
-            // remove a cor mais antiga se o limite já foi atingido
             if (
                 historico.length >= limiteHistorico &&
                 indiceExistente === -1
@@ -680,7 +687,6 @@ if (!window.duckfyCategoriasInicializado) {
                 seletorPickr.removeSwatch(coresPredefinidas.length);
             }
 
-            // adiciona a cor mais recente ao final
             seletorPickr.addSwatch(cor.toUpperCase());
         }
 
@@ -690,8 +696,8 @@ if (!window.duckfyCategoriasInicializado) {
 
         function atualizarCorPreview(cor) {
 
-            // atualiza a bolinha de cor personalizada
             if (botaoCorPersonalizada) {
+
                 const iconeMais = botaoCorPersonalizada.querySelector('i');
                 const corAtual = cor.toUpperCase();
 
@@ -699,10 +705,17 @@ if (!window.duckfyCategoriasInicializado) {
 
                 if (ehCorPredefinida) {
                     botaoCorPersonalizada.style.backgroundColor = '';
-                    if (iconeMais) iconeMais.style.display = '';
+
+                    if (iconeMais) {
+                        iconeMais.style.display = '';
+                    }
+
                 } else {
                     botaoCorPersonalizada.style.backgroundColor = corAtual;
-                    if (iconeMais) iconeMais.style.display = 'none';
+
+                    if (iconeMais) {
+                        iconeMais.style.display = 'none';
+                    }
                 }
             }
 
@@ -714,7 +727,6 @@ if (!window.duckfyCategoriasInicializado) {
             colorBox.style.backgroundColor = cor;
             colorValue.textContent = cor;
 
-            // atualiza a seleção das cores predefinidas
             opcoesCores.forEach(opcao => {
 
                 opcao.classList.toggle(
@@ -723,12 +735,12 @@ if (!window.duckfyCategoriasInicializado) {
                 );
             });
 
-            // destaca a opção personalizada
             const corPredefinida = Array.from(opcoesCores).some(opcao => {
                 return opcao.dataset.color.toUpperCase() === cor;
             });
 
             if (botaoCorPersonalizada) {
+
                 botaoCorPersonalizada.classList.toggle(
                     'selecionada',
                     !corPredefinida
@@ -759,7 +771,6 @@ if (!window.duckfyCategoriasInicializado) {
                 position: 'bottom-middle',
                 padding: 8,
 
-                // cores predefinidas e histórico
                 swatches: [],
 
                 components: {
@@ -779,7 +790,6 @@ if (!window.duckfyCategoriasInicializado) {
                     }
                 },
 
-                // tradução dos botões
                 i18n: {
                     'btn:save': 'Confirmar',
                     'btn:cancel': 'Cancelar',
@@ -874,6 +884,7 @@ if (!window.duckfyCategoriasInicializado) {
                 renderizarHistoricoCores();
             });
         }
+
         // ========================================
         // APLICAR COR INICIAL
         // ========================================
