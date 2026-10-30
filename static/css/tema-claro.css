@@ -114,13 +114,17 @@ body.app-body.tema-claro .main-content .semana-circulo {
 }
 
 body.app-body.tema-claro .main-content .cabecalho-perfil {
-  background: linear-gradient(180deg, rgba(112, 66, 200, 0.12), transparent 100%);
+  background: linear-gradient(180deg, rgba(112, 66, 200, 0.2), transparent 100%);
 }
 
 body.app-body.tema-claro .main-content .item-lista-config:not(.sair):hover,
 body.app-body.tema-claro .main-content .item-conta:hover {
   background-color: #e8e0f7 !important;
   border-color: var(--brand-secondary) !important;
+}
+
+body.app-body.tema-claro .main-content .item-lista-config:not(.sair) {
+  background-color: #e6dcf5 !important;
 }
 
 body.app-body.tema-claro .main-content .page-title,
