@@ -1,6 +1,8 @@
-
+<!--  links  -->
 <link rel="stylesheet" href="{{ url_for('static', filename='css/duckfy-modal.css') }}">
 <link rel="stylesheet" href="{{ url_for('static', filename='css/emoji-picker.css') }}">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@simonwep/pickr@1.10.2/dist/themes/classic.min.css">
+
 
 <div id="modalNovaCategoria" class="duckfy-modal">
     <div class="dash-card modal-content">
@@ -20,20 +22,10 @@
                 <label for="nome" class="card-subtitle d-block mb-1">Nome</label>
 
                 <div class="input-icon-wrapper">
-                    <img
-                        src="{{ url_for('static', filename='img/icons/nome.svg') }}"
-                        class="input-icon"
-                        alt="Nome"
-                    >
+                    <img src="{{ url_for('static', filename='img/icons/nome.svg') }}" class="input-icon" alt="Nome">
 
-                    <input
-                        type="text"
-                        name="nome"
-                        id="nome"
-                        class="search-input input-with-icon"
-                        placeholder="Ex: Alimentação"
-                        required
-                    >
+                    <input type="text" name="nome" id="nome" class="search-input input-with-icon"
+                        placeholder="Ex: Alimentação" required>
                 </div>
             </div>
 
@@ -42,18 +34,9 @@
                 <label for="tipo" class="card-subtitle d-block mb-1">Tipo</label>
 
                 <div class="input-icon-wrapper">
-                    <img
-                        src="{{ url_for('static', filename='img/icons/tipo.svg') }}"
-                        class="input-icon"
-                        alt="Tipo"
-                    >
+                    <img src="{{ url_for('static', filename='img/icons/tipo.svg') }}" class="input-icon" alt="Tipo">
 
-                    <select
-                        name="tipo"
-                        id="tipo"
-                        class="search-input input-with-icon"
-                        required
-                    >
+                    <select name="tipo" id="tipo" class="search-input input-with-icon" required>
                         <option value="SAIDA">Saída</option>
                         <option value="ENTRADA">Entrada</option>
                     </select>
@@ -65,47 +48,50 @@
                 <label for="emoji" class="card-subtitle d-block mb-1">Emoji</label>
 
                 <div class="input-icon-wrapper emoji-field-wrapper">
-                    <img
-                        src="{{ url_for('static', filename='img/icons/emoji.svg') }}"
-                        class="input-icon emoji-icon-trigger"
-                        alt="Abrir seletor de emojis"
-                        data-emoji-trigger="emoji"
-                        role="button"
-                        tabindex="0"
-                        aria-label="Abrir seletor de emojis"
-                    >
+                    <img src="{{ url_for('static', filename='img/icons/emoji.svg') }}"
+                        class="input-icon emoji-icon-trigger" alt="Abrir seletor de emojis" data-emoji-trigger="emoji"
+                        role="button" tabindex="0" aria-label="Abrir seletor de emojis">
 
-                    <input
-                        type="text"
-                        name="emoji"
-                        id="emoji"
-                        class="search-input input-with-icon emoji-input"
-                        placeholder="Ex: 🍔"
-                        required
-                        autocomplete="off"
-                    >
+                    <input type="text" name="emoji" id="emoji" class="search-input input-with-icon emoji-input"
+                        placeholder="Ex: 🍔" required autocomplete="off">
                 </div>
             </div>
 
+
+            <link rel="stylesheet"
+                href="https://cdn.jsdelivr.net/npm/@simonwep/pickr@1.10.2/dist/themes/classic.min.css">
+
             <!-- campo cor -->
             <div class="mb-3">
-                <label for="cor" class="card-subtitle d-block mb-1">Cor</label>
+                <label class="card-subtitle d-block mb-2">Cor</label>
 
                 <div class="color-picker-wrapper">
-                    <input
-                        type="color"
-                        name="cor"
-                        id="cor"
-                        class="color-input-hidden"
-                        value="#7C4DFF"
-                        oninput="atualizarCorPreview(this.value)"
-                    >
+                    <input type="hidden" name="cor" id="cor" value="#7C4DFF">
 
-                    <span
-                        id="colorBox"
-                        class="color-picker-custom"
-                        style="background-color: #7C4DFF;"
-                    ></span>
+                    <div class="color-options">
+                        <button type="button" class="color-option selecionada" data-color="#7C4DFF"
+                            style="--cor-opcao: #7C4DFF;" aria-label="Roxo"></button>
+                        <button type="button" class="color-option" data-color="#00E676" style="--cor-opcao: #00E676;"
+                            aria-label="Verde"></button>
+                        <button type="button" class="color-option" data-color="#58A6FF" style="--cor-opcao: #58A6FF;"
+                            aria-label="Azul"></button>
+                        <button type="button" class="color-option" data-color="#FFB547" style="--cor-opcao: #FFB547;"
+                            aria-label="Laranja"></button>
+                        <button type="button" class="color-option" data-color="#FF758F" style="--cor-opcao: #FF758F;"
+                            aria-label="Rosa"></button>
+                        <button type="button" class="color-option" data-color="#A0A0B0" style="--cor-opcao: #A0A0B0;"
+                            aria-label="Cinza"></button>
+
+                        <button type="button" id="corPersonalizada" class="color-option color-custom"
+                            aria-label="Escolher outra cor">
+                            <i class="bi bi-plus-lg"></i>
+                        </button>
+                    </div>
+
+                    <div class="color-preview">
+                        <span id="colorBox"></span>
+                        <span id="colorValue">#7C4DFF</span>
+                    </div>
                 </div>
             </div>
 
@@ -123,13 +109,22 @@
 </script>
 
 <!-- biblioteca de emojis -->
-<script
-    src="https://cdn.jsdelivr.net/npm/emoji-mart@5.6.0/dist/browser.js"
-    defer
-></script>
+<script src="https://cdn.jsdelivr.net/npm/emoji-mart@5.6.0/dist/browser.js" defer></script>
 
 <!-- javascript das categorias -->
-<script
-    src="{{ url_for('static', filename='js/categorias.js') }}"
-    defer
-></script>
+<script src="{{ url_for('static', filename='js/categorias.js') }}" defer></script>
+
+
+<!-- biblioteca de seleção de cores -->
+<script src="https://cdn.jsdelivr.net/npm/@simonwep/pickr@1.10.2/dist/pickr.min.js"></script>
+
+<!-- dados dos emojis -->
+<script>
+    window.emojiMartDataUrl = 'https://cdn.jsdelivr.net/npm/@emoji-mart/data';
+</script>
+
+<!-- biblioteca de emojis -->
+<script src="https://cdn.jsdelivr.net/npm/emoji-mart@5.6.0/dist/browser.js" defer></script>
+
+<!-- javascript das categorias -->
+<script src="{{ url_for('static', filename='js/categorias.js') }}" defer></script>

@@ -815,13 +815,227 @@ body.tema-claro .tab-count {
     }
 }
 
-@media (prefers-reduced-motion: reduce) {
 
-    .btn-nova-categoria,
-    .tab-btn,
-    .category-item,
-    .arrow-link,
-    .search-input {
+
+/* seletor de cores */
+.color-picker-wrapper {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+}
+
+.color-options {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 13px;
+}
+
+.color-option {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 34px;
+    height: 34px;
+    padding: 0;
+    border: 2px solid transparent;
+    border-radius: 50%;
+    background: var(--cor-opcao);
+    cursor: pointer;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.color-option:hover {
+    transform: scale(1.12);
+}
+
+.color-option.selecionada {
+    border-color: var(--cor-texto);
+    box-shadow: 0 0 0 2px var(--cor-roxo-claro);
+}
+
+.color-option.selecionada::after {
+    content: "✓";
+    color: #ffffff;
+    font-size: 15px;
+    font-weight: 700;
+    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
+}
+
+.color-custom {
+    border: 1px dashed var(--cor-secundaria);
+    background: var(--cor-painel);
+    color: var(--cor-secundaria);
+    font-size: 15px;
+}
+
+.color-custom:hover {
+    border-color: var(--cor-roxo-claro);
+    color: var(--cor-roxo-claro);
+}
+
+.color-input-hidden {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    opacity: 0;
+    pointer-events: none;
+}
+
+.color-preview {
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    color: var(--cor-secundaria);
+    font-size: 0.78rem;
+}
+
+.color-preview span:first-child {
+    width: 17px;
+    height: 17px;
+    border: 1px solid var(--cor-borda);
+    border-radius: 5px;
+    background: #7C4DFF;
+}
+
+#colorValue {
+    font-family: monospace;
+    letter-spacing: 0.5px;
+}
+
+.color-option:focus-visible,
+.color-custom:focus-visible {
+    outline: 2px solid var(--cor-roxo-claro);
+    outline-offset: 4px;
+}
+
+/* seletor personalizado duckfy */
+.duckfy-color-picker {
+    --pcr-color: var(--brand-primary);
+    --pcr-foreground: var(--text-primary);
+}
+
+/* painel */
+.duckfy-color-picker.pcr-app {
+    z-index: 100000 !important;
+    width: 280px;
+    padding: 14px;
+    border: 1px solid var(--border-color);
+    border-radius: 15px;
+    background: var(--bg-surface-1);
+    color: var(--text-primary);
+    box-shadow: 0 12px 35px var(--shadow-color);
+    font-family: inherit;
+}
+
+/* área de seleção */
+.duckfy-color-picker .pcr-selection {
+    gap: 10px;
+}
+
+.duckfy-color-picker .pcr-color-palette,
+.duckfy-color-picker .pcr-color-chooser {
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+/* campos de valor */
+.duckfy-color-picker .pcr-interaction input {
+    min-height: 34px;
+    border: 1px solid var(--border-color);
+    border-radius: 7px;
+    background: var(--bg-primary);
+    color: var(--text-primary);
+    font-family: inherit;
+}
+
+/* botões */
+.duckfy-color-picker .pcr-interaction button {
+    border-radius: 8px;
+    font-family: inherit;
+    font-weight: 600;
+}
+
+/* botão de confirmação */
+.duckfy-color-picker .pcr-save {
+    background: var(--brand-primary);
+    color: #ffffff;
+}
+
+/* botão de limpar */
+.duckfy-color-picker .pcr-clear {
+    background: var(--bg-surface-2);
+    color: var(--text-primary);
+}
+
+/* acionador personalizado */
+.color-custom.pcr-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px dashed var(--text-muted);
+    border-radius: 50%;
+    background: var(--bg-surface-1) !important;
+    color: var(--text-muted);
+}
+
+.color-custom.pcr-button::before,
+.color-custom.pcr-button::after {
+    display: none !important;
+}
+
+.color-custom.pcr-button i {
+    font-size: 15px;
+}
+
+.color-custom.pcr-button:hover {
+    border-color: var(--brand-secondary);
+    color: var(--brand-secondary);
+}
+
+/* tema claro */
+html.tema-claro .duckfy-color-picker,
+body.tema-claro .duckfy-color-picker {
+    border-color: var(--border-color);
+    background: var(--bg-surface-1);
+    color: var(--text-primary);
+}
+
+/* acessibilidade */
+.duckfy-color-picker button:focus-visible,
+.duckfy-color-picker input:focus-visible {
+    outline: 2px solid var(--brand-secondary);
+    outline-offset: 3px;
+}
+
+/* ========================================
+   PERSONALIZAÇÃO DO BOTÃO CONFIRMAR DO PICKR
+======================================== */
+
+.duckfy-color-picker .pcr-save {
+    background: var(--brand-primary) !important;
+    color: #FFFFFF !important;
+    border: 1px solid var(--brand-primary) !important;
+    border-radius: 8px !important;
+    font-family: inherit;
+    font-weight: 600;
+    transition: background 0.2s ease, transform 0.2s ease;
+}
+
+.duckfy-color-picker .pcr-save:hover {
+    background: var(--brand-dark) !important;
+    border-color: var(--brand-dark) !important;
+    transform: translateY(-1px);
+}
+
+.duckfy-color-picker .pcr-save:focus-visible {
+    outline: 2px solid var(--brand-secondary) !important;
+    outline-offset: 3px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .color-option {
         transition: none;
     }
 }
