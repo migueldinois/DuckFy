@@ -28,9 +28,9 @@ class Extrato:
             params = [id_usuario]
 
             if tipo == 'entrada':
-                query += " AND (LOWER(t.tipo) = 'receita' OR LOWER(t.tipo) = 'entrada')"
+                query += " AND LOWER(t.tipo) IN ('receita', 'entrada', 'entradas', 'retirada')"
             elif tipo == 'saida':
-                query += " AND (LOWER(t.tipo) = 'despesa' OR LOWER(t.tipo) = 'saida')"
+                query += " AND LOWER(t.tipo) IN ('despesa', 'saida', 'saída', 'transferência', 'transferencia')"
 
             if id_conta:
                 query += " AND t.id_conta = %s"
