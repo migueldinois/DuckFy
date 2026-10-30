@@ -62,11 +62,30 @@ function formatarValorMonetario(input, pontoDecimal = false, completarCentavos =
       : '');
 }
 
+function normalizarPontoDecimalDigitado(input, event) {
+  const textoInserido = event.data;
+  if (!textoInserido?.includes('.') || textoInserido.includes(',') || input.value.includes(',')) return;
+
+  const posicaoCursor = input.selectionStart ?? input.value.length;
+  const indicePontoInserido = textoInserido.lastIndexOf('.');
+  const casasDecimais = textoInserido.length - indicePontoInserido - 1;
+  const pontoFoiDigitado = textoInserido === '.';
+  if (!pontoFoiDigitado && casasDecimais > 2) return;
+
+  const indiceNoCampo = posicaoCursor - textoInserido.length + indicePontoInserido;
+  if (input.value[indiceNoCampo] === '.') {
+    input.setRangeText(',', indiceNoCampo, indiceNoCampo + 1, 'end');
+  }
+}
+
 document.addEventListener('DOMContentLoaded', () => {
   document.querySelectorAll('[data-currency-input]').forEach((input) => {
     if (input.value) formatarValorMonetario(input, true, true);
 
-    input.addEventListener('input', () => formatarValorMonetario(input));
+    input.addEventListener('input', (event) => {
+      normalizarPontoDecimalDigitado(input, event);
+      formatarValorMonetario(input);
+    });
     input.addEventListener('blur', () => formatarValorMonetario(input, false, true));
     input.addEventListener('focus', () => {
       if (input.dataset.currencyInitialValue === 'true') {
