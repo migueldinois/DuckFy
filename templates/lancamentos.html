@@ -10,7 +10,7 @@
 
     <!-- Header superior -->
     <header class="d-flex align-items-center mb-3">
-      <button type="button" class="btn-voltar border-0 bg-transparent text-white p-0 me-3 fs-4" aria-label="Voltar" onclick="history.back()">
+      <button type="button" class="btn-voltar btn-voltar-global border-0 bg-transparent text-white p-0 me-3 fs-4" aria-label="Voltar" onclick="history.back()">
         <i class="bi bi-arrow-left"></i>
       </button>
       <h1 class="h4 mb-0 fw-semibold text-white">Lançamento</h1>
@@ -18,7 +18,17 @@
 
     <!-- CARD PRINCIPAL DO FORMULÁRIO -->
     <div class="lancamento-block p-4 rounded-4 shadow-lg">
-      <form action="/salvar_lancamento" method="POST">
+      {% with mensagens = get_flashed_messages(with_categories=true) %}
+      {% if mensagens %}
+      <div class="lancamento-mensagens" role="status" aria-live="polite">
+        {% for categoria, mensagem in mensagens %}
+        <p class="lancamento-mensagem {{ 'sucesso' if categoria == 'success' else 'erro' }}">{{ mensagem }}</p>
+        {% endfor %}
+      </div>
+      {% endif %}
+      {% endwith %}
+
+      <form action="{{ url_for('salvar_lancamento') }}" method="POST">
 
         <!-- Seletor Tipo: Entrada / Saída -->
         <div class="d-flex justify-content-center mb-4">
@@ -36,6 +46,19 @@
         </div>
 
         <div class="row g-3">
+          <div class="col-12">
+            <label for="id_conta" class="form-label text-white-50 fs-7 fw-medium mb-1">Conta</label>
+            <select class="form-select form-control-custom rounded-3" id="id_conta" name="id_conta" required {% if not contas %}disabled{% endif %}>
+              <option value="" selected disabled>Selecione uma conta</option>
+              {% for conta in contas %}
+              <option value="{{ conta.id_conta }}">{{ conta.nome_conta }}</option>
+              {% endfor %}
+            </select>
+            {% if not contas %}
+            <small class="text-white-50">Cadastre uma conta antes de lançar uma transação.</small>
+            {% endif %}
+          </div>
+
           <!-- Campo Local -->
           <div class="col-12 col-md-6">
             <label for="local" class="form-label text-white-50 fs-7 fw-medium mb-1">Local</label>
@@ -79,34 +102,6 @@
             <div class="categoria-selecionada-nome" id="categoria-selecionada-nome" aria-live="polite"></div>
           </div>
 
-          <!-- Campo Sub-Categoria -->
-          <div class="col-12">
-            <label id="subcategoria-label" class="form-label text-white-50 fs-7 fw-medium mb-1">Sub-Categoria</label>
-            <div class="custom-select" id="subcategoria-select">
-              <select id="subcategoria" name="subcategoria" hidden aria-hidden="true" tabindex="-1">
-              <option value="" selected disabled>Selecione uma sub-categoria...</option>
-              <option value="mercado">Mercado</option>
-              <option value="restaurante">Restaurante / Lanchonete</option>
-              <option value="combustivel">Combustível</option>
-              <option value="aluguel">Aluguel / Contas</option>
-              </select>
-              <button type="button" class="custom-select-trigger" id="subcategoria-trigger" role="combobox"
-                aria-haspopup="listbox" aria-expanded="false" aria-controls="subcategoria-options"
-                aria-autocomplete="none" aria-labelledby="subcategoria-label subcategoria-value">
-                <span id="subcategoria-value">Selecione uma sub-categoria...</span>
-                <span class="custom-select-chevron" aria-hidden="true"></span>
-              </button>
-              <div class="custom-select-options" id="subcategoria-options" role="listbox"
-                aria-labelledby="subcategoria-label" hidden>
-                <div class="custom-select-option" role="option" aria-disabled="true" data-value="">Selecione uma sub-categoria...</div>
-                <div class="custom-select-option" role="option" aria-selected="false" data-value="mercado">Mercado</div>
-                <div class="custom-select-option" role="option" aria-selected="false" data-value="restaurante">Restaurante / Lanchonete</div>
-                <div class="custom-select-option" role="option" aria-selected="false" data-value="combustivel">Combustível</div>
-                <div class="custom-select-option" role="option" aria-selected="false" data-value="aluguel">Aluguel / Contas</div>
-              </div>
-            </div>
-          </div>
-
           <!-- Campo Observação -->
           <div class="col-12">
             <label for="observacao" class="form-label text-white-50 fs-7 fw-medium mb-1">Observação (opcional)</label>
@@ -115,7 +110,7 @@
 
           <!-- Botão Submeter Form -->
           <div class="col-12 mt-4">
-            <button type="submit" class="btn-purple-action">Lançar Transação</button>
+            <button type="submit" class="btn-purple-action" {% if not contas %}disabled{% endif %}>Lançar Transação</button>
           </div>
         </div>
 

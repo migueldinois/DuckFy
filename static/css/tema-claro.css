@@ -201,12 +201,12 @@ body.app-body.tema-claro .main-content .termos-abas > a.aba:not(.aba-ativa):hove
   background-color: #e8e0f7 !important;
 }
 
-body.app-body.tema-claro .main-content .termos-topo > a.btn-voltar,
-body.app-body.tema-claro .main-content .termos-topo > a.btn-voltar i {
+body.app-body.tema-claro .main-content .termos-topo > a.btn-voltar:not(.btn-voltar-global),
+body.app-body.tema-claro .main-content .termos-topo > a.btn-voltar:not(.btn-voltar-global) i {
   color: #292238 !important;
 }
 
-body.app-body.tema-claro .main-content .termos-topo > a.btn-voltar {
+body.app-body.tema-claro .main-content .termos-topo > a.btn-voltar:not(.btn-voltar-global) {
   background-color: #e8e0f7 !important;
   border-color: #d7c8f2 !important;
 }
@@ -372,17 +372,17 @@ body.app-body.tema-claro .main-content .btn-outline-light:hover {
   border-color: var(--brand-primary);
 }
 
-body.app-body.tema-claro .main-content .btn-voltar-perfil,
+body.app-body.tema-claro .main-content .btn-voltar-perfil:not(.btn-voltar-global),
 body.app-body.tema-claro .main-content .btn-icon-add,
-body.app-body.tema-claro .main-content .extrato-header a,
+body.app-body.tema-claro .main-content .extrato-header a:not(.btn-voltar-global),
 body.app-body.tema-claro .main-content .arrow-link {
   background-color: var(--bg-surface-2);
   border-color: var(--border-color);
   color: var(--brand-primary);
 }
 
-body.app-body.tema-claro .main-content .btn-voltar-perfil,
-body.app-body.tema-claro .main-content .pagina-patrimonio .btn-voltar {
+body.app-body.tema-claro .main-content .btn-voltar-perfil:not(.btn-voltar-global),
+body.app-body.tema-claro .main-content .pagina-patrimonio .btn-voltar:not(.btn-voltar-global) {
   color: var(--text-primary);
 }
 
@@ -467,12 +467,12 @@ html.tema-claro body.pagina-publica nav.termos-abas > a.aba:not(.aba-ativa):hove
   background-color: #e8e0f7 !important;
 }
 
-html.tema-claro body.pagina-publica .termos-topo > a.btn-voltar,
-html.tema-claro body.pagina-publica .termos-topo > a.btn-voltar i {
+html.tema-claro body.pagina-publica .termos-topo > a.btn-voltar:not(.btn-voltar-global),
+html.tema-claro body.pagina-publica .termos-topo > a.btn-voltar:not(.btn-voltar-global) i {
   color: #292238 !important;
 }
 
-html.tema-claro body.pagina-publica .termos-topo > a.btn-voltar {
+html.tema-claro body.pagina-publica .termos-topo > a.btn-voltar:not(.btn-voltar-global) {
   background-color: #e8e0f7 !important;
   border-color: #d7c8f2 !important;
 }
