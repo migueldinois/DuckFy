@@ -148,3 +148,48 @@ class Usuario():
         finally:
             cursor.close()
             conexao.close()
+
+# cod
+    @staticmethod
+    def buscar_por_email(email):
+        conexao, cursor = Conexao.conectar()
+
+        cursor.execute(
+            "SELECT id_usuario FROM usuarios WHERE email = %s",
+            [email]
+        )
+
+        usuario = cursor.fetchone()
+
+        cursor.close()
+        conexao.close()
+
+        return usuario
+
+
+    @staticmethod
+    def atualizar_senha(email, nova_senha):
+        conexao, cursor = Conexao.conectar()
+
+        try:
+            senha_hash = bcrypt.hashpw(
+                nova_senha.encode("utf-8"),
+                bcrypt.gensalt()
+            ).decode("utf-8")
+
+            cursor.execute(
+                "UPDATE usuarios SET senha_hash = %s WHERE email = %s",
+                [senha_hash, email]
+            )
+
+            conexao.commit()
+            return cursor.rowcount > 0
+
+        except Exception as erro:
+            conexao.rollback()
+            print(f"Erro ao atualizar senha: {erro}")
+            return False
+
+        finally:
+            cursor.close()
+            conexao.close()
