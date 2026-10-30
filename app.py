@@ -125,8 +125,6 @@ def tela_simulador():
             anos = int(request.form.get("anos", 5))
             if anos <= 0:
                 anos = 5
-            aporte_inicial = float(request.form.get("aporte_inicial") or 0.0)
-            aporte_mensal = float(request.form.get("aporte_mensal") or 0.0)
             anos = int(request.form.get("anos") or 5)
             aporte_inicial = float(parse_valor_monetario(request.form.get("aporte_inicial")))
             aporte_mensal = float(parse_valor_monetario(request.form.get("aporte_mensal")))
@@ -415,6 +413,9 @@ def editar_conta(id_conta):
     if not saldo_atual.is_finite() or saldo_atual < 0:
         flash("Informe um saldo válido.", "error")
         return redirect('/contas')
+    if saldo_atual > ContaBancaria.SALDO_MAXIMO:
+        flash("O saldo máximo por conta é R$ 99.999.999,99.", "error")
+        return redirect('/contas')
 
     if not nome_conta or len(nome_conta) > 50:
         flash("O nome da conta é obrigatório e deve ter até 50 caracteres.", "error")
@@ -467,6 +468,9 @@ def criar_conta():
 
         if not saldo_atual.is_finite() or saldo_atual < 0:
             raise ValueError
+        if saldo_atual > ContaBancaria.SALDO_MAXIMO:
+            flash("O saldo máximo por conta é R$ 99.999.999,99.", "error")
+            return redirect(url_for('contas'))
 
         sucesso = ContaBancaria.criar_conta(
             id_usuario,

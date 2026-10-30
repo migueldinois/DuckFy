@@ -64,8 +64,10 @@
                     inputmode="decimal"
                     data-currency-input
                     min="0"
+                        max="99999999.99"
                     required>
             </div>
+                    <small class="card-subtitle d-block mb-3">Máximo por conta: R$ 99.999.999,99</small>
 
             <div class="detalhes-saldo-conta mb-3" aria-live="polite">
                 <span>Total atual <strong id="totalContaEditada">R$ 0,00</strong></span>
@@ -81,7 +83,7 @@
                 <button
                     type="button"
                     id="btnExcluirConta"
-                    class="btn-excluir-conta w-100">
+                    class="btn-danger-action w-100">
                     <i class="bi bi-trash" aria-hidden="true"></i>
                     Excluir conta
                 </button>
