@@ -1,6 +1,9 @@
-
+<!-- estilos -->
 <link rel="stylesheet" href="{{ url_for('static', filename='css/duckfy-modal.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/emoji-picker.css') }}">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@simonwep/pickr@1.10.2/dist/themes/classic.min.css">
 
+<!-- modal de edição -->
 <div id="modalEditarCategoria" class="duckfy-modal">
     <div class="dash-card modal-content">
 
@@ -12,9 +15,7 @@
             </button>
         </div>
 
-        <form id="formEditarCategoria"
-              action="/categorias/atualizar/"
-              method="POST">
+        <form id="formEditarCategoria" action="/categorias/atualizar/" method="POST">
 
             <input type="hidden" name="id_categoria" id="edit_id_categoria">
 
@@ -23,92 +24,114 @@
                 <label for="edit_nome" class="card-subtitle d-block mb-1">Nome</label>
 
                 <div class="input-icon-wrapper">
-                    <img src="{{ url_for('static', filename='img/icons/nome.svg') }}"
-                         class="input-icon" alt="Nome">
+                    <img src="{{ url_for('static', filename='img/icons/nome.svg') }}" class="input-icon" alt="Nome">
 
-                    <input type="text"
-                           name="nome"
-                           id="edit_nome"
-                           class="search-input input-with-icon"
-                           required>
+                    <input type="text" name="nome" id="edit_nome" class="search-input input-with-icon"
+                        placeholder="Nome da categoria" required>
                 </div>
             </div>
 
             <!-- campo tipo -->
             <div class="mb-3">
-                <label for="edit_tipo" class="card-subtitle d-block mb-1">Tipo</label>
+                <label class="card-subtitle d-block mb-2">Tipo</label>
 
-                <div class="input-icon-wrapper">
-                    <img src="{{ url_for('static', filename='img/icons/tipo.svg') }}"
-                         class="input-icon" alt="Tipo">
+                <input type="hidden" name="tipo" id="edit_tipo" value="SAIDA">
 
-                    <select name="tipo" id="edit_tipo"
-                            class="search-input input-with-icon" required>
-                        <option value="SAIDA">Saída</option>
-                        <option value="ENTRADA">Entrada</option>
-                    </select>
+                <div class="tipo-categoria-opcoes">
+                    <button type="button" class="tipo-categoria-btn tipo-saida selecionado" data-tipo="SAIDA"
+                        aria-pressed="true">
+                        <i class="bi bi-arrow-up-right-circle"></i>
+                        <span>Saída</span>
+                    </button>
+
+                    <button type="button" class="tipo-categoria-btn tipo-entrada" data-tipo="ENTRADA"
+                        aria-pressed="false">
+                        <i class="bi bi-arrow-down-left-circle"></i>
+                        <span>Entrada</span>
+                    </button>
                 </div>
             </div>
 
-           
-<!-- campo emoji -->
-<div class="mb-3">
-    <label for="edit_emoji" class="card-subtitle d-block mb-1">Emoji</label>
+            <!-- campo emoji -->
+            <div class="mb-3">
+                <label for="edit_emoji" class="card-subtitle d-block mb-1">Emoji</label>
 
-    <div class="input-icon-wrapper emoji-field-wrapper">
-        <img src="{{ url_for('static', filename='img/icons/emoji.svg') }}"
-             class="input-icon emoji-icon-trigger"
-             alt="Abrir seletor de emojis"
-             data-emoji-trigger="edit_emoji"
-             role="button"
-             tabindex="0"
-             aria-label="Abrir seletor de emojis">
+                <div class="input-icon-wrapper emoji-field-wrapper">
+                    <img src="{{ url_for('static', filename='img/icons/emoji.svg') }}"
+                        class="input-icon emoji-icon-trigger" alt="Abrir seletor de emojis"
+                        data-emoji-trigger="edit_emoji" role="button" tabindex="0" aria-label="Abrir seletor de emojis">
 
-        <input type="text"
-               name="emoji"
-               id="edit_emoji"
-               class="search-input input-with-icon emoji-input"
-               required
-               autocomplete="off">
-    </div>
-</div>
-
+                    <input type="text" name="emoji" id="edit_emoji" class="search-input input-with-icon emoji-input"
+                        placeholder="Selecione um emoji" required autocomplete="off">
+                </div>
+            </div>
 
             <!-- campo cor -->
             <div class="mb-3">
-                <label for="edit_cor" class="card-subtitle d-block mb-1">Cor</label>
+                <label class="card-subtitle d-block mb-2">Cor</label>
 
                 <div class="color-picker-wrapper">
-                    <input type="color"
-                           name="cor"
-                           id="edit_cor"
-                           class="color-input-hidden"
-                           oninput="atualizarCorPreviewEdit(this.value)">
+                    <input type="hidden" name="cor" id="edit_cor" value="#7C4DFF">
 
-                    <span id="editColorBox" class="color-picker-custom"></span>
+                    <div class="color-options">
+                        <button type="button" class="color-option" data-edit-color="#7C4DFF"
+                            style="--cor-opcao: #7C4DFF;" aria-label="Roxo"></button>
+
+                        <button type="button" class="color-option" data-edit-color="#00E676"
+                            style="--cor-opcao: #00E676;" aria-label="Verde"></button>
+
+                        <button type="button" class="color-option" data-edit-color="#58A6FF"
+                            style="--cor-opcao: #58A6FF;" aria-label="Azul"></button>
+
+                        <button type="button" class="color-option" data-edit-color="#FFB547"
+                            style="--cor-opcao: #FFB547;" aria-label="Laranja"></button>
+
+                        <button type="button" class="color-option" data-edit-color="#FF758F"
+                            style="--cor-opcao: #FF758F;" aria-label="Rosa"></button>
+
+                        <button type="button" class="color-option" data-edit-color="#A0A0B0"
+                            style="--cor-opcao: #A0A0B0;" aria-label="Cinza"></button>
+
+                        <button type="button" id="editCorPersonalizada" class="color-option color-custom"
+                            aria-label="Escolher outra cor">
+                            <i class="bi bi-plus-lg"></i>
+                        </button>
+                    </div>
+
+                    <!-- histórico de cores -->
+                    <div id="editHistoricoCores" class="color-history-container" hidden>
+                        <span class="color-history-title">Cores recentes</span>
+                        <div class="color-history-options"></div>
+                    </div>
+
+                    <!-- prévia da cor -->
+                    <div class="color-preview">
+                        <span id="editColorBox"></span>
+                        <span id="editColorValue">#7C4DFF</span>
+                    </div>
                 </div>
             </div>
 
-            <a id="btnIrSubcategorias"
-               href="#"
-               class="btn-secondary-action w-100 mb-2 text-center text-decoration-none d-block">
+            <!-- acesso às subcategorias -->
+            <a id="btnIrSubcategorias" href="#"
+                class="btn-secondary-action w-100 mb-2 text-center text-decoration-none d-block">
                 Ver Subcategorias
             </a>
 
+            <!-- ações da categoria -->
             <div class="d-flex gap-2 mt-3">
                 <button type="submit" class="btn-purple-action w-50">
                     Salvar Alterações
                 </button>
 
-                <button type="button"
-                        class="btn-danger-action w-50"
-                        id="btnExcluirCategoria">
+                <button type="button" class="btn-danger-action w-50" id="btnExcluirCategoria">
                     Excluir
                 </button>
             </div>
 
         </form>
 
+        <!-- formulário de exclusão -->
         <form id="formDeletarCategoria" method="POST" class="d-none"></form>
 
     </div>
@@ -118,8 +141,6 @@
 <div id="modalConfirmarExclusao" class="duckfy-modal">
     <div class="dash-card modal-content modal-confirmacao">
 
-        <div class="confirmacao-icone">!</div>
-
         <h3 class="card-section-title text-center">Excluir categoria?</h3>
 
         <p class="card-subtitle text-center">
@@ -128,16 +149,13 @@
             Essa ação não poderá ser desfeita.
         </p>
 
+        <!-- botões de confirmação -->
         <div class="d-flex gap-2 mt-4">
-            <button type="button"
-                    class="btn-secondary-action w-50"
-                    data-fechar-exclusao>
+            <button type="button" class="btn-secondary-action w-50" data-fechar-exclusao>
                 Cancelar
             </button>
 
-            <button type="button"
-                    class="btn-danger-action w-50"
-                    id="confirmarExclusaoCategoria">
+            <button type="button" class="btn-danger-action w-50" id="confirmarExclusaoCategoria">
                 Excluir categoria
             </button>
         </div>
@@ -146,43 +164,44 @@
 </div>
 
 <script>
-    function atualizarCorPreviewEdit(corHex) {
-        const box = document.getElementById('editColorBox');
+    (() => {
+        // elementos da exclusão
+        const btnExcluirCategoria = document.getElementById('btnExcluirCategoria');
+        const modalEditarCategoria = document.getElementById('modalEditarCategoria');
+        const modalConfirmarExclusao = document.getElementById('modalConfirmarExclusao');
+        const nomeCategoriaExclusao = document.getElementById('nomeCategoriaExclusao');
+        const confirmarExclusaoCategoria = document.getElementById('confirmarExclusaoCategoria');
+        const formDeletarCategoria = document.getElementById('formDeletarCategoria');
 
-        if (box) {
-            box.style.backgroundColor = corHex;
-        }
-    }
+        // abre a confirmação
+        btnExcluirCategoria?.addEventListener('click', function () {
+            if (!modalEditarCategoria || !modalConfirmarExclusao || !nomeCategoriaExclusao) return;
 
-    const btnExcluirCategoria = document.getElementById('btnExcluirCategoria');
-    const modalEditarCategoria = document.getElementById('modalEditarCategoria');
-    const modalConfirmarExclusao = document.getElementById('modalConfirmarExclusao');
-    const nomeCategoriaExclusao = document.getElementById('nomeCategoriaExclusao');
-    const confirmarExclusaoCategoria = document.getElementById('confirmarExclusaoCategoria');
-    const formDeletarCategoria = document.getElementById('formDeletarCategoria');
+            const campoNome = document.getElementById('edit_nome');
+            const nome = campoNome?.value.trim();
 
-    btnExcluirCategoria?.addEventListener('click', function () {
-        const nome = document.getElementById('edit_nome').value.trim();
+            nomeCategoriaExclusao.textContent = nome || 'esta categoria';
 
-        nomeCategoriaExclusao.textContent = nome || 'esta categoria';
-
-        modalEditarCategoria.classList.remove('active');
-        modalConfirmarExclusao.classList.add('active');
-    });
-
-    document.querySelectorAll('[data-fechar-exclusao]').forEach(function (botao) {
-        botao.addEventListener('click', function () {
-            modalConfirmarExclusao.classList.remove('active');
-            modalEditarCategoria.classList.add('active');
+            modalEditarCategoria.classList.remove('active');
+            modalConfirmarExclusao.classList.add('active');
         });
-    });
 
-    confirmarExclusaoCategoria?.addEventListener('click', function () {
-        const id = document.getElementById('edit_id_categoria').value;
+        // cancela a exclusão
+        document.querySelectorAll('[data-fechar-exclusao]').forEach(function (botao) {
+            botao.addEventListener('click', function () {
+                modalConfirmarExclusao?.classList.remove('active');
+                modalEditarCategoria?.classList.add('active');
+            });
+        });
 
-        if (!id) return;
+        // confirma a exclusão
+        confirmarExclusaoCategoria?.addEventListener('click', function () {
+            const id = document.getElementById('edit_id_categoria')?.value;
 
-        formDeletarCategoria.action = `/categorias/excluir/${id}`;
-        formDeletarCategoria.submit();
-    });
+            if (!id || !formDeletarCategoria) return;
+
+            formDeletarCategoria.action = `/categorias/deletar/${id}`;
+            formDeletarCategoria.submit();
+        });
+    })();
 </script>

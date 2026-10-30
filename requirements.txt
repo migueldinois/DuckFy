@@ -4,4 +4,7 @@ bcrypt
 requests
 python-dotenv
 gunicorn
+<<<<<<< HEAD
 Flask-Mail
+=======
+>>>>>>> 56995c4d0e3be062ad088970d324a11a43eed90f
