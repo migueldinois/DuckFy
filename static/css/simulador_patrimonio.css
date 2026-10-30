@@ -48,16 +48,30 @@
    FORMULÁRIO E INPUTS
    ========================================================== */
 .input-custom {
-    background-color: #ffffff !important;
-    border: none !important;
+    background-color: #0B0A12 !important;
+    border: 1px solid rgba(255, 255, 255, 0.12) !important;
     border-radius: 12px !important;
     padding: 0.85rem 1rem !important;
     font-weight: 600 !important;
-    color: #000000 !important;
+    color: #ffffff !important;
+    caret-color: var(--purple-primary);
+}
+
+.input-custom::placeholder {
+    color: #8E8E93 !important;
+    opacity: 1;
 }
 
 .input-custom:focus {
-    box-shadow: 0 0 0 3px var(--purple-primary) !important;
+    border-color: var(--purple-primary) !important;
+    box-shadow: 0 0 0 3px rgba(124, 77, 255, 0.25) !important;
+}
+
+.input-custom:-webkit-autofill,
+.input-custom:-webkit-autofill:hover,
+.input-custom:-webkit-autofill:focus {
+    -webkit-text-fill-color: #ffffff;
+    box-shadow: 0 0 0 1000px #0B0A12 inset;
 }
 
 .btn-purple {

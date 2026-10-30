@@ -64,7 +64,6 @@ def tela_simulador():
     aporte_inicial = 0.0
     aporte_mensal = 0.0
     anos = 5
-    simulado = request.method == "POST"
 
     # 1. Captura de dados do formulário POST
     if request.method == "POST":
@@ -74,6 +73,8 @@ def tela_simulador():
             aporte_mensal = float(parse_valor_monetario(request.form.get("aporte_mensal")))
         except (ValueError, TypeError, InvalidOperation):
             anos, aporte_inicial, aporte_mensal = 5, 0.0, 0.0
+
+    simulado = request.method == "POST" and (aporte_inicial > 0 or aporte_mensal > 0)
 
     if anos <= 0:
         anos = 5
@@ -202,15 +203,18 @@ def logout():
     flash("Você saiu da sua conta!", "success")
     return redirect("/login")
 
+# se o usuário estiver logado, renderiza a página de termos com o layout padrão; caso contrário, renderiza com o layout público
 @app.get("/termos")
 def termos():
     logado = "usuario" in session
-    return render_template("termos.html", usuario_logado=logado)
+    layout_base = "layout.html" if logado else "layout_publico.html"
+    return render_template("termos.html", usuario_logado=logado, layout_base=layout_base)
 
 @app.route('/privacidade')
 def privacidade():
     logado = "usuario" in session
-    return render_template("privacidade.html", usuario_logado=logado)
+    layout_base = "layout.html" if logado else "layout_publico.html"
+    return render_template("privacidade.html", usuario_logado=logado, layout_base=layout_base)
 
 @app.route("/contas")
 def contas():
