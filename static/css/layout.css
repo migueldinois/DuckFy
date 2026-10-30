@@ -48,7 +48,7 @@ body.app-body {
   bottom: 0;
   left: 0;
   z-index: 100;
-  border-right: 1px solid #2a2a38;
+  border-right: 1px solid var(--border-color);
   transition: width 0.25s ease-in-out;
 }
 
@@ -80,7 +80,7 @@ body.app-body {
   object-fit: contain;
   object-position: center;
   flex-shrink: 0;
-  transition: max-width 0.25s ease, height 0.25s ease;
+  transition: width 0.25s ease, max-width 0.25s ease, height 0.25s ease;
 }
 
 .sidebar.collapsed .sidebar-brand {
@@ -92,10 +92,20 @@ body.app-body {
   height: 64px;
 }
 
+.sidebar:not(.collapsed) .sidebar-brand {
+  height: 116px;
+}
+
+.sidebar:not(.collapsed) .sidebar-logo {
+  width: 100%;
+  max-width: 250px;
+  height: 104px;
+}
+
 
 /* Divisor da sidebar */
 .sidebar-divider {
-  border-top: 1px solid #2a2a38;
+  border-top: 1px solid var(--border-color);
   margin: 1rem 0;
   width: 100%;
 }
@@ -159,6 +169,10 @@ body.app-body {
 .sidebar-link:hover {
   color: #ffffff;
   background-color: var(--bg-surface-2);
+}
+
+html.tema-claro .sidebar-link:not(.active):hover {
+  color: var(--text-primary);
 }
 
 .sidebar-link.active {
