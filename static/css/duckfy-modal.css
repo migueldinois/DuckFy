@@ -143,6 +143,50 @@ select.search-input option {
   background: #6c3fff;
 }
 
+
+/* botao verde */
+.btn-confirm-action {
+  display: block;
+  width: 50%;
+  padding: 8px;
+  background: var(--confirmation-primary);
+  border: none;
+  border-radius: 12px;
+  color: #ffffff;
+  font-weight: 600;
+  font-size: 0.95rem;
+  text-align: center;
+  text-decoration: none;
+  cursor: pointer;
+  transition: background-color 0.2s ease, transform 0.1s ease;
+}
+
+.btn-confirm-action:hover {
+  background: var(--confirmation-secondary);
+}
+
+/* botao vermelho */
+.btn-danger-action {
+  display: block;
+  width: 50%;
+  padding: 8px;
+  background: var(--danger-primary);
+  border: none;
+  border-radius: 12px;
+  color: #ffffff;
+  font-weight: 600;
+  font-size: 0.95rem;
+  text-align: center;
+  text-decoration: none;
+  cursor: pointer;
+  transition: background-color 0.2s ease, transform 0.1s ease;
+}
+
+.btn-danger-action:hover {
+  background: var(--danger-secondary);
+}
+
+
 .btn-purple-action:active {
   transform: scale(0.98);
 }
