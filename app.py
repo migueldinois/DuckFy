@@ -619,11 +619,13 @@ def sequencia():
             flash("Não foi possível localizar os dados da sua conta.", "error")
             return redirect('/login')
 
+        # A rota reúne dados do usuário, badges e nível antes de renderizar a página.
         info_fogo = obter_estado_fogo(usuario["dias_ofensiva"])
         conquistas = UsuarioBadge.listar_conquistas_usuario(session["id_usuario"])
         conquistas_desbloqueadas = sum(
             conquista["data_conquista"] is not None for conquista in conquistas
         )
+        # Cada nível exige 100 XP; o resto é o progresso dentro do nível atual.
         pontos_xp = int(usuario["pontos_xp"] or 0)
         nivel = pontos_xp // 100 + 1
         xp_no_nivel = pontos_xp % 100

@@ -498,6 +498,7 @@
     background: var(--bg-surface-2, #181826);
 }
 
+/* O navegador renderiza o preenchimento do elemento progress por pseudo-elementos. */
 .xp-barra::-webkit-progress-bar {
     border-radius: inherit;
     background: var(--bg-surface-2, #181826);
@@ -577,6 +578,7 @@
     transition: border-color .2s ease, transform .2s ease, box-shadow .2s ease;
 }
 
+/* A regra do card usa flex; este seletor garante que o atributo hidden prevaleça. */
 .conquista[hidden] {
     display: none !important;
 }

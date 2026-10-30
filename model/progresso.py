@@ -4,11 +4,13 @@ from database.conexao import Conexao
 
 
 class Progresso:
+    # O limite diário evita que uma única rotina gere XP ilimitado.
     XP_DIARIO_MAXIMO = 100
     BONUS_ATIVIDADE_DIARIA = 5
 
     @staticmethod
     def conceder_xp(cursor, id_usuario, chave_evento, xp_base):
+        # A mesma conexão da ação principal mantém o XP dentro da transação do cadastro.
         cursor.execute(
             "SELECT pontos_xp, dias_ofensiva FROM usuarios WHERE id_usuario = %s FOR UPDATE",
             [id_usuario],
@@ -24,6 +26,7 @@ class Progresso:
         if cursor.fetchone():
             return 0
 
+        # A data vem do MySQL para usar o mesmo fuso da persistência do banco.
         cursor.execute("SELECT CURDATE() AS hoje, DATE_SUB(CURDATE(), INTERVAL 1 DAY) AS ontem")
         datas = cursor.fetchone()
         hoje = datas["hoje"]
@@ -44,6 +47,7 @@ class Progresso:
             melhor_sequencia = int(progresso["melhor_sequencia"] or 0)
             ultima_atividade = progresso["ultima_atividade"]
         else:
+            # Migra a ofensiva antiga na primeira atividade sem zerar o histórico do usuário.
             sequencia_legada = int(usuario["dias_ofensiva"] or 0)
             dias_atual = max(0, sequencia_legada - 1)
             melhor_sequencia = sequencia_legada
@@ -60,6 +64,7 @@ class Progresso:
         nova_atividade = ultima_atividade != hoje
 
         if nova_atividade:
+            # Atividade em dias seguidos aumenta a sequência; após uma pausa, ela recomeça.
             dias_atual = dias_atual + 1 if ultima_atividade == ontem else 1
             melhor_sequencia = max(melhor_sequencia, dias_atual)
             cursor.execute(
@@ -86,6 +91,7 @@ class Progresso:
             max(0, Progresso.XP_DIARIO_MAXIMO - xp_hoje),
         )
 
+        # A chave única do evento impede conceder XP duas vezes pela mesma ação.
         cursor.execute(
             """
             INSERT INTO usuarios_eventos_xp
@@ -129,6 +135,7 @@ class Progresso:
                 "SELECT id_badge, nome, descricao, icone FROM conquistas_badges ORDER BY id_badge"
             )
             badges = cursor.fetchall()
+            # Cada nome deve corresponder a uma regra; as metas são calculadas com dados reais.
             regras = {
                 "Primeiros Passos": resumo["reserva"] >= 100,
                 "Consistência": resumo["melhor_sequencia"] >= 30,
@@ -173,6 +180,7 @@ class Progresso:
                     [id_usuario, badge["id_badge"]],
                 )
                 if not cursor.fetchone():
+                    # Grava o desbloqueio uma única vez para preservar a data original.
                     cursor.execute(
                         "INSERT INTO usuarios_badges (id_usuario, id_badge) VALUES (%s, %s)",
                         [id_usuario, badge["id_badge"]],

@@ -80,6 +80,7 @@ class ContaBancaria:
                 VALUES (%s, %s, %s, %s)
             """
             cursor.execute(sql, (id_usuario, nome_conta, tipo_conta, saldo_atual))
+            # A criação da conta e seus pontos são confirmados ou desfeitos juntos.
             Progresso.conceder_xp(cursor, id_usuario, f"conta:{cursor.lastrowid}", 20)
             conexao.commit()
             return True

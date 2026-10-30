@@ -34,6 +34,7 @@ class Categoria():
         
         try:
             cursor.execute(sql, (id_usuario, nome, tipo, emoji, cor))
+            # Concede XP só depois de inserir a categoria, na mesma transação.
             Progresso.conceder_xp(cursor, id_usuario, f"categoria:{cursor.lastrowid}", 10)
             conexao.commit()
             return True

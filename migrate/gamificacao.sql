@@ -1,5 +1,6 @@
 USE duckfy;
 
+-- Guarda a sequência atual e a maior sequência já alcançada por cada usuário.
 CREATE TABLE IF NOT EXISTS usuarios_gamificacao (
     id_usuario INT PRIMARY KEY,
     dias_atual INT NOT NULL DEFAULT 0,
@@ -10,6 +11,7 @@ CREATE TABLE IF NOT EXISTS usuarios_gamificacao (
         ON DELETE CASCADE ON UPDATE CASCADE
 );
 
+-- Registra cada recompensa de XP para evitar duplicidade e calcular o limite diário.
 CREATE TABLE IF NOT EXISTS usuarios_eventos_xp (
     id_evento BIGINT AUTO_INCREMENT PRIMARY KEY,
     id_usuario INT NOT NULL,
@@ -24,6 +26,7 @@ CREATE TABLE IF NOT EXISTS usuarios_eventos_xp (
     INDEX idx_eventos_xp_data (id_usuario, data_evento)
 );
 
+-- Insere apenas badges ainda não cadastrados, permitindo reaplicar esta migração.
 INSERT INTO conquistas_badges (nome, descricao, icone)
 SELECT novos.nome, novos.descricao, novos.icone
 FROM (

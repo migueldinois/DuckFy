@@ -88,6 +88,7 @@
 			{% if conquistas %}
 			<div class="conquistas-grid">
 				{% for conquista in conquistas %}
+				{# Mantém a grade curta no início; o botão revela os próximos itens. #}
 				<article class="conquista {{ 'desbloqueada' if conquista.data_conquista else 'bloqueada' }} {{ 'conquista-extra' if loop.index > 6 }}" {% if loop.index > 6 %}hidden{% endif %}>
 					<div class="conquista-icone">
 						<i class="bi {{ 'bi-award-fill' if conquista.data_conquista else 'bi-lock-fill' }}" aria-hidden="true"></i>
@@ -125,6 +126,7 @@
 
 {% block extra_js %}
 <script>
+	// Expande ou recolhe as conquistas extras sem recarregar a página.
 	const botaoConquistas = document.querySelector("[data-conquistas-toggle]");
 
 	botaoConquistas?.addEventListener("click", () => {
