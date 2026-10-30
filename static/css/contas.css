@@ -181,28 +181,30 @@
 .pagina-patrimonio .btn-purple-action:hover {
   color: #fff;
   background: var(--brand-dark);
-  box-shadow: 0 5px 18px rgba(120, 86, 232, .2);
+
+  border-color: var(--brand-primary);
 }
 
 .pagina-patrimonio .btn-adicionar-dinheiro {
   color: #fff;
-  background: #5d3dc4;
-  border-color: #7655e8;
+  background: var(--brand-primary);
+
 }
 
 .pagina-patrimonio .btn-adicionar-dinheiro:hover {
-  background: #6d49dc;
-  border-color: #8a6af3;
+  background: var(--brand-dark);
+  border-color: var(--brand-primary);
+
 }
 
 .pagina-patrimonio .btn-transferir-dinheiro {
   color: var(--text-primary);
-  background: var(--bg-surface-1);
-  border-color: var(--border-color);
+  background: var(--brand-primary);
+
 }
 
 .pagina-patrimonio .btn-transferir-dinheiro:hover {
-  background: var(--bg-surface-2);
+  background: var(--brand-dark);
   border-color: var(--brand-primary);
 }
 
