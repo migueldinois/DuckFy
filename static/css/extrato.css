@@ -78,123 +78,6 @@
     box-shadow: 0 4px 14px rgba(124, 77, 255, 0.25);
 }
 
-.monthly-summary {
-    --summary-entry: #69dfa3;
-    --summary-exit: #ff887d;
-
-    margin-bottom: 1.25rem;
-    padding-bottom: 1.25rem;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.09);
-}
-
-.monthly-summary-heading {
-    margin-bottom: 1rem;
-}
-
-.monthly-summary-heading h2 {
-    margin: 0;
-    color: #f4f4f5;
-    font-size: 1rem;
-    font-weight: 700;
-}
-
-.monthly-summary-heading p {
-    margin: 0.25rem 0 0;
-    color: #9293a2;
-    font-size: 0.78rem;
-}
-
-.monthly-summary-content {
-    display: flex;
-    align-items: center;
-    gap: 1.25rem;
-}
-
-.summary-donut {
-    position: relative;
-    display: grid;
-    flex: 0 0 148px;
-    place-items: center;
-    width: 148px;
-    aspect-ratio: 1;
-    background: conic-gradient(
-        var(--summary-entry) 0 var(--entrada-percent),
-        var(--summary-exit) var(--entrada-percent) 100%
-    );
-    border-radius: 50%;
-}
-
-.summary-donut.is-empty {
-    background: #37373d;
-}
-
-.summary-donut::before {
-    position: absolute;
-    inset: 12px;
-    background: var(--extrato-card);
-    border-radius: inherit;
-    content: "";
-}
-
-.summary-donut-center {
-    z-index: 1;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    max-width: 100%;
-    padding: 0.25rem;
-    text-align: center;
-}
-
-.summary-donut-center span {
-    color: #9293a2;
-    font-size: 0.68rem;
-}
-
-.summary-donut-center strong {
-    max-width: 100%;
-    color: #fff;
-    font-size: 0.82rem;
-    white-space: nowrap;
-}
-
-.summary-legend {
-    display: grid;
-    flex: 1;
-    gap: 0.8rem;
-    min-width: 0;
-}
-
-.summary-legend-row {
-    display: grid;
-    grid-template-columns: 10px minmax(0, 1fr) auto;
-    align-items: center;
-    gap: 0.6rem;
-    color: #c9c9d0;
-    font-size: 0.84rem;
-}
-
-.summary-legend-row strong {
-    color: #fff;
-    font-size: 0.84rem;
-    text-align: right;
-    white-space: nowrap;
-}
-
-.summary-swatch {
-    width: 10px;
-    height: 10px;
-    border-radius: 3px;
-}
-
-.summary-swatch.entradas {
-    background: var(--summary-entry);
-}
-
-.summary-swatch.saidas {
-    background: var(--summary-exit);
-}
-
 .timeline-container {
     display: flex;
     flex: 1 1 auto;
@@ -481,13 +364,10 @@
         gap: 1rem;
     }
 
-    .summary-donut {
+    .summary-chart {
         flex-basis: 124px;
         width: 124px;
-    }
-
-    .summary-donut::before {
-        inset: 10px;
+        height: 124px;
     }
 
     .summary-legend-row,

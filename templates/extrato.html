@@ -3,7 +3,7 @@
 {% block title %}Dashboard Financeiro - DuckFy{% endblock %}
 
 {% block styles %}
-<link rel="stylesheet" href="{{ url_for('static', filename='css/extrato.css') }}?v=2.2">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/extrato.css') }}?v=2.3">
 {% endblock %}
 
 {% block content %}
@@ -22,16 +22,19 @@
     <!-- TABS DE FILTRO -->
     <nav class="filter-tabs text-uppercase" aria-label="Filtrar movimentações">
         <a href="/extrato?tipo=tudo"
+            data-tipo="tudo"
             class="tab-btn text-decoration-none {% if not tipo_ativo or tipo_ativo == 'tudo' %}active{% endif %}">
             TUDO
         </a>
 
         <a href="/extrato?tipo=saida"
+            data-tipo="saida"
             class="tab-btn text-decoration-none {% if tipo_ativo == 'saida' %}active{% endif %}">
             SAÍDA
         </a>
 
         <a href="/extrato?tipo=entrada"
+            data-tipo="entrada"
             class="tab-btn text-decoration-none {% if tipo_ativo == 'entrada' %}active{% endif %}">
             ENTRADA
         </a>
@@ -57,38 +60,6 @@
             <option value="30_days">Últimos 30 dias</option>
         </select>
     </div>
-
-    <section class="monthly-summary" aria-labelledby="monthly-summary-title">
-        <div class="monthly-summary-heading">
-            <h2 id="monthly-summary-title">Entradas e saídas</h2>
-            <p>Mês anterior: {{ periodo_resumo }}</p>
-        </div>
-
-        <div class="monthly-summary-content">
-            <div class="summary-donut {% if total_movimentado == 0 %}is-empty{% endif %}"
-                style="--entrada-percent: {{ percentual_entradas }}%;"
-                role="img"
-                aria-label="Entradas: R$ {{ '%.2f'|format(resumo_mes.entradas) }}. Saídas: R$ {{ '%.2f'|format(resumo_mes.saidas) }}.">
-                <div class="summary-donut-center">
-                    <span>Total movimentado</span>
-                    <strong>R$ {{ "%.2f"|format(total_movimentado) }}</strong>
-                </div>
-            </div>
-
-            <div class="summary-legend" aria-label="Valores do mês anterior">
-                <div class="summary-legend-row">
-                    <span class="summary-swatch entradas" aria-hidden="true"></span>
-                    <span>Entradas</span>
-                    <strong>R$ {{ "%.2f"|format(resumo_mes.entradas) }}</strong>
-                </div>
-                <div class="summary-legend-row">
-                    <span class="summary-swatch saidas" aria-hidden="true"></span>
-                    <span>Saídas</span>
-                    <strong>R$ {{ "%.2f"|format(resumo_mes.saidas) }}</strong>
-                </div>
-            </div>
-        </div>
-    </section>
 
     <section class="timeline-container" aria-label="Movimentações">
 

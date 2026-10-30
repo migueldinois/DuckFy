@@ -3,6 +3,8 @@ document.addEventListener('DOMContentLoaded', function () {
     const periodSelect = document.getElementById('periodSelect');
     const items = Array.from(document.querySelectorAll('.timeline-item'));
     const emptyMessage = document.getElementById('no-filter-results');
+    const activeTab = document.querySelector('.filter-tabs .tab-btn.active');
+    const activeType = activeTab ? activeTab.dataset.tipo : 'tudo';
 
     if (!searchInput || !periodSelect || !emptyMessage) {
         return;
@@ -56,21 +58,30 @@ document.addEventListener('DOMContentLoaded', function () {
         const dateRange = getDateRange(periodSelect.value);
         let visibleCount = 0;
 
-        items.forEach(function(item) {
+        items.forEach(function (item) {
             const itemText = normalizeText(item.querySelector('.info').textContent);
             const dateText = item.querySelector('.date').textContent.trim();
             const itemDate = parseDate(dateText);
-            let shouldShow = itemText.includes(searchTerm);
+            const amountElement = item.querySelector('.amount');
+            const isIncome = amountElement.classList.contains('positive');
+            const matchesSearch = itemText.includes(searchTerm);
+            const matchesType = activeType === 'tudo'
+                || (activeType === 'entrada' && isIncome)
+                || (activeType === 'saida' && !isIncome);
+            let matchesDate = true;
 
-            if (dateRange && itemDate) {
-                const [startDate, endDate] = dateRange;
-                shouldShow = shouldShow && itemDate >= startDate && itemDate <= endDate;
-            } else if (dateRange) {
-                shouldShow = false;
+            if (dateRange) {
+                matchesDate = itemDate !== null
+                    && itemDate >= dateRange[0]
+                    && itemDate <= dateRange[1];
             }
 
+            const shouldShow = matchesSearch && matchesType && matchesDate;
             item.hidden = !shouldShow;
-            if (!item.hidden) visibleCount += 1;
+
+            if (shouldShow) {
+                visibleCount += 1;
+            }
         });
 
         emptyMessage.hidden = items.length === 0 || visibleCount > 0;
