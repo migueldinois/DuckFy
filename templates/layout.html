@@ -17,6 +17,7 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='css/variables.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/layout.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/bottom-bar.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/confirmar_logout.css') }}">
 
     <!-- estilos especificos da pagina -->
     {% block extra_css %}{% endblock %}
@@ -148,7 +149,7 @@
 
                 <!-- sair -->
                 <li>
-                    <a href="/logout" class="sidebar-logout" title="Sair">
+                    <a href="/logout" class="sidebar-logout" title="Sair" data-confirmar-logout>
                         <img src="{{ url_for('static', filename='img/icons/logout.svg') }}" alt="" class="sidebar-icon">
                         <span class="brand-text">Sair</span>
                     </a>
@@ -169,6 +170,22 @@
     <!-- barra inferior para dispositivos moveis -->
     {% include 'components/bottom_bar.html' %}
 
+    <!-- oque é um dialog? resposta: Um elemento HTML que cria uma janela modal para confirmação de ações -->
+    <dialog id="dialog-confirmar-logout" class="confirmar-logout-dialog" aria-labelledby="titulo-confirmar-logout"
+        aria-describedby="texto-confirmar-logout">
+        <div class="confirmar-logout-conteudo">
+            <span class="confirmar-logout-icone" aria-hidden="true">!</span>
+            <h2 id="titulo-confirmar-logout" class="confirmar-logout-titulo">Sair da conta?</h2>
+            <p id="texto-confirmar-logout" class="confirmar-logout-texto">Você deseja sair da sua conta?</p>
+            <div class="confirmar-logout-acoes">
+                <button type="button" id="cancelar-logout"
+                    class="confirmar-logout-botao confirmar-logout-cancelar">Cancelar</button>
+                <button type="button" id="confirmar-logout"
+                    class="confirmar-logout-botao confirmar-logout-confirmar">Sair da conta</button>
+            </div>
+        </div>
+    </dialog>
+
     <!-- bootstrap javascript -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 
@@ -182,6 +199,7 @@
 
     <!-- comportamento do layout -->
     <script src="{{ url_for('static', filename='js/layout.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/confirmar_logout.js') }}" defer></script>
 
     <!-- scripts especificos da pagina -->
     {% block extra_js %}{% endblock %}
