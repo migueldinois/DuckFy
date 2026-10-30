@@ -125,8 +125,6 @@ def tela_simulador():
             anos = int(request.form.get("anos", 5))
             if anos <= 0:
                 anos = 5
-            aporte_inicial = float(request.form.get("aporte_inicial") or 0.0)
-            aporte_mensal = float(request.form.get("aporte_mensal") or 0.0)
             anos = int(request.form.get("anos") or 5)
             aporte_inicial = float(parse_valor_monetario(request.form.get("aporte_inicial")))
             aporte_mensal = float(parse_valor_monetario(request.form.get("aporte_mensal")))
