@@ -19,7 +19,7 @@
     <!-- topo da página -->
      <!-- Redirecionamento direto via Jinja2 no href, evitando o acúmulo de etapas do histórico do navegador no botão voltar -->
     <header class="termos-topo">
-        <a class="btn-voltar" href="{{ url_for('perfil') if usuario_logado else url_for('cadastro') }}"
+        <a class="btn-voltar btn-voltar-global" href="{{ url_for('perfil') if usuario_logado else url_for('cadastro') }}"
             {% if not usuario_logado %}onclick="return voltarPaginaPublica(event)"{% endif %}
             aria-label="Voltar para a página anterior">
             <i class="fa-solid fa-arrow-left"></i>
