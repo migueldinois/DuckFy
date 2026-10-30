@@ -38,6 +38,7 @@
             <hr class="sidebar-divider">
 
 
+
             <ul class="sidebar-menu list-unstyled">
 
                 <!-- dashboard -->
@@ -49,18 +50,6 @@
                         <img src="{{ url_for('static', filename='img/icons/dashboard.svg') }}" alt=""
                             class="sidebar-icon">
                         <span class="brand-text">Dashboard</span>
-                    </a>
-                </li>
-
-                <!-- lancamentos -->
-                <li>
-                    <a href="/lancamento"
-                        class="sidebar-link {% if request.path.rstrip('/') == '/lancamento' %}active{% endif %}"
-                        title="Lançamentos" {% if request.path.rstrip('/')=='/lancamento' %}aria-current="page" {% endif
-                        %}>
-                        <img src="{{ url_for('static', filename='img/icons/lancamento.svg') }}" alt=""
-                            class="sidebar-icon">
-                        <span class="brand-text">Lançamentos</span>
                     </a>
                 </li>
 
@@ -76,18 +65,6 @@
                     </a>
                 </li>
 
-                <!-- simulador -->
-                <li>
-                    <a href="/simulador"
-                        class="sidebar-link {% if request.path.rstrip('/') == '/simulador' %}active{% endif %}"
-                        title="Simulador de Patrimônio" {% if request.path.rstrip('/')=='/simulador'
-                        %}aria-current="page" {% endif %}>
-                        <img src="{{ url_for('static', filename='img/icons/simulador.svg') }}" alt=""
-                            class="sidebar-icon">
-                        <span class="brand-text">Simulador</span>
-                    </a>
-                </li>
-
                 <!-- categorias -->
                 <li>
                     <a href="/categorias"
@@ -97,6 +74,18 @@
                         <img src="{{ url_for('static', filename='img/icons/categoria.svg') }}" alt=""
                             class="sidebar-icon">
                         <span class="brand-text">Categorias</span>
+                    </a>
+                </li>
+
+                <!-- lancamentos -->
+                <li>
+                    <a href="/lancamento"
+                        class="sidebar-link {% if request.path.rstrip('/') == '/lancamento' %}active{% endif %}"
+                        title="Lançamentos" {% if request.path.rstrip('/')=='/lancamento' %}aria-current="page" {% endif
+                        %}>
+                        <img src="{{ url_for('static', filename='img/icons/lancamento.svg') }}" alt=""
+                            class="sidebar-icon">
+                        <span class="brand-text">Lançamentos</span>
                     </a>
                 </li>
 
@@ -120,6 +109,18 @@
                         <img src="{{ url_for('static', filename='img/icons/extrato.svg') }}" alt=""
                             class="sidebar-icon">
                         <span class="brand-text">Extrato</span>
+                    </a>
+                </li>
+
+                <!-- simulador de patrimonio -->
+                <li>
+                    <a href="/simulador"
+                        class="sidebar-link {% if request.path.rstrip('/') == '/simulador' %}active{% endif %}"
+                        title="Simulador de Patrimônio" {% if request.path.rstrip('/')=='/simulador'
+                        %}aria-current="page" {% endif %}>
+                        <img src="{{ url_for('static', filename='img/icons/simulador.svg') }}" alt=""
+                            class="sidebar-icon">
+                        <span class="brand-text">Simulador de Patrimônio</span>
                     </a>
                 </li>
 
