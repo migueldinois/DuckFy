@@ -852,11 +852,24 @@ def cadastrar():
     nome = request.form.get("nome")
     email = request.form.get("email")
     senha = request.form.get("senha")
-    confirmar_senha = request.form.get("confirma_senha")
+    confirmar_senha = request.form.get("confirmar_senha")
     foto_perfil = request.form.get("foto_perfil") or "https://placehold.co/400x400"
 
     if not nome or not email or not senha:
         flash("Todos os campos são obrigatórios!", "error")
+        return redirect('/cadastro')
+
+    if senha != confirmar_senha:
+        flash("As senhas precisam ser iguais.", "error")
+        return redirect('/cadastro')
+
+    tem_caractere_especial = any(
+        not caractere.isalnum() and not caractere.isspace()
+        for caractere in senha
+    )
+    tem_letra_maiuscula = any(caractere.isupper() for caractere in senha)
+    if len(senha) < 8 or not tem_letra_maiuscula or not tem_caractere_especial:
+        flash("A senha deve ter pelo menos 8 caracteres, 1 letra maiúscula e 1 caractere especial.", "error")
         return redirect('/cadastro')
 
     usuario_criado = Usuario.criar_usuario(nome, email, senha, foto_perfil)

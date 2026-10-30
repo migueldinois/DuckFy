@@ -20,7 +20,7 @@
 
     <!-- conecta os estilos -->
     <link rel="stylesheet" href="{{ url_for('static', filename='css/variables.css') }}">
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/cadastro.css') }}?v=2.1">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/cadastro.css') }}?v=2.2">
 
 
     <!-- biblioteca de ícones -->
@@ -119,15 +119,30 @@
 
                     <div class="campo">
                         <label for="senha">Senha:</label>
-                        <input type="password" id="senha" name="senha" placeholder="Crie uma senha"
-                            autocomplete="new-password" required>
+                        <div class="campo-senha-controle">
+                            <input type="password" id="senha" name="senha" placeholder="Crie uma senha"
+                                autocomplete="new-password" minlength="8" aria-describedby="senha-requisitos" required>
+                            <button type="button" class="btn-olho-senha" data-target="senha"
+                                aria-label="Mostrar senha" title="Mostrar senha">
+                                <i class="fi fi-sr-eye" aria-hidden="true"></i>
+                            </button>
+                        </div>
+                        <p class="senha-requisitos" id="senha-requisitos">
+                            Use pelo menos 8 caracteres, 1 letra maiúscula e 1 caractere especial.
+                        </p>
                     </div>
 
 
                     <div class="campo">
                         <label for="confirmar_senha">Confirmar senha:</label>
-                        <input type="password" id="confirmar_senha" name="confirmar_senha"
-                            placeholder="Digite a senha novamente" autocomplete="new-password" required>
+                        <div class="campo-senha-controle">
+                            <input type="password" id="confirmar_senha" name="confirmar_senha"
+                                placeholder="Digite a senha novamente" autocomplete="new-password" required>
+                            <button type="button" class="btn-olho-senha" data-target="confirmar_senha"
+                                aria-label="Mostrar confirmação da senha" title="Mostrar confirmação da senha">
+                                <i class="fi fi-sr-eye" aria-hidden="true"></i>
+                            </button>
+                        </div>
                     </div>
 
 
@@ -378,9 +393,53 @@
         const senha = document.getElementById("senha");
         const confirmarSenha = document.getElementById("confirmar_senha");
 
+        function senhaAtendeRequisitos(valor) {
+            const temOitoCaracteres = Array.from(valor).length >= 8;
+            const temLetraMaiuscula = /\p{Lu}/u.test(valor);
+            const temCaractereEspecial = Array.from(valor).some((caractere) =>
+                /[^\p{L}\p{N}\s]/u.test(caractere)
+            );
+
+            return temOitoCaracteres && temLetraMaiuscula && temCaractereEspecial;
+        }
+
+        function validarSenha() {
+            if (senha.value && !senhaAtendeRequisitos(senha.value)) {
+                senha.setCustomValidity(
+                    "A senha deve ter pelo menos 8 caracteres, 1 letra maiúscula e 1 caractere especial."
+                );
+            } else {
+                senha.setCustomValidity("");
+            }
+        }
+
+        document.querySelectorAll(".btn-olho-senha").forEach((botao) => {
+            botao.addEventListener("click", function () {
+                const campoSenha = document.getElementById(botao.dataset.target);
+                const icone = botao.querySelector("i");
+                const mostrar = campoSenha.type === "password";
+
+                campoSenha.type = mostrar ? "text" : "password";
+                icone.classList.toggle("fi-sr-eye", !mostrar);
+                icone.classList.toggle("fi-sr-eye-crossed", mostrar);
+                botao.setAttribute("aria-label", mostrar ? "Ocultar senha" : "Mostrar senha");
+                botao.title = mostrar ? "Ocultar senha" : "Mostrar senha";
+            });
+        });
+
 
         if (formulario && senha && confirmarSenha) {
+            senha.addEventListener("input", validarSenha);
+
             formulario.addEventListener("submit", function (evento) {
+                validarSenha();
+
+                if (!senha.checkValidity()) {
+                    evento.preventDefault();
+                    senha.reportValidity();
+                    return;
+                }
+
                 if (senha.value !== confirmarSenha.value) {
                     evento.preventDefault();
 
