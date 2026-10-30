@@ -134,6 +134,56 @@ body.app-body.tema-claro .main-content .item-conta:hover {
   border-color: #bda2e2 !important;
 }
 
+body.app-body.tema-claro .main-content .sequencia-principal {
+  background:
+    radial-gradient(ellipse at 100% 0%, rgba(112, 66, 200, 0.12), transparent 52%),
+    var(--bg-surface-1) !important;
+}
+
+body.app-body.tema-claro .main-content .sequencia-lateral {
+  background:
+    radial-gradient(ellipse at 100% 0%, rgba(18, 134, 83, 0.08), transparent 54%),
+    var(--bg-surface-1) !important;
+}
+
+body.app-body.tema-claro .main-content .resumo-item,
+body.app-body.tema-claro .main-content .conquista {
+  background-color: var(--bg-surface-2);
+  border-color: var(--border-color);
+}
+
+body.app-body.tema-claro .main-content .sequencia-numero strong,
+body.app-body.tema-claro .main-content .sequencia-lateral h2,
+body.app-body.tema-claro .main-content .resumo-item strong,
+body.app-body.tema-claro .main-content .conquista-info strong {
+  color: var(--text-primary);
+}
+
+body.app-body.tema-claro .main-content .sequencia-status,
+body.app-body.tema-claro .main-content .sequencia-eyebrow,
+body.app-body.tema-claro .main-content .conquistas-contador {
+  color: var(--brand-primary);
+}
+
+body.app-body.tema-claro .main-content .sequencia-mensagem {
+  background: rgba(112, 66, 200, 0.07);
+  border-color: rgba(112, 66, 200, 0.16);
+}
+
+body.app-body.tema-claro .main-content .conquista.desbloqueada {
+  border-color: rgba(18, 134, 83, 0.3);
+}
+
+body.app-body.tema-claro .main-content .conquista.desbloqueada .conquista-icone {
+  background: rgba(18, 134, 83, 0.1);
+  color: var(--accent-primary);
+}
+
+body.app-body.tema-claro .main-content .conquista.bloqueada .conquista-icone {
+  background: #e7e1ef;
+  color: #837a91;
+}
+
 body.app-body.tema-claro .main-content .item-lista-config:not(.sair):hover .icone-box,
 body.app-body.tema-claro .main-content .item-lista-config:not(.sair):hover .icone-lista {
   background-color: #cbb4e9;
