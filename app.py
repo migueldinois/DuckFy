@@ -81,9 +81,7 @@ def index():
     return render_template("tela_login.html")
 
 
-<<<<<<< HEAD
 # formata valores para o padrão brasileiro
-=======
 
 
 def parse_valor_monetario(valor):
@@ -118,7 +116,6 @@ def login():
     
     return render_template("tela_login.html")
 
->>>>>>> bcb34ace6f9e9fc48911e07cc8b8e7e2255eae48
 def formatar_moeda_brl(valor):
     """Converte valores numéricos para a pontuação brasileira R$ X.XXX,XX"""
     return f"{valor:,.2f}".replace(",", "X").replace(".", ",").replace("X", ".")
@@ -964,23 +961,7 @@ def cadastrar():
         flash("Todos os campos são obrigatórios!", "error")
         return redirect('/cadastro')
 
-<<<<<<< HEAD
     # cria o usuário no banco de dados
-=======
-    if senha != confirmar_senha:
-        flash("As senhas precisam ser iguais.", "error")
-        return redirect('/cadastro')
-
-    tem_caractere_especial = any(
-        not caractere.isalnum() and not caractere.isspace()
-        for caractere in senha
-    )
-    tem_letra_maiuscula = any(caractere.isupper() for caractere in senha)
-    if len(senha) < 8 or not tem_letra_maiuscula or not tem_caractere_especial:
-        flash("A senha deve ter pelo menos 8 caracteres, 1 letra maiúscula e 1 caractere especial.", "error")
-        return redirect('/cadastro')
-
->>>>>>> bcb34ace6f9e9fc48911e07cc8b8e7e2255eae48
     usuario_criado = Usuario.criar_usuario(nome, email, senha, foto_perfil)
 
     if usuario_criado:
@@ -988,14 +969,9 @@ def cadastrar():
     else:
         flash("Erro ao cadastrar usuário. Tente novamente.", "error")
         return redirect('/cadastro')
-<<<<<<< HEAD
 
 
 # exibe a página de redefinição de senha
-=======
-    
-    
->>>>>>> bcb34ace6f9e9fc48911e07cc8b8e7e2255eae48
 @app.get("/redefinir")
 def redefinir():
     
