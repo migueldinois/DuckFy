@@ -70,17 +70,23 @@
         </span>
     </div>
     <!-- Alternador de Abas -->
-    <div class="type-switcher mb-3">
-        <button type="button" class="tab-btn active" id="btnSaidas" onclick="alternarAba('SAIDA')">Saídas</button>
-        <button type="button" class="tab-btn" id="btnEntradas" onclick="alternarAba('ENTRADA')">Entradas</button>
-    </div>
+    <!-- abas de categorias -->
+    <nav class="categorias-abas" role="tablist" aria-label="Tipo de categoria">
+
+        <button type="button" class="tab-btn active" id="btnSaidas" role="tab" aria-selected="true"
+            aria-controls="listaSaidas" onclick="alternarAba('SAIDA')">
+            <span class="aba-icone despesas-icone">
+                <i class="bi bi-arrow-up-right"></i>
+            </span>
 
             <span class="aba-texto">
                 <strong>Despesas</strong>
                 <small>Para onde vai seu dinheiro</small>
             </span>
 
-            <span class="tab-count">{{ categorias_despesa|length }}</span>
+            <span class="tab-count">
+                {{ categorias_despesa|length }}
+            </span>
         </button>
 
         <button type="button" class="tab-btn" id="btnEntradas" role="tab" aria-selected="false"
@@ -94,8 +100,11 @@
                 <small>De onde vem seu dinheiro</small>
             </span>
 
-            <span class="tab-count">{{ categorias_receita|length }}</span>
+            <span class="tab-count">
+                {{ categorias_receita|length }}
+            </span>
         </button>
+
     </nav>
 
     <!-- lista de despesas -->
@@ -276,31 +285,6 @@
         atualizarPesquisa();
     });
 
-    // exibe os emojis no estilo apple.
-    function carregarEmojisIOS() {
-        document.querySelectorAll('.emoji-ios').forEach(el => {
-            const emojiTexto = el.textContent.trim();
-            if (!emojiTexto) return;
-
-            const unicodeHex = [...emojiTexto]
-                .map(char => char.codePointAt(0).toString(16))
-                .filter(hex => hex !== 'fe0f')
-                .join('-');
-
-            const img = document.createElement('img');
-            img.src = `https://cdn.jsdelivr.net/npm/emoji-datasource-apple/img/apple/64/${unicodeHex}.png`;
-            img.alt = emojiTexto;
-            img.width = 28;
-            img.height = 28;
-
-            img.onerror = () => {
-                el.textContent = emojiTexto;
-            };
-
-            el.replaceChildren(img);
-        });
-    }
-
     // fecha as notificações automaticamente.
     document.querySelectorAll('.alert-container .notificacao').forEach(notificacao => {
         setTimeout(() => {
@@ -320,6 +304,8 @@
     });
 
 </script>
+
+<script src="{{ url_for('static', filename='js/emoji-ios.js') }}"></script>
 
 <!-- biblioteca de emojis -->
 <script>

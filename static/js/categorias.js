@@ -30,6 +30,16 @@ if (!window.duckfyCategoriasInicializado) {
             });
         });
 
+        const tipoParaCriar = new URLSearchParams(window.location.search).get('criar');
+        if (tipoParaCriar === 'entrada' || tipoParaCriar === 'saida') {
+            const botaoTipo = document.querySelector(
+                `.tipo-categoria-btn[data-tipo="${tipoParaCriar.toUpperCase()}"]`
+            );
+            botaoTipo?.click();
+            ModalManager.abrir('modalNovaCategoria');
+            document.getElementById('nome')?.focus();
+        }
+
         // ========================================
         // CONFIGURAÇÃO DO SELETOR DE EMOJIS
         // ========================================
