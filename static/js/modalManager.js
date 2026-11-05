@@ -41,6 +41,21 @@ const ModalManager = {
       if (btnExcluir) {
         e.preventDefault();
         const id = document.getElementById('edit_id_categoria')?.value;
+
+        if (!id) return;
+
+        window.DuckFyAlert.confirm({
+          title: 'Excluir categoria?',
+          text: 'Essa ação não pode ser desfeita.',
+          confirmButtonText: 'Excluir categoria'
+        }).then((confirmado) => {
+          if (!confirmado) return;
+          const formDeletar = document.getElementById('formDeletarCategoria');
+          if (formDeletar) {
+            formDeletar.action = `/categorias/deletar/${id}`;
+            formDeletar.submit();
+          }
+        });
       }
     });
   }
@@ -60,7 +75,10 @@ function abrirModalEditarCategoria(dados) {
   if (inputId) inputId.value = dados.id;
   if (inputNome) inputNome.value = dados.nome;
   if (selectTipo) selectTipo.value = dados.tipo;
-  if (inputEmoji) inputEmoji.value = dados.emoji;
+  if (inputEmoji) {
+    inputEmoji.value = dados.emoji;
+    inputEmoji.dispatchEvent(new Event('input', { bubbles: true }));
+  }
   if (inputCor) {
     inputCor.value = dados.cor;
     atualizarCorPreviewEdit(dados.cor);

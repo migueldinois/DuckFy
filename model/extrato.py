@@ -12,12 +12,31 @@ class Extrato:
             query = """
                 SELECT 
                     t.id_transacao,
-                    t.descricao,
+                    CASE
+                        WHEN t.id_reserva IS NOT NULL
+                            AND LOWER(t.tipo) IN ('crédito', 'credito', 'receita', 'entrada')
+                            THEN 'Aporte na Reserva de Emergência'
+                        WHEN t.id_reserva IS NOT NULL
+                            AND LOWER(t.tipo) IN ('débito', 'debito', 'despesa', 'saida', 'saída')
+                            THEN 'Retirada da Reserva de Emergência'
+                        ELSE COALESCE(t.descricao, 'Movimentação sem descrição')
+                    END AS descricao,
                     t.valor,
-                    t.tipo,
+                    CASE
+                        WHEN t.id_reserva IS NOT NULL
+                            AND LOWER(t.tipo) IN ('crédito', 'credito', 'receita', 'entrada')
+                            THEN 'entrada'
+                        WHEN t.id_reserva IS NOT NULL
+                            AND LOWER(t.tipo) IN ('débito', 'debito', 'despesa', 'saida', 'saída')
+                            THEN 'saida'
+                        ELSE t.tipo
+                    END AS tipo,
                     DATE_FORMAT(t.data_transacao, '%d/%m/%Y') AS data_transacao,
                     cb.nome_conta,
-                    COALESCE(cat.nome, 'Sem Categoria') AS nome_categoria,
+                    CASE
+                        WHEN t.id_reserva IS NOT NULL THEN 'Reserva de Emergência'
+                        ELSE COALESCE(cat.nome, 'Sem Categoria')
+                    END AS nome_categoria,
                     COALESCE(cat.emoji, '💸') AS emoji,
                     COALESCE(cat.cor, '#CCCCCC') AS cor
                 FROM transacoes t
@@ -28,9 +47,9 @@ class Extrato:
             params = [id_usuario]
 
             if tipo == 'entrada':
-                query += " AND LOWER(t.tipo) IN ('receita', 'entrada', 'entradas', 'retirada')"
+                query += " AND (LOWER(t.tipo) IN ('receita', 'entrada', 'entradas') OR (t.id_reserva IS NOT NULL AND LOWER(t.tipo) IN ('crédito', 'credito')))"
             elif tipo == 'saida':
-                query += " AND LOWER(t.tipo) IN ('despesa', 'saida', 'saída', 'transferência', 'transferencia')"
+                query += " AND (LOWER(t.tipo) IN ('despesa', 'saida', 'saída', 'transferência', 'transferencia') OR (t.id_reserva IS NOT NULL AND LOWER(t.tipo) IN ('débito', 'debito')))"
 
             if id_conta:
                 query += " AND t.id_conta = %s"

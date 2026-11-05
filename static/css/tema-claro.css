@@ -134,6 +134,129 @@ body.app-body.tema-claro .main-content .item-conta:hover {
   border-color: #bda2e2 !important;
 }
 
+body.app-body.tema-claro .main-content .sequencia-principal {
+  background:
+    radial-gradient(ellipse at 100% 0%, rgba(112, 66, 200, 0.12), transparent 52%),
+    var(--bg-surface-1) !important;
+}
+
+body.app-body.tema-claro .main-content .sequencia-lateral {
+  background:
+    radial-gradient(ellipse at 100% 0%, rgba(18, 134, 83, 0.08), transparent 54%),
+    var(--bg-surface-1) !important;
+}
+
+body.app-body.tema-claro .main-content #page-reserva {
+  --reserva-green: var(--accent-primary);
+  --reserva-line: var(--border-color);
+}
+
+body.app-body.tema-claro .main-content #page-reserva .reserva-overview,
+body.app-body.tema-claro .main-content #page-reserva .reserva-history-section {
+  border-color: var(--border-color);
+  background: linear-gradient(115deg, #ffffff, #f8f6fc);
+  box-shadow: 0 12px 32px var(--shadow-color);
+}
+
+body.app-body.tema-claro .main-content #page-reserva .progress-reserva {
+  background: #e9e4f0;
+}
+
+body.app-body.tema-claro .main-content #page-reserva .reserva-actions .btn-purple-action {
+  border-color: #6036ad;
+  background-color: #6d31ddbd;
+  color: #ffffff;
+}
+
+body.app-body.tema-claro .main-content #page-reserva .reserva-actions .btn-purple-action i {
+  color: #ffffff;
+}
+
+body.app-body.tema-claro .main-content #page-reserva .reserva-actions .btn-purple-action:first-child {
+  border-color: #126b40;
+  background-color: #16834baf;
+}
+
+body.app-body.tema-claro .main-content #page-reserva .reserva-actions .btn-purple-action:nth-child(2) {
+  border-color: #a63e39;
+  background-color: #c6534bbe;
+}
+
+body.app-body.tema-claro .main-content #page-reserva .reserva-actions .btn-purple-action:hover {
+  border-color: #512b9b;
+  background-color: #512b9b;
+  color: #ffffff;
+}
+
+body.app-body.tema-claro .main-content #page-reserva .reserva-actions .btn-purple-action:first-child:hover {
+  border-color: #0b6b41;
+  background-color: #0b6b41;
+}
+
+body.app-body.tema-claro .main-content #page-reserva .reserva-actions .btn-purple-action:nth-child(2):hover {
+  border-color: #a53d38;
+  background-color: #a53d38;
+}
+
+body.app-body.tema-claro .main-content #page-reserva .text-white-50 {
+  color: var(--text-muted) !important;
+}
+
+body.app-body.tema-claro .main-content .resumo-item,
+body.app-body.tema-claro .main-content .conquista {
+  background-color: var(--bg-surface-2);
+  border-color: var(--border-color);
+}
+
+body.app-body.tema-claro .main-content .sequencia-numero strong,
+body.app-body.tema-claro .main-content .sequencia-lateral h2,
+body.app-body.tema-claro .main-content .resumo-item strong,
+body.app-body.tema-claro .main-content .conquista-info strong {
+  color: var(--text-primary);
+}
+
+body.app-body.tema-claro .main-content .sequencia-status,
+body.app-body.tema-claro .main-content .sequencia-eyebrow,
+body.app-body.tema-claro .main-content .conquistas-contador {
+  color: var(--brand-primary);
+}
+
+body.app-body.tema-claro .main-content .sequencia-mensagem {
+  background: rgba(112, 66, 200, 0.07);
+  border-color: rgba(112, 66, 200, 0.16);
+}
+
+body.app-body.tema-claro .main-content .conquista.desbloqueada {
+  border-color: rgba(18, 134, 83, 0.58);
+  background:
+    linear-gradient(130deg, rgba(18, 134, 83, 0.13), rgba(18, 134, 83, 0.04)),
+    var(--bg-surface-1);
+  box-shadow: 0 8px 20px rgba(18, 134, 83, 0.1), inset 0 0 0 1px rgba(18, 134, 83, 0.08);
+}
+
+body.app-body.tema-claro .main-content .conquista.desbloqueada .conquista-icone {
+  background: rgba(18, 134, 83, 0.18);
+  color: #0b6b41;
+}
+
+body.app-body.tema-claro .main-content .conquista.desbloqueada .conquista-status {
+  color: #0b6b41;
+}
+
+body.app-body.tema-claro .main-content .conquista.desbloqueada .conquista-recompensa {
+  background: rgba(18, 134, 83, 0.16);
+  color: #0b6b41;
+}
+
+body.app-body.tema-claro .main-content .conquista.desbloqueada .conquista-recompensa small {
+  color: #315d49;
+}
+
+body.app-body.tema-claro .main-content .conquista.bloqueada .conquista-icone {
+  background: #e7e1ef;
+  color: #837a91;
+}
+
 body.app-body.tema-claro .main-content .item-lista-config:not(.sair):hover .icone-box,
 body.app-body.tema-claro .main-content .item-lista-config:not(.sair):hover .icone-lista {
   background-color: #cbb4e9;
@@ -201,12 +324,12 @@ body.app-body.tema-claro .main-content .termos-abas > a.aba:not(.aba-ativa):hove
   background-color: #e8e0f7 !important;
 }
 
-body.app-body.tema-claro .main-content .termos-topo > a.btn-voltar,
-body.app-body.tema-claro .main-content .termos-topo > a.btn-voltar i {
+body.app-body.tema-claro .main-content .termos-topo > a.btn-voltar:not(.btn-voltar-global),
+body.app-body.tema-claro .main-content .termos-topo > a.btn-voltar:not(.btn-voltar-global) i {
   color: #292238 !important;
 }
 
-body.app-body.tema-claro .main-content .termos-topo > a.btn-voltar {
+body.app-body.tema-claro .main-content .termos-topo > a.btn-voltar:not(.btn-voltar-global) {
   background-color: #e8e0f7 !important;
   border-color: #d7c8f2 !important;
 }
@@ -250,6 +373,15 @@ body.app-body.tema-claro .main-content .tab-btn.active,
 body.app-body.tema-claro .main-content .type-switcher .tab-btn.active {
   color: #ffffff;
   background-color: var(--brand-primary);
+}
+
+body.app-body.tema-claro .main-content .categorias-container .tab-btn.active {
+  border-color: rgba(112, 66, 200, 0.22);
+  background:
+    linear-gradient(115deg, rgba(112, 66, 200, 0.12), transparent 85%),
+    var(--bg-surface-1);
+  color: var(--text-primary);
+  box-shadow: 0 4px 14px rgba(57, 40, 90, 0.08);
 }
 
 body.app-body.tema-claro .main-content .category-item:hover {
@@ -372,17 +504,17 @@ body.app-body.tema-claro .main-content .btn-outline-light:hover {
   border-color: var(--brand-primary);
 }
 
-body.app-body.tema-claro .main-content .btn-voltar-perfil,
+body.app-body.tema-claro .main-content .btn-voltar-perfil:not(.btn-voltar-global),
 body.app-body.tema-claro .main-content .btn-icon-add,
-body.app-body.tema-claro .main-content .extrato-header a,
+body.app-body.tema-claro .main-content .extrato-header a:not(.btn-voltar-global),
 body.app-body.tema-claro .main-content .arrow-link {
   background-color: var(--bg-surface-2);
   border-color: var(--border-color);
   color: var(--brand-primary);
 }
 
-body.app-body.tema-claro .main-content .btn-voltar-perfil,
-body.app-body.tema-claro .main-content .pagina-patrimonio .btn-voltar {
+body.app-body.tema-claro .main-content .btn-voltar-perfil:not(.btn-voltar-global),
+body.app-body.tema-claro .main-content .pagina-patrimonio .btn-voltar:not(.btn-voltar-global) {
   color: var(--text-primary);
 }
 
@@ -467,12 +599,12 @@ html.tema-claro body.pagina-publica nav.termos-abas > a.aba:not(.aba-ativa):hove
   background-color: #e8e0f7 !important;
 }
 
-html.tema-claro body.pagina-publica .termos-topo > a.btn-voltar,
-html.tema-claro body.pagina-publica .termos-topo > a.btn-voltar i {
+html.tema-claro body.pagina-publica .termos-topo > a.btn-voltar:not(.btn-voltar-global),
+html.tema-claro body.pagina-publica .termos-topo > a.btn-voltar:not(.btn-voltar-global) i {
   color: #292238 !important;
 }
 
-html.tema-claro body.pagina-publica .termos-topo > a.btn-voltar {
+html.tema-claro body.pagina-publica .termos-topo > a.btn-voltar:not(.btn-voltar-global) {
   background-color: #e8e0f7 !important;
   border-color: #d7c8f2 !important;
 }

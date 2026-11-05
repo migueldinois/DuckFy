@@ -180,6 +180,34 @@ html.tema-claro .sidebar-link:not(.active):hover {
   background-color: var(--brand-primary);
 }
 
+.theme-switch {
+  border: 0;
+  background: transparent;
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+
+.theme-switch:hover {
+  color: var(--text-primary, #ffffff);
+  background-color: var(--bg-surface-2);
+}
+
+.theme-switch:focus-visible {
+  outline: 2px solid var(--accent-secondary);
+  outline-offset: 2px;
+}
+
+.theme-switch-icon {
+  display: grid;
+  place-items: center;
+  width: 48px;
+  height: 48px;
+  flex-shrink: 0;
+  color: var(--brand-primary);
+  font-size: 1.2rem;
+}
+
 .sidebar-logout {
   color: #ff0000;
 }

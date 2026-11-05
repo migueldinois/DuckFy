@@ -8,20 +8,30 @@
 <div id="page-lancamento" class="py-3">
   <div class="style-container">
 
-    <!-- Header superior -->
-    <header class="d-flex align-items-center mb-3">
-      <button type="button" class="btn-voltar border-0 bg-transparent text-white p-0 me-3 fs-4" aria-label="Voltar" onclick="history.back()">
+    <header class="lancamento-header">
+      <button type="button" class="btn-voltar btn-voltar-global border-0 bg-transparent text-white p-0" aria-label="Voltar" onclick="history.back()">
         <i class="bi bi-arrow-left"></i>
       </button>
-      <h1 class="h4 mb-0 fw-semibold text-white">Lançamento</h1>
+      <div>
+        <span class="lancamento-eyebrow"><i class="bi bi-arrow-left-right" aria-hidden="true"></i> MOVIMENTAÇÃO FINANCEIRA</span>
+        <h1>Novo lançamento</h1>
+        <p>Registre suas entradas e saídas para manter suas finanças em dia.</p>
+      </div>
     </header>
 
-    <!-- CARD PRINCIPAL DO FORMULÁRIO -->
-    <div class="lancamento-block p-4 rounded-4 shadow-lg">
-      <form action="/salvar_lancamento" method="POST">
+    <section class="lancamento-block p-4 rounded-4 shadow-lg" aria-labelledby="lancamento-form-title">
+      <div class="lancamento-card-heading">
+        <div class="lancamento-card-icon" aria-hidden="true"><i class="bi bi-wallet2"></i></div>
+        <div>
+          <h2 id="lancamento-form-title">Detalhes da movimentação</h2>
+          <p>Preencha as informações abaixo para adicionar ao seu extrato.</p>
+        </div>
+      </div>
 
-        <!-- Seletor Tipo: Entrada / Saída -->
-        <div class="d-flex justify-content-center mb-4">
+      <form action="{{ url_for('salvar_lancamento') }}" method="POST">
+
+        <fieldset class="lancamento-type-section">
+          <legend class="form-label text-white-50 fs-7 fw-medium mb-2">Tipo de movimentação</legend>
           <div class="tipo-switch-container p-1 rounded-pill d-inline-flex">
             <input type="radio" class="btn-check" name="tipo_transacao" id="tipoEntrada" value="entrada" checked>
             <label class="btn btn-tipo-switch rounded-pill px-4 py-2" for="tipoEntrada">
@@ -33,16 +43,27 @@
               <i class="bi bi-arrow-up-right-circle me-1"></i> Saída
             </label>
           </div>
-        </div>
+        </fieldset>
 
         <div class="row g-3">
-          <!-- Campo Local -->
+          <div class="col-12">
+            <label for="id_conta" class="form-label text-white-50 fs-7 fw-medium mb-1">Conta</label>
+            <select class="form-select form-control-custom rounded-3" id="id_conta" name="id_conta" required {% if not contas %}disabled{% endif %}>
+              <option value="" selected disabled>Selecione uma conta</option>
+              {% for conta in contas %}
+              <option value="{{ conta.id_conta }}">{{ conta.nome_conta }}</option>
+              {% endfor %}
+            </select>
+            {% if not contas %}
+            <small class="text-white-50">Cadastre uma conta antes de lançar uma transação.</small>
+            {% endif %}
+          </div>
+
           <div class="col-12 col-md-6">
             <label for="local" class="form-label text-white-50 fs-7 fw-medium mb-1">Local</label>
             <input type="text" class="form-control form-control-custom rounded-3" id="local" name="local" placeholder="Ex: Supermercado, Salário, etc." required>
           </div>
 
-          <!-- Campo Valor -->
           <div class="col-12 col-md-6">
             <label for="valor-display" class="form-label text-white-50 fs-7 fw-medium mb-1">Valor</label>
             <div class="input-group">
@@ -52,73 +73,97 @@
             </div>
           </div>
 
-          <!-- Seleção de Categoria -->
-          <div class="col-12 mb-2">
-            <label class="form-label text-white-50 fs-7 fw-medium d-block mb-2">Categoria</label>
-            <div class="d-flex flex-wrap gap-2">
-              <input type="radio" class="btn-check" name="categoria" id="catHome" value="moradia" checked>
-              <label class="btn btn-categoria-icon rounded-circle d-flex align-items-center justify-content-center" for="catHome" title="Moradia">
-                <i class="bi bi-house-door fs-5"></i>
-              </label>
-
-              <input type="radio" class="btn-check" name="categoria" id="catTransport" value="transporte">
-              <label class="btn btn-categoria-icon rounded-circle d-flex align-items-center justify-content-center" for="catTransport" title="Transporte">
-                <i class="bi bi-car-front fs-5"></i>
-              </label>
-
-              <input type="radio" class="btn-check" name="categoria" id="catFood" value="alimentacao">
-              <label class="btn btn-categoria-icon rounded-circle d-flex align-items-center justify-content-center" for="catFood" title="Alimentação">
-                <i class="bi bi-cup-hot fs-5"></i>
-              </label>
-
-              <input type="radio" class="btn-check" name="categoria" id="catWork" value="trabalho">
-              <label class="btn btn-categoria-icon rounded-circle d-flex align-items-center justify-content-center" for="catWork" title="Trabalho / Salário">
-                <i class="bi bi-briefcase fs-5"></i>
-              </label>
-            </div>
-          </div>
-
-          <!-- Campo Sub-Categoria -->
           <div class="col-12">
-            <label id="subcategoria-label" class="form-label text-white-50 fs-7 fw-medium mb-1">Sub-Categoria</label>
-            <div class="custom-select" id="subcategoria-select">
-              <select id="subcategoria" name="subcategoria" hidden aria-hidden="true" tabindex="-1">
-              <option value="" selected disabled>Selecione uma sub-categoria...</option>
-              <option value="mercado">Mercado</option>
-              <option value="restaurante">Restaurante / Lanchonete</option>
-              <option value="combustivel">Combustível</option>
-              <option value="aluguel">Aluguel / Contas</option>
-              </select>
-              <button type="button" class="custom-select-trigger" id="subcategoria-trigger" role="combobox"
-                aria-haspopup="listbox" aria-expanded="false" aria-controls="subcategoria-options"
-                aria-autocomplete="none" aria-labelledby="subcategoria-label subcategoria-value">
-                <span id="subcategoria-value">Selecione uma sub-categoria...</span>
-                <span class="custom-select-chevron" aria-hidden="true"></span>
+            <div class="lancamento-category-section">
+            <label class="form-label text-white-50 fs-7 fw-medium d-block mb-2">Categoria <span>(opcional)</span></label>
+            <input type="hidden" id="categoria-selecionada" name="categoria">
+            <div class="d-flex flex-wrap align-items-center gap-2" id="categorias-rapidas">
+              {% for categoria in categorias_despesa[:3] %}
+              <button type="button" class="btn-categoria-icon rounded-circle d-flex align-items-center justify-content-center"
+                data-category-choice data-category-type="saida" data-category-id="{{ categoria.id_categoria }}"
+                data-category-name="{{ categoria.nome }}" data-category-color="{{ categoria.cor }}"
+                title="{{ categoria.nome }}" aria-label="{{ categoria.nome }}">
+                <span class="emoji-ios">{{ categoria.emoji }}</span>
               </button>
-              <div class="custom-select-options" id="subcategoria-options" role="listbox"
-                aria-labelledby="subcategoria-label" hidden>
-                <div class="custom-select-option" role="option" aria-disabled="true" data-value="">Selecione uma sub-categoria...</div>
-                <div class="custom-select-option" role="option" aria-selected="false" data-value="mercado">Mercado</div>
-                <div class="custom-select-option" role="option" aria-selected="false" data-value="restaurante">Restaurante / Lanchonete</div>
-                <div class="custom-select-option" role="option" aria-selected="false" data-value="combustivel">Combustível</div>
-                <div class="custom-select-option" role="option" aria-selected="false" data-value="aluguel">Aluguel / Contas</div>
-              </div>
+              {% endfor %}
+              {% for categoria in categorias_receita[:3] %}
+              <button type="button" class="btn-categoria-icon rounded-circle d-flex align-items-center justify-content-center"
+                data-category-choice data-category-type="entrada" data-category-id="{{ categoria.id_categoria }}"
+                data-category-name="{{ categoria.nome }}" data-category-color="{{ categoria.cor }}"
+                title="{{ categoria.nome }}" aria-label="{{ categoria.nome }}" hidden>
+                <span class="emoji-ios">{{ categoria.emoji }}</span>
+              </button>
+              {% endfor %}
+              <button type="button" class="btn-categoria-icon rounded-circle d-flex align-items-center justify-content-center"
+                id="abrir-modal-categorias" aria-label="Ver todas as categorias" title="Ver todas as categorias">
+                <i class="bi bi-three-dots fs-5" aria-hidden="true"></i>
+              </button>
+            </div>
+            <div class="categoria-selecionada-nome" id="categoria-selecionada-nome" aria-live="polite"></div>
+            <a class="lancamento-adicionar-categoria"
+              data-category-create="saida"
+              href="{{ url_for('categorias', criar='saida') }}"
+              {% if categorias_despesa %}hidden{% endif %}>
+              <i class="bi bi-plus-circle" aria-hidden="true"></i>
+              <span>Adicionar categoria de saída</span>
+            </a>
+            <a class="lancamento-adicionar-categoria"
+              data-category-create="entrada"
+              href="{{ url_for('categorias', criar='entrada') }}"
+              {% if categorias_receita %}hidden{% endif %}>
+              <i class="bi bi-plus-circle" aria-hidden="true"></i>
+              <span>Adicionar categoria de entrada</span>
+            </a>
             </div>
           </div>
 
-          <!-- Campo Observação -->
           <div class="col-12">
             <label for="observacao" class="form-label text-white-50 fs-7 fw-medium mb-1">Observação (opcional)</label>
             <textarea class="form-control form-control-custom rounded-3" id="observacao" name="observacao" rows="3" placeholder="Adicione algum detalhe extra..."></textarea>
           </div>
 
-          <!-- Botão Submeter Form -->
           <div class="col-12 mt-4">
-            <button type="submit" class="btn-purple-action">Lançar Transação</button>
+            <button type="submit" class="btn-purple-action" {% if not contas %}disabled{% endif %}>
+              <i class="bi bi-check2-circle" aria-hidden="true"></i>
+              <span>Confirmar lançamento</span>
+            </button>
           </div>
         </div>
 
       </form>
+    </section>
+
+    <div class="duckfy-modal categoria-modal" id="modal-selecionar-categoria" aria-hidden="true">
+      <section class="categoria-modal-conteudo" role="dialog" aria-modal="true" aria-labelledby="titulo-modal-categorias">
+        <header class="d-flex justify-content-between align-items-center mb-3">
+          <h2 class="m-0" id="titulo-modal-categorias">Selecionar categoria</h2>
+          <button type="button" class="btn-close-custom" id="fechar-modal-categorias" aria-label="Fechar">&times;</button>
+        </header>
+        <div class="categoria-modal-lista">
+          {% for categoria in categorias_despesa %}
+          <button type="button" class="categoria-modal-opcao" data-category-choice data-category-type="saida"
+            data-category-id="{{ categoria.id_categoria }}" data-category-name="{{ categoria.nome }}"
+            data-category-color="{{ categoria.cor }}">
+            <span class="categoria-modal-emoji emoji-ios">{{ categoria.emoji }}</span>
+            <span>{{ categoria.nome }}</span>
+          </button>
+          {% endfor %}
+          {% for categoria in categorias_receita %}
+          <button type="button" class="categoria-modal-opcao" data-category-choice data-category-type="entrada"
+            data-category-id="{{ categoria.id_categoria }}" data-category-name="{{ categoria.nome }}"
+            data-category-color="{{ categoria.cor }}" hidden>
+            <span class="categoria-modal-emoji emoji-ios">{{ categoria.emoji }}</span>
+            <span>{{ categoria.nome }}</span>
+          </button>
+          {% endfor %}
+          {% if not categorias_despesa %}
+          <p class="categoria-modal-vazio" data-category-empty="saida">Nenhuma categoria de saída cadastrada.</p>
+          {% endif %}
+          {% if not categorias_receita %}
+          <p class="categoria-modal-vazio" data-category-empty="entrada" hidden>Nenhuma categoria de entrada cadastrada.</p>
+          {% endif %}
+        </div>
+      </section>
     </div>
 
   </div>
@@ -126,5 +171,6 @@
 {% endblock %}
 
 {% block extra_js %}
+<script src="{{ url_for('static', filename='js/emoji-ios.js') }}" defer></script>
 <script src="{{ url_for('static', filename='js/lancamentos.js') }}" defer></script>
 {% endblock %}

@@ -3,6 +3,7 @@ import math
 import random
 import os
 import secrets
+import uuid
 from dotenv import load_dotenv
 from datetime import datetime, timedelta
 from flask_mail import Mail, Message
@@ -17,10 +18,13 @@ from werkzeug.utils import secure_filename
 from database.conexao import Conexao
 from model.categorias import Categoria
 from model.usuarios import Usuario
+from model.usuarios_badges import UsuarioBadge
 from model.extrato import Extrato
+from model.transacoes import Transacao 
 from model.contas_bancarias import ContaBancaria
 from model.reserva_emergencia import Reserva
 from model.simulador import SimuladorPatrimonio
+from model.progresso import Progresso
 
 load_dotenv()
 
@@ -28,6 +32,12 @@ load_dotenv()
 # inicia a aplicação flask
 app = Flask(__name__)
 app.secret_key = "duckfy999"
+
+
+@app.template_filter("moeda_br")
+def moeda_br(valor):
+    valor_formatado = f"{float(valor or 0):,.2f}"
+    return valor_formatado.translate(str.maketrans({",": ".", ".": ","}))
 
 app.config["MAIL_SERVER"] = "smtp.gmail.com"
 app.config["MAIL_PORT"] = 587
@@ -269,9 +279,11 @@ def logar():
         session["usuario"] = usuario_logado
         session["email"] = input_email
         session["id_usuario"] = Usuario.buscar_id_por_email(input_email)
+        Progresso.registrar_login_diario(session["id_usuario"])
+        flash("Login realizado com sucesso!", "success")
         return redirect(url_for("dashboard"))
     else:
-        flash("Usuario ou senha invalidos!", "error")
+        flash("Usuário ou senha inválidos.", "error")
         return redirect('/login')
 
 
@@ -353,11 +365,11 @@ def transferir_dinheiro():
             raise ValueError
 
         if id_conta_origem == id_conta_destino:
-            flash("Escolha duas contas diferentes.", "error")
+            flash("A conta de origem e a conta de destino precisam ser diferentes.", "error")
             return redirect(url_for('contas'))
 
     except (ValueError, TypeError, InvalidOperation):
-        flash("Informe duas contas válidas e um valor maior que zero.", "error")
+        flash("Selecione duas contas válidas e informe um valor maior que zero.", "error")
         return redirect(url_for('contas'))
 
     # executa a transferência
@@ -370,12 +382,12 @@ def transferir_dinheiro():
 
     if sucesso:
         flash(
-            f"Transferência de R$ {valor_transferencia:.2f} realizada com sucesso!",
+            f"Transferência concluída! R$ {valor_transferencia:.2f} foram enviados para a conta de destino.",
             "success"
         )
     else:
         flash(
-            "Não foi possível transferir. Verifique as contas e o saldo disponível.",
+            "A transferência não foi concluída. Confira as contas selecionadas e o saldo disponível e tente novamente.",
             "error"
         )
 
@@ -597,15 +609,17 @@ def guardar_reserva():
         id_conta = None
 
     descricao = request.form.get('descricao', 'Depósito na Reserva')
-
-    # verifica os dados antes de guardar
     if not valor_guardar.is_finite() or valor_guardar <= 0 or id_conta is None:
         flash("Informe uma conta e um valor válido maior que zero!", "error")
         return redirect(url_for('reserva_emergencia'))
 
-    if not Reserva.guardar_dinheiro(id_usuario, id_conta, valor_guardar, descricao):
-        flash("A conta selecionada não existe ou não tem saldo suficiente.", "error")
-        return redirect(url_for('reserva_emergencia'))
+    if not Reserva.guardar_dinheiro(id_usuario, id_conta, valor_guardar):
+        return redirect(url_for(
+            'reserva_emergencia',
+            erro_saldo=1,
+            abrir_guardar=1,
+            conta_id=id_conta
+        ))
 
     flash(f'R$ {valor_guardar:.2f} guardados na reserva com sucesso!', 'success')
     return redirect(url_for('reserva_emergencia'))
@@ -630,8 +644,7 @@ def retirar_reserva():
         flash("Informe uma conta e um valor válido maior que zero.", "error")
         return redirect(url_for('reserva_emergencia'))
 
-    descricao = request.form.get('descricao', '').strip() or 'Retirada da reserva'
-    if not Reserva.retirar_dinheiro(session['id_usuario'], id_conta, valor_retirar, descricao):
+    if not Reserva.retirar_dinheiro(session['id_usuario'], id_conta, valor_retirar):
         flash("Não foi possível retirar: confira o saldo da reserva e a conta selecionada.", "error")
         return redirect(url_for('reserva_emergencia'))
 
@@ -664,11 +677,79 @@ def alterar_meta_reserva():
 # exibe o painel principal
 @app.get('/dashboard')
 def dashboard():
-    if "usuario" in session:
-        return render_template("dashboard.html")
-    else:
+    id_usuario = session.get("id_usuario")
+    email = session.get("email")
+    if not id_usuario or not email:
         flash("Você precisa estar logado para acessar o dashboard!", "error")
-        return redirect('/login')
+        return redirect(url_for('index'))
+
+    usuario = Usuario.recuperar_dados_usuario(email)
+    if not usuario:
+        session.clear()
+        flash("Não foi possível localizar os dados da sua conta.", "error")
+        return redirect(url_for('index'))
+
+    hoje = datetime.now().date()
+    inicio_mes = hoje.replace(day=1)
+    inicio_proximo_mes = datetime(
+        inicio_mes.year + (inicio_mes.month == 12),
+        inicio_mes.month % 12 + 1,
+        1,
+    ).date()
+    resumo = Transacao.obter_resumo_dashboard(id_usuario, inicio_mes, inicio_proximo_mes)
+    receitas_categoria = [item for item in resumo['categorias'] if item['tipo'] == 'receita']
+    despesas_categoria = [item for item in resumo['categorias'] if item['tipo'] == 'despesa']
+    paleta = ['#58e4a0', '#ff796c', '#55c5d8', '#f6c85f', '#b093ff', '#8bd3a8']
+
+    def preparar_categorias(itens, total):
+        acumulado = 0
+        fatias = []
+        for indice, item in enumerate(itens):
+            item['percentual'] = round(item['total'] / total * 100) if total else 0
+            cor = str(item.get('cor') or '')
+            if len(cor) != 7 or cor[0] != '#' or not all(char in '0123456789abcdefABCDEF' for char in cor[1:]):
+                cor = paleta[indice % len(paleta)]
+            item['cor'] = cor
+            proximo = 100 if indice == len(itens) - 1 else acumulado + (item['total'] / total * 100 if total else 0)
+            fatias.append(f"{item['cor']} {acumulado:.2f}% {proximo:.2f}%")
+            acumulado = proximo
+        return f"conic-gradient({', '.join(fatias)})" if fatias else 'conic-gradient(#45454d 0% 100%)'
+
+    total_receitas = resumo['total_receitas']
+    total_despesas = resumo['total_despesas']
+    economia_percentual = ((total_receitas - total_despesas) / total_receitas * 100) if total_receitas else 0
+    contas_com_alocacao = ContaBancaria.buscar_com_alocacao_reserva(id_usuario)
+    saldo_disponivel = sum(
+        max(0, float(conta['saldo_atual'] or 0) - float(conta['valor_alocado'] or 0))
+        for conta in contas_com_alocacao
+    )
+    reserva = Reserva.obter_reserva(id_usuario) or {}
+    saldo_reserva = float(reserva.get('valor_atual') or 0)
+    meta_reserva = float(reserva.get('meta_valor') or 0)
+    progresso_reserva = min(100, saldo_reserva / meta_reserva * 100) if meta_reserva > 0 else 0
+    mes_nome = [
+        'janeiro', 'fevereiro', 'março', 'abril', 'maio', 'junho',
+        'julho', 'agosto', 'setembro', 'outubro', 'novembro', 'dezembro',
+    ][hoje.month - 1]
+
+    return render_template(
+        "dashboard.html",
+        saldo_disponivel=saldo_disponivel,
+        usuario=usuario,
+        sequencia=usuario.get('dias_ofensiva') or 0,
+        mes_atual=f"{mes_nome.capitalize()} {hoje.year}",
+        total_receitas=total_receitas,
+        total_despesas=total_despesas,
+        economia_percentual=economia_percentual,
+        receitas_categoria=receitas_categoria,
+        despesas_categoria=despesas_categoria,
+        receitas_gradient=preparar_categorias(receitas_categoria, total_receitas),
+        despesas_gradient=preparar_categorias(despesas_categoria, total_despesas),
+        transacoes_recentes=resumo['transacoes_recentes'],
+        saldo_reserva=saldo_reserva,
+        meta_reserva=meta_reserva,
+        progresso_reserva=progresso_reserva,
+    )
 
 
 # exibe a sequência de atividades do usuário
@@ -676,8 +757,36 @@ def dashboard():
 def sequencia():
     if "usuario" in session:
         usuario = Usuario.recuperar_dados_usuario(session["email"])
+        if not usuario:
+            flash("Não foi possível localizar os dados da sua conta.", "error")
+            return redirect('/login')
+
+        # A rota reúne dados do usuário, badges e nível antes de renderizar a página.
         info_fogo = obter_estado_fogo(usuario["dias_ofensiva"])
-        return render_template("sequencia.html", usuario=usuario, info_fogo=info_fogo)
+        conquistas = UsuarioBadge.listar_conquistas_usuario(session["id_usuario"])
+        # A sincronização pode conceder XP por conquistas desbloqueadas nesta visita.
+        usuario = Usuario.recuperar_dados_usuario(session["email"])
+        conquistas_desbloqueadas = sum(
+            conquista["data_conquista"] is not None for conquista in conquistas
+        )
+        # Cada nível exige 100 XP; o resto é o progresso dentro do nível atual.
+        pontos_xp = int(usuario["pontos_xp"] or 0)
+        nivel, xp_no_nivel, xp_para_proximo_nivel, percentual_nivel = (
+            Progresso.calcular_nivel(pontos_xp)
+        )
+        titulo_nivel = "Aprendiz" if nivel == 1 else "Organizador" if nivel < 5 else "Estrategista"
+        return render_template(
+            "sequencia.html",
+            usuario=usuario,
+            info_fogo=info_fogo,
+            conquistas=conquistas,
+            conquistas_desbloqueadas=conquistas_desbloqueadas,
+            nivel=nivel,
+            titulo_nivel=titulo_nivel,
+            xp_no_nivel=xp_no_nivel,
+            xp_para_proximo_nivel=xp_para_proximo_nivel,
+            percentual_nivel=percentual_nivel,
+        )
     else:
         flash("Você precisa estar logado para acessar a sequência!", "error")
         return redirect('/login')
@@ -826,11 +935,74 @@ def tela_extrato():
 # exibe a página de lançamentos
 @app.get("/lancamento")
 def lancamento():
-    if "usuario" in session:
-        return render_template("lancamentos.html")
+    if "usuario" in session and session.get("id_usuario"):
+        id_usuario = session["id_usuario"]
+        categorias_despesa = Categoria.recuperar_categorias_por_tipo(id_usuario, "Despesa")
+        categorias_receita = Categoria.recuperar_categorias_por_tipo(id_usuario, "Receita")
+        contas = ContaBancaria.buscar_todas_por_usuario(id_usuario)
+        return render_template(
+            "lancamentos.html",
+            categorias_despesa=categorias_despesa,
+            categorias_receita=categorias_receita,
+            contas=contas,
+        )
     else:
-        flash("Você precisa estar logado para editar o seu perfil!", "error")
-        return redirect('/login')
+        flash("Você precisa estar logado para lançar uma transação.", "error")
+        return redirect(url_for("index"))
+
+
+@app.post("/salvar_lancamento")
+def salvar_lancamento():
+    if "usuario" not in session or not session.get("id_usuario"):
+        flash("Faça login para lançar uma transação.", "error")
+        return redirect(url_for("index"))
+
+    id_usuario = session["id_usuario"]
+    tipo_formulario = request.form.get("tipo_transacao", "").strip().lower()
+    tipos = {"entrada": "Receita", "saida": "Despesa"}
+
+    try:
+        tipo = tipos.get(tipo_formulario)
+        if not tipo:
+            raise ValueError("Selecione entrada ou saída.")
+
+        descricao = request.form.get("local", "").strip()
+        if not descricao:
+            raise ValueError("Informe o local ou a descrição da transação.")
+
+        id_conta = int(request.form.get("id_conta", ""))
+        id_categoria_raw = request.form.get("categoria", "").strip()
+        id_categoria = int(id_categoria_raw) if id_categoria_raw else None
+        valor = parse_valor_monetario(request.form.get("valor", ""))
+
+        detalhes = [descricao]
+        observacao = request.form.get("observacao", "").strip()
+        if observacao:
+            detalhes.append(observacao)
+
+        if Transacao.registrar(
+            id_usuario=id_usuario,
+            id_conta=id_conta,
+            id_categoria=id_categoria,
+            descricao=" - ".join(detalhes)[:100],
+            valor=valor,
+            tipo=tipo,
+        ):
+            flash(
+                "A transação foi salva com sucesso e já está disponível no extrato.",
+                "transaction_success",
+            )
+            return redirect(url_for("tela_extrato"))
+    except ValueError as erro:
+        flash(str(erro), "error")
+        return redirect(url_for("lancamento"))
+    except Exception as erro:
+        print(f"Erro ao salvar lançamento: {erro}")
+        flash("Não foi possível salvar a transação. Tente novamente.", "error")
+        return redirect(url_for("lancamento"))
+
+    flash("Não foi possível salvar a transação.", "error")
+    return redirect(url_for("lancamento"))
 
 
 # exibe as categorias de despesas e receitas
@@ -965,6 +1137,7 @@ def cadastrar():
     usuario_criado = Usuario.criar_usuario(nome, email, senha, foto_perfil)
 
     if usuario_criado:
+        flash("Cadastro realizado com sucesso! Agora você já pode entrar.", "success")
         return redirect('/login')
     else:
         flash("Erro ao cadastrar usuário. Tente novamente.", "error")

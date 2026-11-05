@@ -1,0 +1,5 @@
+<div id="duckfy-sweetalert-messages" hidden>
+  {% for category, message in get_flashed_messages(with_categories=true) %}
+    <span data-swal-message="{{ message }}" data-swal-type="{{ category }}"></span>
+  {% endfor %}
+</div>
