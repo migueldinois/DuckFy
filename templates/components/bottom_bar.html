@@ -25,7 +25,17 @@
     </a>
     <a href="/contas" class="nav-icon-btn {% if caminho_atual.startswith('/contas') %}active{% endif %}"
       title="Contas Bancárias" {% if caminho_atual.startswith('/contas') %}aria-current="page"{% endif %}>
+    <a href="/contas" class="nav-icon-btn" title="Contas Bancárias">
       <span><img src="{{ url_for('static', filename='img/icons/contas-bancarias.svg') }}" alt="Contas Bancárias"></span>
+    </a>
+    <a href="/categorias" class="nav-icon-btn" title="Categorias">
+      <span><img src="{{ url_for('static', filename='img/icons/categoria.svg') }}" alt="Categorias"></span>
+    </a>
+    <a href="/lancamento" class="nav-icon-btn" title="Lançamentos">
+      <span><img src="{{ url_for('static', filename='img/icons/lancamento.svg') }}" alt="Lançamentos"></span>
+    </a>
+    <a href="/reserva_emergencia" class="nav-icon-btn" title="Reserva de Emergência">
+      <span><img src="{{ url_for('static', filename='img/icons/reserva.svg') }}" alt="Reserva de Emergência"></span>
     </a>
 
     <div class="nav-icon-btn dropdown-trigger {% if mais_ativo %}active{% endif %}" title="Configurações"
@@ -41,6 +51,14 @@
           {% if caminho_atual.startswith('/categorias') %}aria-current="page"{% endif %}>Categorias</a>
         <a href="/sequencia" class="{% if caminho_atual.startswith('/sequencia') %}active{% endif %}"
           {% if caminho_atual.startswith('/sequencia') %}aria-current="page"{% endif %}>Sequência</a>
+        <a href="/extrato">Extrato</a>
+        <a href="/simulador">Simulador de Patrimônio</a>
+        <a href="/sequencia">Sequência</a>
+        <a href="/perfil">Perfil</a>
+        <button type="button" class="bottom-theme-switch" aria-label="Ativar tema claro" title="Ativar tema claro">
+          <span class="theme-switch-label">Tema claro</span>
+          <i class="bi bi-brightness-high-fill theme-switch-icon" aria-hidden="true"></i>
+        </button>
         <a href="/logout" class="logout-btn" data-confirmar-logout>Sair</a>
       </div>
     </div>

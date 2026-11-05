@@ -85,14 +85,14 @@
   border: 1px solid rgba(255, 255, 255, 0.08);
   border-radius: 16px;
   box-shadow: 0 -10px 30px rgba(0, 0, 0, 0.5);
-  padding: 8px;
+  padding: 6px;
   opacity: 0;
   pointer-events: none;
   transform: translateY(10px);
   transition: all 0.2s ease;
   display: none;
   flex-direction: column;
-  gap: 4px;
+  gap: 2px;
   z-index: 1001;
 }
 
@@ -108,7 +108,7 @@
   text-decoration: none;
   font-size: 0.85rem;
   font-weight: 500;
-  padding: 10px 12px;
+  padding: 7px 10px;
   border-radius: 10px;
   text-transform: none;
   letter-spacing: normal;
@@ -137,6 +137,62 @@
 
 .dropdown-menu a.logout-btn:hover {
   background-color: rgba(255, 74, 74, 0.1);
+}
+
+.dropdown-menu .bottom-theme-switch {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.65rem;
+  width: 100%;
+  padding: 7px 10px;
+  border: 0;
+  border-radius: 10px;
+  background: transparent;
+  color: #8a8a9a;
+  font: inherit;
+  font-size: 0.85rem;
+  text-align: left;
+  cursor: pointer;
+  transition: background 0.2s ease, color 0.2s ease;
+}
+
+.dropdown-menu .bottom-theme-switch:hover {
+  background: rgba(255, 255, 255, 0.05);
+  color: #ffffff;
+}
+
+.bottom-theme-switch .theme-switch-icon {
+  flex: 0 0 auto;
+  color: var(--brand-primary);
+}
+
+.dropdown-menu .bottom-theme-switch {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.65rem;
+  width: 100%;
+  padding: 7px 10px;
+  border: 0;
+  border-radius: 10px;
+  background: transparent;
+  color: #8a8a9a;
+  font: inherit;
+  font-size: 0.85rem;
+  text-align: left;
+  cursor: pointer;
+  transition: background 0.2s ease, color 0.2s ease;
+}
+
+.dropdown-menu .bottom-theme-switch:hover {
+  background: rgba(255, 255, 255, 0.05);
+  color: #ffffff;
+}
+
+.bottom-theme-switch .theme-switch-icon {
+  flex: 0 0 auto;
+  color: var(--brand-primary);
 }
 
 @media (max-width: 900px) {
