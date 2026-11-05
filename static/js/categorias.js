@@ -48,6 +48,33 @@ if (!window.duckfyCategoriasInicializado) {
             campo.setAttribute('readonly', true);
             campo.setAttribute('placeholder', 'Selecione um emoji');
             campo.style.cursor = 'pointer';
+
+            const wrapper = campo.closest('.emoji-field-wrapper');
+            const preview = document.createElement('img');
+
+            preview.className = 'emoji-input-preview';
+            preview.alt = '';
+            preview.setAttribute('aria-hidden', 'true');
+            wrapper.appendChild(preview);
+
+            const atualizarPreview = () => {
+                const emoji = campo.value.trim();
+
+                wrapper.classList.remove('has-emoji-preview');
+
+                if (!emoji) {
+                    preview.removeAttribute('src');
+                    return;
+                }
+
+                preview.onload = () => wrapper.classList.add('has-emoji-preview');
+                preview.onerror = () => wrapper.classList.remove('has-emoji-preview');
+                preview.src = urlEmojiApple(emoji);
+            };
+
+            campo.addEventListener('input', atualizarPreview);
+            campo.addEventListener('change', atualizarPreview);
+            atualizarPreview();
         });
 
         const picker = document.createElement('div');
@@ -282,11 +309,11 @@ if (!window.duckfyCategoriasInicializado) {
 
                 emojiPickerElement = document.createElement('emoji-picker');
 
-                emojiPickerElement.setAttribute('locale', 'en');
+                emojiPickerElement.setAttribute('locale', 'pt');
 
                 emojiPickerElement.setAttribute(
                     'data-source',
-                    'https://cdn.jsdelivr.net/npm/emoji-picker-element-data@1.8.0/en/emojibase/data.json'
+                    'https://cdn.jsdelivr.net/npm/emoji-picker-element-data@1.8.0/pt/cldr/data.json'
                 );
 
                 emojiPickerElement.i18n = {
@@ -809,7 +836,7 @@ if (!window.duckfyCategoriasInicializado) {
                     botaoCorPersonalizada.style.backgroundColor = cor;
 
                     if (iconeMais) {
-                        iconeMais.style.display = 'none';
+                        iconeMais.style.display = '';
                     }
                 }
             }
@@ -1011,7 +1038,7 @@ if (!window.duckfyCategoriasInicializado) {
                     ehPredefinida ? '' : cor;
 
                 if (icone) {
-                    icone.style.display = ehPredefinida ? '' : 'none';
+                    icone.style.display = '';
                 }
             }
         }

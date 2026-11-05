@@ -24,6 +24,7 @@ from model.transacoes import Transacao
 from model.contas_bancarias import ContaBancaria
 from model.reserva_emergencia import Reserva
 from model.simulador import SimuladorPatrimonio
+from model.progresso import Progresso
 
 load_dotenv()
 
@@ -272,6 +273,7 @@ def logar():
         session["usuario"] = usuario_logado
         session["email"] = input_email
         session["id_usuario"] = Usuario.buscar_id_por_email(input_email)
+        Progresso.registrar_login_diario(session["id_usuario"])
         flash("Login realizado com sucesso!", "success")
         return redirect(url_for("dashboard"))
     else:
@@ -688,13 +690,16 @@ def sequencia():
         # A rota reúne dados do usuário, badges e nível antes de renderizar a página.
         info_fogo = obter_estado_fogo(usuario["dias_ofensiva"])
         conquistas = UsuarioBadge.listar_conquistas_usuario(session["id_usuario"])
+        # A sincronização pode conceder XP por conquistas desbloqueadas nesta visita.
+        usuario = Usuario.recuperar_dados_usuario(session["email"])
         conquistas_desbloqueadas = sum(
             conquista["data_conquista"] is not None for conquista in conquistas
         )
         # Cada nível exige 100 XP; o resto é o progresso dentro do nível atual.
         pontos_xp = int(usuario["pontos_xp"] or 0)
-        nivel = pontos_xp // 100 + 1
-        xp_no_nivel = pontos_xp % 100
+        nivel, xp_no_nivel, xp_para_proximo_nivel, percentual_nivel = (
+            Progresso.calcular_nivel(pontos_xp)
+        )
         titulo_nivel = "Aprendiz" if nivel == 1 else "Organizador" if nivel < 5 else "Estrategista"
         return render_template(
             "sequencia.html",
@@ -705,6 +710,8 @@ def sequencia():
             nivel=nivel,
             titulo_nivel=titulo_nivel,
             xp_no_nivel=xp_no_nivel,
+            xp_para_proximo_nivel=xp_para_proximo_nivel,
+            percentual_nivel=percentual_nivel,
         )
     else:
         flash("Você precisa estar logado para acessar a sequência!", "error")
