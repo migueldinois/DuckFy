@@ -32,6 +32,12 @@ load_dotenv()
 app = Flask(__name__)
 app.secret_key = "duckfy999"
 
+
+@app.template_filter("moeda_br")
+def moeda_br(valor):
+    valor_formatado = f"{float(valor or 0):,.2f}"
+    return valor_formatado.translate(str.maketrans({",": ".", ".": ","}))
+
 app.config["MAIL_SERVER"] = "smtp.gmail.com"
 app.config["MAIL_PORT"] = 587
 app.config["MAIL_USE_TLS"] = True
@@ -669,11 +675,79 @@ def alterar_meta_reserva():
 # exibe o painel principal
 @app.get('/dashboard')
 def dashboard():
-    if "usuario" in session:
-        return render_template("dashboard.html")
-    else:
+    id_usuario = session.get("id_usuario")
+    email = session.get("email")
+    if not id_usuario or not email:
         flash("Você precisa estar logado para acessar o dashboard!", "error")
-        return redirect('/login')
+        return redirect(url_for('index'))
+
+    usuario = Usuario.recuperar_dados_usuario(email)
+    if not usuario:
+        session.clear()
+        flash("Não foi possível localizar os dados da sua conta.", "error")
+        return redirect(url_for('index'))
+
+    hoje = datetime.now().date()
+    inicio_mes = hoje.replace(day=1)
+    inicio_proximo_mes = datetime(
+        inicio_mes.year + (inicio_mes.month == 12),
+        inicio_mes.month % 12 + 1,
+        1,
+    ).date()
+    resumo = Transacao.obter_resumo_dashboard(id_usuario, inicio_mes, inicio_proximo_mes)
+    receitas_categoria = [item for item in resumo['categorias'] if item['tipo'] == 'receita']
+    despesas_categoria = [item for item in resumo['categorias'] if item['tipo'] == 'despesa']
+    paleta = ['#58e4a0', '#ff796c', '#55c5d8', '#f6c85f', '#b093ff', '#8bd3a8']
+
+    def preparar_categorias(itens, total):
+        acumulado = 0
+        fatias = []
+        for indice, item in enumerate(itens):
+            item['percentual'] = round(item['total'] / total * 100) if total else 0
+            cor = str(item.get('cor') or '')
+            if len(cor) != 7 or cor[0] != '#' or not all(char in '0123456789abcdefABCDEF' for char in cor[1:]):
+                cor = paleta[indice % len(paleta)]
+            item['cor'] = cor
+            proximo = 100 if indice == len(itens) - 1 else acumulado + (item['total'] / total * 100 if total else 0)
+            fatias.append(f"{item['cor']} {acumulado:.2f}% {proximo:.2f}%")
+            acumulado = proximo
+        return f"conic-gradient({', '.join(fatias)})" if fatias else 'conic-gradient(#45454d 0% 100%)'
+
+    total_receitas = resumo['total_receitas']
+    total_despesas = resumo['total_despesas']
+    economia_percentual = ((total_receitas - total_despesas) / total_receitas * 100) if total_receitas else 0
+    contas_com_alocacao = ContaBancaria.buscar_com_alocacao_reserva(id_usuario)
+    saldo_disponivel = sum(
+        max(0, float(conta['saldo_atual'] or 0) - float(conta['valor_alocado'] or 0))
+        for conta in contas_com_alocacao
+    )
+    reserva = Reserva.obter_reserva(id_usuario) or {}
+    saldo_reserva = float(reserva.get('valor_atual') or 0)
+    meta_reserva = float(reserva.get('meta_valor') or 0)
+    progresso_reserva = min(100, saldo_reserva / meta_reserva * 100) if meta_reserva > 0 else 0
+    mes_nome = [
+        'janeiro', 'fevereiro', 'março', 'abril', 'maio', 'junho',
+        'julho', 'agosto', 'setembro', 'outubro', 'novembro', 'dezembro',
+    ][hoje.month - 1]
+
+    return render_template(
+        "dashboard.html",
+        saldo_disponivel=saldo_disponivel,
+        usuario=usuario,
+        sequencia=usuario.get('dias_ofensiva') or 0,
+        mes_atual=f"{mes_nome.capitalize()} {hoje.year}",
+        total_receitas=total_receitas,
+        total_despesas=total_despesas,
+        economia_percentual=economia_percentual,
+        receitas_categoria=receitas_categoria,
+        despesas_categoria=despesas_categoria,
+        receitas_gradient=preparar_categorias(receitas_categoria, total_receitas),
+        despesas_gradient=preparar_categorias(despesas_categoria, total_despesas),
+        transacoes_recentes=resumo['transacoes_recentes'],
+        saldo_reserva=saldo_reserva,
+        meta_reserva=meta_reserva,
+        progresso_reserva=progresso_reserva,
+    )
 
 
 # exibe a sequência de atividades do usuário

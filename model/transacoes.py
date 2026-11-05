@@ -7,6 +7,78 @@ class Transacao:
 	VALOR_MAXIMO = Decimal("99999999.99")
 
 	@staticmethod
+	def obter_resumo_dashboard(id_usuario, inicio_mes, inicio_proximo_mes):
+		conexao, cursor = Conexao.conectar()
+		try:
+			cursor.execute(
+				"""
+				SELECT
+					COALESCE(SUM(CASE WHEN LOWER(tipo) = 'receita' THEN valor ELSE 0 END), 0) AS total_receitas,
+					COALESCE(SUM(CASE WHEN LOWER(tipo) = 'despesa' THEN valor ELSE 0 END), 0) AS total_despesas
+				FROM transacoes
+				WHERE id_usuario = %s AND data_transacao >= %s AND data_transacao < %s
+				""",
+				(id_usuario, inicio_mes, inicio_proximo_mes)
+			)
+			totais = cursor.fetchone()
+
+			cursor.execute(
+				"""
+				SELECT
+					LOWER(t.tipo) AS tipo,
+					COALESCE(c.nome, 'Sem categoria') AS categoria,
+					c.cor AS cor,
+					SUM(t.valor) AS total
+				FROM transacoes t
+				LEFT JOIN categorias c
+					ON c.id_categoria = t.id_categoria
+					AND (c.id_usuario = t.id_usuario OR c.id_usuario IS NULL)
+				WHERE t.id_usuario = %s
+					AND t.data_transacao >= %s AND t.data_transacao < %s
+					AND LOWER(t.tipo) IN ('receita', 'despesa')
+				GROUP BY LOWER(t.tipo), COALESCE(c.nome, 'Sem categoria'), c.cor
+				ORDER BY total DESC
+				""",
+				(id_usuario, inicio_mes, inicio_proximo_mes)
+			)
+			categorias = cursor.fetchall()
+
+			cursor.execute(
+				"""
+				SELECT
+					t.descricao,
+					t.valor,
+					LOWER(t.tipo) AS tipo,
+					DATE_FORMAT(t.data_transacao, '%d/%m/%Y') AS data_transacao,
+					COALESCE(c.nome, 'Sem categoria') AS categoria
+				FROM transacoes t
+				LEFT JOIN categorias c
+					ON c.id_categoria = t.id_categoria
+					AND (c.id_usuario = t.id_usuario OR c.id_usuario IS NULL)
+				WHERE t.id_usuario = %s
+				ORDER BY t.data_transacao DESC, t.id_transacao DESC
+				LIMIT 5
+				""",
+				(id_usuario,)
+			)
+			transacoes_recentes = cursor.fetchall()
+
+			for item in categorias:
+				item['total'] = float(item['total'] or 0)
+			for item in transacoes_recentes:
+				item['valor'] = float(item['valor'] or 0)
+
+			return {
+				'total_receitas': float(totais['total_receitas'] or 0),
+				'total_despesas': float(totais['total_despesas'] or 0),
+				'categorias': categorias,
+				'transacoes_recentes': transacoes_recentes,
+			}
+		finally:
+			cursor.close()
+			conexao.close()
+
+	@staticmethod
 	def registrar(id_usuario, id_conta, id_categoria, descricao, valor, tipo):
 		try:
 			valor = Decimal(str(valor)).quantize(Decimal("0.01"))
