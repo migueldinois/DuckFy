@@ -75,7 +75,10 @@ function abrirModalEditarCategoria(dados) {
   if (inputId) inputId.value = dados.id;
   if (inputNome) inputNome.value = dados.nome;
   if (selectTipo) selectTipo.value = dados.tipo;
-  if (inputEmoji) inputEmoji.value = dados.emoji;
+  if (inputEmoji) {
+    inputEmoji.value = dados.emoji;
+    inputEmoji.dispatchEvent(new Event('input', { bubbles: true }));
+  }
   if (inputCor) {
     inputCor.value = dados.cor;
     atualizarCorPreviewEdit(dados.cor);
