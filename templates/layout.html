@@ -10,7 +10,7 @@
             if (localStorage.getItem("duckfy-tema") === "claro") {
                 document.documentElement.classList.add("tema-claro");
             }
-        } catch {}
+        } catch { }
     </script>
 
     <title>{% block title %}DuckFy{% endblock %}</title>
@@ -52,8 +52,8 @@
 
                 <img src="{{ url_for('static', filename='img/logo_duckfy04.png') }}"
                     data-logo-claro="{{ url_for('static', filename='img/logo_escura.png') }}"
-                    data-logo-escuro="{{ url_for('static', filename='img/logo_duckfy04.png') }}"
-                    alt="DuckFy" class="sidebar-logo">
+                    data-logo-escuro="{{ url_for('static', filename='img/logo_duckfy04.png') }}" alt="DuckFy"
+                    class="sidebar-logo">
             </a>
 
             <hr class="sidebar-divider">
@@ -166,6 +166,15 @@
                             class="sidebar-icon">
                         <span class="brand-text">Perfil</span>
                     </a>
+                </li>
+
+                <!-- botão para alternar entre os temas -->
+                <li>
+                    <button type="button" id="btn-tema" class="sidebar-link theme-switch"
+                        aria-label="Ativar tema claro" title="Ativar tema claro">
+                        <i id="icone-tema" class="bi bi-brightness-high-fill theme-switch-icon" aria-hidden="true"></i>
+                        <span id="texto-tema" class="brand-text">Tema claro</span>
+                    </button>
                 </li>
 
                 <!-- sair -->
