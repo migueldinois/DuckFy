@@ -366,3 +366,129 @@ button[type="submit"]:focus-visible {
     cursor: wait;
     opacity: 0.7;
 }
+
+body {
+    background:
+        radial-gradient(
+            circle at 15% 20%,
+            rgba(124, 77, 255, 0.06),
+            transparent 35%
+        ),
+        #F7F5FC;
+
+    color: #19152B;
+}
+
+/* Card principal */
+.container {
+    background: #FFFFFF;
+    border: 1px solid #E6DDF2;
+
+    box-shadow: 0 12px 35px rgba(50, 30, 90, 0.08);
+}
+
+/* Títulos */
+.logo {
+    color: #19152B;
+}
+
+.etapa-atual {
+    color: #7C4DFF;
+}
+
+.descricao {
+    color: #77718A;
+}
+
+/* Campos */
+.campo label {
+    color: #302A43;
+}
+
+.campo input {
+    color: #302A43;
+    background: #FFFFFF;
+    border: 1px solid #E3DAF0;
+}
+
+.campo input::placeholder {
+    color: #A49BB5;
+}
+
+.campo input:focus {
+    border-color: #7C4DFF;
+    box-shadow: 0 0 0 3px rgba(124, 77, 255, 0.12);
+}
+
+/* Regras da senha */
+.regras p {
+    color: #77718A;
+}
+
+/* Progresso */
+.progresso-ponto {
+    background: #F0ECF7;
+    border-color: #DCD3E9;
+}
+
+.progresso-linha {
+    background: #DED6EA;
+}
+
+/* Mensagens */
+.mensagem-status {
+    color: #A52F36;
+    background: #FFF0F0;
+    border-color: #F2CCCC;
+}
+
+.mensagem-status.sucesso {
+    color: #237A50;
+    background: #EAF8F0;
+    border-color: #C5E8D2;
+}
+
+/* Botões */
+button[type="submit"] {
+    color: #FFFFFF;
+    background: #7540C8;
+    border: none;
+    box-shadow: 0 6px 15px rgba(117, 64, 200, 0.18);
+}
+
+button[type="submit"]:hover {
+    background: #6632B8;
+}
+
+/* Botões secundários */
+.botao-secundario {
+    color: #77718A;
+}
+
+.botao-secundario:hover {
+    color: #7540C8;
+}
+
+/* Voltar ao login */
+.voltar-login {
+    color: #77718A;
+}
+
+.voltar-login:hover {
+    color: #7540C8;
+}
+
+/* Aviso de sucesso */
+.aviso-sucesso {
+    color: #302A43;
+    background: #F0ECF7;
+}
+
+/* Botão continuar */
+.btn-continuar {
+    background: #7540C8;
+}
+
+.btn-continuar:hover {
+    background: #6632B8;
+}
