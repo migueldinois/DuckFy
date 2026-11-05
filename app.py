@@ -290,7 +290,7 @@ def logar():
 # encerra a sessão do usuário
 @app.route("/logout")
 def logout():
-    session.pop("usuario", None)
+    session.clear()
     flash("Você saiu da sua conta!", "success")
     return redirect("/login")
 
