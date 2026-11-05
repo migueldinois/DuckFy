@@ -25,10 +25,19 @@ async function chamarApi(url, dados) {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(dados),
     });
-    const resultado = await resposta.json().catch(() => ({}));
+    const tipoConteudo = resposta.headers.get("content-type") || "";
+    const resultado = tipoConteudo.includes("application/json")
+        ? await resposta.json().catch(() => ({}))
+        : {};
 
     if (!resposta.ok) {
-        throw new Error(resultado.message || "Não foi possível concluir esta etapa.");
+        throw new Error(
+            resultado.message || `Falha na comunicação com o servidor (HTTP ${resposta.status}). Tente novamente.`
+        );
+    }
+
+    if (!tipoConteudo.includes("application/json")) {
+        throw new Error(`O servidor retornou uma resposta inválida (HTTP ${resposta.status}).`);
     }
 
     return resultado;
