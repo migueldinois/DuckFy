@@ -69,59 +69,11 @@
             {{ categorias_despesa|length }} categorias
         </span>
     </div>
-<<<<<<< HEAD
     <!-- Alternador de Abas -->
     <div class="type-switcher mb-3">
         <button type="button" class="tab-btn active" id="btnSaidas" onclick="alternarAba('SAIDA')">Saídas</button>
         <button type="button" class="tab-btn" id="btnEntradas" onclick="alternarAba('ENTRADA')">Entradas</button>
     </div>
-=======
-
-    <!-- notificações -->
-    {% with messages = get_flashed_messages(with_categories=true) %}
-    {% if messages %}
-    <div class="alert-container" aria-live="polite">
-        {% for category, message in messages %}
-        <div class="alert notificacao notificacao-{{ category }}" role="alert">
-
-            <div class="notificacao-icone">
-                {% if category == 'success' %}
-                <i class="bi bi-check-lg"></i>
-                {% elif category == 'error' %}
-                <i class="bi bi-exclamation-lg"></i>
-                {% else %}
-                <i class="bi bi-info-lg"></i>
-                {% endif %}
-            </div>
-
-            <div class="notificacao-conteudo">
-                <strong>
-                    {% if category == 'success' %}
-                    Sucesso!
-                    {% elif category == 'error' %}
-                    Atenção!
-                    {% else %}
-                    Aviso
-                    {% endif %}
-                </strong>
-
-                <span>{{ message }}</span>
-            </div>
-
-        </div>
-        {% endfor %}
-    </div>
-    {% endif %}
-    {% endwith %}
-
-    <!-- navegação -->
-    <nav class="categorias-abas" role="tablist" aria-label="Tipo de categoria">
-        <button type="button" class="tab-btn active" id="btnSaidas" role="tab" aria-selected="true"
-            aria-controls="listaSaidas" onclick="alternarAba('SAIDA')">
-            <span class="aba-icone despesas-icone">
-                <i class="bi bi-arrow-up-right"></i>
-            </span>
->>>>>>> ad5fe6106928845d9f8d9258f124061fad1fadbe
 
             <span class="aba-texto">
                 <strong>Despesas</strong>
