@@ -309,11 +309,11 @@ if (!window.duckfyCategoriasInicializado) {
 
                 emojiPickerElement = document.createElement('emoji-picker');
 
-                emojiPickerElement.setAttribute('locale', 'en');
+                emojiPickerElement.setAttribute('locale', 'pt');
 
                 emojiPickerElement.setAttribute(
                     'data-source',
-                    'https://cdn.jsdelivr.net/npm/emoji-picker-element-data@1.8.0/en/emojibase/data.json'
+                    'https://cdn.jsdelivr.net/npm/emoji-picker-element-data@1.8.0/pt/cldr/data.json'
                 );
 
                 emojiPickerElement.i18n = {
