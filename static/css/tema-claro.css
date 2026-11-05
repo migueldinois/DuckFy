@@ -114,13 +114,84 @@ body.app-body.tema-claro .main-content .semana-circulo {
 }
 
 body.app-body.tema-claro .main-content .cabecalho-perfil {
-  background: linear-gradient(180deg, rgba(112, 66, 200, 0.2), transparent 100%);
+  background: linear-gradient(180deg, #e4d8f5 0%, #eee7f8 58%, rgba(238, 231, 248, 0) 100%);
+}
+
+body.app-body.tema-claro .main-content .item-lista-config:not(.sair) {
+  background-color: #e8def5 !important;
+  border-color: #d7c8ec !important;
+}
+
+body.app-body.tema-claro .main-content .item-lista-config:not(.sair) .icone-box,
+body.app-body.tema-claro .main-content .item-lista-config:not(.sair) .icone-lista {
+  background-color: #d8c5f0;
+  color: #6036a8;
 }
 
 body.app-body.tema-claro .main-content .item-lista-config:not(.sair):hover,
 body.app-body.tema-claro .main-content .item-conta:hover {
-  background-color: #e8e0f7 !important;
-  border-color: var(--brand-secondary) !important;
+  background-color: #ddd0ef !important;
+  border-color: #bda2e2 !important;
+}
+
+body.app-body.tema-claro .main-content .sequencia-principal {
+  background:
+    radial-gradient(ellipse at 100% 0%, rgba(112, 66, 200, 0.12), transparent 52%),
+    var(--bg-surface-1) !important;
+}
+
+body.app-body.tema-claro .main-content .sequencia-lateral {
+  background:
+    radial-gradient(ellipse at 100% 0%, rgba(18, 134, 83, 0.08), transparent 54%),
+    var(--bg-surface-1) !important;
+}
+
+body.app-body.tema-claro .main-content .resumo-item,
+body.app-body.tema-claro .main-content .conquista {
+  background-color: var(--bg-surface-2);
+  border-color: var(--border-color);
+}
+
+body.app-body.tema-claro .main-content .sequencia-numero strong,
+body.app-body.tema-claro .main-content .sequencia-lateral h2,
+body.app-body.tema-claro .main-content .resumo-item strong,
+body.app-body.tema-claro .main-content .conquista-info strong {
+  color: var(--text-primary);
+}
+
+body.app-body.tema-claro .main-content .sequencia-status,
+body.app-body.tema-claro .main-content .sequencia-eyebrow,
+body.app-body.tema-claro .main-content .conquistas-contador {
+  color: var(--brand-primary);
+}
+
+body.app-body.tema-claro .main-content .sequencia-mensagem {
+  background: rgba(112, 66, 200, 0.07);
+  border-color: rgba(112, 66, 200, 0.16);
+}
+
+body.app-body.tema-claro .main-content .conquista.desbloqueada {
+  border-color: rgba(18, 134, 83, 0.3);
+}
+
+body.app-body.tema-claro .main-content .conquista.desbloqueada .conquista-icone {
+  background: rgba(18, 134, 83, 0.1);
+  color: var(--accent-primary);
+}
+
+body.app-body.tema-claro .main-content .conquista.bloqueada .conquista-icone {
+  background: #e7e1ef;
+  color: #837a91;
+}
+
+body.app-body.tema-claro .main-content .item-lista-config:not(.sair):hover .icone-box,
+body.app-body.tema-claro .main-content .item-lista-config:not(.sair):hover .icone-lista {
+  background-color: #cbb4e9;
+  color: #512b9b;
+}
+
+body.app-body.tema-claro .main-content .item-lista-config:not(.sair) {
+  background-color: #e6dcf5 !important;
 }
 
 body.app-body.tema-claro .main-content .item-lista-config:not(.sair) {
@@ -188,12 +259,12 @@ body.app-body.tema-claro .main-content .termos-abas > a.aba:not(.aba-ativa):hove
   background-color: #e8e0f7 !important;
 }
 
-body.app-body.tema-claro .main-content .termos-topo > a.btn-voltar,
-body.app-body.tema-claro .main-content .termos-topo > a.btn-voltar i {
+body.app-body.tema-claro .main-content .termos-topo > a.btn-voltar:not(.btn-voltar-global),
+body.app-body.tema-claro .main-content .termos-topo > a.btn-voltar:not(.btn-voltar-global) i {
   color: #292238 !important;
 }
 
-body.app-body.tema-claro .main-content .termos-topo > a.btn-voltar {
+body.app-body.tema-claro .main-content .termos-topo > a.btn-voltar:not(.btn-voltar-global) {
   background-color: #e8e0f7 !important;
   border-color: #d7c8f2 !important;
 }
@@ -359,17 +430,17 @@ body.app-body.tema-claro .main-content .btn-outline-light:hover {
   border-color: var(--brand-primary);
 }
 
-body.app-body.tema-claro .main-content .btn-voltar-perfil,
+body.app-body.tema-claro .main-content .btn-voltar-perfil:not(.btn-voltar-global),
 body.app-body.tema-claro .main-content .btn-icon-add,
-body.app-body.tema-claro .main-content .extrato-header a,
+body.app-body.tema-claro .main-content .extrato-header a:not(.btn-voltar-global),
 body.app-body.tema-claro .main-content .arrow-link {
   background-color: var(--bg-surface-2);
   border-color: var(--border-color);
   color: var(--brand-primary);
 }
 
-body.app-body.tema-claro .main-content .btn-voltar-perfil,
-body.app-body.tema-claro .main-content .pagina-patrimonio .btn-voltar {
+body.app-body.tema-claro .main-content .btn-voltar-perfil:not(.btn-voltar-global),
+body.app-body.tema-claro .main-content .pagina-patrimonio .btn-voltar:not(.btn-voltar-global) {
   color: var(--text-primary);
 }
 
@@ -454,12 +525,12 @@ html.tema-claro body.pagina-publica nav.termos-abas > a.aba:not(.aba-ativa):hove
   background-color: #e8e0f7 !important;
 }
 
-html.tema-claro body.pagina-publica .termos-topo > a.btn-voltar,
-html.tema-claro body.pagina-publica .termos-topo > a.btn-voltar i {
+html.tema-claro body.pagina-publica .termos-topo > a.btn-voltar:not(.btn-voltar-global),
+html.tema-claro body.pagina-publica .termos-topo > a.btn-voltar:not(.btn-voltar-global) i {
   color: #292238 !important;
 }
 
-html.tema-claro body.pagina-publica .termos-topo > a.btn-voltar {
+html.tema-claro body.pagina-publica .termos-topo > a.btn-voltar:not(.btn-voltar-global) {
   background-color: #e8e0f7 !important;
   border-color: #d7c8f2 !important;
 }

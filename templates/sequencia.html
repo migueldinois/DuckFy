@@ -4,19 +4,146 @@
 {% block title %}Sequência e Conquistas - DuckFy{% endblock %}
 
 {% block extra_css %}
-<link rel="stylesheet" href="{{ url_for('static', filename='css/sequencia.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/sequencia.css') }}?v=3.0">
 {% endblock %}
 
 {% block content %}
+<div class="sequencia-page">
+	<header class="sequencia-header">
+		<div>
+			<span class="sequencia-eyebrow"><i class="bi bi-stars" aria-hidden="true"></i> SUA JORNADA</span>
+			<h1>Sequência e conquistas</h1>
+			<p>Pequenos passos consistentes também fazem parte de uma vida financeira mais tranquila.</p>
+		</div>
+		<div class="sequencia-tag">
+			<i class="bi bi-person-circle" aria-hidden="true"></i>
+			<span>{{ usuario.nome }}</span>
+		</div>
+	</header>
 
-<h1 class="dashboard-title">Tela de Sequência e Conquistas</h1>
-<!--  Mensagem desenvolvimento -->
-<p class="development-message">A Sequência ainda está em construção.</p>
+	<section class="sequencia-grid" aria-label="Seu progresso no DuckFy">
+		<article class="sequencia-card sequencia-principal">
+			<div class="sequencia-status">
+				<span class="status-ponto" aria-hidden="true"></span>
+				{{ "SEQUÊNCIA ATIVA" if usuario.dias_ofensiva else "PRONTO PARA COMEÇAR" }}
+			</div>
+
+			<div class="sequencia-numero">
+				<div class="sequencia-chama" style="--streak-color: {{ info_fogo.cor_principal }}; --streak-glow: {{ info_fogo.glow }}">
+					<i class="bi {{ info_fogo.icone }}" aria-hidden="true"></i>
+				</div>
+				<div>
+					<strong>{{ usuario.dias_ofensiva or 0 }}</strong>
+					<span>{{ "dia consecutivo" if usuario.dias_ofensiva == 1 else "dias consecutivos" }}</span>
+				</div>
+			</div>
+
+			<div class="sequencia-mensagem">
+				<strong>{{ info_fogo.titulo }}</strong>
+				<p>{{ info_fogo.mensagem }}</p>
+			</div>
+
+			<div class="sequencia-resumo">
+				<div class="resumo-item">
+					<span class="resumo-icone xp"><i class="bi bi-lightning-charge-fill" aria-hidden="true"></i></span>
+					<span><strong>{{ usuario.pontos_xp or 0 }} XP</strong><small>experiência acumulada</small></span>
+				</div>
+				<div class="resumo-item">
+					<span class="resumo-icone badge"><i class="bi bi-award-fill" aria-hidden="true"></i></span>
+					<span><strong>{{ conquistas_desbloqueadas }} de {{ conquistas|length }}</strong><small>conquistas liberadas</small></span>
+				</div>
+			</div>
+
+			<div class="xp-card">
+				<div class="xp-cabecalho">
+					<strong>Nível {{ nivel }} · {{ titulo_nivel }}</strong>
+					<span>{{ xp_no_nivel }} / 100 XP</span>
+				</div>
+				<progress class="xp-barra" aria-label="Progresso para o próximo nível" value="{{ xp_no_nivel }}" max="100">{{ xp_no_nivel }}%</progress>
+				<p class="xp-legenda">Ganhe XP ao criar contas e categorias e ao guardar dinheiro na reserva. Sua primeira atividade diária dá bônus, com limite de 100 XP por dia.</p>
+			</div>
+		</article>
+
+		<aside class="sequencia-card sequencia-lateral">
+			<div class="lateral-ilustracao" aria-hidden="true"><i class="bi bi-trophy-fill"></i></div>
+			<span class="lateral-etiqueta">SEU PROGRESSO</span>
+			<h2>Uma conquista de cada vez</h2>
+			<p>Continue usando o DuckFy para acompanhar sua evolução. Suas conquistas aparecem aqui conforme forem desbloqueadas.</p>
+			<div class="lateral-indicador">
+				<span><i class="bi bi-check2-circle" aria-hidden="true"></i> Progresso registrado</span>
+				<strong>{{ conquistas_desbloqueadas }}/{{ conquistas|length }}</strong>
+			</div>
+		</aside>
+
+		<section class="sequencia-card conquistas-card" aria-labelledby="titulo-conquistas">
+			<div class="conquistas-cabecalho">
+				<div>
+					<span class="sequencia-eyebrow"><i class="bi bi-award" aria-hidden="true"></i> MARCOS DA JORNADA</span>
+					<h2 class="card-titulo" id="titulo-conquistas">Suas conquistas</h2>
+					<p class="card-descricao">Cada marco celebra uma etapa da sua organização financeira.</p>
+				</div>
+				<span class="conquistas-contador">{{ conquistas_desbloqueadas }} / {{ conquistas|length }} desbloqueadas</span>
+			</div>
+
+			{% if conquistas %}
+			<div class="conquistas-grid">
+				{% for conquista in conquistas %}
+				{# Mantém a grade curta no início; o botão revela os próximos itens. #}
+				<article class="conquista {{ 'desbloqueada' if conquista.data_conquista else 'bloqueada' }} {{ 'conquista-extra' if loop.index > 6 }}" {% if loop.index > 6 %}hidden{% endif %}>
+					<div class="conquista-icone">
+						<i class="bi {{ 'bi-award-fill' if conquista.data_conquista else 'bi-lock-fill' }}" aria-hidden="true"></i>
+					</div>
+					<div class="conquista-info">
+						<strong>{{ conquista.nome }}</strong>
+						<p>{{ conquista.descricao or 'Continue usando o DuckFy para desbloquear este marco.' }}</p>
+						{% if conquista.data_conquista %}
+						<span class="conquista-status"><i class="bi bi-check-circle-fill" aria-hidden="true"></i> Conquistada em {{ conquista.data_conquista.strftime('%d/%m/%Y') }}</span>
+						{% else %}
+						<span class="conquista-status"><i class="bi bi-lock-fill" aria-hidden="true"></i> Ainda não desbloqueada</span>
+						{% endif %}
+					</div>
+				</article>
+				{% endfor %}
+			</div>
+			{% if conquistas|length > 6 %}
+			<button class="conquistas-toggle" type="button" data-conquistas-toggle aria-expanded="false">
+				<span>Ver mais conquistas</span>
+				<small>+{{ conquistas|length - 6 }}</small>
+				<i class="bi bi-chevron-down" aria-hidden="true"></i>
+			</button>
+			{% endif %}
+			{% else %}
+			<div class="conquistas-vazio">
+				<i class="bi bi-award" aria-hidden="true"></i>
+				<strong>Suas conquistas estão a caminho</strong>
+				<p>Ainda não há marcos cadastrados. Continue sua jornada e volte para conferir.</p>
+			</div>
+			{% endif %}
+		</section>
+	</section>
+</div>
 {% endblock %}
 
 {% block extra_js %}
 <script>
+	// Expande ou recolhe as conquistas extras sem recarregar a página.
+	const botaoConquistas = document.querySelector("[data-conquistas-toggle]");
 
+	botaoConquistas?.addEventListener("click", () => {
+		const expandido = botaoConquistas.getAttribute("aria-expanded") === "true";
+		const extras = document.querySelectorAll(".conquista-extra");
+
+		extras.forEach((conquista) => {
+			conquista.hidden = expandido;
+		});
+
+		botaoConquistas.setAttribute("aria-expanded", String(!expandido));
+		botaoConquistas.querySelector("span").textContent = expandido
+			? "Ver mais conquistas"
+			: "Mostrar menos";
+		botaoConquistas.querySelector("i").classList.toggle("bi-chevron-down", expandido);
+		botaoConquistas.querySelector("i").classList.toggle("bi-chevron-up", !expandido);
+	});
 </script>
 {% endblock %}
 

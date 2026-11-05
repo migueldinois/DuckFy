@@ -1,7 +1,7 @@
 <div id="modalAdicionarBanco" class="duckfy-modal">
     <div class="dash-card modal-content">
         <div class="d-flex justify-content-between align-items-center mb-3">
-            <h3 class="card-section-title m-0">Adicionar Banco</h3>
+            <h3 class="card-section-title m-0">Adicionar conta</h3>
             <button type="button" class="btn-close-custom" data-close-modal>&times;</button>
         </div>
 
@@ -47,8 +47,9 @@
 
                 <div class="input-icon-wrapper">
                     <input type="text" name="saldo_atual" id="saldo_atual" class="search-input" placeholder="0,00"
-                        inputmode="decimal" data-currency-input min="0" value="0" required>
+                        inputmode="decimal" data-currency-input min="0" max="99999999.99" value="0" required>
                 </div>
+                <small class="card-subtitle d-block mt-2">Máximo por conta: R$ 99.999.999,99</small>
             </div>
 
             <div class="resumo-saldo-conta mb-3" aria-live="polite">
@@ -61,7 +62,7 @@
                     Cancelar
                 </button>
                 <button type="submit" class="btn-confirm-action w-100">
-                    Adicionar banco
+                    Adicionar conta
                 </button>
             </div>
 

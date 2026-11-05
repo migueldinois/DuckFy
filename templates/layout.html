@@ -10,7 +10,7 @@
             if (localStorage.getItem("duckfy-tema") === "claro") {
                 document.documentElement.classList.add("tema-claro");
             }
-        } catch {}
+        } catch { }
     </script>
 
     <title>{% block title %}DuckFy{% endblock %}</title>
@@ -31,6 +31,7 @@
     {% block extra_css %}{% endblock %}
     {% block styles %}{% endblock %}
     <link rel="stylesheet" href="{{ url_for('static', filename='css/tema-claro.css') }}?v=2.6">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/botao-voltar.css') }}">
 </head>
 
 <body class="app-body">
@@ -39,6 +40,8 @@
             document.body.classList.add("tema-claro");
         }
     </script>
+
+    {% include 'components/sweetalert_messages.html' %}
 
     <div class="app-container">
 
@@ -49,11 +52,12 @@
 
                 <img src="{{ url_for('static', filename='img/logo_duckfy04.png') }}"
                     data-logo-claro="{{ url_for('static', filename='img/logo_escura.png') }}"
-                    data-logo-escuro="{{ url_for('static', filename='img/logo_duckfy04.png') }}"
-                    alt="DuckFy" class="sidebar-logo">
+                    data-logo-escuro="{{ url_for('static', filename='img/logo_duckfy04.png') }}" alt="DuckFy"
+                    class="sidebar-logo">
             </a>
 
             <hr class="sidebar-divider">
+
 
 
             <ul class="sidebar-menu list-unstyled">
@@ -70,18 +74,6 @@
                     </a>
                 </li>
 
-                <!-- lancamentos -->
-                <li>
-                    <a href="/lancamento"
-                        class="sidebar-link {% if request.path.rstrip('/') == '/lancamento' %}active{% endif %}"
-                        title="Lançamentos" {% if request.path.rstrip('/')=='/lancamento' %}aria-current="page" {% endif
-                        %}>
-                        <img src="{{ url_for('static', filename='img/icons/lancamento.svg') }}" alt=""
-                            class="sidebar-icon">
-                        <span class="brand-text">Lançamentos</span>
-                    </a>
-                </li>
-
                 <!-- contas bancarias -->
                 <li>
                     <a href="/contas"
@@ -94,18 +86,6 @@
                     </a>
                 </li>
 
-                <!-- simulador -->
-                <li>
-                    <a href="/simulador"
-                        class="sidebar-link {% if request.path.rstrip('/') == '/simulador' %}active{% endif %}"
-                        title="Simulador de Patrimônio" {% if request.path.rstrip('/')=='/simulador'
-                        %}aria-current="page" {% endif %}>
-                        <img src="{{ url_for('static', filename='img/icons/simulador.svg') }}" alt=""
-                            class="sidebar-icon">
-                        <span class="brand-text">Simulador</span>
-                    </a>
-                </li>
-
                 <!-- categorias -->
                 <li>
                     <a href="/categorias"
@@ -115,6 +95,18 @@
                         <img src="{{ url_for('static', filename='img/icons/categoria.svg') }}" alt=""
                             class="sidebar-icon">
                         <span class="brand-text">Categorias</span>
+                    </a>
+                </li>
+
+                <!-- lancamentos -->
+                <li>
+                    <a href="/lancamento"
+                        class="sidebar-link {% if request.path.rstrip('/') == '/lancamento' %}active{% endif %}"
+                        title="Lançamentos" {% if request.path.rstrip('/')=='/lancamento' %}aria-current="page" {% endif
+                        %}>
+                        <img src="{{ url_for('static', filename='img/icons/lancamento.svg') }}" alt=""
+                            class="sidebar-icon">
+                        <span class="brand-text">Lançamentos</span>
                     </a>
                 </li>
 
@@ -141,6 +133,18 @@
                     </a>
                 </li>
 
+                <!-- simulador de patrimonio -->
+                <li>
+                    <a href="/simulador"
+                        class="sidebar-link {% if request.path.rstrip('/') == '/simulador' %}active{% endif %}"
+                        title="Simulador de Patrimônio" {% if request.path.rstrip('/')=='/simulador'
+                        %}aria-current="page" {% endif %}>
+                        <img src="{{ url_for('static', filename='img/icons/simulador.svg') }}" alt=""
+                            class="sidebar-icon">
+                        <span class="brand-text">Simulador de Patrimônio</span>
+                    </a>
+                </li>
+
                 <!-- sequencia -->
                 <li class="mt-auto">
                     <a href="/sequencia"
@@ -162,6 +166,15 @@
                             class="sidebar-icon">
                         <span class="brand-text">Perfil</span>
                     </a>
+                </li>
+
+                <!-- botão para alternar entre os temas -->
+                <li>
+                    <button type="button" id="btn-tema" class="sidebar-link theme-switch"
+                        aria-label="Ativar tema claro" title="Ativar tema claro">
+                        <i id="icone-tema" class="bi bi-brightness-high-fill theme-switch-icon" aria-hidden="true"></i>
+                        <span id="texto-tema" class="brand-text">Tema claro</span>
+                    </button>
                 </li>
 
                 <!-- sair -->
@@ -205,6 +218,8 @@
 
     <!-- bootstrap javascript -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="{{ url_for('static', filename='js/sweetalert-messages.js') }}"></script>
 
     <!-- tema -->
     <script src="{{ url_for('static', filename='js/tema.js') }}" defer></script>
