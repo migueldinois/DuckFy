@@ -57,10 +57,10 @@
 			<div class="xp-card">
 				<div class="xp-cabecalho">
 					<strong>Nível {{ nivel }} · {{ titulo_nivel }}</strong>
-					<span>{{ xp_no_nivel }} / 100 XP</span>
+					<span>{{ xp_no_nivel }} / {{ xp_para_proximo_nivel }} XP</span>
 				</div>
-				<progress class="xp-barra" aria-label="Progresso para o próximo nível" value="{{ xp_no_nivel }}" max="100">{{ xp_no_nivel }}%</progress>
-				<p class="xp-legenda">Ganhe XP ao criar contas e categorias e ao guardar dinheiro na reserva. Sua primeira atividade diária dá bônus, com limite de 100 XP por dia.</p>
+				<progress class="xp-barra" aria-label="Progresso para o próximo nível" value="{{ xp_no_nivel }}" max="{{ xp_para_proximo_nivel }}">{{ percentual_nivel }}%</progress>
+				
 			</div>
 		</article>
 
@@ -96,6 +96,11 @@
 					<div class="conquista-info">
 						<strong>{{ conquista.nome }}</strong>
 						<p>{{ conquista.descricao or 'Continue usando o DuckFy para desbloquear este marco.' }}</p>
+						<span class="conquista-recompensa">
+							<i class="bi bi-lightning-charge-fill" aria-hidden="true"></i>
+							+{{ conquista.xp_recompensa }} XP
+							<small>{{ 'recebidos' if conquista.data_conquista else 'ao desbloquear' }}</small>
+						</span>
 						{% if conquista.data_conquista %}
 						<span class="conquista-status"><i class="bi bi-check-circle-fill" aria-hidden="true"></i> Conquistada em {{ conquista.data_conquista.strftime('%d/%m/%Y') }}</span>
 						{% else %}
