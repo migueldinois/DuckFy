@@ -8,27 +8,31 @@
     <a href="/dashboard" class="nav-icon-btn active" title="Dashboard">
       <span><img src="{{ url_for('static', filename='img/icons/dashboard.svg') }}" alt="Dashboard"></span>
     </a>
-    <a href="/extrato" class="nav-icon-btn" title="Extrato">
-      <span><img src="{{ url_for('static', filename='img/icons/extrato.svg') }}" alt="Extrato"></span>
-    </a>
-    <a href="/simulador" class="nav-icon-btn" title="Simulador de Patrimônio">
-      <span><img src="{{ url_for('static', filename='img/icons/simulador.svg') }}" alt="Simulador de Patrimônio"></span>
-    </a>
-    <a href="/perfil" class="nav-icon-btn" title="Perfil">
-      <span><img src="{{ url_for('static', filename='img/icons/perfill.svg') }}" alt="Perfil"></span>
-    </a>
     <a href="/contas" class="nav-icon-btn" title="Contas Bancárias">
       <span><img src="{{ url_for('static', filename='img/icons/contas-bancarias.svg') }}" alt="Contas Bancárias"></span>
+    </a>
+    <a href="/categorias" class="nav-icon-btn" title="Categorias">
+      <span><img src="{{ url_for('static', filename='img/icons/categoria.svg') }}" alt="Categorias"></span>
+    </a>
+    <a href="/lancamento" class="nav-icon-btn" title="Lançamentos">
+      <span><img src="{{ url_for('static', filename='img/icons/lancamento.svg') }}" alt="Lançamentos"></span>
+    </a>
+    <a href="/reserva_emergencia" class="nav-icon-btn" title="Reserva de Emergência">
+      <span><img src="{{ url_for('static', filename='img/icons/reserva.svg') }}" alt="Reserva de Emergência"></span>
     </a>
 
     <div class="nav-icon-btn dropdown-trigger" title="Configurações">
       <span><img src="{{ url_for('static', filename='img/icons/mais.svg') }}" alt="Configurações"></span>
       
       <div class="dropdown-menu">
-        <a href="/lancamento">Lançamentos</a>
-        <a href="/reserva_emergencia">Reserva de emergencia</a>
-        <a href="/categorias">Categorias</a>
-        <a href="/sequencia">Sequencia</a>
+        <a href="/extrato">Extrato</a>
+        <a href="/simulador">Simulador de Patrimônio</a>
+        <a href="/sequencia">Sequência</a>
+        <a href="/perfil">Perfil</a>
+        <button type="button" class="bottom-theme-switch" aria-label="Ativar tema claro" title="Ativar tema claro">
+          <span class="theme-switch-label">Tema claro</span>
+          <i class="bi bi-brightness-high-fill theme-switch-icon" aria-hidden="true"></i>
+        </button>
         <a href="/logout" class="logout-btn" data-confirmar-logout>Sair</a>
       </div>
     </div>
