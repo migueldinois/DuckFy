@@ -20,7 +20,7 @@ from model.categorias import Categoria
 from model.usuarios import Usuario
 from model.usuarios_badges import UsuarioBadge
 from model.extrato import Extrato
-from model.transacoes import Transacao
+from model.transacoes import Transacao 
 from model.contas_bancarias import ContaBancaria
 from model.reserva_emergencia import Reserva
 from model.simulador import SimuladorPatrimonio
@@ -981,7 +981,10 @@ def salvar_lancamento():
             valor=valor,
             tipo=tipo,
         ):
-            flash("Transação lançada com sucesso.", "success")
+            flash(
+                "A transação foi salva com sucesso e já está disponível no extrato.",
+                "transaction_success",
+            )
             return redirect(url_for("tela_extrato"))
     except ValueError as erro:
         flash(str(erro), "error")

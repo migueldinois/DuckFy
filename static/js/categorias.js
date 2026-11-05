@@ -30,6 +30,16 @@ if (!window.duckfyCategoriasInicializado) {
             });
         });
 
+        const tipoParaCriar = new URLSearchParams(window.location.search).get('criar');
+        if (tipoParaCriar === 'entrada' || tipoParaCriar === 'saida') {
+            const botaoTipo = document.querySelector(
+                `.tipo-categoria-btn[data-tipo="${tipoParaCriar.toUpperCase()}"]`
+            );
+            botaoTipo?.click();
+            ModalManager.abrir('modalNovaCategoria');
+            document.getElementById('nome')?.focus();
+        }
+
         // ========================================
         // CONFIGURAÇÃO DO SELETOR DE EMOJIS
         // ========================================
@@ -73,6 +83,117 @@ if (!window.duckfyCategoriasInicializado) {
         let campoAtual = null;
         let iconeAtual = null;
         let emojiPickerElement = null;
+
+        function urlEmojiApple(emoji) {
+
+            const unicodeHex = [...emoji]
+                .map(char => char.codePointAt(0).toString(16))
+                .filter(hex => hex !== 'fe0f')
+                .join('-');
+
+            return `https://cdn.jsdelivr.net/npm/emoji-datasource-apple/img/apple/64/${unicodeHex}.png`;
+        }
+
+        function aplicarEmojisAppleNoSeletor() {
+
+            const raiz = emojiPickerElement?.shadowRoot;
+
+            if (!raiz) return;
+
+            if (!raiz.querySelector('[data-emoji-apple-style]')) {
+                const estilo = document.createElement('style');
+
+                estilo.dataset.emojiAppleStyle = '';
+                estilo.textContent = `
+                    .emoji-apple-image {
+                        color: transparent !important;
+                        background-image: var(--emoji-apple-image) !important;
+                        background-position: center !important;
+                        background-repeat: no-repeat !important;
+                        background-size: var(--emoji-size) var(--emoji-size) !important;
+                    }
+
+                    .nav-emoji.emoji-apple-image {
+                        background-size: var(--category-emoji-size) var(--category-emoji-size) !important;
+                    }
+                `;
+
+                raiz.appendChild(estilo);
+            }
+
+            const atualizarEmojis = () => {
+                raiz.querySelectorAll('.emoji:not(.custom-emoji)').forEach(elemento => {
+                    const emoji = elemento.textContent.trim();
+
+                    if (!emoji) return;
+
+                    elemento.style.setProperty(
+                        '--emoji-apple-image',
+                        `url("${urlEmojiApple(emoji)}")`
+                    );
+                    elemento.classList.add('emoji-apple-image');
+                });
+            };
+
+            atualizarEmojis();
+
+            const observador = new MutationObserver(atualizarEmojis);
+            observador.observe(raiz, {
+                childList: true,
+                characterData: true,
+                subtree: true
+            });
+        }
+
+        function selecionarEmoji(emoji) {
+
+            if (!campoAtual || !emoji) return;
+
+            const campoSelecionado = campoAtual;
+
+            campoSelecionado.value = emoji;
+            campoSelecionado.dispatchEvent(new Event('input', { bubbles: true }));
+            campoSelecionado.dispatchEvent(new Event('change', { bubbles: true }));
+
+            fecharPicker();
+            campoSelecionado.focus();
+        }
+
+        function mostrarEmojisAlternativos() {
+
+            const emojis = [
+                '🍎', '🍔', '🍕', '🍽️', '☕', '🛒', '🏠', '🚗',
+                '🚌', '💊', '🎓', '🎮', '🎬', '👕', '🐶', '🐱',
+                '💰', '💵', '💳', '🏦', '📈', '💼', '🎁', '💡',
+                '✈️', '🌱', '⚽', '📱', '🔧', '❤️', '⭐', '📦'
+            ];
+
+            container.innerHTML = `
+                <div class="emoji-picker-fallback" aria-label="Emojis comuns">
+                    ${emojis.map(emoji => `
+                        <button type="button" class="emoji-fallback-option"
+                            aria-label="Selecionar ${emoji}" data-emoji="${emoji}">${emoji}</button>
+                    `).join('')}
+                </div>
+            `;
+
+            container.querySelectorAll('[data-emoji]').forEach(botao => {
+                const emoji = botao.dataset.emoji;
+                const imagem = document.createElement('img');
+
+                imagem.src = urlEmojiApple(emoji);
+                imagem.alt = '';
+                imagem.width = 28;
+                imagem.height = 28;
+                imagem.draggable = false;
+                imagem.onerror = () => imagem.replaceWith(document.createTextNode(emoji));
+                botao.replaceChildren(imagem);
+
+                botao.addEventListener('click', () => {
+                    selecionarEmoji(emoji);
+                });
+            });
+        }
 
         // ========================================
         // CORES DO DUCKFY
@@ -205,31 +326,13 @@ if (!window.duckfyCategoriasInicializado) {
 
                 emojiPickerElement.addEventListener('emoji-click', event => {
 
-                    if (!campoAtual) return;
-
                     const emojiSelecionado = event.detail?.unicode;
-
-                    if (!emojiSelecionado) return;
-
-                    const campoSelecionado = campoAtual;
-
-                    campoSelecionado.value = emojiSelecionado;
-
-                    campoSelecionado.dispatchEvent(
-                        new Event('input', { bubbles: true })
-                    );
-
-                    campoSelecionado.dispatchEvent(
-                        new Event('change', { bubbles: true })
-                    );
-
-                    fecharPicker();
-
-                    campoSelecionado.focus();
+                    selecionarEmoji(emojiSelecionado);
                 });
 
                 container.innerHTML = '';
                 container.appendChild(emojiPickerElement);
+                aplicarEmojisAppleNoSeletor();
 
                 aplicarTemaEmoji();
 
@@ -238,13 +341,7 @@ if (!window.duckfyCategoriasInicializado) {
             } catch (erro) {
 
                 console.error('Erro ao carregar o seletor de emojis:', erro);
-
-                container.innerHTML = `
-                    <p class="emoji-picker-error">
-                        Não foi possível carregar os emojis.
-                        Verifique o console para identificar o erro.
-                    </p>
-                `;
+                mostrarEmojisAlternativos();
             }
         };
 

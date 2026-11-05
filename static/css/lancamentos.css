@@ -30,16 +30,36 @@
   transform: translateX(-3px);
 }
 
-#page-lancamento header {
+#page-lancamento .lancamento-header {
+  display: flex;
+  align-items: center;
   gap: 12px;
-  margin-bottom: 1.25rem !important;
+  margin-bottom: 1.5rem;
 }
 
-#page-lancamento header h1 {
+#page-lancamento .lancamento-header h1 {
+  margin: 0;
   color: var(--text-primary) !important;
   font-size: clamp(1.25rem, 2vw, 1.5rem);
   font-weight: 700 !important;
   letter-spacing: 0;
+}
+
+#page-lancamento .lancamento-header p {
+  margin: 5px 0 0;
+  color: var(--text-muted);
+  font-size: 14px;
+}
+
+.lancamento-eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 5px;
+  color: var(--accent-secondary);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
 }
 
 #page-lancamento .lancamento-block {
@@ -50,10 +70,51 @@
   box-shadow: 0 16px 48px var(--shadow-color) !important;
 }
 
+.lancamento-card-heading {
+  display: flex;
+  align-items: center;
+  gap: 13px;
+  margin-bottom: 1.35rem;
+  padding-bottom: 1.2rem;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.lancamento-card-icon {
+  display: grid;
+  width: 44px;
+  height: 44px;
+  flex: 0 0 auto;
+  place-items: center;
+  border: 1px solid rgba(124, 77, 255, 0.35);
+  border-radius: 12px;
+  background: rgba(124, 77, 255, 0.13);
+  color: var(--brand-secondary);
+  font-size: 20px;
+}
+
+.lancamento-card-heading h2 {
+  margin: 0;
+  color: var(--text-primary);
+  font-size: 17px;
+  font-weight: 700;
+}
+
+.lancamento-card-heading p {
+  margin: 4px 0 0;
+  color: var(--text-muted);
+  font-size: 13px;
+}
+
 #page-lancamento .form-label {
   display: block;
   margin-bottom: 7px !important;
   color: var(--text-muted) !important;
+}
+
+#page-lancamento .form-label span {
+  color: var(--text-muted);
+  font-size: 12px;
+  font-weight: 400;
 }
 
 #page-lancamento .form-control-custom,
@@ -78,32 +139,23 @@
   box-shadow: 0 0 0 3px rgba(124, 77, 255, 0.2);
 }
 
-.lancamento-mensagens {
-  margin-bottom: 18px;
+.lancamento-type-section {
+  margin: 0 0 1.25rem;
+  padding: 0 0 1.25rem;
+  border: 0;
+  border-bottom: 1px solid var(--border-color);
 }
 
-.lancamento-mensagem {
-  margin: 0;
-  padding: 11px 14px;
-  border: 1px solid transparent;
-  border-radius: 8px;
-  font-size: 14px;
+.lancamento-type-section legend {
+  float: none;
+  width: auto;
 }
 
-.lancamento-mensagem + .lancamento-mensagem {
-  margin-top: 8px;
-}
-
-.lancamento-mensagem.sucesso {
-  border-color: rgba(76, 195, 129, 0.3);
-  background: rgba(76, 195, 129, 0.1);
-  color: #a7efc4;
-}
-
-.lancamento-mensagem.erro {
-  border-color: rgba(255, 112, 112, 0.3);
-  background: rgba(255, 112, 112, 0.1);
-  color: #ffb0b0;
+.lancamento-category-section {
+  padding: 14px 16px 8px;
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+  background: var(--bg-primary);
 }
 
 /* Switch Entrada / Saída */
@@ -265,8 +317,8 @@
   width: 48px;
   height: 48px;
   padding: 0;
-  background-color: var(--bg-primary);
-  border: 1px solid var(--border-color);
+  background-color: color-mix(in srgb, var(--category-color, var(--brand-primary)) 14%, var(--bg-primary));
+  border: 1px solid color-mix(in srgb, var(--category-color, var(--brand-primary)) 45%, transparent);
   color: var(--text-muted);
   font-size: 20px;
   transition: all 0.2s ease;
@@ -275,10 +327,10 @@
 
 .btn-categoria-icon:hover,
 .btn-categoria-icon.is-selected {
-  background-color: var(--brand-primary);
+  background-color: color-mix(in srgb, var(--category-color, var(--brand-primary)) 28%, var(--bg-primary));
   color: var(--text-primary);
-  border-color: var(--brand-primary);
-  box-shadow: 0 0 12px rgba(124, 77, 255, 0.4);
+  border-color: var(--category-color, var(--brand-primary));
+  box-shadow: 0 0 12px color-mix(in srgb, var(--category-color, var(--brand-primary)) 40%, transparent);
 }
 
 #categorias-rapidas [hidden],
@@ -291,6 +343,32 @@
   margin-top: 6px;
   color: var(--text-muted);
   font-size: 12px;
+}
+
+.lancamento-adicionar-categoria {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  margin: 4px 0 8px;
+  color: var(--brand-secondary);
+  font-size: 13px;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.lancamento-adicionar-categoria[hidden] {
+  display: none;
+}
+
+.lancamento-adicionar-categoria:hover {
+  color: var(--text-primary);
+  text-decoration: underline;
+}
+
+.lancamento-adicionar-categoria:focus-visible {
+  border-radius: 4px;
+  outline: 2px solid var(--brand-secondary);
+  outline-offset: 3px;
 }
 
 .categoria-modal {
@@ -361,8 +439,8 @@
 
 .categoria-modal-opcao:hover,
 .categoria-modal-opcao.is-selected {
-  border-color: var(--brand-primary);
-  background: rgba(124, 77, 255, 0.16);
+  border-color: var(--category-color, var(--brand-primary));
+  background: color-mix(in srgb, var(--category-color, var(--brand-primary)) 16%, var(--bg-primary));
 }
 
 .categoria-modal-emoji {
@@ -372,8 +450,27 @@
   flex: 0 0 auto;
   place-items: center;
   border-radius: 50%;
-  background: rgba(124, 77, 255, 0.18);
+  background: color-mix(in srgb, var(--category-color, var(--brand-primary)) 22%, var(--bg-primary));
   font-size: 17px;
+}
+
+.emoji-ios {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 1;
+}
+
+.emoji-ios img {
+  display: block;
+  width: 28px;
+  height: 28px;
+  object-fit: contain;
+}
+
+.categoria-modal-emoji img {
+  width: 22px;
+  height: 22px;
 }
 
 .categoria-modal-vazio {
@@ -411,6 +508,14 @@
   transform: translateY(-2px);
   box-shadow: 0 12px 25px rgba(124, 77, 255, 0.5),
     inset 0 1px 0 rgba(255, 255, 255, 0.3);
+}
+
+.btn-purple-action {
+  gap: 9px;
+}
+
+.btn-purple-action i {
+  font-size: 18px;
 }
 
 .fs-7 {
@@ -460,6 +565,20 @@
     width: 100%;
   }
 
+  #page-lancamento .lancamento-header {
+    align-items: flex-start;
+    margin-bottom: 1.15rem;
+  }
+
+  #page-lancamento .lancamento-header p {
+    max-width: 34ch;
+    font-size: 13px;
+  }
+
+  .lancamento-card-heading {
+    margin-bottom: 1.1rem;
+  }
+
   #page-lancamento .lancamento-block {
     padding: 1rem !important;
     border-radius: 16px !important;
@@ -478,5 +597,9 @@
   #page-lancamento .row {
     --bs-gutter-x: 0.85rem;
     --bs-gutter-y: 0.85rem;
+  }
+
+  .lancamento-category-section {
+    padding: 12px 12px 6px;
   }
 }
