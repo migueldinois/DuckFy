@@ -1,30 +1,109 @@
-<!DOCTYPE html>
-<html lang="pt-BR">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>DuckFy - Configurações</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/perfil.css') }}">
-</head>
-<body>
-    <main class="phone-screen">
-        <section class="profile-header">
-            <h1 class="page-title">Configurações</h1>
+{% extends 'layout.html' %}
 
-            <div class="profile-summary">
-                <div class="avatar" aria-hidden="true">
-                    <span class="avatar-head"></span>
-                    <span class="avatar-body"></span>
+{% block title %}DuckFy - Perfil de {{ usuario.nome }}{% endblock %}
+
+{% block styles %}
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/perfil.css') }}">
+{% endblock %}
+
+{% block content %}
+<div class="perfil-pagina-container w-100">
+
+    <!-- TOPO / CABEÇALHO DA PÁGINA -->
+    <header class="cabecalho-perfil mb-4">
+        <div class="d-flex align-items-center justify-content-between mb-4">
+            <a class="btn-voltar-perfil btn-voltar-global" href="{{ url_for('dashboard') }}" aria-label="Voltar">
+                <i class="fa-solid fa-arrow-left"></i>
+            </a>
+            <h1 class="titulo-pagina text-white fs-3 fw-bold m-0">Configuração do Perfil</h1>
+            <div style="width: 42px;"></div>
+        </div>
+
+        <!-- CARTÃO DO USUÁRIO EXPANDIDO -->
+        <div class="cartao-usuario-destaque p-4 rounded-4 d-flex flex-column flex-sm-row align-items-center justify-content-between gap-3">
+            <div class="d-flex flex-column flex-sm-row align-items-center gap-3 text-center text-sm-start">
+                <div class="avatar-container flex-shrink-0">
+                    {% if usuario.foto_perfil %}
+                        <img src="{{ usuario.foto_perfil }}" alt="Foto de {{ usuario.nome }}" class="avatar rounded-circle object-fit-cover">
+                    {% else %}
+                        <div class="avatar rounded-circle d-flex align-items-center justify-content-center bg-purple-glow">
+                            <i class="fa-solid fa-user text-white fs-2"></i>
+                        </div>
+                    {% endif %}
                 </div>
-                <p>Olá, Fulano!</p>
-                <a class="edit-link" href="{{ url_for('editar_perfil') }}">Editar perfil</a>
-            </div>
-        </section>
 
-        <nav class="settings-list" aria-label="Configurações">
-            <a href="#">Acessibilidade</a>
-            <a href="#">Termos</a>
-        </nav>
-    </main>
-</body>
-</html>
+                <div class="detalhes-usuario">
+                    <h2 class="nome-usuario fs-4 fw-bold text-white mb-1">Olá, {{ usuario.nome }}!</h2>
+                    <p class="email-usuario small mb-2">{{ usuario.email }}</p>
+                    
+                    <div class="d-flex align-items-center justify-content-center justify-content-sm-start gap-2">
+                        <span class="badge-gamification badge-fire">
+                            <i class="fa-solid fa-fire"></i> {{ usuario.dias_ofensiva | default(0) }} dias
+                        </span>
+                        <span class="badge-gamification badge-xp">
+                            <i class="fa-solid fa-star"></i> {{ usuario.pontos_xp | default(0) }} XP
+                        </span>
+                    </div>
+                </div>
+            </div>
+
+            <a class="btn-editar-perfil" href="{{ url_for('editar_perfil') }}">
+                <i class="fa-solid fa-pen-to-square"></i>
+                <span>Editar</span>
+            </a>
+        </div>
+    </header>
+
+    <!-- LISTA DE OPÇÕES EM LARGURA TOTAL -->
+    <section class="conteudo-perfil">
+        <h3 class="titulo-secao text-uppercase fw-semibold mb-3">Outras Opções</h3>
+
+        <div class="secao-lista-config d-flex flex-column gap-3">
+
+            <a href="{{ url_for('termos') }}" class="item-lista-config">
+                <div class="d-flex align-items-center gap-3">
+                    <div class="icone-box">
+                        <i class="fa-solid fa-file-contract"></i>
+                    </div>
+                    <span class="texto-item">Termos e Condições</span>
+                </div>
+                <i class="fa-solid fa-chevron-right seta"></i>
+            </a>
+
+            <a href="{{ url_for('privacidade') }}" class="item-lista-config">
+                <div class="d-flex align-items-center gap-3">
+                    <div class="icone-box">
+                        <i class="fa-solid fa-shield-halved"></i>
+                    </div>
+                    <span class="texto-item">Política de Privacidade</span>
+                </div>
+                <i class="fa-solid fa-chevron-right seta"></i>
+            </a>
+
+            <a href="{{ url_for('redefinir') }}" class="item-lista-config">
+                <div class="d-flex align-items-center gap-3">
+                    <div class="icone-box">
+                        <i class="fa-solid fa-key"></i>
+                    </div>
+                    <span class="texto-item">Redefinir senha</span>
+                </div>
+                <i class="fa-solid fa-chevron-right seta"></i>
+            </a>
+
+            <a href="{{ url_for('logout') }}" class="item-lista-config sair" data-confirmar-logout>
+                <div class="d-flex align-items-center gap-3">
+                    <div class="icone-box icone-sair">
+                        <i class="fa-solid fa-right-from-bracket"></i>
+                    </div>
+                    <span class="texto-item texto-sair">Sair da conta</span>
+                </div>
+                <i class="fa-solid fa-chevron-right seta"></i>
+            </a>
+
+        </div>
+    </section>
+
+</div>
+{% endblock %}
+

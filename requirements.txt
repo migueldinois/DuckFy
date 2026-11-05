@@ -1,1 +1,7 @@
 Flask
+mysql-connector-python
+bcrypt
+requests
+python-dotenv
+gunicorn
+Flask-Mail

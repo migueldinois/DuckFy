@@ -1,38 +1,134 @@
-<!DOCTYPE html>
-<html lang="pt-BR">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>DuckFy - Editar Perfil</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}">
-</head>
-<body>
-    <main class="phone-screen edit-screen">
-        <section class="profile-header edit-header">
-            <a class="back-link" href="{{ url_for('perfil') }}" aria-label="Voltar">&larr;</a>
-            <span class="page-title">Editar Perfil</span>
-            <a class="save-link" href="{{ url_for('perfil') }}">Salvar</a>
+{% extends 'layout.html' %}
 
-            <div class="edit-profile-summary">
-                <div class="avatar large-avatar" aria-hidden="true">
-                    <span class="avatar-head"></span>
-                    <span class="avatar-body"></span>
+{% block title %}DuckFy - Editar Perfil{% endblock %}
+
+{% block styles %}
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/editar_perfil.css') }}">
+{% endblock %}
+
+{% block content %}
+<div class="perfil-pagina-container w-100">
+
+    <!-- O enctype="multipart/form-data" é OBRIGATÓRIO para envio de imagens -->
+    <form id="form-editar-perfil" action="{{ url_for('editar_perfil') }}" method="POST" enctype="multipart/form-data" novalidate>
+        
+        <!-- CABEÇALHO DA PÁGINA -->
+        <header class="cabecalho-perfil mb-4">
+            <div class="d-flex align-items-center justify-content-between mb-4">
+                <a class="btn-voltar-perfil btn-voltar-global" href="{{ url_for('perfil') }}" aria-label="Voltar para o perfil">
+                    <i class="fa-solid fa-arrow-left"></i>
+                </a>
+                
+                <h1 class="titulo-pagina text-white fs-3 fw-bold m-0">Editar Perfil</h1>
+                
+                <button type="submit" class="btn-salvar-topo">Salvar</button>
+            </div>
+
+            <!-- CARTÃO DE FOTO E UPLOAD -->
+            <div class="cartao-usuario-destaque p-4 rounded-4 d-flex flex-column align-items-center justify-content-center gap-2 text-center">
+                <div class="avatar-container position-relative">
+                    {% if usuario and usuario.foto_perfil %}
+                        <img id="preview-avatar" src="{{ usuario.foto_perfil }}" alt="Foto de perfil" class="avatar rounded-circle object-fit-cover">
+                    {% else %}
+                        <div id="preview-avatar-placeholder" class="avatar rounded-circle d-flex align-items-center justify-content-center bg-purple-glow">
+                            <i class="fa-solid fa-user text-white fs-2"></i>
+                        </div>
+                        <img id="preview-avatar" src="" alt="Foto de perfil" class="avatar rounded-circle object-fit-cover d-none">
+                    {% endif %}
                 </div>
-                <a class="photo-link" href="#">Alterar foto</a>
+
+                <!-- Input invisível de foto acionado pelo label -->
+                <label for="foto_perfil" class="link-foto text-decoration-none small fw-semibold mt-1 style-cursor-pointer" style="cursor: pointer;">
+                    <i class="fa-solid fa-camera me-1"></i> Alterar foto
+                </label>
+                <input type="file" id="foto_perfil" name="foto_perfil" accept="image/*" class="d-none">
+            </div>
+        </header>
+
+        <!-- FORMULÁRIO DE EDIÇÃO -->
+        <section class="conteudo-formulario">
+            <div class="cartao-formulario p-4 rounded-4 d-flex flex-column gap-3">
+                
+                <div class="grupo-campo d-flex flex-column gap-1">
+                    <label for="nome" class="form-label text-white fw-semibold small mb-1">Alterar Nome</label>
+                    <input id="nome" name="nome" type="text" class="form-control campo-input p-3 text-white" placeholder="Digite seu nome" value="{{ usuario.nome if usuario else '' }}">
+                </div>
+
+                <div class="grupo-campo d-flex flex-column gap-1">
+                    <label for="email" class="form-label text-white fw-semibold small mb-1">Alterar E-mail</label>
+                    <input id="email" name="email" type="email" class="form-control campo-input p-3 text-white" placeholder="seuemail@exemplo.com" value="{{ usuario.email if usuario else '' }}">
+                </div>
+
+                <!-- AÇÕES ADICIONAIS -->
+                <div class="d-flex flex-column gap-2 mt-4">
+                    <button class="btn btn-acao-vermelho p-3 rounded-3 fw-semibold" type="button" id="abrir-modal-excluir-conta" data-delete-url="{{ url_for('excluir_conta_usuario') }}">Excluir conta</button>
+                </div>
+
             </div>
         </section>
 
-        <form class="profile-form">
-            <label for="nome">Nome</label>
-            <input id="nome" name="nome" type="text" placeholder="Digite seu nome">
+    </form>
 
-            <label for="email">E-mail</label>
-            <input id="email" name="email" type="email" placeholder="seuemail@exemplo.com">
+</div>
+{% endblock %}
 
-            <button type="button">Alterar senha</button>
-            <button type="button">Sair da conta</button>
-            <button type="button">Excluir conta</button>
-        </form>
-    </main>
-</body>
-</html>
+{% block extra_js %}
+<script>
+    // Preview instantâneo da foto selecionada antes de salvar
+    const inputFoto = document.getElementById('foto_perfil');
+    const previewAvatar = document.getElementById('preview-avatar');
+    const previewPlaceholder = document.getElementById('preview-avatar-placeholder');
+
+    inputFoto.addEventListener('change', function(e) {
+        const file = e.target.files[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = function(event) {
+                previewAvatar.src = event.target.result;
+                previewAvatar.classList.remove('d-none');
+                if (previewPlaceholder) previewPlaceholder.classList.add('d-none');
+            };
+            reader.readAsDataURL(file);
+        }
+    });
+
+    // Validação básica do formulário
+    const formularioPerfil = document.getElementById('form-editar-perfil');
+    const campoNome = document.getElementById('nome');
+    const campoEmail = document.getElementById('email');
+    const regexEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+    formularioPerfil.addEventListener('submit', function(event) {
+        const nomeInvalido = campoNome.value.trim() === '';
+        const emailInvalido = !regexEmail.test(campoEmail.value.trim());
+
+        if (nomeInvalido || emailInvalido) {
+            event.preventDefault();
+            const campoInvalido = nomeInvalido ? campoNome : campoEmail;
+            const texto = nomeInvalido
+                ? 'Por favor, insira um nome.'
+                : 'Por favor, insira um e-mail válido.';
+            window.DuckFyAlert.error(texto, 'Verifique seus dados');
+            campoInvalido.focus();
+        }
+    });
+
+
+    const botaoExcluirConta = document.getElementById('abrir-modal-excluir-conta');
+    botaoExcluirConta.addEventListener('click', async function() {
+        const confirmado = await window.DuckFyAlert.confirm({
+            title: 'Excluir sua conta?',
+            text: 'Essa ação é permanente e não poderá ser desfeita.',
+            confirmButtonText: 'Sim, excluir conta'
+        });
+        if (!confirmado) return;
+
+        const formulario = document.createElement('form');
+        formulario.method = 'POST';
+        formulario.action = botaoExcluirConta.dataset.deleteUrl;
+        document.body.appendChild(formulario);
+        formulario.submit();
+    });
+</script>
+{% endblock %}

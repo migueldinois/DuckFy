@@ -1,0 +1,172 @@
+/* ======================================================
+   DUCKFY - EDITAR PERFIL (DESIGN MODERNO & HARMONIOSO)
+   ====================================================== */
+
+:root {
+  --bg-dark: #0f0c1b;
+  --bg-card: #181826;
+  --bg-card-hover: #222234;
+  --primary-purple: #7c4dff;
+  --purple-glow: rgba(124, 77, 255, 0.35);
+  --border-glass: rgba(255, 255, 255, 0.08);
+  --text-muted: #a0a0b5;
+}
+
+/* ESTRUTURA E LARGURA PROPORCIONAL */
+.perfil-pagina-container,
+.editar-perfil-container {
+  width: 100% !important;
+  max-width: 980px !important; /* Mesma largura exata do perfil */
+  margin: 0 auto !important;
+  padding: 0 0 40px 0 !important;
+  color: #ffffff;
+  box-sizing: border-box;
+}
+
+/* 1. CABEÇALHO COM O DEGRADÊ ROXO E BORDAS SUAVES */
+.cabecalho-perfil {
+  background: linear-gradient(180deg, rgba(124, 77, 255, 0.25) 0%, rgba(15, 12, 27, 0) 100%);
+  border-radius: 20px;
+  padding: 24px 20px;
+  margin-bottom: 24px;
+}
+
+/* BOTÃO VOLTAR */
+.btn-voltar-perfil {
+  width: 42px;
+  height: 42px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid var(--border-glass);
+  border-radius: 12px;
+  color: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-decoration: none;
+  font-size: 1.1rem;
+  transition: all 0.25s ease;
+  backdrop-filter: blur(8px);
+}
+
+.btn-voltar-perfil:hover {
+  background: var(--primary-purple);
+  box-shadow: 0 0 15px var(--purple-glow);
+  transform: translateX(-3px);
+}
+
+/* BOTÃO SALVAR NO TOPO */
+.btn-salvar-topo {
+  background: var(--primary-purple);
+  color: #ffffff;
+  border: none;
+  padding: 10px 24px;
+  border-radius: 12px;
+  font-weight: 600;
+  font-size: 0.95rem;
+  transition: all 0.25s ease;
+  box-shadow: 0 4px 15px var(--purple-glow);
+  cursor: pointer;
+}
+
+.btn-salvar-topo:hover {
+  background: #6c3bfa;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(124, 77, 255, 0.5);
+}
+
+/* 2. CARTÃO DE AVATAR E INPUTS (MESMO ESTILO DO PERFIL) */
+.cartao-usuario-destaque,
+.cartao-formulario {
+  background: var(--bg-card) !important;
+  border: 1px solid var(--border-glass) !important;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4), 0 0 20px rgba(124, 77, 255, 0.08) !important;
+  width: 100% !important;
+  border-radius: 18px !important;
+  backdrop-filter: blur(12px);
+  box-sizing: border-box;
+}
+
+/* AVATAR E ALTERAR FOTO */
+.avatar {
+  width: 80px;
+  height: 80px;
+  border: 2px solid var(--primary-purple);
+  box-shadow: 0 0 15px var(--purple-glow);
+}
+
+.bg-purple-glow {
+  background: rgba(124, 77, 255, 0.2);
+  width: 80px;
+  height: 80px;
+  border: 2px solid var(--primary-purple);
+}
+
+.link-foto {
+  color: var(--primary-purple);
+  font-size: 0.9rem;
+  transition: all 0.2s ease;
+}
+
+.link-foto:hover {
+  color: #b093ff;
+  text-decoration: underline !important;
+}
+
+/* 3. INPUTS / CAMPOS DE TEXTO ILUMINADOS */
+.campo-input {
+  background: rgba(255, 255, 255, 0.05) !important;
+  border: 1px solid var(--border-glass) !important;
+  border-radius: 12px !important;
+  color: #ffffff !important;
+  transition: all 0.25s ease !important;
+}
+
+.campo-input::placeholder {
+  color: var(--text-muted) !important;
+  opacity: 1 !important;
+  -webkit-text-fill-color: var(--text-muted) !important;
+}
+
+.campo-input:focus {
+  background: rgba(255, 255, 255, 0.08) !important;
+  border-color: var(--primary-purple) !important;
+  box-shadow: 0 0 12px var(--purple-glow) !important;
+  color: #ffffff !important;
+  outline: none !important;
+}
+
+.campo-input.invalido {
+  border-color: #ff5252 !important;
+  box-shadow: 0 0 10px rgba(255, 82, 82, 0.3) !important;
+}
+
+/* 4. BOTÕES DE AÇÃO DESTACADOS E COM BRILHO HOVER */
+.btn-acao-roxo {
+  background: rgba(124, 77, 255, 0.15);
+  color: var(--primary-purple);
+  border: 1px solid rgba(124, 77, 255, 0.35);
+  transition: all 0.25s ease;
+}
+
+.btn-acao-roxo:hover {
+  background: var(--primary-purple);
+  color: #ffffff;
+  box-shadow: 0 0 15px var(--purple-glow);
+  transform: translateY(-2px);
+}
+
+
+.btn-acao-vermelho {
+  background: rgba(255, 82, 82, 0.12);
+  color: #ff5252;
+  border: 1px solid rgba(255, 82, 82, 0.3);
+  transition: all 0.25s ease;
+}
+
+.btn-acao-vermelho:hover {
+  background: #ff5252;
+  color: #ffffff;
+  box-shadow: 0 0 15px rgba(255, 82, 82, 0.4);
+  transform: translateY(-2px);
+}
+

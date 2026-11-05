@@ -1,0 +1,298 @@
+
+{% extends 'layout.html' %}
+
+{% block title %}Dashboard Financeiro - DuckFy{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/dashboard.css') }}">
+{% endblock %}
+
+{% block content %}
+<div class="dashboard-container">
+
+  <!-- Bloco 1: Resumo do mês e Sequência -->
+  <section class="dash-card">
+    <div class="dash-card-header d-flex justify-content-between align-items-start mb-3">
+      <div>
+        <h2 class="card-main-title m-0">Resumo do mês</h2>
+        <span class="card-subtitle">{{ mes_atual }}</span>
+      </div>
+
+      <div class="text-end">
+        <span class="sequence-label">SEQUÊNCIA</span>
+        <div class="sequence-value">{{ sequencia }}</div>
+      </div>
+    </div>
+
+    <div class="row g-3">
+
+      <!-- Saldo disponível -->
+      <div class="col-12 col-md-6">
+        <div class="inner-card p-3 d-flex flex-column justify-content-between">
+          <div>
+            <div class="d-flex justify-content-between align-items-center">
+              <span class="inner-title">Saldo Disponível</span>
+            </div>
+
+            <div class="amount-large mt-1">R$ {{ saldo_disponivel|moeda_br }}</div>
+          </div>
+
+          <div class="mt-3">
+            <div class="stat-indicators d-flex gap-2">
+              <span class="text-green">
+                <i class="bi bi-arrow-up-short"></i> R$ {{ total_receitas|moeda_br }}
+              </span>
+
+              <span class="text-red">
+                <i class="bi bi-arrow-down-short"></i> R$ {{ total_despesas|moeda_br }}
+              </span>
+            </div>
+
+            <div class="subtext-green mt-1">
+              <span class="fw-bold">Economia</span> de {{ "%.1f"|format(economia_percentual) }}% neste mês.
+            </div>
+            <div class="d-flex justify-content-end mt-2">
+              <a href="{{ url_for('contas') }}" class="dashboard-card-action">
+                <img src="{{ url_for('static', filename='img/icons/contas-bancarias.svg') }}" alt="" aria-hidden="true">
+                <span>Ver contas</span>
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Reserva de emergência -->
+      <div class="col-12 col-md-6">
+        <div class="inner-card p-3 d-flex flex-column justify-content-between">
+          <div>
+            <span class="inner-title">Reserva de Emergência</span>
+
+            <div class="progress-container mt-3">
+              <div class="custom-progress-bar">
+                <div class="progress-fill" style="width: {{ progresso_reserva }}%;">
+                  <span class="progress-badge">R$ {{ saldo_reserva|moeda_br }}</span>
+                </div>
+              </div>
+
+              <div class="text-end total-target mt-1">
+                Meta: R$ {{ meta_reserva|moeda_br }}
+              </div>
+            </div>
+          </div>
+
+          <div class="d-flex justify-content-end mt-3">
+            <a href="{{ url_for('reserva_emergencia') }}" class="dashboard-card-action">
+              <img src="{{ url_for('static', filename='img/icons/reserva.svg') }}" alt="" aria-hidden="true">
+              <span>Acessar reserva</span>
+            </a>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+
+  <section class="dash-card income-chart-card">
+    <div class="category-carousel-controls" role="group" aria-label="Tipo de movimentação">
+      <button class="category-carousel-tab active" type="button" data-bs-target="#categoryCarousel" data-bs-slide-to="0" aria-label="Ver receitas por categoria" aria-current="true">Entradas</button>
+      <button class="category-carousel-tab" type="button" data-bs-target="#categoryCarousel" data-bs-slide-to="1" aria-label="Ver despesas por categoria">Saídas</button>
+    </div>
+
+    <div id="categoryCarousel" class="carousel slide category-carousel" data-bs-interval="false" data-bs-touch="false">
+      <div class="carousel-inner">
+        <article class="carousel-item active">
+          <div class="category-slide-layout{% if not receitas_categoria %} is-empty{% endif %}">
+            <div class="income-chart-heading">
+              <span class="chart-eyebrow">RESUMO DE {{ mes_atual|upper }}</span>
+              <h3 class="card-section-title m-0">Receitas por categoria</h3>
+              <p class="chart-description">Veja de onde veio seu dinheiro neste mês.</p>
+            </div>
+
+            {% if receitas_categoria %}
+            <div class="income-chart-content">
+              <div class="donut-chart" style="background: {{ receitas_gradient }};" role="img" aria-label="Distribuição das receitas por categoria">
+                <div class="donut-center">
+                  <span>Total recebido</span>
+                  <strong>R$ {{ total_receitas|moeda_br }}</strong>
+                </div>
+              </div>
+
+              <ul class="category-legend" aria-label="Receitas por categoria">
+                {% for item in receitas_categoria %}
+                <li>
+                  <span class="legend-swatch" style="background: {{ item.cor }};" aria-hidden="true"></span>
+                  <span class="legend-copy"><span>{{ item.categoria }}</span><small>{{ item.percentual }}%</small></span>
+                  <strong>R$ {{ item.total|moeda_br }}</strong>
+                </li>
+                {% endfor %}
+              </ul>
+            </div>
+            {% else %}
+            <div class="category-empty-state" role="status">
+              <div class="category-empty-copy">
+                <strong>Nenhuma receita neste mês</strong>
+                <span>As receitas lançadas aparecerão aqui.</span>
+              </div>
+              <div class="category-empty-total">
+                <span>Total recebido</span>
+                <strong>R$ {{ total_receitas|moeda_br }}</strong>
+              </div>
+            </div>
+            {% endif %}
+            <div class="category-type-card is-income" aria-label="Tipo de movimentação: entradas">
+              <span class="category-type-icon" aria-hidden="true"><i class="bi bi-arrow-down-left"></i></span>
+              <span>Entradas</span>
+            </div>
+          </div>
+        </article>
+
+        <article class="carousel-item">
+          <div class="category-slide-layout{% if not despesas_categoria %} is-empty{% endif %}">
+            <div class="income-chart-heading">
+              <span class="chart-eyebrow">RESUMO DE {{ mes_atual|upper }}</span>
+              <h3 class="card-section-title m-0">Despesas por categoria</h3>
+              <p class="chart-description">Acompanhe para onde seu dinheiro foi.</p>
+            </div>
+
+            {% if despesas_categoria %}
+            <div class="income-chart-content">
+              <div class="donut-chart donut-expense" style="background: {{ despesas_gradient }};" role="img" aria-label="Distribuição das despesas por categoria">
+                <div class="donut-center">
+                  <span>Total gasto</span>
+                  <strong>R$ {{ total_despesas|moeda_br }}</strong>
+                </div>
+              </div>
+
+              <ul class="category-legend" aria-label="Despesas por categoria">
+                {% for item in despesas_categoria %}
+                <li>
+                  <span class="legend-swatch" style="background: {{ item.cor }};" aria-hidden="true"></span>
+                  <span class="legend-copy"><span>{{ item.categoria }}</span><small>{{ item.percentual }}%</small></span>
+                  <strong>R$ {{ item.total|moeda_br }}</strong>
+                </li>
+                {% endfor %}
+              </ul>
+            </div>
+            {% else %}
+            <div class="category-empty-state" role="status">
+              <div class="category-empty-copy">
+                <strong>Nenhuma despesa neste mês</strong>
+                <span>As despesas lançadas aparecerão aqui.</span>
+              </div>
+              <div class="category-empty-total">
+                <span>Total gasto</span>
+                <strong>R$ {{ total_despesas|moeda_br }}</strong>
+              </div>
+            </div>
+            {% endif %}
+            <div class="category-type-card is-expense" aria-label="Tipo de movimentação: saídas">
+              <span class="category-type-icon" aria-hidden="true"><i class="bi bi-arrow-up-right"></i></span>
+              <span>Saídas</span>
+            </div>
+          </div>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- Bloco 3: Ações principais -->
+  <div class="d-flex flex-column gap-2">
+    <a href="{{ url_for('categorias') }}" class="btn-purple-action">Ir para Categorias</a>
+    <a href="{{ url_for('lancamento') }}" class="btn-purple-action">Ir para Lançamento</a>
+  </div>
+
+  <!-- Bloco 4: Últimas transações -->
+  <section class="dash-card transactions-card">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+      <div class="transactions-heading">
+        <span class="chart-eyebrow">MOVIMENTAÇÕES</span>
+        <h3 class="card-section-title m-0">Últimas transações</h3>
+      </div>
+
+      <a href="/extrato" class="extrato-link d-flex align-items-center gap-1">
+        Ver extrato <i class="bi bi-arrow-right"></i>
+      </a>
+    </div>
+
+    <div class="transaction-list">
+      {% for transacao in transacoes_recentes %}
+      <div class="transaction-item">
+        <div class="transaction-main">
+          <div class="tx-icon {{ 'icon-plus' if transacao.tipo == 'receita' else 'icon-minus' }}" aria-hidden="true">
+            <i class="bi {{ 'bi-arrow-down-left' if transacao.tipo == 'receita' else 'bi-arrow-up-right' }}"></i>
+          </div>
+          <div class="tx-details">
+            <div class="tx-title">{{ transacao.descricao or 'Movimentação sem descrição' }}</div>
+            <div class="tx-meta">{{ transacao.data_transacao }} <span aria-hidden="true">·</span> {{ transacao.categoria }}</div>
+          </div>
+        </div>
+        <div class="tx-amount {{ 'tx-income' if transacao.tipo == 'receita' else 'tx-expense' }}">
+          {{ '+' if transacao.tipo == 'receita' else '-' }} R$ {{ transacao.valor|moeda_br }}
+        </div>
+      </div>
+      {% else %}
+      <p class="category-empty">Nenhuma transação registrada.</p>
+      {% endfor %}
+    </div>
+  </section>
+
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const carousel = document.getElementById('categoryCarousel');
+    const tabs = document.querySelectorAll('.category-carousel-tab');
+    let inicioArraste = null;
+
+    carousel?.addEventListener('pointerdown', (event) => {
+      if (!event.isPrimary || (event.pointerType === 'mouse' && event.button !== 0)) return;
+
+      inicioArraste = { x: event.clientX, y: event.clientY, pointerId: event.pointerId };
+      carousel.classList.add('is-dragging');
+      carousel.setPointerCapture(event.pointerId);
+    });
+
+    carousel?.addEventListener('pointerup', (event) => {
+      if (!inicioArraste || inicioArraste.pointerId !== event.pointerId) return;
+
+      const deslocamentoX = event.clientX - inicioArraste.x;
+      const deslocamentoY = event.clientY - inicioArraste.y;
+      inicioArraste = null;
+      carousel.classList.remove('is-dragging');
+
+      if (Math.abs(deslocamentoX) < 45 || Math.abs(deslocamentoX) <= Math.abs(deslocamentoY)) return;
+
+      const instancia = bootstrap.Carousel.getOrCreateInstance(carousel, {
+        interval: false,
+        touch: false
+      });
+      if (deslocamentoX < 0) instancia.next();
+      else instancia.prev();
+    });
+
+    const cancelarArraste = () => {
+      inicioArraste = null;
+      carousel?.classList.remove('is-dragging');
+    };
+
+    carousel?.addEventListener('pointercancel', cancelarArraste);
+    carousel?.addEventListener('lostpointercapture', cancelarArraste);
+
+    carousel?.addEventListener('slid.bs.carousel', (event) => {
+      tabs.forEach((tab, index) => {
+        const active = index === event.to;
+        tab.classList.toggle('active', active);
+        if (active) {
+          tab.setAttribute('aria-current', 'true');
+        } else {
+          tab.removeAttribute('aria-current');
+        }
+      });
+    });
+  });
+</script>
+{% endblock %}
+

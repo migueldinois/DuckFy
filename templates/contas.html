@@ -1,0 +1,382 @@
+
+{% extends 'layout.html' %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/contas.css') }}?v=3">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/duckfy-modal.css') }}?v=2">
+{% endblock %}
+
+
+{% block content %}
+{% include 'components/modal_adicionar_banco.html' %}
+{% include 'components/modal_editar_conta.html' %}
+{% include 'components/modal_transferir_contas.html' %}
+{% include 'components/modal_adicionar_dinheiro_conta.html' %}
+<main class="pagina-patrimonio">
+
+  <!-- Cabeçalho -->
+  <header class="cabecalho-pagina mb-4">
+    <a href="{{ url_for('dashboard') }}" class="btn-voltar btn-voltar-global" aria-label="Voltar ao painel">
+      <i class="bi bi-arrow-left" aria-hidden="true"></i>
+    </a>
+    <h1 class="titulo-pagina m-0">Patrimônio Total</h1>
+  </header>
+
+  <!-- Resumo -->
+  <section class="patrimonio-resumo" aria-label="Resumo financeiro">
+    <article class="card-patrimonio">
+      <span class="card-rotulo">Patrimônio total</span>
+      <h2 class="card-valor">
+        R$ {{ patrimonio_total|default('0,00', true) }}
+      </h2>
+      <p class="card-descricao">Soma dos saldos de todas as contas, incluindo a reserva.</p>
+    </article>
+
+    <article class="card-patrimonio card-reserva">
+      <span class="card-rotulo">Reserva de emergência</span>
+      <h2 class="card-valor">
+        R$ {{ reserva_total|default('0,00', true) }}
+      </h2>
+      <p class="card-descricao">Valor separado para imprevistos, já incluído no patrimônio total.</p>
+      <span class="card-detalhe-reserva">
+        {{ '%.1f'|format(porcentagem_reservada|default(0, true))|replace('.', ',') }}% do patrimônio
+      </span>
+      <a class="link-reserva" href="{{ url_for('reserva_emergencia') }}">
+        Ir para reserva de emergência
+        <i class="bi bi-arrow-up-right" aria-hidden="true"></i>
+      </a>
+    </article>
+
+    <article class="card-patrimonio">
+      <span class="card-rotulo">Dinheiro disponível</span>
+      <h2 class="card-valor">
+        R$ {{ saldo_fora_reserva|default('0,00', true) }}
+      </h2>
+      <p class="card-descricao">Valor que não está separado para a reserva de emergência.</p>
+    </article>
+  </section>
+
+  <!-- Ações -->
+
+  <section class="acoes-patrimonio mb-4">
+    <button type="button" class="btn-acao-patrimonio btn-adicionar-banco" data-open-modal="modalAdicionarBanco">
+      <i class="bi bi-plus-lg" aria-hidden="true"></i>
+      <span>Adicionar conta</span>
+    </button>
+    
+    <button type="button" class="btn-acao-patrimonio btn-adicionar-dinheiro" data-open-modal="modalAdicionarDinheiro">
+      <i class="bi bi-plus-lg" aria-hidden="true"></i>
+      <span>Depositar dinheiro</span>
+    </button>
+
+    <button type="button" class="btn-acao-patrimonio btn-transferir-dinheiro" data-open-modal="modalTransferirContas">
+      <i class="bi bi-arrow-left-right" aria-hidden="true"></i>
+      <span>Transferir dinheiro</span>
+    </button>
+
+  </section>
+
+  <!-- Contas -->
+  <section class="card-lista-contas mb-4" aria-label="Contas bancárias">
+
+    {% if contas_bancarias %}
+    {% for conta in contas_bancarias %}
+    <article class="item-conta">
+
+      <div class="conta-identificacao">
+        <div class="avatar-banco" aria-hidden="true">
+          <i class="bi bi-bank"></i>
+        </div>
+
+        <div class="info-banco">
+          <h2 class="nome-banco m-0">
+            {{ conta.nome_conta }}
+          </h2>
+          <span class="tipo-banco">
+            {{ conta.tipo_conta }}
+          </span>
+          {% if conta.valor_alocado|default(0, true)|float > 0 %}
+          <span class="alocacao-reserva">
+            Na reserva: R$ {{ '%.2f'|format(conta.valor_alocado|float)|replace('.', ',') }}
+          </span>
+          {% endif %}
+        </div>
+
+      </div>
+
+      <div class="resumo-conta">
+        <div class="saldo-banco">
+          <span class="card-subtitle d-block">Disponível</span>
+          <strong>
+            R$ {{ '%.2f'|format(
+                (conta.saldo_atual|float - conta.valor_alocado|default(0, true)|float)
+            )|replace('.', ',') }}
+          </strong>
+          <small class="card-subtitle d-block mt-1">
+            Saldo total: R$ {{ '%.2f'|format(conta.saldo_atual|float)|replace('.', ',') }}
+          </small>
+        </div>
+
+        <button type="button" class="btn-editar-conta" title="Editar {{ conta.nome_conta }}"
+          aria-label="Editar {{ conta.nome_conta }}" data-editar-conta data-id="{{ conta.id_conta }}"
+          data-nome="{{ conta.nome_conta }}" data-tipo="{{ conta.tipo_conta }}" data-saldo="{{ conta.saldo_atual }}"
+          data-reservado="{{ conta.valor_alocado|default(0, true) }}"
+          data-url="{{ url_for('editar_conta', id_conta=conta.id_conta) }}"
+          data-url-excluir="{{ url_for('excluir_conta', id_conta=conta.id_conta) }}">
+          <i class="bi bi-pencil-square" aria-hidden="true"></i>
+        </button>
+      </div>
+
+    </article>
+    {% endfor %}
+    {% else %}
+    <div class="estado-vazio">
+      <div class="icone-estado-vazio" aria-hidden="true">
+        <i class="bi bi-bank"></i>
+      </div>
+      <h2 class="estado-vazio-titulo m-0">Nenhuma conta cadastrada</h2>
+      <p class="estado-vazio-descricao mb-0">Suas contas aparecerão aqui assim que você cadastrar a primeira.</p>
+
+      <button type="button" class="btn-acao-patrimonio btn-adicionar-banco" data-open-modal="modalAdicionarBanco">
+        <i class="bi bi-plus-lg" aria-hidden="true"></i>
+        <span>Adicionar primeira conta</span>
+      </button>
+    </div>
+    {% endif %}
+
+  </section>
+
+</main>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const parametros = new URLSearchParams(window.location.search);
+    if (parametros.get('adicionar_saldo') === '1') {
+      ModalManager.abrir('modalAdicionarDinheiro');
+    } else if (parametros.get('adicionar') === '1') {
+      ModalManager.abrir('modalAdicionarBanco');
+    }
+
+    const form = document.getElementById('formEditarConta');
+    const nome = document.getElementById('editarNomeConta');
+    const tipo = document.getElementById('editarTipoConta');
+    const saldo = document.getElementById('editarSaldoConta');
+    const btnExcluir = document.getElementById('btnExcluirConta');
+    const confirmacao = document.getElementById('confirmacaoExcluirConta');
+    const palavra = document.getElementById('palavraConfirmacaoExcluir');
+    const btnConfirmar = document.getElementById('confirmarExcluirConta');
+    const btnCancelar = document.getElementById('cancelarExcluirConta');
+    const btnCopiar = document.getElementById('copiarPalavraDeletar');
+    let urlExcluir = '';
+
+    if (!form || !nome || !tipo || !saldo) return;
+
+    document.querySelectorAll('[data-editar-conta]').forEach(botao => {
+      botao.addEventListener('click', () => {
+        nome.value = botao.dataset.nome || '';
+        tipo.value = botao.dataset.tipo || '';
+        saldo.value = botao.dataset.saldo || '0';
+        const totalAtual = Number(botao.dataset.saldo || 0);
+        const reservadoAtual = Number(botao.dataset.reservado || 0);
+        document.getElementById('totalContaEditada').textContent = formatarMoeda(totalAtual);
+        document.getElementById('reservadoContaEditada').textContent = formatarMoeda(reservadoAtual);
+        document.getElementById('disponivelContaEditada').textContent = formatarMoeda(
+          Math.max(0, totalAtual - reservadoAtual)
+        );
+        saldo.dataset.currencyInitialValue = 'true';
+        form.action = botao.dataset.url || '';
+        urlExcluir = botao.dataset.urlExcluir || '';
+
+        if (confirmacao) confirmacao.hidden = true;
+        if (palavra) palavra.value = '';
+        if (btnConfirmar) btnConfirmar.disabled = true;
+
+        ModalManager.abrir('modalEditarConta');
+      });
+    });
+
+    palavra?.addEventListener('input', () => {
+      const valido = palavra.value.trim().toLowerCase() === 'deletar';
+
+      if (btnConfirmar) btnConfirmar.disabled = !valido;
+
+    });
+
+    btnExcluir?.addEventListener('click', () => {
+      if (!urlExcluir) {
+        window.DuckFyAlert.error('Não foi possível identificar a conta selecionada.');
+        return;
+      }
+
+      confirmacao.hidden = false;
+      palavra.value = '';
+      btnConfirmar.disabled = true;
+      palavra.focus();
+    });
+
+    btnCancelar?.addEventListener('click', () => {
+      confirmacao.hidden = true;
+      palavra.value = '';
+      btnConfirmar.disabled = true;
+    });
+
+    btnCopiar?.addEventListener('click', async () => {
+      try {
+        await navigator.clipboard.writeText('Deletar');
+      } catch {
+        const temporario = document.createElement('textarea');
+        temporario.value = 'Deletar';
+        temporario.style.position = 'fixed';
+        temporario.style.opacity = '0';
+        document.body.appendChild(temporario);
+        temporario.select();
+
+        document.execCommand('copy');
+        temporario.remove();
+      }
+    });
+
+    btnConfirmar?.addEventListener('click', () => {
+      if (palavra.value.trim().toLowerCase() !== 'deletar' || !urlExcluir) {
+        btnConfirmar.disabled = true;
+        return;
+      }
+
+      const formExcluir = document.createElement('form');
+      formExcluir.method = 'POST';
+      formExcluir.action = urlExcluir;
+      document.body.appendChild(formExcluir);
+      formExcluir.submit();
+    });
+  });
+
+  function formatarMoeda(valor) {
+    return Number(valor || 0).toLocaleString('pt-BR', {
+      style: 'currency',
+      currency: 'BRL'
+    });
+  }
+
+  function lerMoeda(valor) {
+    const texto = String(valor || '').trim();
+    if (!texto) return 0;
+    return texto.includes(',')
+      ? Number(texto.replace(/\./g, '').replace(',', '.')) || 0
+      : Number(texto) || 0;
+  }
+
+  function lerValorDigitado(valor) {
+    const texto = String(valor || '').trim();
+    if (!texto) return 0;
+    if (texto.includes(',')) {
+      return Number(texto.replace(/\./g, '').replace(',', '.')) || 0;
+    }
+    if (/\.\d{1,2}$/.test(texto)) return Number(texto) || 0;
+    return Number(texto.replace(/\./g, '')) || 0;
+  }
+
+  document.addEventListener('DOMContentLoaded', () => {
+    const saldoInicial = document.getElementById('saldo_atual');
+    const previaSaldoNovoBanco = document.getElementById('previaSaldoNovoBanco');
+    saldoInicial?.addEventListener('currency:formatted', () => {
+      previaSaldoNovoBanco.textContent = `R$ ${saldoInicial.value || '0,00'}`;
+    });
+
+    const contaAdicionar = document.getElementById('contaAdicionarDinheiro');
+    const valorAdicionar = document.getElementById('valorAdicionarDinheiro');
+    const detalhesAdicionar = document.getElementById('detalhesSaldoAdicionar');
+    const resumoAdicionar = document.getElementById('resumoAdicionarDinheiro');
+    const atualizarAdicao = () => {
+      const conta = contaAdicionar?.selectedOptions[0];
+      const selecionada = Boolean(conta?.value);
+      detalhesAdicionar.hidden = !selecionada;
+      resumoAdicionar.hidden = !selecionada;
+      if (!selecionada) return;
+
+      const total = lerMoeda(conta.dataset.saldo);
+      const reservado = lerMoeda(conta.dataset.reservado);
+      const valor = lerValorDigitado(valorAdicionar.value);
+      document.getElementById('totalAdicionar').textContent = formatarMoeda(total);
+      document.getElementById('reservadoAdicionar').textContent = formatarMoeda(reservado);
+      document.getElementById('disponivelAdicionar').textContent = formatarMoeda(total - reservado);
+      document.getElementById('saldoFinalAdicionar').textContent = formatarMoeda(total + valor);
+      resumoAdicionar.hidden = valor <= 0;
+    };
+    contaAdicionar?.addEventListener('change', atualizarAdicao);
+    valorAdicionar?.addEventListener('input', atualizarAdicao);
+
+    const origem = document.getElementById('contaOrigemTransferencia');
+    const destino = document.getElementById('contaDestinoTransferencia');
+    const valorTransferencia = document.getElementById('valorTransferenciaContas');
+    const formTransferencia = document.getElementById('formTransferirContas');
+    const resumoTransferencia = document.getElementById('resumoTransferenciaContas');
+    const erroTransferencia = document.getElementById('erroTransferenciaContas');
+    const botaoTransferir = formTransferencia?.querySelector('[type="submit"]');
+    const alternar = document.getElementById('btnAlternarContas');
+
+    function atualizarDetalheConta(select, prefixo, containerId) {
+      const conta = select.selectedOptions[0];
+      const detalhes = document.getElementById(containerId);
+      const selecionada = Boolean(conta?.value);
+      detalhes.hidden = !selecionada;
+      if (!selecionada) return null;
+
+      const total = lerMoeda(conta.dataset.saldo);
+      const reservado = lerMoeda(conta.dataset.reservado);
+      const disponivel = Math.max(0, total - reservado);
+      document.getElementById(`total${prefixo}`).textContent = formatarMoeda(total);
+      document.getElementById(`reservado${prefixo}`).textContent = formatarMoeda(reservado);
+      document.getElementById(`disponivel${prefixo}`).textContent = formatarMoeda(disponivel);
+      return { total, disponivel };
+    }
+
+    const validarTransferencia = () => {
+      if (!origem || !destino || !valorTransferencia || !formTransferencia) return;
+
+      const dadosOrigem = atualizarDetalheConta(origem, 'Origem', 'detalhesSaldoOrigem');
+      const dadosDestino = atualizarDetalheConta(destino, 'Destino', 'detalhesSaldoDestino');
+      const valor = lerValorDigitado(valorTransferencia.value);
+      let mensagem = '';
+
+      if (origem.value && destino.value && origem.value === destino.value) {
+        mensagem = 'A conta de origem e a conta de destino precisam ser diferentes.';
+      } else if (dadosOrigem && valor > dadosOrigem.disponivel) {
+        mensagem = `O valor informado ultrapassa o saldo disponível. Você pode transferir até ${formatarMoeda(dadosOrigem.disponivel)}.`;
+      }
+
+      erroTransferencia.textContent = mensagem;
+      erroTransferencia.hidden = !mensagem;
+      const invalida = Boolean(mensagem);
+      botaoTransferir.disabled = invalida;
+
+      const podeMostrarResumo = dadosOrigem && dadosDestino && valor > 0 && !invalida;
+      resumoTransferencia.hidden = !podeMostrarResumo;
+      if (podeMostrarResumo) {
+        document.getElementById('disponivelFinalOrigem').textContent =
+          formatarMoeda(dadosOrigem.disponivel - valor);
+        document.getElementById('saldoFinalDestino').textContent =
+          formatarMoeda(dadosDestino.total + valor);
+      }
+    };
+
+    origem?.addEventListener('change', validarTransferencia);
+    destino?.addEventListener('change', validarTransferencia);
+    valorTransferencia?.addEventListener('currency:formatted', validarTransferencia);
+    alternar?.addEventListener('click', () => {
+      const valorOrigem = origem.value;
+      origem.value = destino.value;
+      destino.value = valorOrigem;
+      origem.dispatchEvent(new Event('change', { bubbles: true }));
+      destino.dispatchEvent(new Event('change', { bubbles: true }));
+      validarTransferencia();
+    });
+    formTransferencia?.addEventListener('submit', (event) => {
+      validarTransferencia();
+      if (erroTransferencia && !erroTransferencia.hidden) event.preventDefault();
+    });
+  });
+
+</script>
+{% endblock %}
