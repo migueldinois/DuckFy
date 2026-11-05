@@ -348,12 +348,20 @@
 .lancamento-adicionar-categoria {
   display: inline-flex;
   align-items: center;
-  gap: 7px;
+  gap: 9px;
   margin: 4px 0 8px;
+  padding: 10px 14px;
+  border: 1px solid color-mix(in srgb, var(--brand-secondary) 45%, transparent);
+  border-radius: 8px;
+  background-color: color-mix(in srgb, var(--brand-secondary) 10%, transparent);
   color: var(--brand-secondary);
-  font-size: 13px;
+  font-size: 15px;
   font-weight: 600;
   text-decoration: none;
+}
+
+.lancamento-adicionar-categoria i {
+  font-size: 18px;
 }
 
 .lancamento-adicionar-categoria[hidden] {
