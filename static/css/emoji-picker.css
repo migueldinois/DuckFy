@@ -39,11 +39,11 @@
     position: fixed;
     z-index: 99999;
 
-    width: 350px;
+    width: 320px;
     max-width: calc(100vw - 24px);
     max-height: calc(100vh - 24px);
 
-    padding: 14px;
+    padding: 10px;
 
     box-sizing: border-box;
     overflow: hidden;
@@ -75,7 +75,7 @@
     justify-content: space-between;
     align-items: center;
 
-    margin-bottom: 12px;
+    margin-bottom: 6px;
 
     cursor: grab;
     touch-action: none;
@@ -123,14 +123,14 @@
 
 #emojiPickerContainer {
     width: 100%;
-    min-height: 250px;
+    min-height: 0;
 }
 
 #emojiPickerContainer emoji-picker {
     display: block;
 
     width: 100%;
-    height: 390px;
+    height: 290px;
     max-height: calc(100vh - 100px);
 
     border: none;
@@ -146,8 +146,12 @@
     --input-placeholder-color: var(--text-muted);
     --outline-color: var(--brand-primary);
     --category-font-color: var(--text-muted);
-    --emoji-size: 1.45rem;
-    --num-columns: 8;
+    --category-emoji-size: 0.68rem;
+    --category-emoji-padding: 0.08rem 0.14rem;
+    --indicator-height: 1px;
+    --emoji-padding: 0.22rem;
+    --emoji-size: 2.2rem;
+    --num-columns: 6;
 }
 
 
@@ -166,6 +170,40 @@
 
 .emoji-picker-error {
     color: var(--text-muted);
+}
+
+.emoji-picker-fallback {
+    display: grid;
+    grid-template-columns: repeat(8, minmax(0, 1fr));
+    gap: 5px;
+}
+
+.emoji-fallback-option {
+    display: grid;
+    place-items: center;
+    aspect-ratio: 1;
+    min-width: 0;
+    padding: 3px;
+    border: 0;
+    border-radius: 8px;
+    background: transparent;
+    color: inherit;
+    font: inherit;
+    font-size: 2rem;
+    cursor: pointer;
+}
+
+.emoji-fallback-option:hover,
+.emoji-fallback-option:focus-visible {
+    outline: none;
+    background: var(--bg-surface-2);
+}
+
+.emoji-fallback-option img {
+    width: 2rem;
+    height: 2rem;
+    object-fit: contain;
+    pointer-events: none;
 }
 
 
@@ -192,13 +230,29 @@
 @media (max-width: 480px) {
 
     .emoji-picker {
-        width: 310px;
+        width: 290px;
         max-width: calc(100vw - 24px);
     }
 
     #emojiPickerContainer emoji-picker {
-        height: 360px;
-        --num-columns: 7;
-        --emoji-size: 1.35rem;
+        height: 260px;
+        --num-columns: 6;
+        --category-emoji-size: 0.62rem;
+        --category-emoji-padding: 0.06rem 0.12rem;
+        --emoji-padding: 0.18rem;
+        --emoji-size: 2rem;
+    }
+
+    .emoji-picker-fallback {
+        grid-template-columns: repeat(7, minmax(0, 1fr));
+    }
+
+    .emoji-fallback-option {
+        font-size: 1.8rem;
+    }
+
+    .emoji-fallback-option img {
+        width: 1.8rem;
+        height: 1.8rem;
     }
 }
