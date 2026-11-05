@@ -44,8 +44,8 @@
     const criarConfiguracao = (elemento) => {
       const tipo = elemento.dataset.swalType;
       return {
-        icon: tipo === 'success' || tipo === 'withdrawal' ? 'success' : tipo === 'error' ? 'error' : tipo === 'warning' ? 'warning' : 'info',
-        title: tipo === 'success' ? 'Ação concluída' : tipo === 'withdrawal' ? 'Retirada concluída' : tipo === 'error' ? 'Confira esta informação' : tipo === 'warning' ? 'Atenção' : 'Aviso',
+        icon: tipo === 'success' || tipo === 'withdrawal' || tipo === 'transaction_success' ? 'success' : tipo === 'error' ? 'error' : tipo === 'warning' ? 'warning' : 'info',
+        title: tipo === 'transaction_success' ? 'Lançamento realizado!' : tipo === 'success' ? 'Ação concluída' : tipo === 'withdrawal' ? 'Retirada concluída' : tipo === 'error' ? 'Confira esta informação' : tipo === 'warning' ? 'Atenção' : 'Aviso',
         text: elemento.dataset.swalMessage,
         confirmButtonText: 'Entendi'
       };
