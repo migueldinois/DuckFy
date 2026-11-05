@@ -154,10 +154,10 @@
             </div>
             {% if not contas_usuario %}
               <span hidden data-swal-modal="#modalGuardarDinheiro" data-swal-message="Cadastre uma conta bancária para guardar dinheiro na reserva." data-swal-type="warning"></span>
-              <a class="btn btn-reserva-primary btn-reserva-add-account text-white mt-2" href="{{ url_for('contas', adicionar=1) }}">
-                <i class="bi bi-plus-lg me-1" aria-hidden="true"></i>Cadastrar conta bancária
-              </a>
             {% endif %}
+            <a class="btn btn-reserva-primary btn-reserva-add-account text-white mt-2" href="{{ url_for('contas', adicionar=1) }}">
+              <i class="bi bi-plus-lg me-1" aria-hidden="true"></i>Adicionar nova conta
+            </a>
           </div>
 
           <div class="mb-3">
@@ -213,11 +213,9 @@
                 {% endfor %}
               </div>
             </div>
-            {% if not contas_usuario %}
-              <a class="btn btn-reserva-primary btn-reserva-add-account text-white mt-2" href="{{ url_for('contas', adicionar=1) }}">
-                <i class="bi bi-plus-lg me-1" aria-hidden="true"></i>Cadastrar conta bancária
-              </a>
-            {% endif %}
+            <a class="btn btn-reserva-primary btn-reserva-add-account text-white mt-2" href="{{ url_for('contas', adicionar=1) }}">
+              <i class="bi bi-plus-lg me-1" aria-hidden="true"></i>Adicionar nova conta
+            </a>
           </div>
 
           <div class="mb-3">

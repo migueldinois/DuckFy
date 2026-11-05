@@ -277,7 +277,7 @@ def logar():
         flash("Login realizado com sucesso!", "success")
         return redirect(url_for("dashboard"))
     else:
-        flash("Usuario ou senha invalidos!", "error")
+        flash("Usuário ou senha inválidos.", "error")
         return redirect('/login')
 
 
@@ -359,11 +359,11 @@ def transferir_dinheiro():
             raise ValueError
 
         if id_conta_origem == id_conta_destino:
-            flash("Escolha duas contas diferentes.", "error")
+            flash("A conta de origem e a conta de destino precisam ser diferentes.", "error")
             return redirect(url_for('contas'))
 
     except (ValueError, TypeError, InvalidOperation):
-        flash("Informe duas contas válidas e um valor maior que zero.", "error")
+        flash("Selecione duas contas válidas e informe um valor maior que zero.", "error")
         return redirect(url_for('contas'))
 
     # executa a transferência
@@ -376,12 +376,12 @@ def transferir_dinheiro():
 
     if sucesso:
         flash(
-            f"Transferência de R$ {valor_transferencia:.2f} realizada com sucesso!",
+            f"Transferência concluída! R$ {valor_transferencia:.2f} foram enviados para a conta de destino.",
             "success"
         )
     else:
         flash(
-            "Não foi possível transferir. Verifique as contas e o saldo disponível.",
+            "A transferência não foi concluída. Confira as contas selecionadas e o saldo disponível e tente novamente.",
             "error"
         )
 
