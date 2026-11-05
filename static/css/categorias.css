@@ -749,8 +749,8 @@ body.tema-claro .tab-count {
     }
 
     .tab-btn {
-        align-items: flex-start;
-        flex-wrap: wrap;
+        align-items: center;
+        flex-wrap: nowrap;
         gap: 9px;
         padding: 12px 10px;
     }
@@ -763,7 +763,6 @@ body.tema-claro .tab-count {
     }
 
     .aba-texto {
-        flex-basis: calc(100% - 48px);
         gap: 4px;
     }
 
