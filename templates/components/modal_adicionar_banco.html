@@ -1,8 +1,7 @@
-
 <div id="modalAdicionarBanco" class="duckfy-modal">
     <div class="dash-card modal-content">
         <div class="d-flex justify-content-between align-items-center mb-3">
-            <h3 class="card-section-title m-0">Adicionar Banco</h3>
+            <h3 class="card-section-title m-0">Adicionar conta</h3>
             <button type="button" class="btn-close-custom" data-close-modal>&times;</button>
         </div>
 
@@ -14,17 +13,10 @@
                 </label>
 
                 <div class="input-icon-wrapper">
-                    <img src="{{ url_for('static', filename='img/icons/nome.svg') }}"
-                         class="input-icon" alt="Banco">
+                    <img src="{{ url_for('static', filename='img/icons/nome.svg') }}" class="input-icon" alt="Banco">
 
-                    <input
-                        type="text"
-                        name="nome_conta"
-                        id="nome_conta"
-                        class="search-input input-with-icon"
-                        placeholder="Ex.: Nubank, Itaú, Inter"
-                        maxlength="50"
-                        required>
+                    <input type="text" name="nome_conta" id="nome_conta" class="search-input input-with-icon"
+                        placeholder="Ex.: Nubank, Itaú, Inter" maxlength="50" required>
                 </div>
             </div>
 
@@ -34,14 +26,10 @@
                 </label>
 
                 <div class="input-icon-wrapper">
-                    <img src="{{ url_for('static', filename='img/icons/tipo.svg') }}"
-                         class="input-icon" alt="Tipo de conta">
+                    <img src="{{ url_for('static', filename='img/icons/tipo.svg') }}" class="input-icon"
+                        alt="Tipo de conta">
 
-                    <select
-                        name="tipo_conta"
-                        id="tipo_conta"
-                        class="search-input input-with-icon"
-                        required>
+                    <select name="tipo_conta" id="tipo_conta" class="search-input input-with-icon" required>
                         <option value="" disabled selected>Selecione o tipo</option>
                         <option value="Conta Corrente">Conta Corrente</option>
                         <option value="Poupança">Poupança</option>
@@ -58,23 +46,23 @@
                 </label>
 
                 <div class="input-icon-wrapper">
-                    <input
-                        type="text"
-                        name="saldo_atual"
-                        id="saldo_atual"
-                        class="search-input"
-                        placeholder="0,00"
-                        inputmode="decimal"
-                        data-currency-input
-                        min="0"
-                        value="0"
-                        required>
+                    <input type="text" name="saldo_atual" id="saldo_atual" class="search-input" placeholder="0,00"
+                        inputmode="decimal" data-currency-input min="0" max="99999999.99" value="0" required>
                 </div>
+                <small class="card-subtitle d-block mt-2">Máximo por conta: R$ 99.999.999,99</small>
+            </div>
+
+            <div class="resumo-saldo-conta mb-3" aria-live="polite">
+                <span class="card-subtitle">Saldo inicial da conta</span>
+                <strong id="previaSaldoNovoBanco">R$ 0,00</strong>
             </div>
 
             <div class="d-flex gap-2 mt-3">
-                <button type="submit" class="btn-purple-action w-100">
-                    Adicionar banco
+                <button type="button" class="btn-danger-action w-100" data-close-modal>
+                    Cancelar
+                </button>
+                <button type="submit" class="btn-confirm-action w-100">
+                    Adicionar conta
                 </button>
             </div>
 

@@ -17,7 +17,6 @@ class SimuladorPatrimonio:
             response = requests.get(url, timeout=3)
 
             #  verifica se a requisição foi bem-sucedida
-            
             if response.status_code == 200: 
                 dados = response.json()
                 

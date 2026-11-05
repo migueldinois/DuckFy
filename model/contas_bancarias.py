@@ -1,8 +1,10 @@
 from decimal import Decimal
 
 from database.conexao import Conexao
+from model.progresso import Progresso
 
 class ContaBancaria:
+    SALDO_MAXIMO = Decimal("99999999.99")
 
     @staticmethod
     def buscar_todas_por_usuario(id_usuario):
@@ -70,7 +72,11 @@ class ContaBancaria:
         conexao, cursor = Conexao.conectar()
         try:
             saldo_atual = Decimal(str(saldo_atual))
-            if not saldo_atual.is_finite() or saldo_atual < 0:
+            if (
+                not saldo_atual.is_finite()
+                or saldo_atual < 0
+                or saldo_atual > ContaBancaria.SALDO_MAXIMO
+            ):
                 return False
 
             sql = """
@@ -78,6 +84,8 @@ class ContaBancaria:
                 VALUES (%s, %s, %s, %s)
             """
             cursor.execute(sql, (id_usuario, nome_conta, tipo_conta, saldo_atual))
+            # A criação da conta e seus pontos são confirmados ou desfeitos juntos.
+            Progresso.conceder_xp(cursor, id_usuario, f"conta:{cursor.lastrowid}", 20)
             conexao.commit()
             return True
         except Exception as e:
@@ -94,7 +102,11 @@ class ContaBancaria:
         conexao, cursor = Conexao.conectar()
         try:
             saldo_atual = Decimal(str(saldo_atual))
-            if not saldo_atual.is_finite() or saldo_atual < 0:
+            if (
+                not saldo_atual.is_finite()
+                or saldo_atual < 0
+                or saldo_atual > ContaBancaria.SALDO_MAXIMO
+            ):
                 return False
 
             cursor.execute(
@@ -116,6 +128,7 @@ class ContaBancaria:
             )
             valor_alocado = Decimal(str(cursor.fetchone()["valor_alocado"] or 0))
             if saldo_atual < valor_alocado:
+                conexao.rollback()
                 return False
 
             sql = """
@@ -224,6 +237,7 @@ class ContaBancaria:
                 conexao.rollback()
                 return False
 
+            saldo_origem = Decimal(str(contas[id_conta_origem]["saldo_atual"] or 0))
             cursor.execute(
                 """
                 SELECT COALESCE(SUM(rc.valor_alocado), 0) AS valor_alocado
@@ -234,8 +248,8 @@ class ContaBancaria:
                 (id_conta_origem, id_usuario)
             )
             valor_alocado = Decimal(str(cursor.fetchone()["valor_alocado"] or 0))
-            saldo_origem = Decimal(str(contas[id_conta_origem]["saldo_atual"] or 0))
-            if saldo_origem - valor_alocado < valor:
+            saldo_disponivel = saldo_origem - valor_alocado
+            if saldo_disponivel < valor:
                 conexao.rollback()
                 return False
 

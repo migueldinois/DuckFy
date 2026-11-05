@@ -1,234 +1,477 @@
-/* ==========================================================
-   PALETA DE CORES (REGRAS DE 60%, 30%, 10%)
-   ========================================================== */
-:root {
-    /* 60% - Dominante / Fundo Escuro */
-    --bg-main: #0F0C1B;
-    /* Fundo geral da aplicação */
-    --bg-card: #19191B;
-    /* Card principal */
-    --bg-item: #181826;
-    /* Fundo dos itens da timeline */
-    --bg-item-hover: #222234;
-    /* Hover do item */
+.extrato-page {
+    --extrato-card: #19191b;
+    --extrato-item: #181826;
+    --extrato-green: #69dfa3;
+    --extrato-red: #ff887d;
 
-    /* 30% - Secundária / Roxo */
-    --purple-primary: #7C4DFF;
-    --purple-light: #B093FF;
-    --purple-dark: #4300FF;
-
-    /* 10% - Destaque / Verde e Vermelho para Transações */
-    --green-accent: #00E676;
-    /* Entradas/Positivo */
-    --red-accent: #FF5252;
-    /* Saídas/Negativo */
-}
-
-/* ==========================================================
-   ESTILOS GERAIS
-   ========================================================== */
-* {
-    box-sizing: border-box;
-}
-
-body {
-    background-color: var(--bg-main);
-    color: #ffffff;
-    font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
-    min-height: 100vh;
-    margin: 0;
     display: flex;
-    justify-content: center;
+    flex-direction: column;
+    width: min(100%, 900px);
+    min-height: min(82vh, 760px);
+    margin: 0 auto;
+    padding: clamp(1.25rem, 3vw, 2rem);
+    color: #fff;
+    background: var(--extrato-card);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    border-radius: 24px;
+    box-shadow: 0 16px 48px rgba(0, 0, 0, 0.28);
+}
+
+.extrato-header {
+    flex: 0 0 auto;
+    margin-bottom: 1.5rem;
+}
+
+.extrato-header h1 {
+    font-size: clamp(1.25rem, 2vw, 1.5rem);
+    letter-spacing: -0.03em;
+}
+
+.extrato-header a {
+    display: inline-flex;
     align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    margin-right: 0 !important;
+    background: rgba(255, 255, 255, 0.06);
+    border-radius: 12px;
 }
 
-/* Container Responsivo (Mobile Padrão) */
-.app-container {
-    width: 100%;
-    max-width: 480px;
-    min-height: 100vh;
-    transition: all 0.3s ease;
+.extrato-header a:hover {
+    background: rgba(255, 255, 255, 0.12);
 }
 
-/* ==========================================================
-   HEADER
-   ========================================================== */
-.header h1 {
-    font-size: 1.5rem;
-    letter-spacing: -0.5px;
-}
-
-/* ==========================================================
-   FILTROS (TUDO, SAÍDA, ENTRADA)
-   ========================================================== */
 .filter-tabs {
-    background-color: var(--bg-card);
-    padding: 6px;
-    border-radius: 16px;
-    border: 1px solid rgba(255, 255, 255, 0.05);
-    gap: 8px;
+    display: flex;
+    flex: 0 0 auto;
+    gap: 0.5rem;
+    width: min(100%, 460px);
+    margin-bottom: 1.25rem;
+    padding: 0.375rem;
+    background: #101015;
+    border: 1px solid rgba(255, 255, 255, 0.07);
+    border-radius: 14px;
 }
 
 .tab-btn {
-    flex: 1;
+    flex: 1 1 0;
+    min-width: 0;
+    padding: 0.65rem 0.75rem;
+    color: rgba(255, 255, 255, 0.62);
     text-align: center;
-    color: rgba(255, 255, 255, 0.6);
-    padding: 8px 12px;
-    border-radius: 12px;
-    font-weight: 600;
-    font-size: 0.8rem;
-    transition: all 0.2s ease;
+    text-decoration: none;
+    font-size: 0.78rem;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    border-radius: 10px;
+    transition: color 0.2s ease, background-color 0.2s ease;
 }
 
 .tab-btn:hover {
-    color: #ffffff;
+    color: #fff;
 }
 
 .tab-btn.active {
-    background-color: var(--purple-primary);
-    color: #ffffff;
-    box-shadow: 0 4px 12px rgba(124, 77, 255, 0.3);
+    color: #fff;
+    background: #7c4dff;
+    box-shadow: 0 4px 14px rgba(124, 77, 255, 0.25);
 }
 
-/* ==========================================================
-   TIMELINE / LISTA DE EXTRATO
-   ========================================================== */
 .timeline-container {
     display: flex;
+    flex: 1 1 auto;
     flex-direction: column;
-    gap: 12px;
+    gap: 0;
+    min-height: 0;
+    overflow-y: auto;
+    padding: 0 0.25rem;
+}
+
+.timeline-container::-webkit-scrollbar {
+    width: 6px;
+}
+
+.timeline-container::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.18);
+    border-radius: 8px;
 }
 
 .timeline-item {
-    background-color: var(--bg-card);
-    border-radius: 18px;
-    padding: 1rem;
     display: flex;
     align-items: center;
-    justify-content: space-between;
-    border: 1px solid rgba(255, 255, 255, 0.05);
-    transition: transform 0.2s ease, background-color 0.2s ease;
+    gap: 0.875rem;
+    min-width: 0;
+    padding: 1rem 0.25rem;
+    background: transparent;
+    border: 0;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.09);
+    transition: background-color 0.2s ease;
+}
+
+.timeline-item:last-child {
+    border-bottom: 0;
 }
 
 .timeline-item:hover {
-    background-color: var(--bg-item-hover);
-    transform: translateY(-2px);
+    background: rgba(255, 255, 255, 0.025);
 }
 
-/* Ícones dos Itens */
 .icon-box {
-    width: 44px;
-    height: 44px;
-    border-radius: 14px;
-    background-color: var(--bg-item);
-    color: var(--purple-light);
     display: flex;
+    flex: 0 0 42px;
     align-items: center;
     justify-content: center;
-    font-size: 1.2rem;
-    margin-right: 1rem;
-    flex-shrink: 0;
+    width: 42px;
+    height: 42px;
+    margin: 0;
+    color: #b093ff;
+    font-size: 1.1rem;
+    background: rgba(124, 77, 255, 0.14);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 13px;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
-/* Informações de Data e Descrição */
+.icon-box.entrada {
+    color: var(--extrato-green);
+    background: rgba(105, 223, 163, 0.12);
+    border-color: rgba(105, 223, 163, 0.24);
+    box-shadow: inset 0 0 0 1px rgba(105, 223, 163, 0.04);
+}
+
+.icon-box.saida {
+    color: var(--extrato-red);
+    background: rgba(255, 136, 125, 0.12);
+    border-color: rgba(255, 136, 125, 0.24);
+    box-shadow: inset 0 0 0 1px rgba(255, 136, 125, 0.04);
+}
+
+.timeline-item:hover .icon-box.entrada {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 14px rgba(105, 223, 163, 0.12);
+}
+
+.timeline-item:hover .icon-box.saida {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 14px rgba(255, 136, 125, 0.12);
+}
+
 .info {
-    flex-grow: 1;
+    flex: 1 1 auto;
+    min-width: 0;
 }
 
 .date-time {
+    margin-bottom: 0.15rem;
+    color: #9293a2;
     font-size: 0.75rem;
-    color: rgba(255, 255, 255, 0.5);
-    margin-bottom: 2px;
-}
-
-.date-time .time {
-    margin-right: 6px;
+    line-height: 1.35;
 }
 
 .description {
-    font-weight: 600;
-    font-size: 0.95rem;
-    color: #ffffff;
+    overflow: hidden;
+    color: #f4f4f5;
+    font-size: 0.92rem;
+    line-height: 1.35;
+    text-overflow: ellipsis;
+    white-space: nowrap;
 }
 
-/* Valores (Valores Positivos e Negativos) */
+.info small,
+.info .text-muted {
+    display: block;
+    overflow: hidden;
+    margin-top: 0.15rem;
+    color: #9293a2 !important;
+    font-size: 0.76rem;
+    line-height: 1.35;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
 .amount {
+    flex: 0 0 auto;
+    color: var(--extrato-red);
+    font-size: 0.88rem;
     font-weight: 700;
-    font-size: 0.95rem;
+    letter-spacing: -0.02em;
     text-align: right;
-    color: var(--green-accent);
-    /* Padrão de entrada */
+    white-space: nowrap;
 }
 
-/* Ajuste automático para valores negativos contendo o caractere "-" */
-.amount:has(:first-child),
-.amount {
-    letter-spacing: -0.3px;
+.amount.positive {
+    color: var(--extrato-green);
 }
 
-/* ==========================================================
-   ADAPTAÇÃO DESKTOP MINIMALISTA (Para telas >= 992px)
-   ========================================================== */
-@media (min-width: 992px) {
-    .app-container {
-        max-width: 850px;
-        /* Largura reduzida para visual minimalista */
-        min-height: auto;
-        padding: 3rem 2rem;
+.amount.negative {
+    color: var(--extrato-red);
+}
+
+@media (max-width: 768px) {
+    .extrato-page {
+        width: 100%;
+        min-height: calc(100dvh - 100px);
+        padding: 1.25rem 1rem;
+        border-radius: 20px;
     }
 
-    .header {
-        margin-bottom: 2rem !important;
+    .extrato-header {
+        margin-bottom: 1.1rem;
     }
 
-    main {
-        background-color: var(--bg-card);
-        padding: 2rem;
-        border-radius: 28px;
-        box-shadow: 0 12px 40px rgba(0, 0, 0, 0.4);
-        border: 1px solid rgba(255, 255, 255, 0.05);
-    }
-
-    /* Abas de filtro mais elegantes e centradas no Desktop */
     .filter-tabs {
-        max-width: 400px;
-        margin-bottom: 2rem !important;
-        background-color: var(--bg-main);
-    }
-
-    /* Container de Timeline em Grade/Lista Espaçada no Desktop */
-    .timeline-container {
-        gap: 14px;
+        width: 100%;
+        margin-bottom: 0.75rem;
     }
 
     .timeline-item {
-        background-color: var(--bg-item);
-        padding: 1.1rem 1.5rem;
-    }
-
-    .timeline-item:hover {
-        background-color: #202030;
+        gap: 0.7rem;
+        padding: 0.9rem 0.1rem;
     }
 
     .icon-box {
-        width: 44px;
-        height: 44px;
+        flex-basis: 38px;
+        width: 38px;
+        height: 38px;
         border-radius: 12px;
+    }
+
+    .description {
+        font-size: 0.86rem;
+    }
+
+    .amount {
+        font-size: 0.8rem;
+    }
+}
+
+@media (max-width: 380px) {
+    .extrato-page {
+        padding: 1rem 0.75rem;
+        border-radius: 16px;
+    }
+
+    .timeline-item {
+        gap: 0.55rem;
+    }
+
+    .icon-box {
+        flex-basis: 34px;
+        width: 34px;
+        height: 34px;
+        font-size: 1rem;
+    }
+
+    .amount {
+        font-size: 0.74rem;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .extrato-header a,
+    .tab-btn,
+    .timeline-item,
+    .icon-box {
+        transition: none;
+    }
+}
+
+.advanced-controls {
+    display: grid;
+        grid-template-columns: minmax(0, 1fr) minmax(190px, 240px);
+        align-items: center;
+        align-self: stretch;
+        width: 100%;
+    gap: 0.75rem;
+    margin-bottom: 1.25rem;
+}
+
+.search-box {
+        position: relative;
         display: flex;
         align-items: center;
-        justify-content: center;
-        font-size: 1.25rem;
-        flex-shrink: 0;
-        margin-right: 16px;
+    min-width: 0;
+}
+
+.search-icon {
+  position: absolute;
+  left: 12px;
+  width: 16px;
+  height: 16px;
+  color: #71717a;
+  pointer-events: none;
+}
+
+.search-box input {
+        width: 100%;
+        min-width: 0;
+    min-height: 44px;
+    padding: 0.65rem 0.75rem 0.65rem 2.4rem;
+    color: #fff;
+    background: #101015;
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    border-radius: 10px;
+        outline: none;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.search-box input::placeholder {
+    color: #9293a2;
+}
+
+.search-box input:focus,
+.custom-select {
+    color: #fff;
+    background-color: #101015;
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    border-radius: 10px;
+    outline: none;
+}
+
+.custom-select {
+    width: 100%;
+    min-width: 0;
+    min-height: 44px;
+    padding: 0.65rem 2rem 0.65rem 0.75rem;
+    color-scheme: dark;
+    font-size: 0.875rem;
+    cursor: pointer;
+}
+
+.search-box input:focus,
+.custom-select:focus {
+    border-color: #7c4dff;
+    box-shadow: 0 0 0 3px rgba(105, 223, 163, 0.12);
+}
+
+.empty-filter-message {
+    padding: 2rem 1rem;
+    color: #9293a2;
+    text-align: center;
+}
+
+.empty-filter-message[hidden] {
+    display: none;
+}
+
+.timeline-item[hidden] {
+    display: none;
+}
+
+@media (max-width: 520px) {
+    .monthly-summary-content {
+        gap: 1rem;
     }
 
-    .icon-box.entrada {
-        background-color: rgba(0, 230, 118, 0.15);
-        color: #00E676;
+    .summary-chart {
+        flex-basis: 124px;
+        width: 124px;
+        height: 124px;
     }
 
-    .icon-box.saida {
-        background-color: rgba(255, 82, 82, 0.15);
-        color: #FF5252;
+    .summary-legend-row,
+    .summary-legend-row strong {
+        font-size: 0.76rem;
     }
+
+    .advanced-controls {
+        grid-template-columns: minmax(0, 1fr);
+        gap: 0.6rem;
+        margin-bottom: 1rem;
+    }
+
+    .search-box input,
+    .custom-select {
+        min-height: 46px;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .search-box input {
+        transition: none;
+    }
+}
+
+/* Container dos dois gráficos */
+.charts-container {
+  display: grid;
+
+  gap: 16px;
+  margin-bottom: 24px;
+  
+  /* Ajusta a largura total para alinhar com o card superior */
+  width: 100%;
+  max-width: 680px; /* Altere este valor para a largura exata da div do seu extrato */
+  margin-left: auto;
+  margin-right: auto;
+  box-sizing: border-box;
+}
+
+/* Card individual do gráfico */
+.chart-card {
+  background-color: #18181b;
+  border: 1px solid #27272a;
+  border-radius: 16px;
+  padding: 18px 20px;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Cabeçalho do card */
+.chart-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+}
+
+.chart-title-group {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.chart-title-group h3 {
+  font-size: 14px;
+  font-weight: 600;
+  color: #a1a1aa;
+  margin: 0;
+}
+
+/* Bolinha indicadora de cor */
+.indicator-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  display: inline-block;
+}
+
+.indicator-dot.green {
+  background-color: #22c55e;
+}
+
+.indicator-dot.red {
+  background-color: #ef4444;
+}
+
+/* Valores totais no topo do gráfico */
+.chart-total {
+  font-size: 15px;
+  font-weight: 700;
+}
+
+.chart-total.positive {
+  color: #22c55e;
+}
+
+.chart-total.negative {
+  color: #ef4444;
+}
+
+/* Área que envelopa o canvas */
+.chart-wrapper {
+  position: relative;
+  height: 180px;
+  width: 100%;
 }

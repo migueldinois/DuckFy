@@ -62,11 +62,110 @@ function formatarValorMonetario(input, pontoDecimal = false, completarCentavos =
       : '');
 }
 
+function formatarValorEmCentavos(input) {
+  const digitos = input.value.replace(/\D/g, '').slice(0, 10);
+  if (!digitos) {
+    input.value = '';
+    input.setCustomValidity('');
+    return;
+  }
+
+  const valor = Number(digitos) / 100;
+  input.value = valor.toLocaleString('pt-BR', {
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2
+  });
+
+  const minimo = input.getAttribute('min');
+  const maximo = input.getAttribute('max');
+  const abaixoDoMinimo = minimo !== null && valor < lerValorMonetario(minimo, true).decimal;
+  const acimaDoMaximo = maximo !== null && valor > lerValorMonetario(maximo, true).decimal;
+  input.setCustomValidity(abaixoDoMinimo
+    ? 'O valor deve ser maior ou igual ao mínimo permitido.'
+    : acimaDoMaximo
+      ? 'O valor excede o limite permitido.'
+      : '');
+
+  input.setSelectionRange(input.value.length, input.value.length);
+}
+
+function formatarCentavosDigitados(input) {
+  const valorOriginal = input.value;
+  const posicaoOriginal = input.selectionStart ?? valorOriginal.length;
+  const digitosAntesDoCursor = valorOriginal.slice(0, posicaoOriginal).replace(/\D/g, '').length;
+  const digitos = valorOriginal.replace(/\D/g, '').replace(/^0+(?=\d)/, '') || '0';
+  const valorEmCentavos = digitos.padStart(3, '0');
+  const parteInteira = valorEmCentavos.slice(0, -2).replace(/^0+(?=\d)/, '') || '0';
+  const parteDecimal = valorEmCentavos.slice(-2);
+  const inteiroFormatado = parteInteira.replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+  input.value = `${inteiroFormatado},${parteDecimal}`;
+
+  const zerosDePreenchimento = Math.max(0, 3 - digitos.length);
+  const digitosAlvo = zerosDePreenchimento + digitosAntesDoCursor;
+  let novaPosicao = 0;
+  let digitosEncontrados = 0;
+  while (novaPosicao < input.value.length && digitosEncontrados < digitosAlvo) {
+    if (/\d/.test(input.value[novaPosicao])) digitosEncontrados += 1;
+    novaPosicao += 1;
+  }
+  input.setSelectionRange(novaPosicao, novaPosicao);
+
+  const valor = lerValorMonetario(input.value, true);
+  const minimo = input.getAttribute('min');
+  const maximo = input.getAttribute('max');
+  const minimoInvalido = minimo !== null && valor.decimal < lerValorMonetario(minimo, true).decimal;
+  const maximoInvalido = maximo !== null && valor.decimal > lerValorMonetario(maximo, true).decimal;
+  input.setCustomValidity(minimoInvalido
+    ? 'O valor deve ser maior ou igual ao mínimo permitido.'
+    : maximoInvalido
+      ? 'O valor excede o limite permitido.'
+      : '');
+}
+
+function normalizarPontoDecimalDigitado(input, event) {
+  const textoInserido = event.data;
+  if (!textoInserido?.includes('.') || textoInserido.includes(',') || input.value.includes(',')) return;
+
+  const posicaoCursor = input.selectionStart ?? input.value.length;
+  const indicePontoInserido = textoInserido.lastIndexOf('.');
+  const casasDecimais = textoInserido.length - indicePontoInserido - 1;
+  const pontoFoiDigitado = textoInserido === '.';
+  if (!pontoFoiDigitado && casasDecimais > 2) return;
+
+  const indiceNoCampo = posicaoCursor - textoInserido.length + indicePontoInserido;
+  if (input.value[indiceNoCampo] === '.') {
+    input.setRangeText(',', indiceNoCampo, indiceNoCampo + 1, 'end');
+  }
+}
+
 document.addEventListener('DOMContentLoaded', () => {
   document.querySelectorAll('[data-currency-input]').forEach((input) => {
+    if (input.hasAttribute('data-currency-cents')) {
+      if (input.value) formatarValorMonetario(input, true, true);
+
+      input.addEventListener('input', () => {
+        formatarValorEmCentavos(input);
+        input.dispatchEvent(new Event('currency:formatted', { bubbles: true }));
+      });
+      input.addEventListener('focus', () => {
+        input.setSelectionRange(input.value.length, input.value.length);
+      });
+      input.addEventListener('blur', () => {
+        if (input.value) formatarValorMonetario(input, true, true);
+      });
+      return;
+    }
+
     if (input.value) formatarValorMonetario(input, true, true);
 
-    input.addEventListener('input', () => formatarValorMonetario(input));
+    input.addEventListener('input', (event) => {
+      normalizarPontoDecimalDigitado(input, event);
+      const colagemComSeparador = event.inputType === 'insertFromPaste'
+        && /[.,]/.test(event.data || '');
+      if (colagemComSeparador) formatarValorMonetario(input, true, true);
+      else formatarCentavosDigitados(input);
+      input.dispatchEvent(new Event('currency:formatted', { bubbles: true }));
+    });
     input.addEventListener('blur', () => formatarValorMonetario(input, false, true));
     input.addEventListener('focus', () => {
       if (input.dataset.currencyInitialValue === 'true') {
