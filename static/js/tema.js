@@ -48,8 +48,8 @@ document.addEventListener("DOMContentLoaded", function () {
 
         if (iconeTema) {
             iconeTema.className = claro
-                ? "bi bi-moon-fill"
-                : "bi bi-sun-fill";
+                ? "bi bi-moon-stars-fill theme-switch-icon"
+                : "bi bi-brightness-high-fill theme-switch-icon";
         }
 
         if (textoTema) {
