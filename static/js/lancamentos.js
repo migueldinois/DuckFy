@@ -93,6 +93,14 @@ function configurarLancamentos() {
   const botaoFecharModalCategoria = document.querySelector('#fechar-modal-categorias');
   const botoesCategoria = document.querySelectorAll('[data-category-choice]');
   const tiposTransacao = document.querySelectorAll('[name="tipo_transacao"]');
+  const botoesAdicionarCategoria = document.querySelectorAll('[data-category-create]');
+
+  botoesCategoria.forEach(function (botao) {
+    const cor = botao.dataset.categoryColor;
+    if (cor && /^#[\da-f]{6}$/i.test(cor)) {
+      botao.style.setProperty('--category-color', cor);
+    }
+  });
 
   function abrirModalCategoria() {
     if (!modalCategoria) return;
@@ -120,6 +128,10 @@ function configurarLancamentos() {
 
     botoesCategoria.forEach(function (botao) {
       botao.hidden = botao.dataset.categoryType !== tipo;
+    });
+
+    botoesAdicionarCategoria.forEach(function (botao) {
+      botao.hidden = botao.dataset.categoryCreate !== tipo;
     });
 
     document.querySelectorAll('[data-category-empty]').forEach(function (aviso) {
@@ -195,6 +207,7 @@ function configurarLancamentos() {
   });
 
   iniciarCategorias();
+  window.carregarEmojisIOS?.();
 }
 
 configurarLancamentos();
