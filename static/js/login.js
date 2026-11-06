@@ -158,6 +158,13 @@ function aplicarTema(tema) {
 
         botaoTema.setAttribute("aria-label", descricao);
         botaoTema.setAttribute("title", descricao);
+
+        const iconeTema = botaoTema.querySelector(".theme-switch-icon");
+        if (iconeTema) {
+            iconeTema.className = claro
+                ? "bi bi-moon-stars-fill theme-switch-icon"
+                : "bi bi-brightness-high-fill theme-switch-icon";
+        }
     }
 }
 
