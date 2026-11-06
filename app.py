@@ -940,11 +940,22 @@ def lancamento():
         categorias_despesa = Categoria.recuperar_categorias_por_tipo(id_usuario, "Despesa")
         categorias_receita = Categoria.recuperar_categorias_por_tipo(id_usuario, "Receita")
         contas = ContaBancaria.buscar_todas_por_usuario(id_usuario)
+        etapa_inicial = 1
+        dados_lancamento = {}
+        erro_lancamento = ""
+        if request.args.get("etapa") == "3":
+            dados_lancamento = session.pop("lancamento_form_erro", {})
+            if dados_lancamento:
+                etapa_inicial = 3
+                erro_lancamento = dados_lancamento.pop("erro_lancamento", "")
         return render_template(
             "lancamentos.html",
             categorias_despesa=categorias_despesa,
             categorias_receita=categorias_receita,
             contas=contas,
+            etapa_inicial=etapa_inicial,
+            dados_lancamento=dados_lancamento,
+            erro_lancamento=erro_lancamento,
         )
     else:
         flash("Você precisa estar logado para lançar uma transação.", "error")
@@ -994,6 +1005,11 @@ def salvar_lancamento():
             )
             return redirect(url_for("tela_extrato"))
     except ValueError as erro:
+        if str(erro) == "Saldo disponível insuficiente para essa despesa.":
+            dados_lancamento = request.form.to_dict()
+            dados_lancamento["erro_lancamento"] = str(erro)
+            session["lancamento_form_erro"] = dados_lancamento
+            return redirect(url_for("lancamento", etapa=3))
         flash(str(erro), "error")
         return redirect(url_for("lancamento"))
     except Exception as erro:
