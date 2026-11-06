@@ -56,6 +56,10 @@
             </select>
             {% if not contas %}
             <small class="text-white-50">Cadastre uma conta antes de lançar uma transação.</small>
+            <a class="lancamento-adicionar-categoria" href="{{ url_for('contas', adicionar=1) }}">
+              <i class="bi bi-plus-circle" aria-hidden="true"></i>
+              <span>Cadastrar conta bancária</span>
+            </a>
             {% endif %}
           </div>
 
