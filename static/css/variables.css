@@ -40,9 +40,9 @@ body.tema-claro {
     color-scheme: light;
 
     /* Fundos */
-    --bg-primary: #F7F5FC;
-    --bg-surface-1: #FFFFFF;
-    --bg-surface-2: #F0ECF8;
+    --bg-primary: #ECEAF2;
+    --bg-surface-1: #F8F7FB;
+    --bg-surface-2: #E4E1EC;
 
     /* Identidade visual roxa */
     --brand-primary: #7042C8;
@@ -62,9 +62,9 @@ body.tema-claro {
 
     /* Tipografia */
     --text-primary: #292238;
-    --text-muted: #746B84;
+    --text-muted: #625B70;
 
     /* Bordas e profundidade */
-    --border-color: #E6E0F0;
+    --border-color: #D7D2E0;
     --shadow-color: rgba(45, 29, 76, 0.08);
 }

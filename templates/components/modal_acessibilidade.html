@@ -1,0 +1,133 @@
+<dialog id="dialog-acessibilidade" class="modal-acessibilidade" aria-labelledby="titulo-acessibilidade"
+    aria-describedby="descricao-acessibilidade">
+    <div class="acessibilidade-pagina">
+        <header class="acessibilidade-cabecalho">
+            <span class="acessibilidade-marca" aria-hidden="true"><i class="bi bi-universal-access"></i></span>
+            <div class="acessibilidade-identidade">
+                <h2 id="titulo-acessibilidade">Acessibilidade</h2>
+                <p id="descricao-acessibilidade">Personalize sua experiência no DuckFy.</p>
+            </div>
+            <button type="button" class="acessibilidade-fechar" data-fechar-acessibilidade
+                aria-label="Fechar configurações de acessibilidade">
+                <i class="bi bi-x-lg" aria-hidden="true"></i>
+            </button>
+        </header>
+
+        <div class="assistente-progresso" aria-label="Progresso da configuração">
+            <div class="assistente-trilho" aria-hidden="true"><span id="progresso-etapa"></span></div>
+            <p id="rotulo-etapa" aria-live="polite">Etapa 1 de 4</p>
+        </div>
+
+        <form class="acessibilidade-form" id="form-acessibilidade">
+            <div class="assistente-corpo" aria-live="polite">
+                <section class="assistente-etapa ativa" data-etapa="0" aria-labelledby="titulo-inicio">
+                    <span class="assistente-ilustracao" aria-hidden="true"><i class="bi bi-universal-access"></i></span>
+                    <p class="assistente-sobretitulo">CONFIGURAÇÃO PERSONALIZADA</p>
+                    <h3 id="titulo-inicio" tabindex="-1">Personalize sua experiência</h3>
+                    <p class="assistente-descricao">Adapte a leitura e as cores do DuckFy às suas necessidades. Você poderá revisar as escolhas antes de salvar.</p>
+                </section>
+
+                <section class="assistente-etapa" data-etapa="1" aria-labelledby="titulo-leitura" hidden>
+                    <header class="assistente-etapa-cabecalho">
+                        <span class="assistente-icone" aria-hidden="true"><i class="bi bi-type"></i></span>
+                        <div>
+                            <h3 id="titulo-leitura" tabindex="-1">Visual e leitura</h3>
+                            <p>Ajuste a apresentação dos textos.</p>
+                        </div>
+                    </header>
+
+                    <div class="controle-assistente">
+                        <div class="controle-titulo">
+                            <div>
+                                <label for="tamanho-fonte">Tamanho da fonte</label>
+                                <p>Escolha entre 90% e 140%.</p>
+                            </div>
+                            <output id="valor-fonte" for="tamanho-fonte">100%</output>
+                        </div>
+                        <input id="tamanho-fonte" name="tamanho-fonte" type="range" min="90" max="140" step="10" value="100">
+                        <div class="faixa-fonte" aria-hidden="true"><span>90%</span><span>140%</span></div>
+                    </div>
+
+                </section>
+
+                <section class="assistente-etapa" data-etapa="2" aria-labelledby="titulo-cores" hidden>
+                    <header class="assistente-etapa-cabecalho">
+                        <span class="assistente-icone" aria-hidden="true"><i class="bi bi-palette2"></i></span>
+                        <div>
+                            <h3 id="titulo-cores" tabindex="-1">Cores e percepção</h3>
+                            <p>Selecione a paleta que oferece melhor distinção.</p>
+                        </div>
+                    </header>
+
+                    <fieldset class="paleta-opcoes">
+                        <legend class="visually-hidden">Escolha uma paleta de cores</legend>
+                        <label class="paleta-opcao" data-paleta="normal">
+                            <input type="radio" name="paleta-daltonismo" value="normal">
+                            <span class="paleta-conteudo">
+                                <span class="paleta-info"><strong>Original</strong><small>Cores padrão do DuckFy.</small></span>
+                                <span class="paleta-amostras" aria-hidden="true"><i></i><i></i><i></i><i></i></span>
+                                <span class="paleta-check" aria-hidden="true"><i class="bi bi-check2"></i></span>
+                            </span>
+                        </label>
+                        <label class="paleta-opcao" data-paleta="protanopia">
+                            <input type="radio" name="paleta-daltonismo" value="protanopia">
+                            <span class="paleta-conteudo">
+                                <span class="paleta-info"><strong>Protanopia</strong><small>Adaptação para tons de vermelho.</small></span>
+                                <span class="paleta-amostras" aria-hidden="true"><i></i><i></i><i></i><i></i></span>
+                                <span class="paleta-check" aria-hidden="true"><i class="bi bi-check2"></i></span>
+                            </span>
+                        </label>
+                        <label class="paleta-opcao" data-paleta="deuteranopia">
+                            <input type="radio" name="paleta-daltonismo" value="deuteranopia">
+                            <span class="paleta-conteudo">
+                                <span class="paleta-info"><strong>Deuteranopia</strong><small>Adaptação para tons de verde.</small></span>
+                                <span class="paleta-amostras" aria-hidden="true"><i></i><i></i><i></i><i></i></span>
+                                <span class="paleta-check" aria-hidden="true"><i class="bi bi-check2"></i></span>
+                            </span>
+                        </label>
+                        <label class="paleta-opcao" data-paleta="tritanopia">
+                            <input type="radio" name="paleta-daltonismo" value="tritanopia">
+                            <span class="paleta-conteudo">
+                                <span class="paleta-info"><strong>Tritanopia</strong><small>Adaptação para azul e amarelo.</small></span>
+                                <span class="paleta-amostras" aria-hidden="true"><i></i><i></i><i></i><i></i></span>
+                                <span class="paleta-check" aria-hidden="true"><i class="bi bi-check2"></i></span>
+                            </span>
+                        </label>
+                    </fieldset>
+                    <p class="aviso-paleta">A paleta altera as cores da interface, não as fotos. Você pode trocá-la quando quiser.</p>
+                </section>
+
+                <section class="assistente-etapa" data-etapa="3" aria-labelledby="titulo-revisao" hidden>
+                    <header class="assistente-etapa-cabecalho">
+                        <span class="assistente-icone assistente-icone-concluido" aria-hidden="true"><i class="bi bi-check2-circle"></i></span>
+                        <div>
+                            <h3 id="titulo-revisao" tabindex="-1">Revise suas escolhas</h3>
+                            <p>Confira as preferências antes de concluir.</p>
+                        </div>
+                    </header>
+                    <dl class="resumo-acessibilidade">
+                        <div><dt>Tamanho da fonte</dt><dd id="resumo-fonte">100%</dd></div>
+                        <div><dt>Paleta de cores</dt><dd id="resumo-paleta">Original</dd></div>
+                    </dl>
+                </section>
+            </div>
+
+            <footer class="acessibilidade-rodape">
+                <p id="status-acessibilidade" class="acessibilidade-alerta" role="status" aria-live="polite" hidden>
+                    <i class="bi bi-check-circle-fill" aria-hidden="true"></i>
+                    <span id="mensagem-acessibilidade"></span>
+                </p>
+                <button type="button" id="voltar-etapa" class="botao-acessibilidade botao-voltar" hidden>Voltar</button>
+                <button type="button" id="restaurar-acessibilidade" class="botao-acessibilidade botao-restaurar" hidden>
+                    <i class="bi bi-arrow-counterclockwise" aria-hidden="true"></i>
+                    Restaurar padrão
+                </button>
+                <button type="button" id="avancar-etapa" class="botao-acessibilidade botao-continuar">Começar</button>
+                <button type="button" id="salvar-acessibilidade" class="botao-acessibilidade botao-salvar" hidden>
+                    <i class="bi bi-check2" aria-hidden="true"></i>
+                    Concluir
+                </button>
+            </footer>
+        </form>
+    </div>
+</dialog>

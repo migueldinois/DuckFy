@@ -1,9 +1,7 @@
 
 document.addEventListener("DOMContentLoaded", function () {
-    const botaoTema = document.getElementById("btn-tema");
+    const botoesTema = document.querySelectorAll("[data-theme-toggle]");
     const logos = document.querySelectorAll(".logo-imagem, .sidebar-logo");
-    const iconeTema = document.getElementById("icone-tema");
-    const textoTema = document.getElementById("texto-tema");
 
     // verifica o tema salvo
     function temaEstaClaro() {
@@ -34,38 +32,34 @@ document.addEventListener("DOMContentLoaded", function () {
 
         atualizarLogo();
 
-        if (botaoTema) {
-            botaoTema.setAttribute(
+        botoesTema.forEach((botao) => {
+            botao.setAttribute(
                 "aria-label",
                 claro ? "Ativar tema escuro" : "Ativar tema claro"
             );
 
-            botaoTema.setAttribute(
+            botao.setAttribute(
                 "title",
                 claro ? "Ativar tema escuro" : "Ativar tema claro"
             );
-        }
-
-        if (iconeTema) {
-            iconeTema.className = claro
-                ? "bi bi-moon-fill"
-                : "bi bi-sun-fill";
-        }
-
-        if (textoTema) {
-            textoTema.textContent = claro
-                ? "Tema escuro"
-                : "Tema claro";
-        }
+            const icone = botao.querySelector("[data-theme-icon]");
+            if (icone) {
+                const iconeSidebar = icone.classList.contains("sidebar-icon");
+                icone.className = claro ? "bi bi-moon-stars" : "bi bi-sun";
+                if (iconeSidebar) icone.classList.add("sidebar-icon");
+            }
+            const texto = botao.querySelector("[data-theme-label]");
+            if (texto) texto.textContent = claro ? "Tema escuro" : "Tema claro";
+        });
     }
 
     // carrega a preferência salva
     aplicarTema(localStorage.getItem("duckfy-tema") || "escuro");
 
     // alterna o tema
-    if (botaoTema) {
-        botaoTema.addEventListener("click", function () {
+    botoesTema.forEach((botao) => {
+        botao.addEventListener("click", function () {
             aplicarTema(temaEstaClaro() ? "escuro" : "claro");
         });
-    }
+    });
 });

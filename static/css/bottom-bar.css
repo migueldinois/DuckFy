@@ -118,6 +118,10 @@
   box-sizing: border-box;
 }
 
+.dropdown-menu .dropdown-theme-toggle {
+  font-size: 0.85rem;
+}
+
 .dropdown-menu a:hover {
   background: rgba(255, 255, 255, 0.05);
   color: #ffffff;

@@ -7,9 +7,17 @@
 
     <script>
         try {
-            if (localStorage.getItem("duckfy-tema") === "claro") {
-                document.documentElement.classList.add("tema-claro");
+            const raiz = document.documentElement;
+            const tema = localStorage.getItem("duckfy-tema") || "escuro";
+            const tamanhoFonte = Number(localStorage.getItem("duckfy-fonte") || 100);
+            const paleta = localStorage.getItem("duckfy-daltonismo") || "normal";
+
+            raiz.classList.toggle("tema-claro", tema === "claro");
+            raiz.classList.remove("daltonismo-protanopia", "daltonismo-deuteranopia", "daltonismo-tritanopia");
+            if (["protanopia", "deuteranopia", "tritanopia"].includes(paleta)) {
+                raiz.classList.add(`daltonismo-${paleta}`);
             }
+            raiz.style.fontSize = `${Math.min(140, Math.max(90, tamanhoFonte))}%`;
         } catch {}
     </script>
 
@@ -31,6 +39,7 @@
     {% block extra_css %}{% endblock %}
     {% block styles %}{% endblock %}
     <link rel="stylesheet" href="{{ url_for('static', filename='css/tema-claro.css') }}?v=2.6">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/acessibilidade.css') }}">
 </head>
 
 <body class="app-body">
@@ -164,6 +173,14 @@
                     </a>
                 </li>
 
+                <li>
+                    <button type="button" class="sidebar-link sidebar-theme-toggle" data-theme-toggle
+                        aria-label="Ativar tema claro" title="Ativar tema claro">
+                        <i class="bi bi-sun sidebar-icon" data-theme-icon aria-hidden="true"></i>
+                        <span class="brand-text" data-theme-label>Tema claro</span>
+                    </button>
+                </li>
+
                 <!-- sair -->
                 <li>
                     <a href="/logout" class="sidebar-logout" title="Sair" data-confirmar-logout>
@@ -208,6 +225,8 @@
 
     <!-- tema -->
     <script src="{{ url_for('static', filename='js/tema.js') }}" defer></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="{{ url_for('static', filename='js/acessibilidade.js') }}" defer></script>
 
     <!-- gerenciamento de modais -->
     <script src="{{ url_for('static', filename='js/modalManager.js') }}"></script>
