@@ -245,16 +245,19 @@
   overflow: hidden;
   border-radius: 10px;
   background: var(--bg-primary);
+  border: 1px solid var(--border-color);
   transition: box-shadow .18s;
 }
 
 #page-lancamento .input-group:focus-within {
+  border-color: var(--brand-primary);
   box-shadow: 0 0 0 3px color-mix(in srgb, var(--brand-primary) 24%, transparent);
 }
 
 #page-lancamento .input-group .form-control-custom {
   min-height: 48px;
   border-radius: 0;
+  border: 0;
 }
 
 #page-lancamento .input-group .form-control-custom:focus {
@@ -266,7 +269,8 @@
   justify-content: center;
   color: var(--text-muted) !important;
   background: var(--bg-surface-2) !important;
-  border-color: var(--border-color) !important;
+  border-right: 1px solid var(--border-color) !important;
+  border-radius: 0 !important;
   font-size: 14px;
   font-weight: 650;
 }
@@ -348,7 +352,8 @@
 .categoria-selecionada-nome:not(:empty) {
   width: fit-content;
   padding: 5px 9px;
-  background: color-mix(in srgb, var(--brand-primary) 10%, var(--bg-surface-1));
+  background: color-mix(in srgb, var(--category-color, var(--brand-primary)) 18%, var(--bg-surface-1));
+  border: 1px solid color-mix(in srgb, var(--category-color, var(--brand-primary)) 35%, var(--border-color));
   border-radius: 7px;
 }
 
@@ -551,6 +556,18 @@
   margin-top: clamp(24px, 4vh, 44px);
 }
 
+.lancamento-wizard-step[data-wizard-step="2"] {
+  width: min(100%, 1040px);
+  margin-right: auto;
+  margin-left: auto;
+}
+
+.lancamento-wizard-step[data-wizard-step="3"] {
+  width: min(100%, 1040px);
+  margin-right: auto;
+  margin-left: auto;
+}
+
 .lancamento-wizard-step.is-active {
   animation: lancamento-step-in .22s ease-out both;
 }
@@ -731,6 +748,15 @@
   font-size: 13px;
 }
 
+.lancamento-balance-feedback:not([hidden]) {
+  margin: 0 0 18px;
+  padding: 12px 14px;
+  background: color-mix(in srgb, var(--lancamento-exit) 10%, var(--bg-surface-1));
+  border: 1px solid color-mix(in srgb, var(--lancamento-exit) 35%, var(--border-color));
+  border-radius: 10px;
+  line-height: 1.5;
+}
+
 .lancamento-wizard-actions {
   display: flex;
   align-items: center;
@@ -879,12 +905,27 @@
   font-size: 11px;
 }
 
+.lancamento-conta-resumo-dados {
+  display: flex;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: 5px 16px;
+  min-width: 0;
+}
+
 .lancamento-conta-resumo-copy strong {
   overflow: hidden;
   color: var(--text-primary);
   font-size: 14px;
   text-overflow: ellipsis;
   white-space: nowrap;
+}
+
+#lancamento-conta-resumo-saldo {
+  color: var(--brand-secondary);
+  font-size: 17px;
+  font-weight: 800;
+  font-variant-numeric: tabular-nums;
 }
 
 .lancamento-conta-alterar {
@@ -974,7 +1015,8 @@
 
 .lancamento-account-option-copy small {
   color: var(--text-muted);
-  font-size: 12px;
+  font-size: 14px;
+  font-weight: 600;
 }
 
 .lancamento-account-option-arrow {

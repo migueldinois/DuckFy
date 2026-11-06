@@ -5,7 +5,7 @@
 {% endblock %}
 
 {% block content %}
-<main id="page-lancamento" class="py-3">
+<main id="page-lancamento" class="py-3" data-initial-step="{{ etapa_inicial|default(1) }}">
   <div class="style-container">
     <header class="lancamento-wizard-header">
       <div class="lancamento-wizard-topline">
@@ -34,7 +34,7 @@
     </header>
 
     <form class="lancamento-wizard-form" action="{{ url_for('salvar_lancamento') }}" method="POST">
-      <input type="hidden" id="id_conta" name="id_conta">
+      <input type="hidden" id="id_conta" name="id_conta" value="{{ dados_lancamento.get('id_conta', '') }}">
 
       <section class="lancamento-wizard-step is-active" data-wizard-step="1" aria-labelledby="titulo-etapa-tipo">
         <div class="lancamento-step-intro">
@@ -46,7 +46,7 @@
         <fieldset class="lancamento-type-choices">
           <legend class="visually-hidden">Tipo de movimentação</legend>
           <label class="lancamento-type-card" for="tipoEntrada">
-            <input class="lancamento-type-input" type="radio" name="tipo_transacao" id="tipoEntrada" value="entrada" data-wizard-type>
+            <input class="lancamento-type-input" type="radio" name="tipo_transacao" id="tipoEntrada" value="entrada" data-wizard-type {% if dados_lancamento.get('tipo_transacao') == 'entrada' %}checked{% endif %}>
             <span class="lancamento-type-card-icon lancamento-type-card-icon-entry" aria-hidden="true"><i class="bi bi-arrow-down-left-circle"></i></span>
             <span class="lancamento-type-card-copy">
               <strong>Entrada</strong>
@@ -55,7 +55,7 @@
             <i class="bi bi-check-circle-fill lancamento-type-check" aria-hidden="true"></i>
           </label>
           <label class="lancamento-type-card" for="tipoSaida">
-            <input class="lancamento-type-input" type="radio" name="tipo_transacao" id="tipoSaida" value="saida" data-wizard-type>
+            <input class="lancamento-type-input" type="radio" name="tipo_transacao" id="tipoSaida" value="saida" data-wizard-type {% if dados_lancamento.get('tipo_transacao') == 'saida' %}checked{% endif %}>
             <span class="lancamento-type-card-icon lancamento-type-card-icon-exit" aria-hidden="true"><i class="bi bi-arrow-up-right-circle"></i></span>
             <span class="lancamento-type-card-copy">
               <strong>Saída</strong>
@@ -76,17 +76,20 @@
       <section class="lancamento-wizard-step" data-wizard-step="2" aria-labelledby="titulo-etapa-conta" hidden>
         <div class="lancamento-step-intro lancamento-step-intro-left">
           <span class="lancamento-step-kicker">PASSO 2</span>
-          <h2 id="titulo-etapa-conta">Escolha uma conta</h2>
-          <p>Onde deseja registrar esta movimentação?</p>
+          <h2 id="titulo-etapa-conta">Em qual conta vai lançar?</h2>
+          <p>Selecione a conta onde esta entrada ou saída será registrada.</p>
         </div>
 
         <div class="lancamento-account-page-panel">
           {% if contas %}
           <div class="lancamento-account-list" aria-label="Contas bancárias">
             {% for conta in contas %}
-            <button type="button" class="lancamento-account-option" data-account-select data-account-id="{{ conta.id_conta }}" data-account-name="{{ conta.nome_conta }}">
+            <button type="button" class="lancamento-account-option" data-account-select data-account-id="{{ conta.id_conta }}" data-account-name="{{ conta.nome_conta }}" data-account-balance="{{ conta.saldo_atual|default(0, true) }}">
               <span class="lancamento-account-option-icon" aria-hidden="true"><i class="bi bi-bank"></i></span>
-              <span class="lancamento-account-option-copy"><strong>{{ conta.nome_conta }}</strong><small>{{ conta.tipo_conta }}</small></span>
+              <span class="lancamento-account-option-copy">
+                <strong>{{ conta.nome_conta }}</strong>
+                <small>{{ conta.tipo_conta }} · Saldo: R$ {{ '{:,.2f}'.format(conta.saldo_atual|default(0, true)|float).replace(',', 'X').replace('.', ',').replace('X', '.') }}</small>
+              </span>
               <i class="bi bi-arrow-right lancamento-account-option-arrow" aria-hidden="true"></i>
             </button>
             {% endfor %}
@@ -119,30 +122,37 @@
 
         <div class="lancamento-conta-resumo" id="lancamento-conta-resumo" hidden>
           <span class="lancamento-conta-resumo-icon" aria-hidden="true"><i class="bi bi-bank"></i></span>
-          <span class="lancamento-conta-resumo-copy"><small>Conta selecionada</small><strong id="lancamento-conta-resumo-nome"></strong></span>
+          <span class="lancamento-conta-resumo-copy">
+            <small>Conta selecionada</small>
+            <span class="lancamento-conta-resumo-dados">
+              <strong id="lancamento-conta-resumo-nome"></strong>
+              <strong id="lancamento-conta-resumo-saldo"></strong>
+            </span>
+          </span>
           <button type="button" class="lancamento-conta-alterar" data-account-trigger>
             <i class="bi bi-pencil" aria-hidden="true"></i><span>Alterar</span>
           </button>
         </div>
 
         <div class="lancamento-details-panel">
+          <p class="lancamento-wizard-feedback lancamento-balance-feedback" id="saldo-insuficiente" role="alert" aria-live="assertive" tabindex="-1" {% if not erro_lancamento %}hidden{% endif %}>{{ erro_lancamento or 'O valor da despesa ultrapassa o saldo disponível nesta conta.' }}</p>
           <div class="lancamento-details-grid">
             <div class="lancamento-field">
               <label for="local" class="form-label">Descrição</label>
-              <input type="text" class="form-control form-control-custom" id="local" name="local" placeholder="Ex.: Supermercado, salário..." required>
+              <input type="text" class="form-control form-control-custom" id="local" name="local" value="{{ dados_lancamento.get('local', '') }}" placeholder="Ex.: Supermercado, salário..." required>
             </div>
             <div class="lancamento-field">
               <label for="valor-display" class="form-label">Valor</label>
               <div class="input-group">
                 <span class="input-group-text form-control-custom">R$</span>
-                <input type="text" inputmode="numeric" autocomplete="off" class="form-control form-control-custom" id="valor-display" placeholder="0,00" aria-label="Valor da transação" required>
-                <input type="hidden" id="valor" name="valor">
+                <input type="text" inputmode="numeric" autocomplete="off" class="form-control form-control-custom" id="valor-display" value="{{ dados_lancamento.get('valor_display', '') }}" placeholder="0,00" aria-label="Valor da transação" required>
+                <input type="hidden" id="valor" name="valor" value="{{ dados_lancamento.get('valor', '') }}">
               </div>
             </div>
             <div class="lancamento-field lancamento-field-wide">
               <div class="lancamento-category-section">
                 <label class="form-label d-block">Categoria <span>(opcional)</span></label>
-                <input type="hidden" id="categoria-selecionada" name="categoria">
+                <input type="hidden" id="categoria-selecionada" name="categoria" value="{{ dados_lancamento.get('categoria', '') }}">
                 <div class="d-flex flex-wrap align-items-center gap-2" id="categorias-rapidas">
                   {% for categoria in categorias_despesa[:3] %}
                   <button type="button" class="btn-categoria-icon" data-category-choice data-category-type="saida" data-category-id="{{ categoria.id_categoria }}" data-category-name="{{ categoria.nome }}" data-category-color="{{ categoria.cor }}" title="{{ categoria.nome }}" aria-label="{{ categoria.nome }}">
@@ -169,7 +179,7 @@
             </div>
             <div class="lancamento-field lancamento-field-wide">
               <label for="observacao" class="form-label">Observação <span>(opcional)</span></label>
-              <textarea class="form-control form-control-custom" id="observacao" name="observacao" rows="3" placeholder="Adicione algum detalhe extra..."></textarea>
+              <textarea class="form-control form-control-custom" id="observacao" name="observacao" rows="3" placeholder="Adicione algum detalhe extra...">{{ dados_lancamento.get('observacao', '') }}</textarea>
             </div>
           </div>
         </div>

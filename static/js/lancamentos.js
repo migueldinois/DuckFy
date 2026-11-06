@@ -39,20 +39,48 @@ function configurarLancamentos() {
 
     valorDigitado.addEventListener('input', atualizarValor);
     valorDigitado.form?.addEventListener('reset', limparValorDepoisDoReset);
+
+    if (!valorDigitado.value && valorEnviado.value) {
+      const valorRestaurado = Number(valorEnviado.value);
+      if (Number.isFinite(valorRestaurado)) {
+        valorDigitado.value = valorRestaurado.toLocaleString('pt-BR', {
+          minimumFractionDigits: 2,
+          maximumFractionDigits: 2,
+        });
+      }
+    }
   }
 
   const etapasWizard = document.querySelectorAll('[data-wizard-step]');
+  const paginaLancamento = document.querySelector('#page-lancamento');
   const etapasProgresso = document.querySelectorAll('[data-progress-step]');
   const indicadorEtapa = document.querySelector('#lancamento-step-count');
   const botaoContinuar = document.querySelector('[data-wizard-continue]');
   const botoesVoltar = document.querySelectorAll('[data-wizard-back]');
   const avisoWizard = document.querySelector('#lancamento-wizard-feedback');
+  const avisoSaldo = document.querySelector('#saldo-insuficiente');
   const botoesSelecionarConta = document.querySelectorAll('[data-account-select]');
   const campoConta = document.querySelector('#id_conta');
   const resumoConta = document.querySelector('#lancamento-conta-resumo');
   const nomeResumoConta = document.querySelector('#lancamento-conta-resumo-nome');
+  const saldoResumoConta = document.querySelector('#lancamento-conta-resumo-saldo');
   const formularioLancamento = document.querySelector('.lancamento-wizard-form');
   const botoesAlterarConta = document.querySelectorAll('[data-account-trigger]');
+  let saldoContaSelecionada = null;
+
+  function mostrarErroSaldo(mensagem) {
+    if (window.DuckFyAlert?.error) {
+      if (avisoSaldo) avisoSaldo.hidden = true;
+      window.DuckFyAlert.error(mensagem, 'Saldo insuficiente');
+      return;
+    }
+
+    if (avisoSaldo) {
+      avisoSaldo.textContent = mensagem;
+      avisoSaldo.hidden = false;
+      avisoSaldo.focus();
+    }
+  }
 
   function definirEtapaWizard(etapa) {
     etapasWizard.forEach(function (painel) {
@@ -77,6 +105,21 @@ function configurarLancamentos() {
   function mostrarEtapaConta() {
     definirEtapaWizard(2);
     document.querySelector('[data-account-select]')?.focus();
+  }
+
+  function atualizarResumoConta(botao) {
+    if (!botao) return;
+
+    if (campoConta) campoConta.value = botao.dataset.accountId || '';
+    if (nomeResumoConta) nomeResumoConta.textContent = botao.dataset.accountName || '';
+    saldoContaSelecionada = Number(botao.dataset.accountBalance || 0);
+    if (saldoResumoConta) {
+      saldoResumoConta.textContent = `Saldo: ${saldoContaSelecionada.toLocaleString('pt-BR', {
+        style: 'currency',
+        currency: 'BRL',
+      })}`;
+    }
+    if (resumoConta) resumoConta.hidden = false;
   }
 
   function navegarParaEtapa(etapa) {
@@ -136,9 +179,7 @@ function configurarLancamentos() {
 
   botoesSelecionarConta.forEach(function (botao) {
     botao.addEventListener('click', function () {
-      if (campoConta) campoConta.value = botao.dataset.accountId || '';
-      if (nomeResumoConta) nomeResumoConta.textContent = botao.dataset.accountName || '';
-      if (resumoConta) resumoConta.hidden = false;
+      atualizarResumoConta(botao);
       definirEtapaWizard(3);
       document.querySelector('#local')?.focus();
     });
@@ -150,7 +191,16 @@ function configurarLancamentos() {
     });
   });
 
-  definirEtapaWizard(1);
+  const contaRestaurada = Array.from(botoesSelecionarConta).find(function (botao) {
+    return botao.dataset.accountId === campoConta?.value;
+  });
+  if (contaRestaurada) atualizarResumoConta(contaRestaurada);
+
+  const etapaInicial = Number(paginaLancamento?.dataset.initialStep) || 1;
+  definirEtapaWizard(etapaInicial === 3 && contaRestaurada ? 3 : 1);
+  if (avisoSaldo && !avisoSaldo.hidden) {
+    mostrarErroSaldo(avisoSaldo.textContent.trim());
+  }
 
   const campoCategoria = document.querySelector('#categoria-selecionada');
   const nomeCategoriaSelecionada = document.querySelector('#categoria-selecionada-nome');
@@ -210,6 +260,12 @@ function configurarLancamentos() {
 
     campoCategoria.value = botao.dataset.categoryId;
     nomeCategoriaSelecionada.textContent = `Selecionada: ${botao.dataset.categoryName}`;
+    const corCategoria = botao.dataset.categoryColor;
+    if (corCategoria && /^#[\da-f]{6}$/i.test(corCategoria)) {
+      nomeCategoriaSelecionada.style.setProperty('--category-color', corCategoria);
+    } else {
+      nomeCategoriaSelecionada.style.removeProperty('--category-color');
+    }
 
     botoesCategoria.forEach(function (opcao) {
       const mesmaCategoria = opcao.dataset.categoryId === botao.dataset.categoryId;
@@ -231,7 +287,12 @@ function configurarLancamentos() {
       return;
     }
 
-    const primeiraCategoria = document.querySelector(
+    const categoriaRestaurada = campoCategoria?.value
+      ? Array.from(botoesCategoria).find(function (botao) {
+        return botao.dataset.categoryId === campoCategoria.value && botao.dataset.categoryType === tipo;
+      })
+      : null;
+    const primeiraCategoria = categoriaRestaurada || document.querySelector(
       `.categoria-modal-lista [data-category-choice][data-category-type="${tipo}"]`
     );
 
@@ -280,6 +341,17 @@ function configurarLancamentos() {
 
   formularioLancamento?.addEventListener('submit', function (evento) {
     const tipoSelecionado = document.querySelector('[name="tipo_transacao"]:checked');
+    const valorNumerico = Number(valorEnviado?.value || 0);
+
+    if (tipoSelecionado?.value === 'saida' && saldoContaSelecionada !== null && valorNumerico > saldoContaSelecionada) {
+      evento.preventDefault();
+      mostrarErroSaldo(`O valor informado ultrapassa o saldo de ${saldoContaSelecionada.toLocaleString('pt-BR', {
+        style: 'currency',
+        currency: 'BRL',
+      })} disponível nesta conta.`);
+      return;
+    }
+
     if (!tipoSelecionado || !campoConta?.value) {
       evento.preventDefault();
       if (!tipoSelecionado) {
@@ -289,6 +361,10 @@ function configurarLancamentos() {
         mostrarEtapaConta();
       }
     }
+  });
+
+  valorDigitado?.addEventListener('input', function () {
+    if (avisoSaldo) avisoSaldo.hidden = true;
   });
 
   iniciarCategorias();
