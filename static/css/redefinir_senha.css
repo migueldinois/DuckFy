@@ -446,12 +446,16 @@ button[type="submit"]:focus-visible {
     color: var(--text-primary, #FFFFFF);
 }
 
+.voltar-perfil {
+    margin-bottom: 20px;
+}
+
 .form-etapa button:disabled {
     cursor: wait;
     opacity: 0.7;
 }
 
-body {
+body.tema-claro {
     background:
         radial-gradient(
             circle at 15% 20%,
@@ -464,7 +468,7 @@ body {
 }
 
 /* Card principal */
-.container {
+body.tema-claro .container {
     background: #FFFFFF;
     border: 1px solid #E6DDF2;
 
@@ -472,107 +476,107 @@ body {
 }
 
 /* Títulos */
-.logo {
+body.tema-claro .logo {
     color: #19152B;
 }
 
-.etapa-atual {
+body.tema-claro .etapa-atual {
     color: #7C4DFF;
 }
 
-.descricao {
+body.tema-claro .descricao {
     color: #77718A;
 }
 
 /* Campos */
-.campo label {
+body.tema-claro .campo label {
     color: #302A43;
 }
 
-.campo input {
+body.tema-claro .campo input {
     color: #302A43;
     background: #FFFFFF;
     border: 1px solid #E3DAF0;
 }
 
-.campo input::placeholder {
+body.tema-claro .campo input::placeholder {
     color: #A49BB5;
 }
 
-.campo input:focus {
+body.tema-claro .campo input:focus {
     border-color: #7C4DFF;
     box-shadow: 0 0 0 3px rgba(124, 77, 255, 0.12);
 }
 
 /* Regras da senha */
-.regras p {
+body.tema-claro .regras p {
     color: #77718A;
 }
 
 /* Progresso */
-.progresso-ponto {
+body.tema-claro .progresso-ponto {
     background: #F0ECF7;
     border-color: #DCD3E9;
 }
 
-.progresso-linha {
+body.tema-claro .progresso-linha {
     background: #DED6EA;
 }
 
 /* Mensagens */
-.mensagem-status {
+body.tema-claro .mensagem-status {
     color: #A52F36;
     background: #FFF0F0;
     border-color: #F2CCCC;
 }
 
-.mensagem-status.sucesso {
+body.tema-claro .mensagem-status.sucesso {
     color: #237A50;
     background: #EAF8F0;
     border-color: #C5E8D2;
 }
 
 /* Botões */
-button[type="submit"] {
+body.tema-claro button[type="submit"] {
     color: #FFFFFF;
     background: #7540C8;
     border: none;
     box-shadow: 0 6px 15px rgba(117, 64, 200, 0.18);
 }
 
-button[type="submit"]:hover {
+body.tema-claro button[type="submit"]:hover {
     background: #6632B8;
 }
 
 /* Botões secundários */
-.botao-secundario {
+body.tema-claro .botao-secundario {
     color: #77718A;
 }
 
-.botao-secundario:hover {
+body.tema-claro .botao-secundario:hover {
     color: #7540C8;
 }
 
 /* Voltar ao login */
-.voltar-login {
+body.tema-claro .voltar-login {
     color: #77718A;
 }
 
-.voltar-login:hover {
+body.tema-claro .voltar-login:hover {
     color: #7540C8;
 }
 
 /* Aviso de sucesso */
-.aviso-sucesso {
+body.tema-claro .aviso-sucesso {
     color: #302A43;
     background: #F0ECF7;
 }
 
 /* Botão continuar */
-.btn-continuar {
+body.tema-claro .btn-continuar {
     background: #7540C8;
 }
 
-.btn-continuar:hover {
+body.tema-claro .btn-continuar:hover {
     background: #6632B8;
 }
