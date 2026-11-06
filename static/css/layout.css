@@ -289,12 +289,10 @@ html.tema-claro .sidebar-link:not(.active):hover {
 @keyframes conteudo-entra {
   from {
     opacity: 0;
-    transform: translateY(9px);
   }
 
   to {
     opacity: 1;
-    transform: translateY(0);
   }
 }
 

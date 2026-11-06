@@ -685,7 +685,7 @@ html.tema-claro body.pagina-publica .termos-topo > a.btn-voltar:not(.btn-voltar-
   border-color: #d7c8f2 !important;
 }
 
-body.app-body .main-content .modal-content,
+body.app-body .modal-content,
 body.app-body .main-content .categoria-modal-conteudo {
   color: var(--text-primary) !important;
   background: var(--bg-surface-1) !important;
@@ -694,17 +694,17 @@ body.app-body .main-content .categoria-modal-conteudo {
   box-shadow: 0 24px 70px var(--shadow-color) !important;
 }
 
-body.app-body .main-content .modal-content .modal-title,
+body.app-body .modal-content .modal-title,
 body.app-body .main-content .duckfy-modal .card-section-title,
 body.app-body .main-content .categoria-modal-conteudo h2 {
   color: var(--text-primary) !important;
 }
 
-body.app-body .main-content .modal-content .form-control,
-body.app-body .main-content .modal-content .form-select,
-body.app-body .main-content .modal-content .custom-select-trigger,
-body.app-body .main-content .modal-content .custom-select-options,
-body.app-body .main-content .modal-content .search-input,
+body.app-body .modal-content .form-control,
+body.app-body .modal-content .form-select,
+body.app-body .modal-content .custom-select-trigger,
+body.app-body .modal-content .custom-select-options,
+body.app-body .modal-content .search-input,
 body.app-body .main-content .duckfy-modal .search-input {
   color: var(--text-primary) !important;
   background-color: var(--bg-surface-2) !important;
@@ -712,28 +712,28 @@ body.app-body .main-content .duckfy-modal .search-input {
   -webkit-text-fill-color: var(--text-primary);
 }
 
-body.app-body .main-content .modal-content .input-group-text {
+body.app-body .modal-content .input-group-text {
   color: var(--text-muted) !important;
   background-color: var(--bg-surface-2) !important;
   border-color: var(--border-color) !important;
   -webkit-text-fill-color: var(--text-muted);
 }
 
-body.app-body .main-content .modal-content .form-control::placeholder,
+body.app-body .modal-content .form-control::placeholder,
 body.app-body .main-content .duckfy-modal .search-input::placeholder {
   color: var(--text-muted) !important;
   -webkit-text-fill-color: var(--text-muted);
   opacity: 1;
 }
 
-body.app-body .main-content .modal-content :is(.form-control, .form-select, .custom-select-trigger, .search-input):focus,
+body.app-body .modal-content :is(.form-control, .form-select, .custom-select-trigger, .search-input):focus,
 body.app-body .main-content .duckfy-modal .search-input:focus {
   border-color: var(--brand-primary) !important;
   box-shadow: 0 0 0 3px color-mix(in srgb, var(--brand-primary) 20%, transparent) !important;
 }
 
-body.app-body .main-content .modal-action-cancel,
-body.app-body .main-content .modal-action-confirm {
+body.app-body .modal-action-cancel,
+body.app-body .modal-action-confirm {
   min-height: 48px;
   padding: 0.65rem 1.25rem;
   border: 0;
@@ -743,23 +743,31 @@ body.app-body .main-content .modal-action-confirm {
   transition: background-color 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
 }
 
-body.app-body .main-content .modal-action-cancel {
+body.app-body .modal-action-cancel {
   background: var(--danger-primary);
 }
 
-body.app-body .main-content .modal-action-cancel:hover {
+body.app-body .modal-action-cancel:hover {
   background: var(--danger-secondary);
   color: #ffffff;
   transform: translateY(-1px);
 }
 
-body.app-body .main-content .modal-action-confirm {
+body.app-body .modal-action-confirm {
   background: var(--confirmation-primary);
 }
 
-body.app-body .main-content .modal-action-confirm:hover {
+body.app-body .modal-action-confirm:hover {
   background: var(--confirmation-secondary);
   color: #ffffff;
   transform: translateY(-1px);
+}
+
+body.app-body.tema-claro .modal .text-white-50 {
+  color: var(--text-muted) !important;
+}
+
+body.app-body.tema-claro .modal .btn-close-white {
+  filter: invert(1) grayscale(100%) brightness(45%);
 }
 
