@@ -290,7 +290,7 @@ def logar():
 # encerra a sessão do usuário
 @app.route("/logout")
 def logout():
-    session.pop("usuario", None)
+    session.clear()
     flash("Você saiu da sua conta!", "success")
     return redirect("/login")
 
@@ -699,9 +699,32 @@ def dashboard():
     resumo = Transacao.obter_resumo_dashboard(id_usuario, inicio_mes, inicio_proximo_mes)
     receitas_categoria = [item for item in resumo['categorias'] if item['tipo'] == 'receita']
     despesas_categoria = [item for item in resumo['categorias'] if item['tipo'] == 'despesa']
+    categorias_receita = Categoria.recuperar_categorias_por_tipo(id_usuario, "Receita")
+    categorias_despesa = Categoria.recuperar_categorias_por_tipo(id_usuario, "Despesa")
+
+    def incluir_categorias_zeradas(itens, categorias_cadastradas):
+        nomes_existentes = {item['categoria'] for item in itens}
+        for categoria in categorias_cadastradas:
+            if categoria['nome'] not in nomes_existentes:
+                itens.append({
+                    'categoria': categoria['nome'],
+                    'cor': categoria['cor'],
+                    'total': 0.0,
+                })
+
+    incluir_categorias_zeradas(receitas_categoria, categorias_receita)
+    incluir_categorias_zeradas(despesas_categoria, categorias_despesa)
     paleta = ['#58e4a0', '#ff796c', '#55c5d8', '#f6c85f', '#b093ff', '#8bd3a8']
 
     def preparar_categorias(itens, total):
+        if not total:
+            for indice, item in enumerate(itens):
+                item['percentual'] = 0
+                cor = str(item.get('cor') or '')
+                if len(cor) != 7 or cor[0] != '#' or not all(char in '0123456789abcdefABCDEF' for char in cor[1:]):
+                    item['cor'] = paleta[indice % len(paleta)]
+            return 'conic-gradient(#45454d 0% 100%)'
+
         acumulado = 0
         fatias = []
         for indice, item in enumerate(itens):
@@ -791,7 +814,6 @@ def sequencia():
         flash("Você precisa estar logado para acessar a sequência!", "error")
         return redirect('/login')
 
-<<<<<<< HEAD
 @app.get("/acessibilidade")
 def acessibilidade():
     if "usuario" not in session:
@@ -801,10 +823,6 @@ def acessibilidade():
     return redirect(url_for("perfil"))
 
 # Rota para exibir o perfil do usuário
-=======
-
-# exibe o perfil do usuário
->>>>>>> 2c609b2f000a979fd7015f0e05ebf89ef6075575
 @app.route("/perfil", methods=["GET", "POST"])
 def perfil():
     email = session.get("email")
