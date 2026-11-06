@@ -11,9 +11,13 @@ document.addEventListener("DOMContentLoaded", function () {
     // atualiza a logo de acordo com o tema
     function atualizarLogo() {
         logos.forEach((logo) => {
-            const caminhoCorreto = temaEstaClaro()
-                ? logo.dataset.logoClaro
-                : logo.dataset.logoEscuro;
+            const sidebarRecolhida = logo.classList.contains("sidebar-logo")
+                && document.getElementById("sidebar")?.classList.contains("collapsed");
+            const caminhoCorreto = sidebarRecolhida
+                ? logo.dataset.logoRecolhida
+                : temaEstaClaro()
+                    ? logo.dataset.logoClaro
+                    : logo.dataset.logoEscuro;
 
             if (caminhoCorreto && logo.getAttribute("src") !== caminhoCorreto) {
                 logo.src = caminhoCorreto;
