@@ -509,6 +509,16 @@ body.app-body.tema-claro .main-content .simulador-info-card {
   box-shadow: 0 6px 18px rgba(83, 47, 145, 0.08);
 }
 
+body.app-body.tema-claro .main-content .simulador-page-wrapper .simulador-tabela {
+  --bs-table-bg: var(--bg-surface-1);
+  --bs-table-color: var(--text-primary);
+  --bs-table-border-color: var(--border-color);
+  --bs-table-striped-bg: var(--bg-surface-2);
+  --bs-table-striped-color: var(--text-primary);
+  --bs-table-hover-bg: var(--bg-surface-2);
+  --bs-table-hover-color: var(--text-primary);
+}
+
 body.app-body.tema-claro .main-content .custom-select-option {
   color: var(--text-primary);
 }
