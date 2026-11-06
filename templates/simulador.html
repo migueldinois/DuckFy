@@ -216,8 +216,7 @@
 <div class="modal fade" id="modalEditarPeriodo" tabindex="-1" aria-labelledby="modalEditarPeriodoLabel"
     aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content text-white"
-            style="background-color: #15141E; border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 12px;">
+        <div class="modal-content">
             <div class="modal-header border-bottom-0 pb-0">
                 <h5 class="modal-title fw-bold" id="modalEditarPeriodoLabel">Personalizar Período</h5>
                 <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"
@@ -227,19 +226,16 @@
                 <label for="inputModalAnos" class="form-label text-white-50 fw-semibold">Informe o tempo de investimento
                     (em anos):</label>
 
-                <input type="number" class="form-control text-white border-0 py-2 px-3" id="inputModalAnos" min="1"
-                    max="50" placeholder="Digite o número de anos"
-                    style="background-color: #0B0A12; border-radius: 8px;">
+                <input type="number" class="form-control py-2 px-3" id="inputModalAnos" min="1"
+                    max="50" placeholder="Digite o número de anos">
 
                 <div class="form-text text-white-50 mt-2 small">
                     * O período máximo permitido para simulação é de <strong>50 anos</strong>.
                 </div>
             </div>
             <div class="modal-footer border-top-0 pt-0">
-                <button type="button" class="btn text-white" data-bs-dismiss="modal"
-                    style="background-color: rgba(255, 255, 255, 0.1); border-radius: 8px;">Cancelar</button>
-                <button type="button" class="btn text-white fw-bold px-4" id="btnConfirmarAnosModal"
-                    style="background-color: #7C4DFF; border-radius: 8px;">Aplicar</button>
+                <button type="button" class="btn modal-action-cancel" data-bs-dismiss="modal">Cancelar</button>
+                <button type="button" class="btn modal-action-confirm" id="btnConfirmarAnosModal">Aplicar</button>
             </div>
         </div>
     </div>
