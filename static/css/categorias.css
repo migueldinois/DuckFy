@@ -26,6 +26,13 @@
     gap: 24px;
 }
 
+.categorias-heading {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    min-width: 0;
+}
+
 .header-texto {
     min-width: 0;
 }
@@ -683,6 +690,16 @@ body.tema-claro .tab-count {
         gap: 17px;
     }
 
+    .categorias-heading {
+        align-items: flex-start;
+        gap: 12px;
+        width: 100%;
+    }
+
+    .categorias-heading .btn-voltar-global {
+        margin-top: 2px;
+    }
+
     .page-title {
         font-size: 1.9rem;
     }
@@ -763,7 +780,7 @@ body.tema-claro .tab-count {
     }
 
     .aba-texto {
-        flex-basis: 0;
+        flex-basis: calc(100% - 48px);
         gap: 4px;
     }
 

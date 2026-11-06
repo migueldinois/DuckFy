@@ -418,9 +418,157 @@
   cursor: pointer;
 }
 
-.pagina-patrimonio select.search-input option {
+.tipo-conta-select {
+  position: relative;
+  width: 100%;
+}
+
+.tipo-conta-select.is-enhanced {
+  z-index: 1;
+}
+
+.tipo-conta-select.is-enhanced.is-open {
+  z-index: 2;
+}
+
+.tipo-conta-select.is-enhanced select[name="tipo_conta"] {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  clip-path: inset(50%);
+  white-space: nowrap;
+  border: 0;
+}
+
+.tipo-conta-trigger {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  min-height: 48px;
+  padding: 11px 14px;
   color: var(--text-primary);
+  background: var(--bg-surface-2);
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+  font: inherit;
+  font-size: .9rem;
+  text-align: left;
+  cursor: pointer;
+  transition: background .18s, border-color .18s, box-shadow .18s;
+}
+
+.tipo-conta-select.has-icon .tipo-conta-trigger {
+  padding-left: 42px;
+}
+
+.tipo-conta-select.is-open .tipo-conta-trigger,
+.tipo-conta-trigger:hover {
+  background: color-mix(in srgb, var(--brand-primary) 8%, var(--bg-surface-2));
+  border-color: color-mix(in srgb, var(--brand-primary) 58%, var(--border-color));
+}
+
+.tipo-conta-trigger:focus-visible {
+  outline: 0;
+  border-color: var(--brand-primary);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--brand-primary) 24%, transparent);
+}
+
+.tipo-conta-trigger.has-placeholder {
+  color: var(--text-muted);
+}
+
+.tipo-conta-trigger[aria-invalid="true"] {
+  border-color: var(--danger-primary);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--danger-primary) 20%, transparent);
+}
+
+.tipo-conta-chevron {
+  width: 9px;
+  height: 9px;
+  margin: -4px 2px 0 12px;
+  flex: 0 0 auto;
+  border-right: 1.5px solid var(--text-muted);
+  border-bottom: 1.5px solid var(--text-muted);
+  transform: rotate(45deg);
+  transition: transform .18s, margin .18s;
+}
+
+.tipo-conta-select.is-open .tipo-conta-chevron {
+  margin-top: 4px;
+  transform: rotate(225deg);
+}
+
+.tipo-conta-lista {
+  position: absolute;
+  z-index: 3;
+  top: calc(100% + 6px);
+  right: 0;
+  left: 0;
+  max-height: 230px;
+  overflow-y: auto;
+  padding: 5px;
   background: var(--bg-surface-1);
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+  box-shadow: 0 14px 34px rgba(0, 0, 0, .38);
+}
+
+.tipo-conta-lista[hidden] {
+  display: none;
+}
+
+.tipo-conta-opcao {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  min-height: 36px;
+  padding: 7px 10px;
+  color: var(--text-primary);
+  border-radius: 8px;
+  font-size: .9rem;
+  cursor: pointer;
+  transition: background .15s, color .15s;
+}
+
+.tipo-conta-opcao:hover,
+.tipo-conta-opcao.is-active {
+  background: color-mix(in srgb, var(--brand-primary) 16%, var(--bg-surface-1));
+}
+
+.tipo-conta-opcao[aria-selected="true"] {
+  color: #fff;
+  background: var(--brand-primary);
+  font-weight: 650;
+}
+
+.tipo-conta-opcao[aria-selected="true"]::after {
+  width: 7px;
+  height: 12px;
+  margin-left: 12px;
+  border-right: 2px solid currentColor;
+  border-bottom: 2px solid currentColor;
+  content: "";
+  transform: rotate(45deg);
+}
+
+.tipo-conta-opcao[aria-disabled="true"] {
+  color: var(--text-muted);
+  cursor: default;
+}
+
+.tipo-conta-erro {
+  display: block;
+  margin-top: 6px;
+  color: #ff7777;
+  font-size: .78rem;
+}
+
+.tipo-conta-erro[hidden] {
+  display: none;
 }
 
 .pagina-patrimonio .search-input:focus {
