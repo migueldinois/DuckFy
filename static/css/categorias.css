@@ -218,6 +218,11 @@
     width: min(100%, 440px);
 }
 
+.categorias-acoes .search-box {
+    width: min(27vw, 260px);
+    flex: 0 1 260px;
+}
+
 .search-icon {
     position: absolute;
     top: 50%;
@@ -673,6 +678,21 @@ body.tema-claro .tab-count {
         padding: 24px 20px;
     }
 
+    .categorias-header {
+        align-items: flex-start;
+        flex-direction: column;
+    }
+
+    .categorias-acoes {
+        width: 100%;
+    }
+
+    .categorias-acoes .search-box {
+        width: auto;
+        min-width: 0;
+        flex: 1 1 180px;
+    }
+
     .category-list {
         grid-template-columns: 1fr;
     }
@@ -690,16 +710,6 @@ body.tema-claro .tab-count {
         gap: 17px;
     }
 
-    .categorias-heading {
-        align-items: flex-start;
-        gap: 12px;
-        width: 100%;
-    }
-
-    .categorias-heading .btn-voltar-global {
-        margin-top: 2px;
-    }
-
     .page-title {
         font-size: 1.9rem;
     }
@@ -710,7 +720,7 @@ body.tema-claro .tab-count {
     }
 
     .btn-nova-categoria {
-        width: 100%;
+        width: auto;
         min-height: 45px;
     }
 
@@ -744,16 +754,6 @@ body.tema-claro .tab-count {
 
     .resumo-numero span {
         font-size: 0.66rem;
-    }
-
-    .categorias-ferramentas {
-        align-items: stretch;
-        flex-direction: column;
-        gap: 10px;
-    }
-
-    .search-box {
-        width: 100%;
     }
 
     .categorias-contagem {
