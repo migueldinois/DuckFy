@@ -5,137 +5,185 @@
 {% endblock %}
 
 {% block content %}
-<div id="page-lancamento" class="py-3">
+<main id="page-lancamento" class="py-3">
   <div class="style-container">
-
-    <header class="lancamento-header">
-      <button type="button" class="btn-voltar btn-voltar-global border-0 bg-transparent text-white p-0" aria-label="Voltar" onclick="history.back()">
-        <i class="bi bi-arrow-left"></i>
-      </button>
-      <div>
-        <span class="lancamento-eyebrow"><i class="bi bi-arrow-left-right" aria-hidden="true"></i> MOVIMENTAÇÃO FINANCEIRA</span>
-        <h1>Novo lançamento</h1>
-        <p>Registre suas entradas e saídas para manter suas finanças em dia.</p>
+    <header class="lancamento-wizard-header">
+      <div class="lancamento-wizard-topline">
+        <div class="lancamento-wizard-title-group">
+          <div class="lancamento-card-icon" aria-hidden="true"><i class="bi bi-arrow-left-right"></i></div>
+          <div>
+            <span class="lancamento-eyebrow"><i class="bi bi-stars" aria-hidden="true"></i> MOVIMENTAÇÃO FINANCEIRA</span>
+            <h1>Novo lançamento</h1>
+            <p>Registre uma entrada ou saída na sua conta.</p>
+          </div>
+        </div>
+        <span class="lancamento-step-count" id="lancamento-step-count">Etapa 1 de 3</span>
       </div>
+
+      <nav class="lancamento-progress" aria-label="Etapas do lançamento">
+        <button type="button" class="lancamento-progress-item is-current" data-progress-step="1" aria-current="step" aria-label="Ir para etapa Tipo">
+          <span class="lancamento-progress-bar"></span><span>Tipo</span>
+        </button>
+        <button type="button" class="lancamento-progress-item" data-progress-step="2" aria-label="Ir para etapa Conta">
+          <span class="lancamento-progress-bar"></span><span>Conta</span>
+        </button>
+        <button type="button" class="lancamento-progress-item" data-progress-step="3" aria-label="Ir para etapa Detalhes">
+          <span class="lancamento-progress-bar"></span><span>Detalhes</span>
+        </button>
+      </nav>
     </header>
 
-    <section class="lancamento-block p-4 rounded-4 shadow-lg" aria-labelledby="lancamento-form-title">
-      <div class="lancamento-card-heading">
-        <div class="lancamento-card-icon" aria-hidden="true"><i class="bi bi-wallet2"></i></div>
-        <div>
-          <h2 id="lancamento-form-title">Detalhes da movimentação</h2>
-          <p>Preencha as informações abaixo para adicionar ao seu extrato.</p>
+    <form class="lancamento-wizard-form" action="{{ url_for('salvar_lancamento') }}" method="POST">
+      <input type="hidden" id="id_conta" name="id_conta">
+
+      <section class="lancamento-wizard-step is-active" data-wizard-step="1" aria-labelledby="titulo-etapa-tipo">
+        <div class="lancamento-step-intro">
+          <span class="lancamento-step-kicker">PASSO 1</span>
+          <h2 id="titulo-etapa-tipo">Escolha o tipo de lançamento</h2>
+          <p>Isso ajuda o DuckFy a organizar sua movimentação.</p>
         </div>
-      </div>
 
-      <form action="{{ url_for('salvar_lancamento') }}" method="POST">
-
-        <fieldset class="lancamento-type-section">
-          <legend class="form-label text-white-50 fs-7 fw-medium mb-2">Tipo de movimentação</legend>
-          <div class="tipo-switch-container p-1 rounded-pill d-inline-flex">
-            <input type="radio" class="btn-check" name="tipo_transacao" id="tipoEntrada" value="entrada" checked>
-            <label class="btn btn-tipo-switch rounded-pill px-4 py-2" for="tipoEntrada">
-              <i class="bi bi-arrow-down-left-circle me-1"></i> Entrada
-            </label>
-
-            <input type="radio" class="btn-check" name="tipo_transacao" id="tipoSaida" value="saida">
-            <label class="btn btn-tipo-switch rounded-pill px-4 py-2" for="tipoSaida">
-              <i class="bi bi-arrow-up-right-circle me-1"></i> Saída
-            </label>
-          </div>
+        <fieldset class="lancamento-type-choices">
+          <legend class="visually-hidden">Tipo de movimentação</legend>
+          <label class="lancamento-type-card" for="tipoEntrada">
+            <input class="lancamento-type-input" type="radio" name="tipo_transacao" id="tipoEntrada" value="entrada" data-wizard-type>
+            <span class="lancamento-type-card-icon lancamento-type-card-icon-entry" aria-hidden="true"><i class="bi bi-arrow-down-left-circle"></i></span>
+            <span class="lancamento-type-card-copy">
+              <strong>Entrada</strong>
+              <small>Salário, vendas, reembolsos e outros valores recebidos.</small>
+            </span>
+            <i class="bi bi-check-circle-fill lancamento-type-check" aria-hidden="true"></i>
+          </label>
+          <label class="lancamento-type-card" for="tipoSaida">
+            <input class="lancamento-type-input" type="radio" name="tipo_transacao" id="tipoSaida" value="saida" data-wizard-type>
+            <span class="lancamento-type-card-icon lancamento-type-card-icon-exit" aria-hidden="true"><i class="bi bi-arrow-up-right-circle"></i></span>
+            <span class="lancamento-type-card-copy">
+              <strong>Saída</strong>
+              <small>Compras, contas, serviços e outros gastos do dia a dia.</small>
+            </span>
+            <i class="bi bi-check-circle-fill lancamento-type-check" aria-hidden="true"></i>
+          </label>
         </fieldset>
 
-        <div class="row g-3">
-          <div class="col-12">
-            <label for="id_conta" class="form-label text-white-50 fs-7 fw-medium mb-1">Conta</label>
-            <select class="form-select form-control-custom rounded-3" id="id_conta" name="id_conta" required {% if not contas %}disabled{% endif %}>
-              <option value="" selected disabled>Selecione uma conta</option>
-              {% for conta in contas %}
-              <option value="{{ conta.id_conta }}">{{ conta.nome_conta }}</option>
-              {% endfor %}
-            </select>
-            {% if not contas %}
-            <small class="text-white-50">Cadastre uma conta antes de lançar uma transação.</small>
-            <a class="lancamento-adicionar-categoria" href="{{ url_for('contas', adicionar=1) }}">
-              <i class="bi bi-plus-circle" aria-hidden="true"></i>
-              <span>Cadastrar conta bancária</span>
-            </a>
-            {% endif %}
-          </div>
+        <p class="lancamento-wizard-feedback" id="lancamento-wizard-feedback" role="status" hidden>Selecione entrada ou saída para continuar.</p>
+        <div class="lancamento-wizard-actions lancamento-wizard-actions-end">
+          <button type="button" class="btn-purple-action" data-wizard-continue>
+            <span>Continuar</span><i class="bi bi-arrow-right" aria-hidden="true"></i>
+          </button>
+        </div>
+      </section>
 
-          <div class="col-12 col-md-6">
-            <label for="local" class="form-label text-white-50 fs-7 fw-medium mb-1">Local</label>
-            <input type="text" class="form-control form-control-custom rounded-3" id="local" name="local" placeholder="Ex: Supermercado, Salário, etc." required>
-          </div>
+      <section class="lancamento-wizard-step" data-wizard-step="2" aria-labelledby="titulo-etapa-conta" hidden>
+        <div class="lancamento-step-intro lancamento-step-intro-left">
+          <span class="lancamento-step-kicker">PASSO 2</span>
+          <h2 id="titulo-etapa-conta">Escolha uma conta</h2>
+          <p>Onde deseja registrar esta movimentação?</p>
+        </div>
 
-          <div class="col-12 col-md-6">
-            <label for="valor-display" class="form-label text-white-50 fs-7 fw-medium mb-1">Valor</label>
-            <div class="input-group">
-              <span class="input-group-text form-control-custom border-end-0 text-white-50">R$</span>
-              <input type="text" inputmode="numeric" autocomplete="off" class="form-control form-control-custom border-start-0 rounded-end-3" id="valor-display" placeholder="0,00" aria-label="Valor da transação" required>
-              <input type="hidden" id="valor" name="valor">
-            </div>
-          </div>
-
-          <div class="col-12">
-            <div class="lancamento-category-section">
-            <label class="form-label text-white-50 fs-7 fw-medium d-block mb-2">Categoria <span>(opcional)</span></label>
-            <input type="hidden" id="categoria-selecionada" name="categoria">
-            <div class="d-flex flex-wrap align-items-center gap-2" id="categorias-rapidas">
-              {% for categoria in categorias_despesa[:3] %}
-              <button type="button" class="btn-categoria-icon rounded-circle d-flex align-items-center justify-content-center"
-                data-category-choice data-category-type="saida" data-category-id="{{ categoria.id_categoria }}"
-                data-category-name="{{ categoria.nome }}" data-category-color="{{ categoria.cor }}"
-                title="{{ categoria.nome }}" aria-label="{{ categoria.nome }}">
-                <span class="emoji-ios">{{ categoria.emoji }}</span>
-              </button>
-              {% endfor %}
-              {% for categoria in categorias_receita[:3] %}
-              <button type="button" class="btn-categoria-icon rounded-circle d-flex align-items-center justify-content-center"
-                data-category-choice data-category-type="entrada" data-category-id="{{ categoria.id_categoria }}"
-                data-category-name="{{ categoria.nome }}" data-category-color="{{ categoria.cor }}"
-                title="{{ categoria.nome }}" aria-label="{{ categoria.nome }}" hidden>
-                <span class="emoji-ios">{{ categoria.emoji }}</span>
-              </button>
-              {% endfor %}
-              <button type="button" class="btn-categoria-icon rounded-circle d-flex align-items-center justify-content-center"
-                id="abrir-modal-categorias" aria-label="Ver todas as categorias" title="Ver todas as categorias">
-                <i class="bi bi-three-dots fs-5" aria-hidden="true"></i>
-              </button>
-            </div>
-            <div class="categoria-selecionada-nome" id="categoria-selecionada-nome" aria-live="polite"></div>
-            <a class="lancamento-adicionar-categoria"
-              data-category-create="saida"
-              href="{{ url_for('categorias', criar='saida') }}"
-              {% if categorias_despesa %}hidden{% endif %}>
-              <i class="bi bi-plus-circle" aria-hidden="true"></i>
-              <span>Adicionar categoria de saída</span>
-            </a>
-            <a class="lancamento-adicionar-categoria"
-              data-category-create="entrada"
-              href="{{ url_for('categorias', criar='entrada') }}"
-              {% if categorias_receita %}hidden{% endif %}>
-              <i class="bi bi-plus-circle" aria-hidden="true"></i>
-              <span>Adicionar categoria de entrada</span>
-            </a>
-            </div>
-          </div>
-
-          <div class="col-12">
-            <label for="observacao" class="form-label text-white-50 fs-7 fw-medium mb-1">Observação (opcional)</label>
-            <textarea class="form-control form-control-custom rounded-3" id="observacao" name="observacao" rows="3" placeholder="Adicione algum detalhe extra..."></textarea>
-          </div>
-
-          <div class="col-12 mt-4">
-            <button type="submit" class="btn-purple-action" {% if not contas %}disabled{% endif %}>
-              <i class="bi bi-check2-circle" aria-hidden="true"></i>
-              <span>Confirmar lançamento</span>
+        <div class="lancamento-account-page-panel">
+          {% if contas %}
+          <div class="lancamento-account-list" aria-label="Contas bancárias">
+            {% for conta in contas %}
+            <button type="button" class="lancamento-account-option" data-account-select data-account-id="{{ conta.id_conta }}" data-account-name="{{ conta.nome_conta }}">
+              <span class="lancamento-account-option-icon" aria-hidden="true"><i class="bi bi-bank"></i></span>
+              <span class="lancamento-account-option-copy"><strong>{{ conta.nome_conta }}</strong><small>{{ conta.tipo_conta }}</small></span>
+              <i class="bi bi-arrow-right lancamento-account-option-arrow" aria-hidden="true"></i>
             </button>
+            {% endfor %}
+          </div>
+          {% else %}
+          <div class="lancamento-account-empty">
+            <span class="lancamento-account-empty-icon" aria-hidden="true"><i class="bi bi-bank"></i></span>
+            <h3>Nenhuma conta cadastrada</h3>
+            <p>Cadastre uma conta bancária para continuar com o lançamento.</p>
+            <a class="lancamento-adicionar-categoria" href="{{ url_for('contas', adicionar=1) }}">
+              <i class="bi bi-plus-circle" aria-hidden="true"></i><span>Cadastrar conta bancária</span>
+            </a>
+          </div>
+          {% endif %}
+        </div>
+
+        <div class="lancamento-wizard-actions lancamento-wizard-actions-end">
+          <button type="button" class="lancamento-back-action" data-wizard-back="1">
+            <i class="bi bi-arrow-left" aria-hidden="true"></i><span>Voltar</span>
+          </button>
+        </div>
+      </section>
+
+      <section class="lancamento-wizard-step" data-wizard-step="3" aria-labelledby="titulo-etapa-detalhes" hidden>
+        <div class="lancamento-step-intro lancamento-step-intro-left">
+          <span class="lancamento-step-kicker">PASSO 3</span>
+          <h2 id="titulo-etapa-detalhes">Quais são os detalhes?</h2>
+          <p>Informe o valor e os dados desta movimentação.</p>
+        </div>
+
+        <div class="lancamento-conta-resumo" id="lancamento-conta-resumo" hidden>
+          <span class="lancamento-conta-resumo-icon" aria-hidden="true"><i class="bi bi-bank"></i></span>
+          <span class="lancamento-conta-resumo-copy"><small>Conta selecionada</small><strong id="lancamento-conta-resumo-nome"></strong></span>
+          <button type="button" class="lancamento-conta-alterar" data-account-trigger>
+            <i class="bi bi-pencil" aria-hidden="true"></i><span>Alterar</span>
+          </button>
+        </div>
+
+        <div class="lancamento-details-panel">
+          <div class="lancamento-details-grid">
+            <div class="lancamento-field">
+              <label for="local" class="form-label">Descrição</label>
+              <input type="text" class="form-control form-control-custom" id="local" name="local" placeholder="Ex.: Supermercado, salário..." required>
+            </div>
+            <div class="lancamento-field">
+              <label for="valor-display" class="form-label">Valor</label>
+              <div class="input-group">
+                <span class="input-group-text form-control-custom">R$</span>
+                <input type="text" inputmode="numeric" autocomplete="off" class="form-control form-control-custom" id="valor-display" placeholder="0,00" aria-label="Valor da transação" required>
+                <input type="hidden" id="valor" name="valor">
+              </div>
+            </div>
+            <div class="lancamento-field lancamento-field-wide">
+              <div class="lancamento-category-section">
+                <label class="form-label d-block">Categoria <span>(opcional)</span></label>
+                <input type="hidden" id="categoria-selecionada" name="categoria">
+                <div class="d-flex flex-wrap align-items-center gap-2" id="categorias-rapidas">
+                  {% for categoria in categorias_despesa[:3] %}
+                  <button type="button" class="btn-categoria-icon" data-category-choice data-category-type="saida" data-category-id="{{ categoria.id_categoria }}" data-category-name="{{ categoria.nome }}" data-category-color="{{ categoria.cor }}" title="{{ categoria.nome }}" aria-label="{{ categoria.nome }}">
+                    <span class="emoji-ios">{{ categoria.emoji }}</span>
+                  </button>
+                  {% endfor %}
+                  {% for categoria in categorias_receita[:3] %}
+                  <button type="button" class="btn-categoria-icon" data-category-choice data-category-type="entrada" data-category-id="{{ categoria.id_categoria }}" data-category-name="{{ categoria.nome }}" data-category-color="{{ categoria.cor }}" title="{{ categoria.nome }}" aria-label="{{ categoria.nome }}" hidden>
+                    <span class="emoji-ios">{{ categoria.emoji }}</span>
+                  </button>
+                  {% endfor %}
+                  <button type="button" class="btn-categoria-icon" id="abrir-modal-categorias" aria-label="Ver todas as categorias" title="Ver todas as categorias">
+                    <i class="bi bi-three-dots" aria-hidden="true"></i>
+                  </button>
+                </div>
+                <div class="categoria-selecionada-nome" id="categoria-selecionada-nome" aria-live="polite"></div>
+                <a class="lancamento-adicionar-categoria" data-category-create="saida" href="{{ url_for('categorias', criar='saida') }}" {% if categorias_despesa %}hidden{% endif %}>
+                  <i class="bi bi-plus-circle" aria-hidden="true"></i><span>Adicionar categoria de saída</span>
+                </a>
+                <a class="lancamento-adicionar-categoria" data-category-create="entrada" href="{{ url_for('categorias', criar='entrada') }}" {% if categorias_receita %}hidden{% endif %}>
+                  <i class="bi bi-plus-circle" aria-hidden="true"></i><span>Adicionar categoria de entrada</span>
+                </a>
+              </div>
+            </div>
+            <div class="lancamento-field lancamento-field-wide">
+              <label for="observacao" class="form-label">Observação <span>(opcional)</span></label>
+              <textarea class="form-control form-control-custom" id="observacao" name="observacao" rows="3" placeholder="Adicione algum detalhe extra..."></textarea>
+            </div>
           </div>
         </div>
 
-      </form>
-    </section>
+        <div class="lancamento-wizard-actions lancamento-wizard-actions-end">
+          <button type="button" class="lancamento-back-action" data-wizard-back="2">
+            <i class="bi bi-arrow-left" aria-hidden="true"></i><span>Voltar</span>
+          </button>
+          <button type="submit" class="btn-purple-action" {% if not contas %}disabled{% endif %}>
+            <span>Salvar lançamento</span><i class="bi bi-check2-circle" aria-hidden="true"></i>
+          </button>
+        </div>
+      </section>
+    </form>
 
     <div class="duckfy-modal categoria-modal" id="modal-selecionar-categoria" aria-hidden="true">
       <section class="categoria-modal-conteudo" role="dialog" aria-modal="true" aria-labelledby="titulo-modal-categorias">
@@ -145,19 +193,13 @@
         </header>
         <div class="categoria-modal-lista">
           {% for categoria in categorias_despesa %}
-          <button type="button" class="categoria-modal-opcao" data-category-choice data-category-type="saida"
-            data-category-id="{{ categoria.id_categoria }}" data-category-name="{{ categoria.nome }}"
-            data-category-color="{{ categoria.cor }}">
-            <span class="categoria-modal-emoji emoji-ios">{{ categoria.emoji }}</span>
-            <span>{{ categoria.nome }}</span>
+          <button type="button" class="categoria-modal-opcao" data-category-choice data-category-type="saida" data-category-id="{{ categoria.id_categoria }}" data-category-name="{{ categoria.nome }}" data-category-color="{{ categoria.cor }}">
+            <span class="categoria-modal-emoji emoji-ios">{{ categoria.emoji }}</span><span>{{ categoria.nome }}</span>
           </button>
           {% endfor %}
           {% for categoria in categorias_receita %}
-          <button type="button" class="categoria-modal-opcao" data-category-choice data-category-type="entrada"
-            data-category-id="{{ categoria.id_categoria }}" data-category-name="{{ categoria.nome }}"
-            data-category-color="{{ categoria.cor }}" hidden>
-            <span class="categoria-modal-emoji emoji-ios">{{ categoria.emoji }}</span>
-            <span>{{ categoria.nome }}</span>
+          <button type="button" class="categoria-modal-opcao" data-category-choice data-category-type="entrada" data-category-id="{{ categoria.id_categoria }}" data-category-name="{{ categoria.nome }}" data-category-color="{{ categoria.cor }}" hidden>
+            <span class="categoria-modal-emoji emoji-ios">{{ categoria.emoji }}</span><span>{{ categoria.nome }}</span>
           </button>
           {% endfor %}
           {% if not categorias_despesa %}
@@ -169,9 +211,8 @@
         </div>
       </section>
     </div>
-
   </div>
-</div>
+</main>
 {% endblock %}
 
 {% block extra_js %}
