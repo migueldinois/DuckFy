@@ -58,9 +58,9 @@
 
             <a href="/dashboard" class="sidebar-brand" title="DuckFy">
 
-                <img src="{{ url_for('static', filename='img/d.png') }}"
-                    data-logo-claro="{{ url_for('static', filename='img/logo_escura.png') }}"
-                    data-logo-escuro="{{ url_for('static', filename='img/logo_duckfy04.png') }}" alt="DuckFy"
+                <img src="{{ url_for('static', filename='img/logo_duckfy.png') }}"
+                    data-logo-claro="{{ url_for('static', filename='img/logo_duckfy.png') }}"
+                    data-logo-escuro="{{ url_for('static', filename='img/logo_duckfy.png') }}" alt="DuckFy"
                     data-logo-recolhida="{{ url_for('static', filename='img/d.png') }}"
                     class="sidebar-logo">
             </a>
@@ -83,7 +83,7 @@
                     </a>
                 </li>
 
-                <!-- contas bancarias -->
+                <!-- contas bancárias -->
                 <li>
                     <a href="/contas"
                         class="sidebar-link {% if request.path.rstrip('/') == '/contas' %}active{% endif %}"
@@ -107,7 +107,7 @@
                     </a>
                 </li>
 
-                <!-- lancamentos -->
+                <!-- lançamentos -->
                 <li>
                     <a href="/lancamento"
                         class="sidebar-link {% if request.path.rstrip('/') == '/lancamento' %}active{% endif %}"
@@ -119,7 +119,7 @@
                     </a>
                 </li>
 
-                <!-- reserva de emergencia -->
+                <!-- reserva de emergência -->
                 <li>
                     <a href="/reserva_emergencia"
                         class="sidebar-link {% if request.path.rstrip('/') == '/reserva_emergencia' %}active{% endif %}"
@@ -142,7 +142,7 @@
                     </a>
                 </li>
 
-                <!-- simulador de patrimonio -->
+                <!-- simulador de patrimônio -->
                 <li>
                     <a href="/simulador"
                         class="sidebar-link {% if request.path.rstrip('/') == '/simulador' %}active{% endif %}"
@@ -154,7 +154,7 @@
                     </a>
                 </li>
 
-                <!-- sequencia -->
+                <!-- sequência -->
                 <li class="mt-auto">
                     <a href="/sequencia"
                         class="sidebar-link {% if request.path.rstrip('/') == '/sequencia' %}active{% endif %}"
