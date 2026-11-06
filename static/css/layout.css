@@ -25,12 +25,12 @@ body.app-body {
   background-color: var(--bg-primary);
   color: #ffffff;
   margin: 0;
-  min-height: 100vh;
+  min-height: 100dvh;
 }
 
 .app-container {
     display: flex;
-    min-height: 100vh;
+    min-height: 100dvh;
     width: 100%;
 }
 
@@ -374,18 +374,25 @@ html.tema-claro .sidebar-link:not(.active):hover {
 /* ==========================================================================
    RESPONSIVIDADE
    ========================================================================== */
-@media (max-width: 768px) {
+@media (max-width: 900px) {
   .sidebar {
     display: none !important;
   }
 
   .bottom-bar {
-    display: block;
+    display: flex;
   }
 
   .main-content {
     margin-left: 0 !important;
-    padding: 1rem;
-    padding-bottom: 80px;
+    padding: 1.25rem 1rem;
+    padding-bottom: calc(112px + env(safe-area-inset-bottom));
+  }
+}
+
+@media (max-width: 480px) {
+  .main-content {
+    padding: 1rem 0.75rem;
+    padding-bottom: calc(108px + env(safe-area-inset-bottom));
   }
 }
