@@ -8,9 +8,13 @@
 
     <title>DuckFy - Recuperação de Senha</title> 
 
+    <script src="{{ url_for('static', filename='js/tema-inicial.js') }}"></script>
+
     <!-- conecta os estilos -->
     <link rel="stylesheet" href="{{ url_for('static', filename='css/variables.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/redefinir_senha.css') }}">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/botao-voltar.css') }}">
 
     <!-- posiciona o fundo das particulas -->
     <style>
@@ -31,12 +35,23 @@
 </head>
 
 <body>
+    <script>
+        if (document.documentElement.classList.contains("tema-claro")) {
+            document.body.classList.add("tema-claro");
+        }
+    </script>
 
     <!-- fundo animado -->
     <canvas id="particulas-fundo" aria-hidden="true"></canvas>
 
     <!-- tela de redefinicao de senha -->
     <main class="container">
+
+        {% if session.get('usuario') and session.get('id_usuario') %}
+        <a class="btn-voltar-global voltar-perfil" href="{{ url_for('perfil') }}" aria-label="Voltar para o perfil">
+            <i class="bi bi-arrow-left" aria-hidden="true"></i>
+        </a>
+        {% endif %}
 
         <p class="etapa-atual" id="etapa-atual">ETAPA 1 DE 3</p>
         <h1 class="logo" id="titulo-etapa">Confirme seu e-mail</h1>
@@ -90,10 +105,13 @@
             <button type="submit">REDEFINIR SENHA</button>
         </form>
 
+        {% if not session.get('usuario') or not session.get('id_usuario') %}
         <a class="voltar-login" href="{{ url_for('index') }}">Voltar para o login</a>
+        {% endif %}
 
     </main>
 
+    <script src="{{ url_for('static', filename='js/particulas.js') }}" defer></script>
     <script src="{{ url_for('static', filename='js/redefinir_senha.js') }}" defer></script>
 </body>
 </html>
