@@ -69,8 +69,10 @@
             {{ categorias_despesa|length }} categorias
         </span>
     </div>
-    <!-- abas de despesas e receitas -->
+    <!-- Alternador de Abas -->
+    <!-- abas de categorias -->
     <nav class="categorias-abas" role="tablist" aria-label="Tipo de categoria">
+
         <button type="button" class="tab-btn active" id="btnSaidas" role="tab" aria-selected="true"
             aria-controls="listaSaidas" onclick="alternarAba('SAIDA')">
             <span class="aba-icone despesas-icone">
@@ -82,7 +84,9 @@
                 <small>Para onde vai seu dinheiro</small>
             </span>
 
-            <span class="tab-count">{{ categorias_despesa|length }}</span>
+            <span class="tab-count">
+                {{ categorias_despesa|length }}
+            </span>
         </button>
 
         <button type="button" class="tab-btn" id="btnEntradas" role="tab" aria-selected="false"
@@ -96,8 +100,11 @@
                 <small>De onde vem seu dinheiro</small>
             </span>
 
-            <span class="tab-count">{{ categorias_receita|length }}</span>
+            <span class="tab-count">
+                {{ categorias_receita|length }}
+            </span>
         </button>
+
     </nav>
 
     <!-- lista de despesas -->

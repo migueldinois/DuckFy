@@ -146,6 +146,131 @@ body.app-body.tema-claro .main-content .sequencia-lateral {
     var(--bg-surface-1) !important;
 }
 
+body.app-body.tema-claro .main-content .income-chart-card {
+  border-color: var(--border-color) !important;
+  background:
+    radial-gradient(ellipse at 8% 100%, rgba(18, 134, 83, 0.1), transparent 42%),
+    linear-gradient(105deg, #f0faf4, #f8f6fc 72%) !important;
+  box-shadow: 0 12px 32px var(--shadow-color), inset 0 1px 0 #ffffff;
+}
+
+body.app-body.tema-claro .main-content .income-chart-card .category-carousel-controls {
+  border-color: var(--border-color);
+  background: #f0ecf8;
+}
+
+body.app-body.tema-claro .main-content .income-chart-card .category-carousel-tab {
+  color: var(--text-muted);
+}
+
+body.app-body.tema-claro .main-content .income-chart-card .category-carousel-tab.active {
+  background: #dcefe5;
+  color: #0b6b41;
+}
+
+body.app-body.tema-claro .main-content .income-chart-card .category-carousel-tab:focus-visible {
+  outline-color: var(--accent-primary);
+}
+
+body.app-body.tema-claro .main-content .income-chart-card .chart-eyebrow {
+  color: var(--accent-primary);
+}
+
+body.app-body.tema-claro .main-content .income-chart-card .card-section-title,
+body.app-body.tema-claro .main-content .income-chart-card .category-empty-copy strong,
+body.app-body.tema-claro .main-content .income-chart-card .category-legend li > strong,
+body.app-body.tema-claro .main-content .income-chart-card .donut-center strong {
+  color: var(--text-primary);
+}
+
+body.app-body.tema-claro .main-content .income-chart-card .chart-description,
+body.app-body.tema-claro .main-content .income-chart-card .category-empty-copy span,
+body.app-body.tema-claro .main-content .income-chart-card .category-empty-total span,
+body.app-body.tema-claro .main-content .income-chart-card .category-legend .legend-copy,
+body.app-body.tema-claro .main-content .income-chart-card .category-legend .legend-copy small,
+body.app-body.tema-claro .main-content .income-chart-card .donut-center span {
+  color: var(--text-muted);
+}
+
+body.app-body.tema-claro .main-content .income-chart-card .category-empty-state,
+body.app-body.tema-claro .main-content .income-chart-card .category-type-card {
+  border-color: var(--border-color);
+  background: var(--bg-surface-2);
+}
+
+body.app-body.tema-claro .main-content .income-chart-card .category-type-card {
+  color: var(--text-primary);
+}
+
+body.app-body.tema-claro .main-content .income-chart-card .category-empty-total strong {
+  color: var(--accent-primary);
+}
+
+body.app-body.tema-claro .main-content .income-chart-card .category-legend li {
+  border-color: var(--border-color);
+}
+
+body.app-body.tema-claro .main-content .income-chart-card .donut-chart::before {
+  background: var(--bg-surface-1);
+  box-shadow: inset 0 0 0 1px var(--border-color);
+}
+
+body.app-body.tema-claro .main-content #page-reserva {
+  --reserva-green: var(--accent-primary);
+  --reserva-line: var(--border-color);
+}
+
+body.app-body.tema-claro .main-content #page-reserva .reserva-overview,
+body.app-body.tema-claro .main-content #page-reserva .reserva-history-section {
+  border-color: var(--border-color);
+  background: linear-gradient(115deg, #ffffff, #f8f6fc);
+  box-shadow: 0 12px 32px var(--shadow-color);
+}
+
+body.app-body.tema-claro .main-content #page-reserva .progress-reserva {
+  background: #e9e4f0;
+}
+
+body.app-body.tema-claro .main-content #page-reserva .reserva-actions .btn-purple-action {
+  border-color: #6036ad;
+  background-color: #6d31ddbd;
+  color: #ffffff;
+}
+
+body.app-body.tema-claro .main-content #page-reserva .reserva-actions .btn-purple-action i {
+  color: #ffffff;
+}
+
+body.app-body.tema-claro .main-content #page-reserva .reserva-actions .btn-purple-action:first-child {
+  border-color: #126b40;
+  background-color: #16834baf;
+}
+
+body.app-body.tema-claro .main-content #page-reserva .reserva-actions .btn-purple-action:nth-child(2) {
+  border-color: #a63e39;
+  background-color: #c6534bbe;
+}
+
+body.app-body.tema-claro .main-content #page-reserva .reserva-actions .btn-purple-action:hover {
+  border-color: #512b9b;
+  background-color: #512b9b;
+  color: #ffffff;
+}
+
+body.app-body.tema-claro .main-content #page-reserva .reserva-actions .btn-purple-action:first-child:hover {
+  border-color: #0b6b41;
+  background-color: #0b6b41;
+}
+
+body.app-body.tema-claro .main-content #page-reserva .reserva-actions .btn-purple-action:nth-child(2):hover {
+  border-color: #a53d38;
+  background-color: #a53d38;
+}
+
+body.app-body.tema-claro .main-content #page-reserva .text-white-50 {
+  color: var(--text-muted) !important;
+}
+
 body.app-body.tema-claro .main-content .resumo-item,
 body.app-body.tema-claro .main-content .conquista {
   background-color: var(--bg-surface-2);
@@ -171,12 +296,29 @@ body.app-body.tema-claro .main-content .sequencia-mensagem {
 }
 
 body.app-body.tema-claro .main-content .conquista.desbloqueada {
-  border-color: rgba(18, 134, 83, 0.3);
+  border-color: rgba(18, 134, 83, 0.58);
+  background:
+    linear-gradient(130deg, rgba(18, 134, 83, 0.13), rgba(18, 134, 83, 0.04)),
+    var(--bg-surface-1);
+  box-shadow: 0 8px 20px rgba(18, 134, 83, 0.1), inset 0 0 0 1px rgba(18, 134, 83, 0.08);
 }
 
 body.app-body.tema-claro .main-content .conquista.desbloqueada .conquista-icone {
-  background: rgba(18, 134, 83, 0.1);
-  color: var(--accent-primary);
+  background: rgba(18, 134, 83, 0.18);
+  color: #0b6b41;
+}
+
+body.app-body.tema-claro .main-content .conquista.desbloqueada .conquista-status {
+  color: #0b6b41;
+}
+
+body.app-body.tema-claro .main-content .conquista.desbloqueada .conquista-recompensa {
+  background: rgba(18, 134, 83, 0.16);
+  color: #0b6b41;
+}
+
+body.app-body.tema-claro .main-content .conquista.desbloqueada .conquista-recompensa small {
+  color: #315d49;
 }
 
 body.app-body.tema-claro .main-content .conquista.bloqueada .conquista-icone {
@@ -300,6 +442,15 @@ body.app-body.tema-claro .main-content .tab-btn.active,
 body.app-body.tema-claro .main-content .type-switcher .tab-btn.active {
   color: #ffffff;
   background-color: var(--brand-primary);
+}
+
+body.app-body.tema-claro .main-content .categorias-container .tab-btn.active {
+  border-color: rgba(112, 66, 200, 0.22);
+  background:
+    linear-gradient(115deg, rgba(112, 66, 200, 0.12), transparent 85%),
+    var(--bg-surface-1);
+  color: var(--text-primary);
+  box-shadow: 0 4px 14px rgba(57, 40, 90, 0.08);
 }
 
 body.app-body.tema-claro .main-content .category-item:hover {

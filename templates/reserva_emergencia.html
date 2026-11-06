@@ -12,7 +12,12 @@
     <header class="reserva-page-header">
       <div class="reserva-page-heading">
         <span class="reserva-eyebrow"><i class="bi bi-shield-check" aria-hidden="true"></i> Objetivo financeiro</span>
-        <h1>Reserva de Emergência</h1>
+        <div class="reserva-title-row">
+          <a href="{{ url_for('dashboard') }}" class="btn-voltar-global" aria-label="Voltar ao painel">
+            <i class="bi bi-arrow-left" aria-hidden="true"></i>
+          </a>
+          <h1>Reserva de Emergência</h1>
+        </div>
         <p>Uma proteção para os imprevistos, construída no seu ritmo.</p>
       </div>
     </header>
@@ -149,10 +154,10 @@
             </div>
             {% if not contas_usuario %}
               <span hidden data-swal-modal="#modalGuardarDinheiro" data-swal-message="Cadastre uma conta bancária para guardar dinheiro na reserva." data-swal-type="warning"></span>
-              <a class="btn btn-reserva-primary btn-reserva-add-account text-white mt-2" href="{{ url_for('contas', adicionar=1) }}">
-                <i class="bi bi-plus-lg me-1" aria-hidden="true"></i>Cadastrar conta bancária
-              </a>
             {% endif %}
+            <a class="btn btn-reserva-primary btn-reserva-add-account text-white mt-2" href="{{ url_for('contas', adicionar=1) }}">
+              <i class="bi bi-plus-lg me-1" aria-hidden="true"></i>Adicionar nova conta
+            </a>
           </div>
 
           <div class="mb-3">
@@ -208,11 +213,9 @@
                 {% endfor %}
               </div>
             </div>
-            {% if not contas_usuario %}
-              <a class="btn btn-reserva-primary btn-reserva-add-account text-white mt-2" href="{{ url_for('contas', adicionar=1) }}">
-                <i class="bi bi-plus-lg me-1" aria-hidden="true"></i>Cadastrar conta bancária
-              </a>
-            {% endif %}
+            <a class="btn btn-reserva-primary btn-reserva-add-account text-white mt-2" href="{{ url_for('contas', adicionar=1) }}">
+              <i class="bi bi-plus-lg me-1" aria-hidden="true"></i>Adicionar nova conta
+            </a>
           </div>
 
           <div class="mb-3">
