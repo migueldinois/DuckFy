@@ -1,0 +1,100 @@
+
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>DuckFy - Recuperação de Senha</title> 
+
+    <!-- conecta os estilos -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/variables.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/redefinir_senha.css') }}">
+
+    <!-- posiciona o fundo das particulas -->
+    <style>
+        #particulas-fundo {
+            position: fixed;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        .container {
+            position: relative;
+            z-index: 1;
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- fundo animado -->
+    <canvas id="particulas-fundo" aria-hidden="true"></canvas>
+
+    <!-- tela de redefinicao de senha -->
+    <main class="container">
+
+        <p class="etapa-atual" id="etapa-atual">ETAPA 1 DE 3</p>
+        <h1 class="logo" id="titulo-etapa">Confirme seu e-mail</h1>
+        <p class="descricao" id="descricao-etapa">Vamos enviar um código para o e-mail associado à sua conta.</p>
+
+        <div class="progresso" aria-label="Progresso da recuperação de senha">
+            <span class="progresso-ponto ativo"></span>
+            <span class="progresso-linha"></span>
+            <span class="progresso-ponto"></span>
+            <span class="progresso-linha"></span>
+            <span class="progresso-ponto"></span>
+        </div>
+
+        <div class="mensagem-status" id="mensagem-status" role="status" aria-live="polite" hidden></div>
+
+        <form id="form-email" class="form-etapa" action="/redefinir/solicitar" method="POST">
+            <div class="campo">
+                <label for="email">E-mail da sua conta</label>
+                <input type="email" id="email" name="email" autocomplete="email" placeholder="voce@exemplo.com" required>
+            </div>
+            <button type="submit">ENVIAR CÓDIGO</button>
+        </form>
+
+        <form id="form-codigo" class="form-etapa" hidden>
+            <div class="campo">
+                <label for="codigo">Código de confirmação</label>
+                <input type="text" id="codigo" name="codigo" inputmode="numeric" pattern="[0-9]{6}" maxlength="6" autocomplete="one-time-code" placeholder="000000" required>
+            </div>
+            <button type="submit">CONFIRMAR CÓDIGO</button>
+            <button type="button" class="botao-secundario" id="reenviar-codigo">Reenviar código</button>
+        </form>
+
+        <form id="form-senha" class="form-etapa" hidden>
+            <div class="campo">
+                <label for="senha">Nova senha</label>
+                <input type="password" id="senha" name="senha" minlength="8" autocomplete="new-password" required>
+                <div class="regras">
+                    <p>Tamanho mínimo: pelo menos 8 caracteres.</p>
+                    <p>Letras maiúsculas: no mínimo 1 letra maiúscula (A-Z).</p>
+                    <p>
+                        Caracteres especiais: no mínimo 1 caractere especial
+                        (ex: ! @ # $ % ^ &amp; * _ - + = ?).
+                    </p>
+                </div>
+            </div>
+            <!-- confirmacao da senha -->
+            <div class="campo campo-confirmacao">
+                <label for="confirmar_senha">Confirme a nova senha</label>
+                 <input type="password" id="confirmar_senha" name="confirmar_senha" minlength="8" autocomplete="new-password" required>
+            </div>
+            <button type="submit">REDEFINIR SENHA</button>
+        </form>
+
+        <a class="voltar-login" href="{{ url_for('index') }}">Voltar para o login</a>
+
+    </main>
+
+    <script src="{{ url_for('static', filename='js/particulas.js') }}" defer></script>
+    <script src="{{ url_for('static', filename='js/redefinir_senha.js') }}" defer></script>
+</body>
+</html>

@@ -1,0 +1,277 @@
+
+/* ========================================
+   ÍCONE ORIGINAL DE EMOJI
+======================================== */
+
+.emoji-field-wrapper {
+    position: relative;
+}
+
+.emoji-input {
+    padding-right: 12px !important;
+}
+
+.emoji-input-preview {
+    position: absolute;
+    left: 42px;
+    width: 22px;
+    height: 22px;
+    object-fit: contain;
+    visibility: hidden;
+    pointer-events: none;
+}
+
+.emoji-field-wrapper.has-emoji-preview .emoji-input {
+    color: transparent !important;
+    caret-color: transparent;
+}
+
+.emoji-field-wrapper.has-emoji-preview .emoji-input-preview {
+    visibility: visible;
+}
+
+.emoji-icon-trigger {
+    cursor: pointer;
+    pointer-events: auto !important;
+    z-index: 3;
+    transition: 0.2s ease;
+}
+
+.emoji-icon-trigger:hover,
+.emoji-icon-trigger.active {
+    opacity: 0.75;
+    transform: scale(1.1);
+}
+
+.emoji-icon-trigger:focus-visible {
+    outline: 2px solid var(--brand-primary);
+    outline-offset: 3px;
+    border-radius: 4px;
+}
+
+
+/* ========================================
+   PAINEL DE EMOJIS
+======================================== */
+
+.emoji-picker {
+    position: fixed;
+    z-index: 99999;
+
+    width: 350px;
+    max-width: calc(100vw - 24px);
+    max-height: calc(100vh - 24px);
+
+    padding: 10px;
+
+    box-sizing: border-box;
+    overflow: hidden;
+
+    background-color: var(--bg-surface-1);
+    color: var(--text-primary);
+
+    border: 1px solid var(--border-color);
+    border-radius: 14px;
+
+    box-shadow: 0 12px 35px var(--shadow-color);
+
+    opacity: 1;
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+}
+
+.emoji-picker[hidden] {
+    display: none !important;
+}
+
+
+/* ========================================
+   CABEÇALHO
+======================================== */
+
+.emoji-picker-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    margin-bottom: 6px;
+
+    cursor: grab;
+    touch-action: none;
+    user-select: none;
+    -webkit-user-select: none;
+}
+
+.emoji-picker-header:active {
+    cursor: grabbing;
+}
+
+.emoji-picker-header strong {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--text-primary);
+}
+
+.emoji-picker-header button {
+    width: 28px;
+    height: 28px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border: none;
+    border-radius: 7px;
+
+    background-color: transparent;
+    color: var(--text-muted);
+
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+.emoji-picker-header button:hover {
+    background-color: var(--bg-surface-2);
+    color: var(--text-primary);
+}
+
+
+/* ========================================
+   COMPONENTE DE EMOJIS
+======================================== */
+
+#emojiPickerContainer {
+    width: 100%;
+    min-height: 0;
+}
+
+#emojiPickerContainer emoji-picker {
+    display: block;
+
+    width: 100%;
+    height: 310px;
+    max-height: calc(100vh - 100px);
+
+    border: none;
+    border-radius: 9px;
+
+    --background: var(--bg-surface-1);
+    --border-color: var(--border-color);
+    --button-hover-background: var(--bg-surface-2);
+    --button-active-background: var(--bg-surface-2);
+    --indicator-color: var(--brand-primary);
+    --input-border-color: var(--border-color);
+    --input-font-color: var(--text-primary);
+    --input-placeholder-color: var(--text-muted);
+    --outline-color: var(--brand-primary);
+    --category-font-color: var(--text-muted);
+    --category-emoji-size: 1.5rem;
+    --category-emoji-padding: 0.08rem 0.12rem;
+    --indicator-height: 1px;
+    --emoji-padding: 0.2rem;
+    --emoji-size: 2rem;
+    --num-columns: 5;
+}
+
+
+/* ========================================
+   CARREGAMENTO E ERROS
+======================================== */
+
+.emoji-picker-loading,
+.emoji-picker-error {
+    padding: 20px 10px;
+
+    color: var(--text-muted);
+    font-size: 12px;
+    text-align: center;
+}
+
+.emoji-picker-error {
+    color: var(--text-muted);
+}
+
+.emoji-picker-fallback {
+    display: grid;
+    grid-template-columns: repeat(8, minmax(0, 1fr));
+    gap: 5px;
+}
+
+.emoji-fallback-option {
+    display: grid;
+    place-items: center;
+    aspect-ratio: 1;
+    min-width: 0;
+    padding: 3px;
+    border: 0;
+    border-radius: 8px;
+    background: transparent;
+    color: inherit;
+    font: inherit;
+    font-size: 2rem;
+    cursor: pointer;
+}
+
+.emoji-fallback-option:hover,
+.emoji-fallback-option:focus-visible {
+    outline: none;
+    background: var(--bg-surface-2);
+}
+
+.emoji-fallback-option img {
+    width: 2rem;
+    height: 2rem;
+    object-fit: contain;
+    pointer-events: none;
+}
+
+
+/* ========================================
+   TECLADO ARRASTÁVEL
+======================================== */
+
+.emoji-picker.arrastando {
+    cursor: grabbing;
+    user-select: none;
+    -webkit-user-select: none;
+}
+
+.emoji-picker.arrastando * {
+    user-select: none;
+    -webkit-user-select: none;
+}
+
+
+/* ========================================
+   RESPONSIVIDADE
+======================================== */
+
+@media (max-width: 480px) {
+
+    .emoji-picker {
+        width: 320px;
+        max-width: calc(100vw - 24px);
+    }
+
+    #emojiPickerContainer emoji-picker {
+        height: 280px;
+        --num-columns: 5;
+        --category-emoji-size: 1.4rem;
+        --category-emoji-padding: 0.08rem 0.1rem;
+        --emoji-padding: 0.18rem;
+        --emoji-size: 2rem;
+    }
+
+    .emoji-picker-fallback {
+        grid-template-columns: repeat(7, minmax(0, 1fr));
+    }
+
+    .emoji-fallback-option {
+        font-size: 2rem;
+    }
+
+    .emoji-fallback-option img {
+        width: 2rem;
+        height: 2rem;
+    }
+}
