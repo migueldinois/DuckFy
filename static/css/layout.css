@@ -276,7 +276,7 @@ html.tema-claro .sidebar-link:not(.active):hover {
   padding: 1.5rem;
   min-width: 0;
   transition: margin-left 0.55s cubic-bezier(0.4, 0, 0.2, 1);
-  animation: conteudo-entra 0.38s cubic-bezier(0.22, 0.61, 0.36, 1) both;
+  animation: conteudo-entra 0.38s cubic-bezier(0.22, 0.61, 0.36, 1);
 }
 
 .main-content.is-leaving {
