@@ -41,6 +41,117 @@ function configurarLancamentos() {
     valorDigitado.form?.addEventListener('reset', limparValorDepoisDoReset);
   }
 
+  const etapasWizard = document.querySelectorAll('[data-wizard-step]');
+  const etapasProgresso = document.querySelectorAll('[data-progress-step]');
+  const indicadorEtapa = document.querySelector('#lancamento-step-count');
+  const botaoContinuar = document.querySelector('[data-wizard-continue]');
+  const botoesVoltar = document.querySelectorAll('[data-wizard-back]');
+  const avisoWizard = document.querySelector('#lancamento-wizard-feedback');
+  const botoesSelecionarConta = document.querySelectorAll('[data-account-select]');
+  const campoConta = document.querySelector('#id_conta');
+  const resumoConta = document.querySelector('#lancamento-conta-resumo');
+  const nomeResumoConta = document.querySelector('#lancamento-conta-resumo-nome');
+  const formularioLancamento = document.querySelector('.lancamento-wizard-form');
+  const botoesAlterarConta = document.querySelectorAll('[data-account-trigger]');
+
+  function definirEtapaWizard(etapa) {
+    etapasWizard.forEach(function (painel) {
+      painel.hidden = Number(painel.dataset.wizardStep) !== etapa;
+      painel.classList.toggle('is-active', !painel.hidden);
+    });
+
+    etapasProgresso.forEach(function (item) {
+      const numeroEtapa = Number(item.dataset.progressStep);
+      item.classList.toggle('is-current', numeroEtapa === etapa);
+      item.classList.toggle('is-complete', numeroEtapa < etapa);
+      if (numeroEtapa === etapa) {
+        item.setAttribute('aria-current', 'step');
+      } else {
+        item.removeAttribute('aria-current');
+      }
+    });
+
+    if (indicadorEtapa) indicadorEtapa.textContent = `Etapa ${etapa} de 3`;
+  }
+
+  function mostrarEtapaConta() {
+    definirEtapaWizard(2);
+    document.querySelector('[data-account-select]')?.focus();
+  }
+
+  function navegarParaEtapa(etapa) {
+    const tipoSelecionado = document.querySelector('[data-wizard-type]:checked');
+
+    if (etapa === 1) {
+      definirEtapaWizard(1);
+      return;
+    }
+
+    if (!tipoSelecionado) {
+      definirEtapaWizard(1);
+      if (avisoWizard) avisoWizard.hidden = false;
+      document.querySelector('[data-wizard-type]')?.focus();
+      return;
+    }
+
+    if (etapa === 2) {
+      mostrarEtapaConta();
+      return;
+    }
+
+    if (!campoConta?.value) {
+      mostrarEtapaConta();
+      return;
+    }
+
+    definirEtapaWizard(3);
+    document.querySelector('#local')?.focus();
+  }
+
+  etapasProgresso.forEach(function (item) {
+    item.addEventListener('click', function () {
+      navegarParaEtapa(Number(item.dataset.progressStep));
+    });
+  });
+
+  botaoContinuar?.addEventListener('click', function () {
+    const tipoSelecionado = document.querySelector('[data-wizard-type]:checked');
+    if (!tipoSelecionado) {
+      if (avisoWizard) avisoWizard.hidden = false;
+      return;
+    }
+
+    if (avisoWizard) avisoWizard.hidden = true;
+    mostrarEtapaConta();
+  });
+
+  botoesVoltar.forEach(function (botao) {
+    botao.addEventListener('click', function () {
+      const etapaDestino = Number(botao.dataset.wizardBack);
+      definirEtapaWizard(etapaDestino);
+      if (etapaDestino === 1) document.querySelector('[data-wizard-type]:checked')?.focus();
+      if (etapaDestino === 2) document.querySelector('[data-account-select]')?.focus();
+    });
+  });
+
+  botoesSelecionarConta.forEach(function (botao) {
+    botao.addEventListener('click', function () {
+      if (campoConta) campoConta.value = botao.dataset.accountId || '';
+      if (nomeResumoConta) nomeResumoConta.textContent = botao.dataset.accountName || '';
+      if (resumoConta) resumoConta.hidden = false;
+      definirEtapaWizard(3);
+      document.querySelector('#local')?.focus();
+    });
+  });
+
+  botoesAlterarConta.forEach(function (botao) {
+    botao.addEventListener('click', function () {
+      mostrarEtapaConta();
+    });
+  });
+
+  definirEtapaWizard(1);
+
   const campoCategoria = document.querySelector('#categoria-selecionada');
   const nomeCategoriaSelecionada = document.querySelector('#categoria-selecionada-nome');
   const botaoAbrirModalCategoria = document.querySelector('#abrir-modal-categorias');
@@ -75,7 +186,7 @@ function configurarLancamentos() {
 
   function obterTipoTransacao() {
     const tipoSelecionado = document.querySelector('[name="tipo_transacao"]:checked');
-    return tipoSelecionado ? tipoSelecionado.value : 'saida';
+    return tipoSelecionado ? tipoSelecionado.value : '';
   }
 
   function atualizarCategoriasVisiveis() {
@@ -115,6 +226,11 @@ function configurarLancamentos() {
     atualizarCategoriasVisiveis();
 
     const tipo = obterTipoTransacao();
+    if (!tipo) {
+      if (nomeCategoriaSelecionada) nomeCategoriaSelecionada.textContent = 'Escolha o tipo para ver as categorias';
+      return;
+    }
+
     const primeiraCategoria = document.querySelector(
       `.categoria-modal-lista [data-category-choice][data-category-type="${tipo}"]`
     );
@@ -146,6 +262,7 @@ function configurarLancamentos() {
 
   tiposTransacao.forEach(function (tipo) {
     tipo.addEventListener('change', function () {
+      if (avisoWizard) avisoWizard.hidden = true;
       atualizarCategoriasVisiveis();
 
       const primeiraCategoria = document.querySelector(
@@ -159,6 +276,19 @@ function configurarLancamentos() {
         nomeCategoriaSelecionada.textContent = 'Nenhuma categoria cadastrada';
       }
     });
+  });
+
+  formularioLancamento?.addEventListener('submit', function (evento) {
+    const tipoSelecionado = document.querySelector('[name="tipo_transacao"]:checked');
+    if (!tipoSelecionado || !campoConta?.value) {
+      evento.preventDefault();
+      if (!tipoSelecionado) {
+        definirEtapaWizard(1);
+        if (avisoWizard) avisoWizard.hidden = false;
+      } else {
+        mostrarEtapaConta();
+      }
+    }
   });
 
   iniciarCategorias();
