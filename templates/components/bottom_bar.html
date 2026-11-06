@@ -11,30 +11,16 @@
       title="Dashboard" {% if caminho_atual == '/dashboard' %}aria-current="page"{% endif %}>
       <span><img src="{{ url_for('static', filename='img/icons/dashboard.svg') }}" alt="Dashboard"></span>
     </a>
-    <a href="/extrato" class="nav-icon-btn {% if caminho_atual.startswith('/extrato') %}active{% endif %}"
-      title="Extrato" {% if caminho_atual.startswith('/extrato') %}aria-current="page"{% endif %}>
-      <span><img src="{{ url_for('static', filename='img/icons/extrato.svg') }}" alt="Extrato"></span>
-    </a>
-    <a href="/simulador" class="nav-icon-btn {% if caminho_atual.startswith('/simulador') %}active{% endif %}"
-      title="Simulador de Patrimônio" {% if caminho_atual.startswith('/simulador') %}aria-current="page"{% endif %}>
-      <span><img src="{{ url_for('static', filename='img/icons/simulador.svg') }}" alt="Simulador de Patrimônio"></span>
-    </a>
-    <a href="/perfil" class="nav-icon-btn {% if caminho_atual.startswith('/perfil') %}active{% endif %}"
-      title="Perfil" {% if caminho_atual.startswith('/perfil') %}aria-current="page"{% endif %}>
-      <span><img src="{{ url_for('static', filename='img/icons/perfill.svg') }}" alt="Perfil"></span>
-    </a>
-    <a href="/contas" class="nav-icon-btn {% if caminho_atual.startswith('/contas') %}active{% endif %}"
-      title="Contas Bancárias" {% if caminho_atual.startswith('/contas') %}aria-current="page"{% endif %}>
     <a href="/contas" class="nav-icon-btn" title="Contas Bancárias">
       <span><img src="{{ url_for('static', filename='img/icons/contas-bancarias.svg') }}" alt="Contas Bancárias"></span>
     </a>
-    <a href="/categorias" class="nav-icon-btn" title="Categorias">
+    <a href="/categorias" class="nav-icon-btn {% if request.path.rstrip('/') == '/categorias' %}active{% endif %}" title="Categorias" {% if request.path.rstrip('/') == '/categorias' %}aria-current="page"{% endif %}>
       <span><img src="{{ url_for('static', filename='img/icons/categoria.svg') }}" alt="Categorias"></span>
     </a>
-    <a href="/lancamento" class="nav-icon-btn" title="Lançamentos">
+    <a href="/lancamento" class="nav-icon-btn {% if request.path.rstrip('/') == '/lancamento' %}active{% endif %}" title="Lançamentos" {% if request.path.rstrip('/') == '/lancamento' %}aria-current="page"{% endif %}>
       <span><img src="{{ url_for('static', filename='img/icons/lancamento.svg') }}" alt="Lançamentos"></span>
     </a>
-    <a href="/reserva_emergencia" class="nav-icon-btn" title="Reserva de Emergência">
+    <a href="/reserva_emergencia" class="nav-icon-btn {% if request.path.rstrip('/') == '/reserva_emergencia' %}active{% endif %}" title="Reserva de Emergência" {% if request.path.rstrip('/') == '/reserva_emergencia' %}aria-current="page"{% endif %}>
       <span><img src="{{ url_for('static', filename='img/icons/reserva.svg') }}" alt="Reserva de Emergência"></span>
     </a>
 
