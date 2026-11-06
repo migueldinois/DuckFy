@@ -2,7 +2,7 @@
 {% extends 'layout.html' %}
 
 {% block extra_css %}
-<link rel="stylesheet" href="{{ url_for('static', filename='css/contas.css') }}?v=3">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/contas.css') }}?v=5">
 <link rel="stylesheet" href="{{ url_for('static', filename='css/duckfy-modal.css') }}?v=2">
 {% endblock %}
 
@@ -177,6 +177,7 @@
       botao.addEventListener('click', () => {
         nome.value = botao.dataset.nome || '';
         tipo.value = botao.dataset.tipo || '';
+        tipo.dispatchEvent(new Event('change', { bubbles: true }));
         saldo.value = botao.dataset.saldo || '0';
         const totalAtual = Number(botao.dataset.saldo || 0);
         const reservadoAtual = Number(botao.dataset.reservado || 0);
@@ -379,4 +380,5 @@
   });
 
 </script>
+<script src="{{ url_for('static', filename='js/tipo_conta_select.js') }}"></script>
 {% endblock %}
