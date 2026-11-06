@@ -822,7 +822,7 @@ def acessibilidade():
 
     return redirect(url_for("perfil"))
 
-# Rota para exibir o perfil do usuário
+# exibe o perfil do usuário
 @app.route("/perfil", methods=["GET", "POST"])
 def perfil():
     email = session.get("email")
