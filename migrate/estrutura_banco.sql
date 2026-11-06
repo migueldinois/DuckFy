@@ -111,3 +111,27 @@ CREATE TABLE transacoes (
         FOREIGN KEY (id_reserva) REFERENCES reserva_emergencia(id_reserva)
         ON DELETE SET NULL ON UPDATE CASCADE
 );
+
+CREATE TABLE IF NOT EXISTS usuarios_gamificacao (
+    id_usuario INT PRIMARY KEY,
+    dias_atual INT NOT NULL DEFAULT 0,
+    melhor_sequencia INT NOT NULL DEFAULT 0,
+    ultima_atividade DATE NULL,
+    CONSTRAINT fk_gamificacao_usuario
+        FOREIGN KEY (id_usuario) REFERENCES usuarios(id_usuario)
+        ON DELETE CASCADE ON UPDATE CASCADE
+);
+
+CREATE TABLE IF NOT EXISTS usuarios_eventos_xp (
+    id_evento BIGINT AUTO_INCREMENT PRIMARY KEY,
+    id_usuario INT NOT NULL,
+    chave_evento VARCHAR(120) NOT NULL,
+    pontos INT NOT NULL DEFAULT 0,
+    data_evento DATE NOT NULL,
+    criado_em TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    CONSTRAINT fk_eventos_xp_usuario
+        FOREIGN KEY (id_usuario) REFERENCES usuarios(id_usuario)
+        ON DELETE CASCADE ON UPDATE CASCADE,
+    CONSTRAINT uk_evento_xp_usuario UNIQUE (id_usuario, chave_evento),
+    INDEX idx_eventos_xp_data (id_usuario, data_evento)
+);
