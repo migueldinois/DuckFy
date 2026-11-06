@@ -67,7 +67,7 @@
       <button type="button" class="btn-purple-action border-0" data-bs-toggle="modal" data-bs-target="#modalGuardarDinheiro">
         <i class="bi bi-plus-circle" aria-hidden="true"></i><span>Guardar dinheiro</span>
       </button>
-      <button type="button" class="btn-purple-action border-0" {% if total_guardado > 0 %}data-bs-toggle="modal" data-bs-target="#modalRetirarDinheiro"{% else %}data-no-reserve-balance="true"{% endif %}>
+      <button type="button" class="btn-purple-action border-0" {% if not contas_usuario or total_guardado > 0 %}data-bs-toggle="modal" data-bs-target="#modalRetirarDinheiro"{% else %}data-no-reserve-balance="true" data-no-reserve-balance-url="{{ url_for('reserva_emergencia', abrir_guardar=1) }}"{% endif %}>
         <i class="bi bi-arrow-up-right-circle" aria-hidden="true"></i><span>Retirar dinheiro</span>
       </button>
       <button type="button" class="btn-purple-action border-0" data-bs-toggle="modal" data-bs-target="#modalAlterarMeta">
@@ -128,10 +128,7 @@
       <form action="{{ url_for('guardar_reserva') }}" method="POST">
         <div class="modal-body">
           {% if request.args.get('erro_saldo') == '1' %}
-            <span hidden data-swal-modal="#modalGuardarDinheiro" data-swal-message="O saldo disponível desta conta é insuficiente. Adicione dinheiro à conta para continuar." data-swal-type="error"></span>
-            <a class="btn btn-reserva-primary btn-reserva-add-account mb-3" href="{{ url_for('contas', adicionar_saldo=1, conta_id=request.args.get('conta_id')|int) }}">
-              <i class="bi bi-plus-lg me-1" aria-hidden="true"></i>Adicionar saldo à conta
-            </a>
+            <span hidden data-swal-modal="#modalGuardarDinheiro" data-swal-message="O valor informado ultrapassa o saldo disponível desta conta." data-swal-type="error" data-swal-title="Saldo insuficiente" data-swal-action-url="{{ url_for('contas', adicionar_saldo=1, conta_id=request.args.get('conta_id')|int) }}" data-swal-action-text="Adicionar saldo"></span>
           {% endif %}
           <div class="mb-3">
             <label id="id_conta-label" for="id_conta" class="form-label text-white-50 fs-7 fw-medium mb-1">Conta de origem</label>
@@ -153,18 +150,15 @@
               </div>
             </div>
             {% if not contas_usuario %}
-              <span hidden data-swal-modal="#modalGuardarDinheiro" data-swal-message="Cadastre uma conta bancária para guardar dinheiro na reserva." data-swal-type="warning"></span>
+              <span hidden data-swal-modal="#modalGuardarDinheiro" data-swal-message="Cadastre uma conta bancária para guardar dinheiro na reserva." data-swal-type="warning" data-swal-action-url="{{ url_for('contas', adicionar=1) }}"></span>
             {% endif %}
-            <a class="btn btn-reserva-primary btn-reserva-add-account text-white mt-2" href="{{ url_for('contas', adicionar=1) }}">
-              <i class="bi bi-plus-lg me-1" aria-hidden="true"></i>Adicionar nova conta
-            </a>
           </div>
 
           <div class="mb-3">
             <label for="valor" class="form-label text-white-50 fs-7 fw-medium mb-1">Valor a Guardar</label>
             <div class="input-group">
-              <span class="input-group-text bg-black bg-opacity-40 border-secondary border-opacity-25 text-white-50">R$</span>
-              <input type="text" inputmode="numeric" data-currency-input data-currency-cents min="0.01" class="form-control bg-black bg-opacity-40 border-secondary border-opacity-25 text-white" id="valor" name="valor" placeholder="0,00" required>
+              <span class="input-group-text">R$</span>
+              <input type="text" inputmode="numeric" data-currency-input data-currency-cents min="0.01" class="form-control" id="valor" name="valor" placeholder="0,00" required>
             </div>
           </div>
 
@@ -192,7 +186,7 @@
       <form action="{{ url_for('retirar_reserva') }}" method="POST">
         <div class="modal-body">
           {% if not contas_usuario %}
-            <span hidden data-swal-modal="#modalRetirarDinheiro" data-swal-message="Cadastre uma conta bancária para receber a retirada." data-swal-type="warning"></span>
+            <span hidden data-swal-modal="#modalRetirarDinheiro" data-swal-message="Cadastre uma conta bancária para receber a retirada." data-swal-type="warning" data-swal-action-url="{{ url_for('contas', adicionar=1) }}" data-swal-action-text="Criar conta"></span>
           {% endif %}
           <div class="mb-3">
             <label id="conta_destino_retirada-label" for="conta_destino_retirada" class="form-label text-white-50 fs-7 fw-medium mb-1">Conta de destino</label>
@@ -213,16 +207,13 @@
                 {% endfor %}
               </div>
             </div>
-            <a class="btn btn-reserva-primary btn-reserva-add-account text-white mt-2" href="{{ url_for('contas', adicionar=1) }}">
-              <i class="bi bi-plus-lg me-1" aria-hidden="true"></i>Adicionar nova conta
-            </a>
           </div>
 
           <div class="mb-3">
             <label for="valor_retirada" class="form-label text-white-50 fs-7 fw-medium mb-1">Valor a retirar</label>
             <div class="input-group">
-              <span class="input-group-text bg-black bg-opacity-40 border-secondary border-opacity-25 text-white-50">R$</span>
-              <input type="text" inputmode="numeric" data-currency-input data-currency-cents min="0.01" max="{{ '%.2f'|format(total_guardado) }}" class="form-control bg-black bg-opacity-40 border-secondary border-opacity-25 text-white" id="valor_retirada" name="valor" placeholder="0,00" required {% if total_guardado <= 0 %}disabled{% endif %}>
+              <span class="input-group-text">R$</span>
+              <input type="text" inputmode="numeric" data-currency-input data-currency-cents min="0.01" max="{{ '%.2f'|format(total_guardado) }}" class="form-control" id="valor_retirada" name="valor" placeholder="0,00" required {% if total_guardado <= 0 %}disabled{% endif %}>
             </div>
           </div>
 
@@ -250,8 +241,8 @@
         <div class="modal-body">
           <label for="meta_valor" class="form-label text-white-50 fs-7 fw-medium mb-1">Nova meta</label>
           <div class="input-group">
-            <span class="input-group-text bg-black bg-opacity-40 border-secondary border-opacity-25 text-white-50">R$</span>
-            <input type="text" inputmode="numeric" data-currency-input data-currency-cents min="0.01" max="99999999.99" class="form-control bg-black bg-opacity-40 border-secondary border-opacity-25 text-white" id="meta_valor" name="meta_valor" value="0,00" required>
+            <span class="input-group-text">R$</span>
+            <input type="text" inputmode="numeric" data-currency-input data-currency-cents min="0.01" max="99999999.99" class="form-control" id="meta_valor" name="meta_valor" value="0,00" required>
           </div>
         </div>
 

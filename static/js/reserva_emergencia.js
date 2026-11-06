@@ -125,13 +125,19 @@ botaoRetirar?.addEventListener('click', async (event) => {
   event.preventDefault();
   event.stopPropagation();
 
-  await window.DuckFyAlert.show({
+  const resultado = await window.DuckFyAlert.show({
     icon: 'error',
     title: 'Saldo insuficiente',
-    text: 'Não há saldo na reserva para realizar uma retirada.',
-    confirmButtonText: 'OK',
-    showCancelButton: false
+    text: 'Não há saldo na reserva para realizar uma retirada. Adicione dinheiro à reserva para continuar.',
+    showCancelButton: true,
+    confirmButtonText: 'Adicionar saldo',
+    cancelButtonText: 'Entendi',
+    reverseButtons: true
   });
+
+  if (resultado.isConfirmed && botaoRetirar.dataset.noReserveBalanceUrl) {
+    window.location.assign(botaoRetirar.dataset.noReserveBalanceUrl);
+  }
 });
 
 if (new URLSearchParams(window.location.search).get('abrir_guardar') === '1') {
