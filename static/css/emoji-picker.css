@@ -11,6 +11,25 @@
     padding-right: 12px !important;
 }
 
+.emoji-input-preview {
+    position: absolute;
+    left: 42px;
+    width: 22px;
+    height: 22px;
+    object-fit: contain;
+    visibility: hidden;
+    pointer-events: none;
+}
+
+.emoji-field-wrapper.has-emoji-preview .emoji-input {
+    color: transparent !important;
+    caret-color: transparent;
+}
+
+.emoji-field-wrapper.has-emoji-preview .emoji-input-preview {
+    visibility: visible;
+}
+
 .emoji-icon-trigger {
     cursor: pointer;
     pointer-events: auto !important;
@@ -39,9 +58,14 @@
     position: fixed;
     z-index: 99999;
 
-    width: 310px;
+    width: 350px;
     max-width: calc(100vw - 24px);
-    padding: 14px;
+    max-height: calc(100vh - 24px);
+
+    padding: 10px;
+
+    box-sizing: border-box;
+    overflow: hidden;
 
     background-color: var(--bg-surface-1);
     color: var(--text-primary);
@@ -56,8 +80,7 @@
     -webkit-backdrop-filter: none;
 }
 
-.emoji-picker[hidden],
-.emoji-sem-resultado[hidden] {
+.emoji-picker[hidden] {
     display: none !important;
 }
 
@@ -71,7 +94,16 @@
     justify-content: space-between;
     align-items: center;
 
-    margin-bottom: 12px;
+    margin-bottom: 6px;
+
+    cursor: grab;
+    touch-action: none;
+    user-select: none;
+    -webkit-user-select: none;
+}
+
+.emoji-picker-header:active {
+    cursor: grabbing;
 }
 
 .emoji-picker-header strong {
@@ -105,104 +137,98 @@
 
 
 /* ========================================
-   PESQUISA
+   COMPONENTE DE EMOJIS
 ======================================== */
 
-.emoji-search {
+#emojiPickerContainer {
     width: 100%;
-    padding: 10px 12px;
-
-    margin-bottom: 12px;
-
-    border: 1px solid var(--border-color);
-    border-radius: 9px;
-
-    outline: none;
-
-    background-color: var(--bg-primary);
-    color: var(--text-primary);
-
-    font-size: 13px;
-    transition: 0.2s;
+    min-height: 0;
 }
 
-.emoji-search::placeholder {
-    color: var(--text-muted);
-}
+#emojiPickerContainer emoji-picker {
+    display: block;
 
-.emoji-search:focus {
-    border-color: var(--brand-primary);
-    box-shadow: 0 0 0 3px rgba(124, 77, 255, 0.12);
-}
-
-
-/* ========================================
-   GRADE DE EMOJIS
-======================================== */
-
-.emoji-picker-grid {
-    display: grid;
-    grid-template-columns: repeat(7, 1fr);
-    gap: 5px;
-
-    max-height: 225px;
-    overflow-y: auto;
-
-    scrollbar-width: thin;
-    scrollbar-color: var(--brand-primary) transparent;
-}
-
-.emoji-option {
-    width: 36px;
-    height: 36px;
-
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    width: 100%;
+    height: 310px;
+    max-height: calc(100vh - 100px);
 
     border: none;
-    border-radius: 8px;
+    border-radius: 9px;
 
-    background-color: transparent;
-    color: var(--text-primary);
-
-    font-size: 23px;
-
-    cursor: pointer;
-    transition: 0.15s;
-}
-
-.emoji-option:hover {
-    background-color: var(--bg-surface-2);
-    transform: scale(1.12);
-}
-
-.emoji-option:focus-visible {
-    outline: 2px solid var(--brand-primary);
-    outline-offset: 1px;
+    --background: var(--bg-surface-1);
+    --border-color: var(--border-color);
+    --button-hover-background: var(--bg-surface-2);
+    --button-active-background: var(--bg-surface-2);
+    --indicator-color: var(--brand-primary);
+    --input-border-color: var(--border-color);
+    --input-font-color: var(--text-primary);
+    --input-placeholder-color: var(--text-muted);
+    --outline-color: var(--brand-primary);
+    --category-font-color: var(--text-muted);
+    --category-emoji-size: 1.5rem;
+    --category-emoji-padding: 0.08rem 0.12rem;
+    --indicator-height: 1px;
+    --emoji-padding: 0.2rem;
+    --emoji-size: 2rem;
+    --num-columns: 5;
 }
 
 
 /* ========================================
-   MENSAGEM SEM RESULTADO
+   CARREGAMENTO E ERROS
 ======================================== */
 
-.emoji-sem-resultado {
-    padding: 14px 0 4px;
+.emoji-picker-loading,
+.emoji-picker-error {
+    padding: 20px 10px;
 
     color: var(--text-muted);
     font-size: 12px;
     text-align: center;
 }
 
+.emoji-picker-error {
+    color: var(--text-muted);
+}
+
+.emoji-picker-fallback {
+    display: grid;
+    grid-template-columns: repeat(8, minmax(0, 1fr));
+    gap: 5px;
+}
+
+.emoji-fallback-option {
+    display: grid;
+    place-items: center;
+    aspect-ratio: 1;
+    min-width: 0;
+    padding: 3px;
+    border: 0;
+    border-radius: 8px;
+    background: transparent;
+    color: inherit;
+    font: inherit;
+    font-size: 2rem;
+    cursor: pointer;
+}
+
+.emoji-fallback-option:hover,
+.emoji-fallback-option:focus-visible {
+    outline: none;
+    background: var(--bg-surface-2);
+}
+
+.emoji-fallback-option img {
+    width: 2rem;
+    height: 2rem;
+    object-fit: contain;
+    pointer-events: none;
+}
+
 
 /* ========================================
-   TECLADO DE EMOJIS ARRASTÁVEL
+   TECLADO ARRASTÁVEL
 ======================================== */
-
-.emoji-picker {
-    touch-action: none;
-}
 
 .emoji-picker.arrastando {
     cursor: grabbing;
@@ -216,18 +242,36 @@
 }
 
 
-
 /* ========================================
    RESPONSIVIDADE
 ======================================== */
 
 @media (max-width: 480px) {
+
     .emoji-picker {
-        width: 290px;
+        width: 320px;
+        max-width: calc(100vw - 24px);
     }
 
-    .emoji-option {
-        width: 34px;
-        height: 34px;
+    #emojiPickerContainer emoji-picker {
+        height: 280px;
+        --num-columns: 5;
+        --category-emoji-size: 1.4rem;
+        --category-emoji-padding: 0.08rem 0.1rem;
+        --emoji-padding: 0.18rem;
+        --emoji-size: 2rem;
+    }
+
+    .emoji-picker-fallback {
+        grid-template-columns: repeat(7, minmax(0, 1fr));
+    }
+
+    .emoji-fallback-option {
+        font-size: 2rem;
+    }
+
+    .emoji-fallback-option img {
+        width: 2rem;
+        height: 2rem;
     }
 }

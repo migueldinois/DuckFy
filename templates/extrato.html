@@ -8,17 +8,17 @@
 
 {% block content %}
 
-<main class="extrato-page">
-
+<div class="extrato-shell">
     <header class="extrato-header">
         <div class="d-flex align-items-center gap-3">
-            <a href="../" class="text-white text-decoration-none fs-4 me-3" aria-label="Voltar">
+            <a href="../" class="btn-voltar-global text-white text-decoration-none fs-4 me-3" aria-label="Voltar">
                 <i class="bi bi-arrow-left"></i>
             </a>
             <h1 class="h3 mb-0 fw-bold text-white">Extrato</h1>
         </div>
     </header>
 
+<main class="extrato-page">
     <!-- TABS DE FILTRO -->
     <nav class="filter-tabs text-uppercase" aria-label="Filtrar movimentações">
         <a href="/extrato?tipo=tudo"
@@ -83,9 +83,9 @@
 
             <div class="amount {% if eh_entrada %}positive{% else %}negative{% endif %}">
                 {% if eh_entrada %}
-                +R$ {{ "%.2f"|format(item.valor|float) }}
+                +R$ {{ item.valor|moeda_br }}
                 {% else %}
-                -R$ {{ "%.2f"|format(item.valor|float) }}
+                -R$ {{ item.valor|moeda_br }}
                 {% endif %}
             </div>
 
@@ -93,7 +93,7 @@
         {% endfor %}
         {% else %}
         <!-- Caso não exista nenhuma transação para a busca -->
-        <div class="text-center text-white-50 py-5">
+        <div class="empty-state-message text-center text-white-50 py-5">
             <i class="bi bi-inbox fs-1 d-block mb-2"></i>
             <p>Nenhuma movimentação encontrada.</p>
         </div>
@@ -106,6 +106,7 @@
 
     </section>
 </main>
+</div>
 
 {% endblock %}
 

@@ -5,7 +5,7 @@
   left: 0;
   width: 100vw;
   height: 100vh;
-  background: rgba(10, 9, 14, 0.75);
+  background: color-mix(in srgb, var(--bg-primary) 82%, transparent);
   backdrop-filter: blur(8px);
   -webkit-backdrop-filter: blur(8px);
   display: flex;
@@ -18,6 +18,10 @@
   z-index: 9999;
 }
 
+body > .swal2-container {
+  z-index: 10000 !important;
+}
+
 .duckfy-modal.active {
   opacity: 1;
   visibility: visible; 
@@ -28,10 +32,10 @@
   width: 100%;
   max-width: 420px;
   background: var(--bg-surface-1, #181720);
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  border: 1px solid var(--border-color);
   border-radius: 20px;
   padding: 24px;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+  box-shadow: 0 24px 70px var(--shadow-color);
   transform: translateY(15px);
   transition: transform 0.25s ease-in-out;
 }
@@ -42,7 +46,7 @@
 
 /* Cabeçalho */
 .card-section-title {
-  color: #ffffff;
+  color: var(--text-primary);
   font-size: 1.25rem;
   font-weight: 600;
 }
@@ -50,7 +54,7 @@
 .btn-close-custom {
   background: transparent;
   border: none;
-  color: #a0a0b5;
+  color: var(--text-muted);
   font-size: 1.4rem;
   line-height: 1;
   cursor: pointer;
@@ -58,12 +62,12 @@
 }
 
 .btn-close-custom:hover {
-  color: #ffffff;
+  color: var(--text-primary);
 }
 
 /* Rótulos */
 .card-subtitle {
-  color: #a0a0b5;
+  color: var(--text-muted);
   font-size: 0.85rem;
   font-weight: 500;
 }
@@ -72,10 +76,10 @@
 .search-input {
   width: 100%;
   background: var(--bg-surface-2, #21202e);
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  border: 1px solid var(--border-color);
   border-radius: 12px;
   padding: 10px 14px;
-  color: #ffffff;
+  color: var(--text-primary);
   font-size: 0.9rem;
   outline: none;
   transition: border-color 0.2s ease;
@@ -84,7 +88,7 @@
 .search-input:focus {
   border-color: var(--brand-primary);
   background: var(--bg-surface-2, #21202e);
-  color: #ffffff;
+  color: var(--text-primary);
 }
 
 /* Estilização do Select */
@@ -98,8 +102,8 @@ select.search-input {
 }
 
 select.search-input option {
-  background-color: #21202e;
-  color: #ffffff;
+  background-color: var(--bg-surface-2);
+  color: var(--text-primary);
 }
 
 /* Input Seletor de Cor */
@@ -107,8 +111,8 @@ select.search-input option {
   width: 100%;
   height: 42px;
   padding: 4px;
-  background: #ff0000;
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: var(--bg-surface-2);
+  border: 1px solid var(--border-color);
   border-radius: 12px;
   cursor: pointer;
 }

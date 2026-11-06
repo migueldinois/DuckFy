@@ -1,550 +1,1208 @@
 
-document.addEventListener('DOMContentLoaded', () => {
+if (!window.duckfyCategoriasInicializado) {
+    window.duckfyCategoriasInicializado = true;
 
-    // ========================================
-    // CONFIGURAÇÃO DO SELETOR
-    // ========================================
+    document.addEventListener('DOMContentLoaded', () => {
 
-    const picker = document.createElement('div');
+        // ========================================
+        // SELEÇÃO DO TIPO DE CATEGORIA
+        // ========================================
 
-    picker.id = 'emojiPicker';
-    picker.className = 'emoji-picker';
-    picker.hidden = true;
+        document.querySelectorAll('.tipo-categoria-opcoes').forEach(container => {
 
-    picker.style.position = 'fixed';
-    picker.style.zIndex = '99999';
-    picker.style.width = '350px';
-    picker.style.maxWidth = 'calc(100vw - 24px)';
-    picker.style.maxHeight = 'calc(100vh - 24px)';
-    picker.style.boxSizing = 'border-box';
-    picker.style.overflow = 'hidden';
+            const campoTipo = container.parentElement.querySelector('input[name="tipo"]');
+            const botoesTipo = container.querySelectorAll('.tipo-categoria-btn');
 
-    picker.innerHTML = `
-        <div class="emoji-picker-header">
-            <strong>Escolha um emoji</strong>
+            botoesTipo.forEach(botao => {
+                botao.addEventListener('click', () => {
 
-            <button
-                type="button"
-                id="fecharEmojiPicker"
-                aria-label="Fechar seletor"
-            >
-                <i class="bi bi-x-lg"></i>
-            </button>
-        </div>
+                    const tipoSelecionado = botao.dataset.tipo;
 
-        <div id="emojiMartContainer"></div>
-    `;
+                    campoTipo.value = tipoSelecionado;
 
-    document.body.appendChild(picker);
+                    botoesTipo.forEach(item => {
+                        const selecionado = item === botao;
 
-    const fechar = document.getElementById('fecharEmojiPicker');
-    const container = document.getElementById('emojiMartContainer');
+                        item.classList.toggle('selecionado', selecionado);
+                        item.setAttribute('aria-pressed', selecionado);
+                    });
+                });
+            });
+        });
 
-    let campoAtual = null;
-    let iconeAtual = null;
-    let emojiMartPicker = null;
-
-    // ========================================
-    // CORES DO DUCKFY
-    // ========================================
-
-    function converterCorRGB(cor) {
-
-        if (!cor) return '124, 77, 255';
-
-        const valor = cor.trim();
-
-        if (valor.startsWith('#')) {
-
-            let hex = valor.replace('#', '');
-
-            if (hex.length === 3) {
-                hex = hex.split('').map(letra => letra + letra).join('');
-            }
-
-            const numero = parseInt(hex, 16);
-
-            return [
-                (numero >> 16) & 255,
-                (numero >> 8) & 255,
-                numero & 255
-            ].join(', ');
+        const tipoParaCriar = new URLSearchParams(window.location.search).get('criar');
+        if (tipoParaCriar === 'entrada' || tipoParaCriar === 'saida') {
+            const botaoTipo = document.querySelector(
+                `.tipo-categoria-btn[data-tipo="${tipoParaCriar.toUpperCase()}"]`
+            );
+            botaoTipo?.click();
+            ModalManager.abrir('modalNovaCategoria');
+            document.getElementById('nome')?.focus();
         }
 
-        const rgb = valor.match(/\d+/g);
+        // ========================================
+        // CONFIGURAÇÃO DO SELETOR DE EMOJIS
+        // ========================================
 
-        return rgb ? rgb.slice(0, 3).join(', ') : '124, 77, 255';
-    }
+        document.querySelectorAll('.emoji-input').forEach(campo => {
+            campo.setAttribute('readonly', true);
+            campo.setAttribute('placeholder', 'Selecione um emoji');
+            campo.style.cursor = 'pointer';
 
-    function aplicarTemaEmoji() {
+            const wrapper = campo.closest('.emoji-field-wrapper');
+            const preview = document.createElement('img');
 
-        const estilos = getComputedStyle(document.documentElement);
+            preview.className = 'emoji-input-preview';
+            preview.alt = '';
+            preview.setAttribute('aria-hidden', 'true');
+            wrapper.appendChild(preview);
 
-        const fundo = converterCorRGB(
-            estilos.getPropertyValue('--bg-surface-1')
-        );
+            const atualizarPreview = () => {
+                const emoji = campo.value.trim();
 
-        const fundoInput = converterCorRGB(
-            estilos.getPropertyValue('--bg-primary')
-        );
+                wrapper.classList.remove('has-emoji-preview');
 
-        const texto = converterCorRGB(
-            estilos.getPropertyValue('--text-primary')
-        );
-
-        const destaque = converterCorRGB(
-            estilos.getPropertyValue('--brand-primary')
-        );
-
-        const borda = converterCorRGB(
-            estilos.getPropertyValue('--border-color')
-        );
-
-        picker.style.setProperty('--rgb-background', fundo);
-        picker.style.setProperty('--rgb-color', texto);
-        picker.style.setProperty('--rgb-input', fundoInput);
-        picker.style.setProperty('--rgb-accent', destaque);
-        picker.style.setProperty('--rgb-border', borda);
-        picker.style.setProperty('--rgb-primary', destaque);
-    }
-
-    // ========================================
-    // CARREGAMENTO DO EMOJI MART
-    // ========================================
-
-    const carregarEmojiMart = async () => {
-
-        try {
-
-            if (!window.EmojiMart || !window.EmojiMart.Picker) {
-                throw new Error('Biblioteca Emoji Mart não encontrada.');
-            }
-
-            const enderecoDados = window.emojiMartDataUrl;
-
-            if (!enderecoDados) {
-                throw new Error('Endereço dos dados dos emojis não encontrado.');
-            }
-
-            const resposta = await fetch(enderecoDados);
-
-            if (!resposta.ok) {
-                throw new Error('Não foi possível carregar os emojis.');
-            }
-
-            const dadosEmojis = await resposta.json();
-
-            emojiMartPicker = new window.EmojiMart.Picker({
-
-                data: dadosEmojis,
-
-                locale: 'pt',
-
-                theme: 'light',
-
-                previewPosition: 'none',
-
-                navPosition: 'top',
-
-                searchPosition: 'sticky',
-
-                perLine: 8,
-
-                maxFrequentRows: 2,
-
-                onEmojiSelect: (emoji) => {
-
-                    if (!campoAtual) return;
-
-                    const campoSelecionado = campoAtual;
-
-                    campoSelecionado.value = emoji.native;
-
-                    campoSelecionado.dispatchEvent(
-                        new Event('input', { bubbles: true })
-                    );
-
-                    campoSelecionado.dispatchEvent(
-                        new Event('change', { bubbles: true })
-                    );
-
-                    fecharPicker();
-
-                    campoSelecionado.focus();
+                if (!emoji) {
+                    preview.removeAttribute('src');
+                    return;
                 }
 
+                preview.onload = () => wrapper.classList.add('has-emoji-preview');
+                preview.onerror = () => wrapper.classList.remove('has-emoji-preview');
+                preview.src = urlEmojiApple(emoji);
+            };
+
+            campo.addEventListener('input', atualizarPreview);
+            campo.addEventListener('change', atualizarPreview);
+            atualizarPreview();
+        });
+
+        const picker = document.createElement('div');
+
+        picker.id = 'emojiPicker';
+        picker.className = 'emoji-picker';
+        picker.hidden = true;
+
+        picker.innerHTML = `
+            <div class="emoji-picker-header">
+                <strong>Escolha um emoji</strong>
+
+                <button
+                    type="button"
+                    id="fecharEmojiPicker"
+                    aria-label="Fechar seletor"
+                >
+                    <i class="bi bi-x-lg"></i>
+                </button>
+            </div>
+
+            <div id="emojiPickerContainer">
+                <p class="emoji-picker-loading">Carregando emojis...</p>
+            </div>
+        `;
+
+        document.body.appendChild(picker);
+
+        const fechar = document.getElementById('fecharEmojiPicker');
+        const header = picker.querySelector('.emoji-picker-header');
+        const container = document.getElementById('emojiPickerContainer');
+
+        let campoAtual = null;
+        let iconeAtual = null;
+        let emojiPickerElement = null;
+
+        function urlEmojiApple(emoji) {
+
+            const unicodeHex = [...emoji]
+                .map(char => char.codePointAt(0).toString(16))
+                .filter(hex => hex !== 'fe0f')
+                .join('-');
+
+            return `https://cdn.jsdelivr.net/npm/emoji-datasource-apple/img/apple/64/${unicodeHex}.png`;
+        }
+
+        function aplicarEmojisAppleNoSeletor() {
+
+            const raiz = emojiPickerElement?.shadowRoot;
+
+            if (!raiz) return;
+
+            if (!raiz.querySelector('[data-emoji-apple-style]')) {
+                const estilo = document.createElement('style');
+
+                estilo.dataset.emojiAppleStyle = '';
+                estilo.textContent = `
+                    .emoji-apple-image {
+                        color: transparent !important;
+                        background-image: var(--emoji-apple-image) !important;
+                        background-position: center !important;
+                        background-repeat: no-repeat !important;
+                        background-size: var(--emoji-size) var(--emoji-size) !important;
+                    }
+
+                    .nav-emoji.emoji-apple-image {
+                        background-size: var(--category-emoji-size) var(--category-emoji-size) !important;
+                    }
+                `;
+
+                raiz.appendChild(estilo);
+            }
+
+            const atualizarEmojis = () => {
+                raiz.querySelectorAll('.emoji:not(.custom-emoji)').forEach(elemento => {
+                    const emoji = elemento.textContent.trim();
+
+                    if (!emoji) return;
+
+                    elemento.style.setProperty(
+                        '--emoji-apple-image',
+                        `url("${urlEmojiApple(emoji)}")`
+                    );
+                    elemento.classList.add('emoji-apple-image');
+                });
+            };
+
+            atualizarEmojis();
+
+            const observador = new MutationObserver(atualizarEmojis);
+            observador.observe(raiz, {
+                childList: true,
+                characterData: true,
+                subtree: true
             });
-
-            container.appendChild(emojiMartPicker);
-
-            aplicarTemaEmoji();
-
-        } catch (erro) {
-
-            console.error('Erro ao carregar Emoji Mart:', erro);
-
-            container.textContent =
-                'Não foi possível carregar os emojis. Verifique sua conexão.';
-        }
-    };
-
-    const emojiMartPronto = carregarEmojiMart();
-
-    // ========================================
-    // CONTROLE DA POSIÇÃO MANUAL
-    // ========================================
-
-    let posicaoManual = false;
-
-    // ========================================
-    // POSICIONAMENTO AUTOMÁTICO
-    // ========================================
-
-    function posicionarPicker(icone) {
-
-        if (!icone || posicaoManual) return;
-
-        const rect = icone.getBoundingClientRect();
-
-        picker.hidden = false;
-        picker.style.visibility = 'hidden';
-
-        const margem = 12;
-        const espacamento = 8;
-
-        const largura = picker.offsetWidth;
-        const altura = picker.offsetHeight;
-
-        let esquerda = rect.left;
-        let topo = rect.bottom + espacamento;
-
-        if (esquerda + largura > window.innerWidth - margem) {
-            esquerda = window.innerWidth - largura - margem;
         }
 
-        if (esquerda < margem) {
-            esquerda = margem;
+        function selecionarEmoji(emoji) {
+
+            if (!campoAtual || !emoji) return;
+
+            const campoSelecionado = campoAtual;
+
+            campoSelecionado.value = emoji;
+            campoSelecionado.dispatchEvent(new Event('input', { bubbles: true }));
+            campoSelecionado.dispatchEvent(new Event('change', { bubbles: true }));
+
+            fecharPicker();
+            campoSelecionado.focus();
         }
 
-        if (topo + altura > window.innerHeight - margem) {
-            topo = rect.top - altura - espacamento;
+        function mostrarEmojisAlternativos() {
+
+            const emojis = [
+                '🍎', '🍔', '🍕', '🍽️', '☕', '🛒', '🏠', '🚗',
+                '🚌', '💊', '🎓', '🎮', '🎬', '👕', '🐶', '🐱',
+                '💰', '💵', '💳', '🏦', '📈', '💼', '🎁', '💡',
+                '✈️', '🌱', '⚽', '📱', '🔧', '❤️', '⭐', '📦'
+            ];
+
+            container.innerHTML = `
+                <div class="emoji-picker-fallback" aria-label="Emojis comuns">
+                    ${emojis.map(emoji => `
+                        <button type="button" class="emoji-fallback-option"
+                            aria-label="Selecionar ${emoji}" data-emoji="${emoji}">${emoji}</button>
+                    `).join('')}
+                </div>
+            `;
+
+            container.querySelectorAll('[data-emoji]').forEach(botao => {
+                const emoji = botao.dataset.emoji;
+                const imagem = document.createElement('img');
+
+                imagem.src = urlEmojiApple(emoji);
+                imagem.alt = '';
+                imagem.width = 28;
+                imagem.height = 28;
+                imagem.draggable = false;
+                imagem.onerror = () => imagem.replaceWith(document.createTextNode(emoji));
+                botao.replaceChildren(imagem);
+
+                botao.addEventListener('click', () => {
+                    selecionarEmoji(emoji);
+                });
+            });
         }
 
-        if (topo < margem) {
-            topo = margem;
+        // ========================================
+        // CORES DO DUCKFY
+        // ========================================
+
+        function converterCorRGB(cor) {
+
+            if (!cor) return '124, 77, 255';
+
+            const valor = cor.trim();
+
+            if (valor.startsWith('#')) {
+
+                let hex = valor.replace('#', '');
+
+                if (hex.length === 3) {
+                    hex = hex.split('').map(letra => letra + letra).join('');
+                }
+
+                const numero = parseInt(hex, 16);
+
+                return [
+                    (numero >> 16) & 255,
+                    (numero >> 8) & 255,
+                    numero & 255
+                ].join(', ');
+            }
+
+            const rgb = valor.match(/\d+/g);
+
+            return rgb ? rgb.slice(0, 3).join(', ') : '124, 77, 255';
         }
 
-        picker.style.left = `${esquerda}px`;
-        picker.style.top = `${topo}px`;
+        function aplicarTemaEmoji() {
 
-        picker.style.visibility = 'visible';
-    }
+            const estilos = getComputedStyle(document.documentElement);
 
-    // ========================================
-    // ARRASTAR O TECLADO INTEIRO
-    // ========================================
+            const fundo = converterCorRGB(
+                estilos.getPropertyValue('--bg-surface-1')
+            );
 
-    let arrastando = false;
-    let ponteiroAtual = null;
+            const fundoInput = converterCorRGB(
+                estilos.getPropertyValue('--bg-primary')
+            );
 
-    let inicioX = 0;
-    let inicioY = 0;
+            const texto = converterCorRGB(
+                estilos.getPropertyValue('--text-primary')
+            );
 
-    let posicaoInicialX = 0;
-    let posicaoInicialY = 0;
+            const destaque = converterCorRGB(
+                estilos.getPropertyValue('--brand-primary')
+            );
 
-    const distanciaMinima = 3;
+            const borda = converterCorRGB(
+                estilos.getPropertyValue('--border-color')
+            );
 
-    picker.addEventListener('pointerdown', event => {
+            picker.style.setProperty('--rgb-background', fundo);
+            picker.style.setProperty('--rgb-color', texto);
+            picker.style.setProperty('--rgb-input', fundoInput);
+            picker.style.setProperty('--rgb-accent', destaque);
+            picker.style.setProperty('--rgb-border', borda);
 
-        if (picker.hidden) return;
+            if (emojiPickerElement) {
 
-        // verifica se o clique ocorreu em um controle interativo
-        // considera também elementos dentro do Shadow DOM do Emoji Mart
-        const caminho = event.composedPath();
+                const temaClaro = document.documentElement.classList.contains('tema-claro');
 
-        const clicouEmControle = caminho.some(elemento => {
+                emojiPickerElement.classList.toggle('light', temaClaro);
+                emojiPickerElement.classList.toggle('dark', !temaClaro);
+            }
+        }
 
-            return elemento instanceof Element &&
-                elemento.matches(
-                    'button, input, select, textarea, a, [role="button"], [contenteditable="true"]'
+        // ========================================
+        // CARREGAMENTO DO SELETOR DE EMOJIS
+        // ========================================
+
+        const carregarSeletorEmoji = async () => {
+
+            try {
+
+                await import(
+                    'https://cdn.jsdelivr.net/npm/emoji-picker-element@1.29.1/index.js'
                 );
 
-        });
+                await customElements.whenDefined('emoji-picker');
 
-        if (clicouEmControle) return;
+                emojiPickerElement = document.createElement('emoji-picker');
 
-        const rect = picker.getBoundingClientRect();
+                emojiPickerElement.setAttribute('locale', 'pt');
 
-        inicioX = event.clientX;
-        inicioY = event.clientY;
+                emojiPickerElement.setAttribute(
+                    'data-source',
+                    'https://cdn.jsdelivr.net/npm/emoji-picker-element-data@1.8.0/pt/cldr/data.json'
+                );
 
-        posicaoInicialX = rect.left;
-        posicaoInicialY = rect.top;
+                emojiPickerElement.i18n = {
+                    categories: {
+                        custom: 'Personalizados',
+                        'smileys-emotion': 'Expressões e emoções',
+                        'people-body': 'Pessoas e corpo',
+                        'animals-nature': 'Animais e natureza',
+                        'food-drink': 'Comidas e bebidas',
+                        'travel-places': 'Viagens e lugares',
+                        activities: 'Atividades',
+                        objects: 'Objetos',
+                        symbols: 'Símbolos',
+                        flags: 'Bandeiras'
+                    },
+                    categoriesLabel: 'Categorias',
+                    emojiUnsupportedMessage: 'Seu navegador não oferece suporte a emojis coloridos.',
+                    favoritesLabel: 'Favoritos',
+                    loadingMessage: 'Carregando...',
+                    networkErrorMessage: 'Não foi possível carregar os emojis.',
+                    regionLabel: 'Seletor de emojis',
+                    searchDescription: 'Pesquise um emoji',
+                    searchLabel: 'Pesquisar',
+                    searchResultsLabel: 'Resultados da pesquisa',
+                    skinToneDescription: 'Escolha um tom de pele',
+                    skinToneLabel: 'Escolher tom de pele',
+                    skinTones: [
+                        'Padrão',
+                        'Claro',
+                        'Médio-claro',
+                        'Médio',
+                        'Médio-escuro',
+                        'Escuro'
+                    ],
+                    skinTonesLabel: 'Tons de pele'
+                };
 
-        ponteiroAtual = event.pointerId;
+                emojiPickerElement.addEventListener('emoji-click', event => {
 
-        // captura o movimento do ponteiro
-        picker.setPointerCapture(event.pointerId);
-
-    });
-
-    picker.addEventListener('pointermove', event => {
-
-        if (ponteiroAtual !== event.pointerId) return;
-
-        const movimentoX = event.clientX - inicioX;
-        const movimentoY = event.clientY - inicioY;
-
-        // evita considerar um clique simples como arraste
-        if (
-            !arrastando &&
-            Math.abs(movimentoX) < distanciaMinima &&
-            Math.abs(movimentoY) < distanciaMinima
-        ) {
-            return;
-        }
-
-        arrastando = true;
-        posicaoManual = true;
-
-        picker.classList.add('arrastando');
-
-        const margem = 8;
-
-        const largura = picker.offsetWidth;
-        const altura = picker.offsetHeight;
-
-        let esquerda = posicaoInicialX + movimentoX;
-        let topo = posicaoInicialY + movimentoY;
-
-        // limita o movimento horizontal
-        esquerda = Math.max(
-            margem,
-            Math.min(esquerda, window.innerWidth - largura - margem)
-        );
-
-        // limita o movimento vertical
-        topo = Math.max(
-            margem,
-            Math.min(topo, window.innerHeight - altura - margem)
-        );
-
-        picker.style.left = `${esquerda}px`;
-        picker.style.top = `${topo}px`;
-
-    });
-
-    function finalizarArraste() {
-
-        arrastando = false;
-        ponteiroAtual = null;
-
-        picker.classList.remove('arrastando');
-
-    }
-
-    picker.addEventListener('pointerup', finalizarArraste);
-    picker.addEventListener('pointercancel', finalizarArraste);
-    picker.addEventListener('lostpointercapture', finalizarArraste);
-
-    // ========================================
-    // ABRIR SELETOR
-    // ========================================
-
-    async function abrirPicker(icone) {
-
-        if (!picker.hidden && iconeAtual === icone) {
-            fecharPicker();
-            return;
-        }
-
-        const idCampo = icone.dataset.emojiTrigger;
-
-        campoAtual = document.getElementById(idCampo);
-        iconeAtual = icone;
-
-        if (!campoAtual) return;
-
-        document.querySelectorAll('[data-emoji-trigger]').forEach(item => {
-            item.classList.remove('active');
-        });
-
-        icone.classList.add('active');
-
-        // ao abrir novamente, posiciona perto do ícone
-        posicaoManual = false;
-
-        aplicarTemaEmoji();
-
-        posicionarPicker(icone);
-
-        try {
-
-            await emojiMartPronto;
-
-            if (picker.hidden || iconeAtual !== icone) return;
-
-            if (emojiMartPicker) {
-
-                emojiMartPicker.update({
-                    theme: document.documentElement.classList.contains('tema-claro')
-                        ? 'light'
-                        : 'dark'
+                    const emojiSelecionado = event.detail?.unicode;
+                    selecionarEmoji(emojiSelecionado);
                 });
 
+                container.innerHTML = '';
+                container.appendChild(emojiPickerElement);
+                aplicarEmojisAppleNoSeletor();
+
+                aplicarTemaEmoji();
+
+                console.log('Seletor de emojis carregado com sucesso!');
+
+            } catch (erro) {
+
+                console.error('Erro ao carregar o seletor de emojis:', erro);
+                mostrarEmojisAlternativos();
+            }
+        };
+
+        const emojiPickerPronto = carregarSeletorEmoji();
+
+        // ========================================
+        // CONTROLE DA POSIÇÃO MANUAL
+        // ========================================
+
+        let posicaoManual = false;
+
+        // ========================================
+        // POSICIONAMENTO AUTOMÁTICO
+        // ========================================
+
+        function posicionarPicker(icone) {
+
+            if (!icone || posicaoManual) return;
+
+            const rect = icone.getBoundingClientRect();
+
+            picker.hidden = false;
+            picker.style.visibility = 'hidden';
+
+            const margem = 12;
+            const espacamento = 8;
+
+            const largura = picker.offsetWidth;
+            const altura = picker.offsetHeight;
+
+            let esquerda = rect.left;
+            let topo = rect.bottom + espacamento;
+
+            if (esquerda + largura > window.innerWidth - margem) {
+                esquerda = window.innerWidth - largura - margem;
             }
 
-            posicionarPicker(icone);
-
-        } catch (erro) {
-            console.error(erro);
-        }
-    }
-
-    // ========================================
-    // FECHAR SELETOR
-    // ========================================
-
-    function fecharPicker() {
-
-        picker.hidden = true;
-        picker.style.visibility = '';
-
-        posicaoManual = false;
-
-        if (iconeAtual) {
-            iconeAtual.classList.remove('active');
-        }
-
-        iconeAtual = null;
-        campoAtual = null;
-    }
-
-    fechar.addEventListener('click', fecharPicker);
-
-    // ========================================
-    // CLIQUE NOS ÍCONES DOS CAMPOS
-    // ========================================
-
-    document.querySelectorAll('[data-emoji-trigger]').forEach(icone => {
-
-        icone.addEventListener('click', event => {
-            event.stopPropagation();
-            abrirPicker(icone);
-        });
-
-        icone.addEventListener('keydown', event => {
-
-            if (event.key === 'Enter' || event.key === ' ') {
-                event.preventDefault();
-                abrirPicker(icone);
+            if (esquerda < margem) {
+                esquerda = margem;
             }
 
-        });
+            if (topo + altura > window.innerHeight - margem) {
+                topo = rect.top - altura - espacamento;
+            }
 
-    });
-
-    // ========================================
-    // FECHAR AO CLICAR FORA
-    // ========================================
-
-    document.addEventListener('click', event => {
-
-        if (picker.hidden) return;
-
-        if (
-            picker.contains(event.target) ||
-            event.target.closest('[data-emoji-trigger]')
-        ) {
-            return;
-        }
-
-        fecharPicker();
-    });
-
-    // ========================================
-    // FECHAR COM ESC
-    // ========================================
-
-    document.addEventListener('keydown', event => {
-
-        if (event.key === 'Escape' && !picker.hidden) {
-            fecharPicker();
-        }
-
-    });
-
-    // ========================================
-    // ATUALIZAR POSIÇÃO
-    // ========================================
-
-    window.addEventListener('resize', () => {
-
-        if (picker.hidden) return;
-
-        if (posicaoManual) {
-
-            const margem = 8;
-
-            const esquerda = Math.max(
-                margem,
-                Math.min(
-                    picker.offsetLeft,
-                    window.innerWidth - picker.offsetWidth - margem
-                )
-            );
-
-            const topo = Math.max(
-                margem,
-                Math.min(
-                    picker.offsetTop,
-                    window.innerHeight - picker.offsetHeight - margem
-                )
-            );
+            if (topo < margem) {
+                topo = margem;
+            }
 
             picker.style.left = `${esquerda}px`;
             picker.style.top = `${topo}px`;
 
-        } else if (iconeAtual) {
-            posicionarPicker(iconeAtual);
+            picker.style.visibility = 'visible';
         }
 
-    });
+        // ========================================
+        // ARRASTAR O SELETOR
+        // ========================================
 
-    window.addEventListener('scroll', () => {
+        let arrastando = false;
+        let ponteiroAtual = null;
 
-        if (!picker.hidden && iconeAtual && !posicaoManual) {
-            posicionarPicker(iconeAtual);
-        }
+        let inicioX = 0;
+        let inicioY = 0;
 
-    }, true);
+        let posicaoInicialX = 0;
+        let posicaoInicialY = 0;
 
-    // ========================================
-    // ATUALIZAR TEMA
-    // ========================================
+        const distanciaMinima = 3;
 
-    const observadorTema = new MutationObserver(() => {
+        header.addEventListener('pointerdown', event => {
 
-        if (picker.hidden) return;
+            if (picker.hidden) return;
 
-        aplicarTemaEmoji();
+            const caminho = event.composedPath();
 
-        if (emojiMartPicker) {
+            const clicouEmControle = caminho.some(elemento => {
 
-            emojiMartPicker.update({
-                theme: document.documentElement.classList.contains('tema-claro')
-                    ? 'light'
-                    : 'dark'
+                return elemento instanceof Element &&
+                    elemento.matches(
+                        'button, input, select, textarea, a, [role="button"]'
+                    );
             });
 
+            if (clicouEmControle) return;
+
+            const rect = picker.getBoundingClientRect();
+
+            inicioX = event.clientX;
+            inicioY = event.clientY;
+
+            posicaoInicialX = rect.left;
+            posicaoInicialY = rect.top;
+
+            ponteiroAtual = event.pointerId;
+
+            header.setPointerCapture(event.pointerId);
+        });
+
+        header.addEventListener('pointermove', event => {
+
+            if (ponteiroAtual !== event.pointerId) return;
+
+            const movimentoX = event.clientX - inicioX;
+            const movimentoY = event.clientY - inicioY;
+
+            if (
+                !arrastando &&
+                Math.abs(movimentoX) < distanciaMinima &&
+                Math.abs(movimentoY) < distanciaMinima
+            ) {
+                return;
+            }
+
+            arrastando = true;
+            posicaoManual = true;
+
+            picker.classList.add('arrastando');
+
+            const margem = 8;
+
+            const largura = picker.offsetWidth;
+            const altura = picker.offsetHeight;
+
+            let esquerda = posicaoInicialX + movimentoX;
+            let topo = posicaoInicialY + movimentoY;
+
+            esquerda = Math.max(
+                margem,
+                Math.min(esquerda, window.innerWidth - largura - margem)
+            );
+
+            topo = Math.max(
+                margem,
+                Math.min(topo, window.innerHeight - altura - margem)
+            );
+
+            picker.style.left = `${esquerda}px`;
+            picker.style.top = `${topo}px`;
+        });
+
+        function finalizarArraste() {
+
+            arrastando = false;
+            ponteiroAtual = null;
+
+            picker.classList.remove('arrastando');
         }
 
-    });
+        header.addEventListener('pointerup', finalizarArraste);
+        header.addEventListener('pointercancel', finalizarArraste);
+        header.addEventListener('lostpointercapture', finalizarArraste);
 
-    observadorTema.observe(document.documentElement, {
-        attributes: true,
-        attributeFilter: ['class']
-    });
+        // ========================================
+        // ABRIR SELETOR
+        // ========================================
 
-});
+        async function abrirPicker(icone) {
+
+            if (!picker.hidden && iconeAtual === icone) {
+                fecharPicker();
+                return;
+            }
+
+            const idCampo = icone.dataset.emojiTrigger;
+
+            campoAtual = document.getElementById(idCampo);
+            iconeAtual = icone;
+
+            if (!campoAtual) return;
+
+            document.querySelectorAll('[data-emoji-trigger]').forEach(item => {
+                item.classList.remove('active');
+            });
+
+            icone.classList.add('active');
+
+            posicaoManual = false;
+
+            aplicarTemaEmoji();
+
+            posicionarPicker(icone);
+
+            try {
+
+                await emojiPickerPronto;
+
+                if (picker.hidden || iconeAtual !== icone) return;
+
+                aplicarTemaEmoji();
+
+                posicionarPicker(icone);
+
+            } catch (erro) {
+                console.error(erro);
+            }
+        }
+
+        // ========================================
+        // FECHAR SELETOR
+        // ========================================
+
+        function fecharPicker() {
+
+            picker.hidden = true;
+            picker.style.visibility = '';
+
+            posicaoManual = false;
+
+            if (iconeAtual) {
+                iconeAtual.classList.remove('active');
+            }
+
+            iconeAtual = null;
+            campoAtual = null;
+        }
+
+        fechar.addEventListener('click', fecharPicker);
+
+        // ========================================
+        // CLIQUE NOS ÍCONES DOS CAMPOS
+        // ========================================
+
+        document.querySelectorAll('[data-emoji-trigger]').forEach(icone => {
+
+            icone.addEventListener('click', event => {
+                event.stopPropagation();
+                abrirPicker(icone);
+            });
+
+            icone.addEventListener('keydown', event => {
+
+                if (event.key === 'Enter' || event.key === ' ') {
+                    event.preventDefault();
+                    abrirPicker(icone);
+                }
+            });
+        });
+
+        // ========================================
+        // FECHAR AO CLICAR FORA
+        // ========================================
+
+        document.addEventListener('click', event => {
+
+            if (picker.hidden) return;
+
+            if (
+                picker.contains(event.target) ||
+                event.target.closest?.('[data-emoji-trigger]')
+            ) {
+                return;
+            }
+
+            fecharPicker();
+        });
+
+        // ========================================
+        // FECHAR COM ESC
+        // ========================================
+
+        document.addEventListener('keydown', event => {
+
+            if (event.key === 'Escape' && !picker.hidden) {
+                fecharPicker();
+            }
+        });
+
+        // ========================================
+        // ATUALIZAR POSIÇÃO
+        // ========================================
+
+        window.addEventListener('resize', () => {
+
+            if (picker.hidden) return;
+
+            if (posicaoManual) {
+
+                const margem = 8;
+
+                const esquerda = Math.max(
+                    margem,
+                    Math.min(
+                        picker.offsetLeft,
+                        window.innerWidth - picker.offsetWidth - margem
+                    )
+                );
+
+                const topo = Math.max(
+                    margem,
+                    Math.min(
+                        picker.offsetTop,
+                        window.innerHeight - picker.offsetHeight - margem
+                    )
+                );
+
+                picker.style.left = `${esquerda}px`;
+                picker.style.top = `${topo}px`;
+
+            } else if (iconeAtual) {
+                posicionarPicker(iconeAtual);
+            }
+        });
+
+        window.addEventListener('scroll', () => {
+
+            if (!picker.hidden && iconeAtual && !posicaoManual) {
+                posicionarPicker(iconeAtual);
+            }
+
+        }, true);
+
+        // ========================================
+        // ATUALIZAR TEMA
+        // ========================================
+
+        const observadorTema = new MutationObserver(() => {
+
+            if (picker.hidden) return;
+
+            aplicarTemaEmoji();
+        });
+
+        observadorTema.observe(document.documentElement, {
+            attributes: true,
+            attributeFilter: ['class']
+        });
+
+        // ========================================
+        // HISTÓRICO DE CORES
+        // ========================================
+
+        const chaveHistoricoCores = 'duckfy-historico-cores';
+        const limiteHistorico = 8;
+
+        const coresPredefinidas = [
+            '#7C4DFF',
+            '#00E676',
+            '#58A6FF',
+            '#FFB547',
+            '#FF758F',
+            '#A0A0B0'
+        ];
+
+        function carregarHistoricoCores() {
+
+            try {
+
+                const historico = JSON.parse(
+                    localStorage.getItem(chaveHistoricoCores)
+                );
+
+                if (!Array.isArray(historico)) return [];
+
+                return historico
+                    .filter(cor => /^#[0-9A-F]{6}$/i.test(cor))
+                    .map(cor => cor.toUpperCase())
+                    .filter((cor, indice, lista) => lista.indexOf(cor) === indice)
+                    .slice(0, limiteHistorico);
+
+            } catch (erro) {
+
+                console.error('Erro ao carregar histórico de cores:', erro);
+
+                return [];
+            }
+        }
+
+        function salvarHistoricoCor(cor) {
+
+            const historico = carregarHistoricoCores();
+
+            const coresAtualizadas = [
+                cor.toUpperCase(),
+                ...historico.filter(item => item !== cor.toUpperCase())
+            ].slice(0, limiteHistorico);
+
+            try {
+
+                localStorage.setItem(
+                    chaveHistoricoCores,
+                    JSON.stringify(coresAtualizadas)
+                );
+
+                renderizarHistoricoCores();
+
+            } catch (erro) {
+
+                console.error('Erro ao salvar histórico de cores:', erro);
+            }
+        }
+
+        // ========================================
+        // SELETOR DE CORES DO MODAL DE CRIAÇÃO
+        // ========================================
+
+        const campoCor = document.getElementById('cor');
+        const colorBox = document.getElementById('colorBox');
+        const colorValue = document.getElementById('colorValue');
+
+        const opcoesCores = document.querySelectorAll(
+            '.color-option[data-color]'
+        );
+
+        const botaoCorPersonalizada = document.getElementById('corPersonalizada');
+
+        let corConfirmada = campoCor?.value || '#7C4DFF';
+        let seletorPickr = null;
+
+        function renderizarHistoricoCores() {
+
+            const historicoContainer = document.getElementById('historicoCores');
+
+            if (!historicoContainer) return;
+
+            const opcoesHistorico = historicoContainer.querySelector(
+                '.color-history-options'
+            );
+
+            const historico = carregarHistoricoCores();
+
+            opcoesHistorico.innerHTML = '';
+
+            historicoContainer.hidden = historico.length === 0;
+
+            historico.forEach(cor => {
+
+                const botao = document.createElement('button');
+
+                botao.type = 'button';
+                botao.className = 'color-option color-history-option';
+                botao.dataset.color = cor;
+                botao.style.setProperty('--cor-opcao', cor);
+                botao.setAttribute('aria-label', `Selecionar cor ${cor}`);
+
+                botao.classList.toggle(
+                    'selecionada',
+                    campoCor?.value.toUpperCase() === cor
+                );
+
+                opcoesHistorico.appendChild(botao);
+            });
+        }
+
+        function atualizarCorPreview(cor) {
+
+            if (!cor) return;
+
+            cor = cor.toUpperCase();
+
+            if (botaoCorPersonalizada) {
+
+                const iconeMais = botaoCorPersonalizada.querySelector('i');
+
+                const ehCorPredefinida = coresPredefinidas.includes(cor);
+
+                if (ehCorPredefinida) {
+                    botaoCorPersonalizada.style.backgroundColor = '';
+
+                    if (iconeMais) {
+                        iconeMais.style.display = '';
+                    }
+
+                } else {
+                    botaoCorPersonalizada.style.backgroundColor = cor;
+
+                    if (iconeMais) {
+                        iconeMais.style.display = '';
+                    }
+                }
+            }
+
+            if (!campoCor || !colorBox || !colorValue) return;
+
+            campoCor.value = cor;
+            colorBox.style.backgroundColor = cor;
+            colorValue.textContent = cor;
+
+            opcoesCores.forEach(opcao => {
+
+                opcao.classList.toggle(
+                    'selecionada',
+                    opcao.dataset.color.toUpperCase() === cor
+                );
+            });
+
+            const corPredefinida = Array.from(opcoesCores).some(opcao => {
+                return opcao.dataset.color.toUpperCase() === cor;
+            });
+
+            if (botaoCorPersonalizada) {
+
+                botaoCorPersonalizada.classList.toggle(
+                    'selecionada',
+                    !corPredefinida
+                );
+            }
+        }
+
+        // inicia o Pickr da criação
+        if (
+            campoCor &&
+            botaoCorPersonalizada &&
+            window.Pickr
+        ) {
+
+            seletorPickr = Pickr.create({
+
+                el: botaoCorPersonalizada,
+                theme: 'classic',
+                useAsButton: true,
+                container: 'body',
+                appClass: 'duckfy-color-picker',
+                default: corConfirmada,
+                position: 'bottom-middle',
+                padding: 8,
+
+                swatches: [],
+
+                components: {
+                    preview: false,
+                    opacity: false,
+                    hue: true,
+
+                    interaction: {
+                        hex: false,
+                        rgba: false,
+                        hsla: false,
+                        hsva: false,
+                        cmyk: false,
+                        input: false,
+                        clear: false,
+                        save: true
+                    }
+                },
+
+                i18n: {
+                    'btn:save': 'Confirmar',
+                    'btn:cancel': 'Cancelar',
+                    'btn:clear': 'Limpar',
+                    'aria:btn:save': 'Confirmar e fechar',
+                    'aria:btn:cancel': 'Cancelar e fechar',
+                    'aria:btn:clear': 'Limpar seleção'
+                }
+            });
+
+            seletorPickr.on('save', cor => {
+
+                if (!cor) return;
+
+                const hexadecimal = cor.toHEXA().toString().toUpperCase();
+
+                corConfirmada = hexadecimal;
+
+                salvarHistoricoCor(hexadecimal);
+                atualizarCorPreview(hexadecimal);
+
+                seletorPickr.hide();
+            });
+
+            seletorPickr.on('cancel', () => {
+
+                atualizarCorPreview(corConfirmada);
+                seletorPickr.setColor(corConfirmada);
+            });
+
+            seletorPickr.on('change', cor => {
+
+                if (!cor) return;
+
+                atualizarCorPreview(cor.toHEXA().toString());
+            });
+
+        } else if (botaoCorPersonalizada && !window.Pickr) {
+
+            console.error('A biblioteca Pickr não foi carregada.');
+        }
+
+        // ========================================
+        // SELECIONAR CORES DA CRIAÇÃO
+        // ========================================
+
+        opcoesCores.forEach(opcao => {
+
+            opcao.addEventListener('click', () => {
+
+                const cor = opcao.dataset.color.toUpperCase();
+
+                corConfirmada = cor;
+
+                atualizarCorPreview(cor);
+
+                seletorPickr?.setColor(cor);
+            });
+        });
+
+        // ========================================
+        // HISTÓRICO DE CORES DA CRIAÇÃO
+        // ========================================
+
+        const historicoContainer = document.getElementById('historicoCores');
+
+        if (historicoContainer) {
+
+            historicoContainer.addEventListener('click', event => {
+
+                const botao = event.target.closest('[data-color]');
+
+                if (!botao) return;
+
+                const cor = botao.dataset.color.toUpperCase();
+
+                corConfirmada = cor;
+
+                atualizarCorPreview(cor);
+
+                seletorPickr?.setColor(cor);
+
+                renderizarHistoricoCores();
+            });
+        }
+
+        // ========================================
+        // SELETOR DE CORES DO MODAL DE EDIÇÃO
+        // ========================================
+
+        const editCampoCor = document.getElementById('edit_cor');
+        const editColorBox = document.getElementById('editColorBox');
+        const editColorValue = document.getElementById('editColorValue');
+        const editBotaoPersonalizada = document.getElementById('editCorPersonalizada');
+        const editHistoricoContainer = document.getElementById('editHistoricoCores');
+
+        const editOpcoesCores = document.querySelectorAll('[data-edit-color]');
+
+        let editCorConfirmada = editCampoCor?.value || '#7C4DFF';
+        let editSeletorPickr = null;
+
+        function editAtualizarCorPreview(cor) {
+
+            if (!editCampoCor || !editColorBox || !editColorValue || !cor) return;
+
+            cor = cor.toUpperCase();
+
+            editCampoCor.value = cor;
+            editColorBox.style.backgroundColor = cor;
+            editColorValue.textContent = cor;
+
+            editOpcoesCores.forEach(opcao => {
+
+                opcao.classList.toggle(
+                    'selecionada',
+                    opcao.dataset.editColor.toUpperCase() === cor
+                );
+            });
+
+            const ehPredefinida = Array.from(editOpcoesCores).some(
+                opcao => opcao.dataset.editColor.toUpperCase() === cor
+            );
+
+            editBotaoPersonalizada?.classList.toggle('selecionada', !ehPredefinida);
+
+            const icone = editBotaoPersonalizada?.querySelector('i');
+
+            if (editBotaoPersonalizada) {
+
+                editBotaoPersonalizada.style.backgroundColor =
+                    ehPredefinida ? '' : cor;
+
+                if (icone) {
+                    icone.style.display = '';
+                }
+            }
+        }
+
+        function editRenderizarHistorico() {
+
+            if (!editHistoricoContainer) return;
+
+            const opcoes = editHistoricoContainer.querySelector(
+                '.color-history-options'
+            );
+
+            const historico = carregarHistoricoCores();
+
+            opcoes.innerHTML = '';
+            editHistoricoContainer.hidden = historico.length === 0;
+
+            historico.forEach(cor => {
+
+                const botao = document.createElement('button');
+
+                botao.type = 'button';
+                botao.className = 'color-option color-history-option';
+                botao.dataset.editColor = cor;
+                botao.style.setProperty('--cor-opcao', cor);
+                botao.setAttribute('aria-label', `Selecionar cor ${cor}`);
+
+                botao.classList.toggle(
+                    'selecionada',
+                    editCampoCor.value.toUpperCase() === cor
+                );
+
+                opcoes.appendChild(botao);
+            });
+        }
+
+        // inicia o Pickr da edição
+        if (
+            editCampoCor &&
+            editBotaoPersonalizada &&
+            window.Pickr
+        ) {
+
+            editSeletorPickr = Pickr.create({
+
+                el: editBotaoPersonalizada,
+                theme: 'classic',
+                useAsButton: true,
+                container: 'body',
+                appClass: 'duckfy-color-picker',
+                default: editCorConfirmada,
+                position: 'bottom-middle',
+                padding: 8,
+
+                swatches: [],
+
+                components: {
+                    preview: false,
+                    opacity: false,
+                    hue: true,
+
+                    interaction: {
+                        hex: false,
+                        rgba: false,
+                        hsla: false,
+                        hsva: false,
+                        cmyk: false,
+                        input: false,
+                        clear: false,
+                        save: true
+                    }
+                },
+
+                i18n: {
+                    'btn:save': 'Confirmar',
+                    'btn:cancel': 'Cancelar',
+                    'btn:clear': 'Limpar',
+                    'aria:btn:save': 'Confirmar e fechar',
+                    'aria:btn:cancel': 'Cancelar e fechar',
+                    'aria:btn:clear': 'Limpar seleção'
+                }
+            });
+
+            editSeletorPickr.on('save', cor => {
+
+                if (!cor) return;
+
+                const hexadecimal = cor.toHEXA().toString().toUpperCase();
+
+                editCorConfirmada = hexadecimal;
+
+                salvarHistoricoCor(hexadecimal);
+                editAtualizarCorPreview(hexadecimal);
+                editRenderizarHistorico();
+
+                editSeletorPickr.hide();
+            });
+
+            editSeletorPickr.on('cancel', () => {
+
+                editAtualizarCorPreview(editCorConfirmada);
+                editSeletorPickr.setColor(editCorConfirmada);
+            });
+
+            editSeletorPickr.on('change', cor => {
+
+                if (!cor) return;
+
+                editAtualizarCorPreview(cor.toHEXA().toString());
+            });
+
+        } else if (editBotaoPersonalizada && !window.Pickr) {
+
+            console.error('A biblioteca Pickr não foi carregada para a edição.');
+        }
+
+        // ========================================
+        // SELECIONAR CORES PREDEFINIDAS DA EDIÇÃO
+        // ========================================
+
+        editOpcoesCores.forEach(opcao => {
+
+            opcao.addEventListener('click', () => {
+
+                const cor = opcao.dataset.editColor.toUpperCase();
+
+                editCorConfirmada = cor;
+
+                editAtualizarCorPreview(cor);
+
+                editSeletorPickr?.setColor(cor);
+            });
+        });
+
+        // ========================================
+        // HISTÓRICO DE CORES DA EDIÇÃO
+        // ========================================
+
+        editHistoricoContainer?.addEventListener('click', event => {
+
+            const botao = event.target.closest('[data-edit-color]');
+
+            if (!botao) return;
+
+            const cor = botao.dataset.editColor.toUpperCase();
+
+            editCorConfirmada = cor;
+
+            editAtualizarCorPreview(cor);
+
+            editSeletorPickr?.setColor(cor);
+
+            editRenderizarHistorico();
+        });
+
+        // ========================================
+        // APLICAR CORES INICIAIS
+        // ========================================
+
+        atualizarCorPreview(corConfirmada);
+        renderizarHistoricoCores();
+
+        editAtualizarCorPreview(editCorConfirmada);
+        editRenderizarHistorico();
+
+    });
+}

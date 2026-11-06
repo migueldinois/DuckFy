@@ -10,23 +10,10 @@
 {% block content %}
 <div class="perfil-pagina-container w-100">
 
-        <!-- MENSAGENS DE SUCESSO OU ERRO -->
-    {% with mensagens = get_flashed_messages(with_categories=true) %}
-        {% if mensagens %}
-            <div aria-live="polite" aria-atomic="true">
-                {% for categoria, mensagem in mensagens %}
-                    <div class="alert {{ 'alert-success' if categoria == 'success' else 'alert-danger' }} {{ 'perfil-mensagem-sucesso' if categoria == 'success' else '' }} mb-3" role="status">
-                        {{ mensagem }}
-                    </div>
-                {% endfor %}
-            </div>
-        {% endif %}
-    {% endwith %}
-
     <!-- TOPO / CABEÇALHO DA PÁGINA -->
     <header class="cabecalho-perfil mb-4">
         <div class="d-flex align-items-center justify-content-between mb-4">
-            <a class="btn-voltar-perfil" href="{{ url_for('dashboard') }}" aria-label="Voltar">
+            <a class="btn-voltar-perfil btn-voltar-global" href="{{ url_for('dashboard') }}" aria-label="Voltar">
                 <i class="fa-solid fa-arrow-left"></i>
             </a>
             <h1 class="titulo-pagina text-white fs-3 fw-bold m-0">Configuração do Perfil</h1>
@@ -132,17 +119,3 @@
 {% include 'components/modal_acessibilidade.html' %}
 {% endblock %}
 
-{% block extra_js %}
-<script>
-    // Função para exibir a mensagem de sucesso e removê-la após 3 segundos
-    document.querySelectorAll('.perfil-mensagem-sucesso').forEach(function(mensagem) {
-        window.setTimeout(function() {
-            mensagem.style.transition = 'opacity 300ms ease';
-            mensagem.style.opacity = '0';
-            window.setTimeout(function() {
-                mensagem.remove();
-            }, 300);
-        }, 3000);
-    });
-</script>
-{% endblock %}
