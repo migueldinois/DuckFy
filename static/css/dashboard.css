@@ -34,17 +34,45 @@
   font-size: 0.85rem;
 }
 
-.sequence-label {
-  font-size: 0.68rem;
-  font-weight: 600;
-  color: #ffffff;
-  letter-spacing: 0.5px;
+.sequence-indicator {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  border-radius: 10px;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.sequence-indicator:focus-visible {
+  outline: 2px solid var(--accent-primary);
+  outline-offset: 3px;
+}
+
+.sequence-flame {
+  position: relative;
+  display: grid;
+  width: 42px;
+  height: 42px;
+  flex: 0 0 42px;
+  place-items: center;
+}
+
+.sequence-flame img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
 }
 
 .sequence-value {
+  position: absolute;
+  top: 53%;
+  left: 50%;
+  transform: translate(-50%, -50%);
   color: #ffffff;
-  font-size: 1rem;
-  font-weight: 600;
+  font-size: 0.72rem;
+  font-weight: 800;
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
 }
 
 .inner-card {
@@ -915,7 +943,7 @@
 
 .reserve-summary-amount {
   color: var(--text-primary);
-  font-size: 1.55rem;
+  font-size: 1.7rem;
   font-weight: 700;
   line-height: 1.2;
 }
@@ -926,10 +954,11 @@
 }
 
 .reserve-progress-track {
-  height: 8px;
+  height: 16px;
   overflow: hidden;
+  border: 1px solid color-mix(in srgb, var(--brand-primary) 30%, var(--border-color));
   border-radius: 999px;
-  background: var(--bg-surface-1);
+  background: color-mix(in srgb, var(--brand-primary) 16%, var(--bg-surface-1));
 }
 
 .reserve-progress-fill {
@@ -937,6 +966,7 @@
   height: 100%;
   border-radius: inherit;
   background: var(--brand-primary);
+  box-shadow: 0 0 8px color-mix(in srgb, var(--brand-primary) 45%, transparent);
 }
 
 .reserve-progress-labels {
@@ -944,7 +974,8 @@
   justify-content: space-between;
   gap: 8px;
   color: var(--text-muted);
-  font-size: 0.7rem;
+  font-size: 0.76rem;
+  font-weight: 600;
 }
 
 .reserve-no-goal {
@@ -1232,22 +1263,15 @@
   font-size: 0.9rem;
 }
 
-.quick-action-primary>i:first-child,
-.quick-action-secondary>i:first-child {
+.quick-action-icon {
   width: 25px;
-  text-align: center;
-}
-
-.quick-action-primary>i:first-child {
-  font-size: 1.05rem;
+  height: 25px;
+  flex: 0 0 25px;
+  object-fit: contain;
 }
 
 .quick-action-secondary {
   background: var(--bg-surface-2);
-}
-
-.quick-action-secondary>i:first-child {
-  color: var(--brand-secondary);
 }
 
 .quick-action-arrow {

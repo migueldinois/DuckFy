@@ -19,10 +19,12 @@
       </div>
 
       {% if sequencia > 0 %}
-      <div class="text-end">
-        <span class="sequence-label">SEQUÊNCIA</span>
-        <div class="sequence-value">{{ sequencia }}</div>
-      </div>
+      <a href="{{ url_for('sequencia') }}" class="sequence-indicator" aria-label="Abrir sequência de {{ sequencia }} dias">
+        <span class="sequence-flame" aria-hidden="true">
+          <img src="{{ url_for('static', filename='img/icons/sequencia.svg') }}" alt="">
+          <strong class="sequence-value">{{ sequencia }}</strong>
+        </span>
+      </a>
       {% endif %}
     </div>
 
@@ -53,13 +55,13 @@
           {% if total_receitas > 0 %}
           {% if economia_percentual >= 0 %}
           <div class="summary-savings">
-            <span class="summary-savings-icon"><i class="bi bi-piggy-bank" aria-hidden="true"></i></span>
+            <span class="summary-savings-icon"><i class="bi bi-arrow-up" aria-hidden="true"></i></span>
             <span class="summary-savings-label">Economia neste mês</span>
             <strong>{{ "%.1f"|format(economia_percentual) }}%</strong>
           </div>
           {% else %}
           <div class="summary-savings is-negative">
-            <span class="summary-savings-icon"><i class="bi bi-exclamation-circle" aria-hidden="true"></i></span>
+            <span class="summary-savings-icon"><i class="bi bi-arrow-down" aria-hidden="true"></i></span>
             <span class="summary-savings-label">Saídas acima das entradas</span>
             <strong>{{ "%.1f"|format(economia_percentual|abs) }}%</strong>
           </div>
@@ -222,27 +224,27 @@
 
     <nav class="dash-card dashboard-actions" aria-label="Ações rápidas">
       <a href="{{ url_for('lancamento') }}" class="quick-action-primary">
-        <i class="bi bi-plus-lg" aria-hidden="true"></i>
+        <img class="quick-action-icon" src="{{ url_for('static', filename='img/icons/lancamento.svg') }}" alt="" aria-hidden="true">
         <span>Novo lançamento</span>
         <i class="bi bi-arrow-up-right quick-action-arrow" aria-hidden="true"></i>
       </a>
       <a href="{{ url_for('categorias') }}" class="quick-action-secondary">
-        <i class="bi bi-tags" aria-hidden="true"></i>
+        <img class="quick-action-icon" src="{{ url_for('static', filename='img/icons/categoria.svg') }}" alt="" aria-hidden="true">
         <span>Categorias</span>
         <i class="bi bi-chevron-right quick-action-arrow" aria-hidden="true"></i>
       </a>
       <a href="{{ url_for('contas') }}" class="quick-action-secondary">
-        <i class="bi bi-wallet2" aria-hidden="true"></i>
+        <img class="quick-action-icon" src="{{ url_for('static', filename='img/icons/contas-bancarias.svg') }}" alt="" aria-hidden="true">
         <span>Contas bancárias</span>
         <i class="bi bi-chevron-right quick-action-arrow" aria-hidden="true"></i>
       </a>
       <a href="{{ url_for('reserva_emergencia') }}" class="quick-action-secondary">
-        <i class="bi bi-shield-check" aria-hidden="true"></i>
+        <img class="quick-action-icon" src="{{ url_for('static', filename='img/icons/reserva.svg') }}" alt="" aria-hidden="true">
         <span>Reserva de emergência</span>
         <i class="bi bi-chevron-right quick-action-arrow" aria-hidden="true"></i>
       </a>
       <a href="{{ url_for('tela_extrato') }}" class="quick-action-secondary">
-        <i class="bi bi-receipt" aria-hidden="true"></i>
+        <img class="quick-action-icon" src="{{ url_for('static', filename='img/icons/extrato.svg') }}" alt="" aria-hidden="true">
         <span>Extrato</span>
         <i class="bi bi-chevron-right quick-action-arrow" aria-hidden="true"></i>
       </a>
