@@ -2,11 +2,11 @@
     width: min(420px, calc(100vw - 32px));
     max-width: none;
     padding: 28px;
-    color: #FFFFFF;
-    background: #19191B;
-    border: 1px solid rgba(255, 255, 255, 0.14);
-    border-radius: 16px;
-    box-shadow: 0 24px 70px rgba(0, 0, 0, 0.5);
+    color: var(--text-primary);
+    background: var(--bg-surface-1);
+    border: 1px solid var(--border-color);
+    border-radius: 22px;
+    box-shadow: 0 24px 70px var(--shadow-color);
 }
 
 .confirmar-logout-dialog::backdrop {
@@ -32,14 +32,14 @@
 
 .confirmar-logout-titulo {
     margin: 0 0 8px;
-    color: #FFFFFF;
+    color: var(--text-primary);
     font-size: 1.25rem;
     font-weight: 700;
 }
 
 .confirmar-logout-texto {
     margin: 0;
-    color: #B8B7C2;
+    color: var(--text-muted);
     font-size: 0.95rem;
     line-height: 1.5;
 }
@@ -56,7 +56,7 @@
     min-height: 42px;
     padding: 0 16px;
     border: 1px solid transparent;
-    border-radius: 8px;
+    border-radius: 12px;
     color: #FFFFFF;
     font: inherit;
     font-weight: 600;
@@ -65,24 +65,24 @@
 }
 
 .confirmar-logout-cancelar {
-    background: #292832;
-    border-color: rgba(255, 255, 255, 0.12);
+    background: var(--bg-surface-2);
+    border-color: var(--border-color);
 }
 
 .confirmar-logout-cancelar:hover {
-    background: #373641;
+    background: color-mix(in srgb, var(--bg-surface-2) 82%, var(--bg-surface-1));
 }
 
 .confirmar-logout-confirmar {
-    background: #D94343;
+    background: var(--danger-primary);
 }
 
 .confirmar-logout-confirmar:hover {
-    background: #BC3030;
+    background: var(--danger-secondary);
 }
 
 .confirmar-logout-botao:focus-visible {
-    outline: 2px solid #B093FF;
+    outline: 2px solid var(--brand-secondary);
     outline-offset: 3px;
 }
 

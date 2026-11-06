@@ -33,22 +33,24 @@
             </div>
 
             <div class="mb-3">
-                <label for="editarTipoConta" class="card-subtitle d-block mb-2">
+                <label id="editarTipoConta-label" for="editarTipoConta" class="card-subtitle d-block mb-2">
                     Tipo de conta
                 </label>
 
-                <select
-                    id="editarTipoConta"
-                    name="tipo_conta"
-                    class="search-input"
-                    required>
-                    <option value="" disabled>Selecione o tipo</option>
-                    <option value="Conta Corrente">Conta Corrente</option>
-                    <option value="Poupança">Poupança</option>
-                    <option value="Conta Digital">Conta Digital</option>
-                    <option value="Investimento">Investimento</option>
-                    <option value="Carteira Digital">Carteira Digital</option>
-                </select>
+                <div class="tipo-conta-select">
+                    <select
+                        id="editarTipoConta"
+                        name="tipo_conta"
+                        class="search-input"
+                        required>
+                        <option value="" disabled>Selecione o tipo</option>
+                        <option value="Conta Corrente">Conta Corrente</option>
+                        <option value="Poupança">Poupança</option>
+                        <option value="Conta Digital">Conta Digital</option>
+                        <option value="Investimento">Investimento</option>
+                        <option value="Carteira Digital">Carteira Digital</option>
+                    </select>
+                </div>
             </div>
 
             <div class="mb-4">
