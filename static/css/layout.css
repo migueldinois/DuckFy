@@ -296,6 +296,41 @@ html.tema-claro .sidebar-link:not(.active):hover {
   }
 }
 
+.sidebar-theme-toggle {
+  border: 0;
+  background: transparent;
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+
+.sidebar-theme-toggle:hover,
+.sidebar-theme-toggle:focus-visible {
+  color: var(--text-primary);
+  background-color: var(--bg-surface-2);
+}
+
+.dropdown-theme-toggle {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  padding: 10px 12px;
+  border: 0;
+  border-radius: 10px;
+  background: transparent;
+  color: var(--text-muted);
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+
+.dropdown-theme-toggle:hover,
+.dropdown-theme-toggle:focus-visible {
+  background: var(--bg-surface-2);
+  color: var(--text-primary);
+}
+
 .sidebar.collapsed~.main-content {
   margin-left: var(--sidebar-w-collapsed);
   transition-delay: 0.16s;

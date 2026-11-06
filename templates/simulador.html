@@ -182,7 +182,7 @@
                 <div class="grafico-legenda d-flex flex-wrap gap-4 align-items-start mt-2 mb-4 px-2">
                     <div class="legenda-item d-flex align-items-start gap-2">
                         <span
-                            style="width: 12px; height: 12px; background-color: #7C4DFF; border-radius: 50%; display: inline-block; margin-top: 4px; flex-shrink: 0;"></span>
+                            style="width: 12px; height: 12px; background-color: var(--brand-primary); border-radius: 50%; display: inline-block; margin-top: 4px; flex-shrink: 0;"></span>
                         <div class="legenda-texto">
                             <div class="fw-bold text-white small">CDI (Benchmark)</div>
                             <div class="text-white-50" style="font-size: 0.75rem; line-height: 1.2;">
@@ -194,7 +194,7 @@
 
                     <div class="legenda-item d-flex align-items-start gap-2">
                         <span
-                            style="width: 12px; height: 12px; background-color: #00E676; border: 2px solid #FFFFFF; border-radius: 50%; display: inline-block; margin-top: 4px; flex-shrink: 0;"></span>
+                            style="width: 12px; height: 12px; background-color: var(--accent-primary); border: 2px solid var(--text-primary); border-radius: 50%; display: inline-block; margin-top: 4px; flex-shrink: 0;"></span>
                         <div class="legenda-texto">
                             <div class="fw-bold text-white small">Rentabilidade</div>
                             <div class="text-white-50" style="font-size: 0.75rem; line-height: 1.2;">
@@ -255,16 +255,29 @@
                 <label for="inputModalAnos" class="form-label text-white-50 fw-semibold">Informe o tempo de investimento
                     (em anos):</label>
 
+<<<<<<< HEAD
+                <input type="number" class="form-control text-white border-0 py-2 px-3" id="inputModalAnos" min="1"
+                    max="50" placeholder="Digite o número de anos"
+                    style="background-color: var(--bg-surface-1); border-radius: 8px;">
+=======
                 <input type="number" class="form-control py-2 px-3" id="inputModalAnos" min="1"
                     max="50" placeholder="Digite o número de anos">
+>>>>>>> 2c609b2f000a979fd7015f0e05ebf89ef6075575
 
                 <div class="form-text text-white-50 mt-2 small">
                     * O período máximo permitido para simulação é de <strong>50 anos</strong>.
                 </div>
             </div>
             <div class="modal-footer border-top-0 pt-0">
+<<<<<<< HEAD
+                <button type="button" class="btn text-white" data-bs-dismiss="modal"
+                    style="background-color: var(--bg-surface-2); border-radius: 8px;">Cancelar</button>
+                <button type="button" class="btn text-white fw-bold px-4" id="btnConfirmarAnosModal"
+                    style="background-color: var(--brand-primary); border-radius: 8px;">Aplicar</button>
+=======
                 <button type="button" class="btn modal-action-cancel" data-bs-dismiss="modal">Cancelar</button>
                 <button type="button" class="btn modal-action-confirm" id="btnConfirmarAnosModal">Aplicar</button>
+>>>>>>> 2c609b2f000a979fd7015f0e05ebf89ef6075575
             </div>
         </div>
     </div>

@@ -7,10 +7,22 @@
 
     <script>
         try {
-            if (localStorage.getItem("duckfy-tema") === "claro") {
-                document.documentElement.classList.add("tema-claro");
+            const raiz = document.documentElement;
+            const tema = localStorage.getItem("duckfy-tema") || "escuro";
+            const tamanhoFonte = Number(localStorage.getItem("duckfy-fonte") || 100);
+            const paleta = localStorage.getItem("duckfy-daltonismo") || "normal";
+
+            raiz.classList.toggle("tema-claro", tema === "claro");
+            raiz.classList.remove("daltonismo-protanopia", "daltonismo-deuteranopia", "daltonismo-tritanopia");
+            if (["protanopia", "deuteranopia", "tritanopia"].includes(paleta)) {
+                raiz.classList.add(`daltonismo-${paleta}`);
             }
+<<<<<<< HEAD
+            raiz.style.fontSize = `${Math.min(140, Math.max(90, tamanhoFonte))}%`;
+        } catch {}
+=======
         } catch { }
+>>>>>>> 2c609b2f000a979fd7015f0e05ebf89ef6075575
     </script>
 
     <title>{% block title %}DuckFy{% endblock %}</title>
@@ -31,7 +43,11 @@
     {% block extra_css %}{% endblock %}
     {% block styles %}{% endblock %}
     <link rel="stylesheet" href="{{ url_for('static', filename='css/tema-claro.css') }}?v=2.6">
+<<<<<<< HEAD
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/acessibilidade.css') }}">
+=======
     <link rel="stylesheet" href="{{ url_for('static', filename='css/botao-voltar.css') }}">
+>>>>>>> 2c609b2f000a979fd7015f0e05ebf89ef6075575
 </head>
 
 <body class="app-body">
@@ -169,12 +185,20 @@
                     </a>
                 </li>
 
+<<<<<<< HEAD
+                <li>
+                    <button type="button" class="sidebar-link sidebar-theme-toggle" data-theme-toggle
+                        aria-label="Ativar tema claro" title="Ativar tema claro">
+                        <i class="bi bi-sun sidebar-icon" data-theme-icon aria-hidden="true"></i>
+                        <span class="brand-text" data-theme-label>Tema claro</span>
+=======
                 <!-- botão para alternar entre os temas -->
                 <li>
                     <button type="button" id="btn-tema" class="sidebar-link theme-switch"
                         aria-label="Ativar tema claro" title="Ativar tema claro">
                         <i id="icone-tema" class="bi bi-brightness-high-fill theme-switch-icon" aria-hidden="true"></i>
                         <span id="texto-tema" class="brand-text theme-switch-label">Tema claro</span>
+>>>>>>> 2c609b2f000a979fd7015f0e05ebf89ef6075575
                     </button>
                 </li>
 
@@ -224,6 +248,8 @@
 
     <!-- tema -->
     <script src="{{ url_for('static', filename='js/tema.js') }}" defer></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="{{ url_for('static', filename='js/acessibilidade.js') }}" defer></script>
 
     <!-- gerenciamento de modais -->
     <script src="{{ url_for('static', filename='js/modalManager.js') }}"></script>

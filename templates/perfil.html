@@ -91,6 +91,17 @@
                 <i class="fa-solid fa-chevron-right seta"></i>
             </a>
 
+            <a href="{{ url_for('acessibilidade') }}" class="item-lista-config"
+                data-abrir-acessibilidade aria-haspopup="dialog">
+                <div class="d-flex align-items-center gap-3">
+                    <div class="icone-box">
+                        <i class="fa-solid fa-universal-access" aria-hidden="true"></i>
+                    </div>
+                    <span class="texto-item">Acessibilidade</span>
+                </div>
+                <i class="fa-solid fa-chevron-right seta"></i>
+            </a>
+
             <a href="{{ url_for('logout') }}" class="item-lista-config sair" data-confirmar-logout>
                 <div class="d-flex align-items-center gap-3">
                     <div class="icone-box icone-sair">
@@ -105,5 +116,6 @@
     </section>
 
 </div>
+{% include 'components/modal_acessibilidade.html' %}
 {% endblock %}
 

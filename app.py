@@ -814,8 +814,20 @@ def sequencia():
         flash("Você precisa estar logado para acessar a sequência!", "error")
         return redirect('/login')
 
+<<<<<<< HEAD
+@app.get("/acessibilidade")
+def acessibilidade():
+    if "usuario" not in session:
+        flash("Você precisa estar logado para acessar as configurações de acessibilidade!", "error")
+        return redirect('/login')
+
+    return redirect(url_for("perfil"))
+
+# Rota para exibir o perfil do usuário
+=======
 
 # exibe o perfil do usuário
+>>>>>>> 2c609b2f000a979fd7015f0e05ebf89ef6075575
 @app.route("/perfil", methods=["GET", "POST"])
 def perfil():
     email = session.get("email")

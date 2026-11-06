@@ -33,10 +33,23 @@
             </div>
         </div>
 
-        <button type="button" class="btn-nova-categoria" data-open-modal="modalNovaCategoria">
-            <i class="bi bi-plus-lg"></i>
-            <span>Nova categoria</span>
-        </button>
+        <div class="categorias-acoes">
+            <button type="button" class="btn-nova-categoria" data-open-modal="modalNovaCategoria">
+                <i class="bi bi-plus-lg"></i>
+                <span>Nova categoria</span>
+            </button>
+
+            <div class="search-box">
+                <i class="bi bi-search search-icon"></i>
+
+                <input type="text" id="inputBusca" class="search-input" placeholder="Buscar categoria..."
+                    aria-label="Buscar categoria">
+
+                <button type="button" id="limparBusca" class="search-clear d-none" aria-label="Limpar pesquisa">
+                    <i class="bi bi-x-lg"></i>
+                </button>
+            </div>
+        </div>
     </header>
 
     <!-- resumo -->
@@ -59,17 +72,6 @@
 
     <!-- pesquisa -->
     <div class="categorias-ferramentas">
-        <div class="search-box">
-            <i class="bi bi-search search-icon"></i>
-
-            <input type="text" id="inputBusca" class="search-input" placeholder="Buscar categoria..."
-                aria-label="Buscar categoria">
-
-            <button type="button" id="limparBusca" class="search-clear d-none" aria-label="Limpar pesquisa">
-                <i class="bi bi-x-lg"></i>
-            </button>
-        </div>
-
         <span class="categorias-contagem" id="contadorCategorias">
             {{ categorias_despesa|length }} categorias
         </span>
