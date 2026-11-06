@@ -1,3 +1,6 @@
+document.querySelectorAll('#modalGuardarDinheiro, #modalRetirarDinheiro, #modalAlterarMeta')
+  .forEach((modal) => document.body.appendChild(modal));
+
 document.querySelectorAll('[data-reserva-select]').forEach((container, selectIndex) => {
   const select = container.querySelector('select');
   const trigger = container.querySelector('.custom-select-trigger');

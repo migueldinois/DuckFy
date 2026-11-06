@@ -184,6 +184,16 @@
     -webkit-overflow-scrolling: touch;
 }
 
+.simulador-page-wrapper .simulador-tabela {
+    --bs-table-bg: #212529;
+    --bs-table-color: #ffffff;
+    --bs-table-border-color: #2d313e;
+    --bs-table-striped-bg: #272a30;
+    --bs-table-striped-color: #ffffff;
+    --bs-table-hover-bg: #2d3138;
+    --bs-table-hover-color: #ffffff;
+}
+
 table {
     width: 100%;
     border-collapse: collapse;
