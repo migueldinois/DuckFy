@@ -3,7 +3,7 @@
 {% endblock %}
 
 {% set caminho_atual = request.path.rstrip('/') %}
-{% set mais_ativo = caminho_atual.startswith('/lancamento') or caminho_atual.startswith('/reserva_emergencia') or caminho_atual.startswith('/categorias') or caminho_atual.startswith('/sequencia') %}
+{% set mais_ativo = caminho_atual.startswith('/lancamento') or caminho_atual.startswith('/reserva_emergencia') or caminho_atual.startswith('/categorias') or caminho_atual.startswith('/subcategorias') or caminho_atual.startswith('/sequencia') %}
 
 <nav class="bottom-bar">
   <div class="bottom-bar-container">
@@ -32,6 +32,7 @@
         <a href="/lancamento">Lançamentos</a>
         <a href="/reserva_emergencia">Reserva de emergência</a>
         <a href="/categorias">Categorias</a>
+        <a href="{{ url_for('tela_subcategorias') }}" {% if caminho_atual == '/subcategorias' %}class="active" aria-current="page"{% endif %}>Subcategorias</a>
         <a href="/sequencia">Sequência</a>
         <button type="button" class="dropdown-theme-toggle" data-theme-toggle>
           <i class="bi bi-sun" data-theme-icon aria-hidden="true"></i>
