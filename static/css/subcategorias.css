@@ -348,6 +348,40 @@ body.tema-claro .subcategorias-page {
     }
 }
 
+.subcategorias-status {
+    display: grid;
+    min-height: min(68vh, 620px);
+    place-content: center;
+    justify-items: center;
+    gap: 18px;
+    padding: 32px 20px;
+    color: var(--text-primary, #fff);
+    text-align: center;
+}
+
+.subcategorias-status i {
+    display: grid;
+    width: 68px;
+    height: 68px;
+    place-items: center;
+    border: 1px solid color-mix(in srgb, var(--brand-secondary, #b093ff) 35%, transparent);
+    border-radius: 20px;
+    background: color-mix(in srgb, var(--brand-primary, #7c4dff) 14%, transparent);
+    color: var(--brand-secondary, #b093ff);
+    font-size: 1.8rem;
+}
+
+.subcategorias-status h1 {
+    margin: 0;
+    font-size: 1.4rem;
+    font-weight: 650;
+}
+
+html.tema-claro .subcategorias-status,
+body.tema-claro .subcategorias-status {
+    color: #242235;
+}
+
 .subcategorias-page .subcategorias-header-actions {
     display: flex;
     align-items: center;
