@@ -72,7 +72,7 @@ document.addEventListener("DOMContentLoaded", function () {
 		window.clearTimeout(temporizadorStatus);
 		if (window.Swal && typeof window.Swal.fire === "function") {
 			window.Swal.fire({
-				target: dialog || document.body,
+				target: dialog?.open ? dialog : document.body,
 				icon: "success",
 				title: titulo,
 				text: mensagem,
@@ -157,6 +157,7 @@ document.addEventListener("DOMContentLoaded", function () {
 	});
 	salvar.addEventListener("click", function () {
 		aplicarPreferencias();
+		dialog?.close();
 		mostrarStatus("Alterações salvas!", "Suas preferências de acessibilidade foram aplicadas.");
 	});
 	if (restaurar) {
