@@ -822,7 +822,10 @@ def acessibilidade():
 
     return redirect(url_for("perfil"))
 
+# Rota para exibir o perfil do usuário
+
 # exibe o perfil do usuário
+
 @app.route("/perfil", methods=["GET", "POST"])
 def perfil():
     email = session.get("email")
@@ -1066,6 +1069,32 @@ def categorias():
     else:
         flash("Você precisa estar logado para acessar as categorias!", "error")
         return redirect('/login')
+
+
+@app.get("/subcategorias")
+def tela_subcategorias():
+    if "usuario" not in session:
+        flash("Você precisa estar logado para acessar as subcategorias!", "error")
+        return redirect(url_for("index"))
+
+    categorias_demo = [
+        {"id": 1, "nome": "Moradia", "tipo": "Despesa"},
+        {"id": 2, "nome": "Alimentação", "tipo": "Despesa"},
+        {"id": 3, "nome": "Transporte", "tipo": "Despesa"},
+        {"id": 4, "nome": "Salário", "tipo": "Receita"},
+    ]
+    subcategorias_demo = [
+        {"nome": "Aluguel", "categoria_id": 1, "categoria_nome": "Moradia", "emoji": "🏠"},
+        {"nome": "Energia elétrica", "categoria_id": 1, "categoria_nome": "Moradia", "emoji": "💡"},
+        {"nome": "Mercado", "categoria_id": 2, "categoria_nome": "Alimentação", "emoji": "🛒"},
+        {"nome": "Combustível", "categoria_id": 3, "categoria_nome": "Transporte", "emoji": "⛽"},
+        {"nome": "Salário mensal", "categoria_id": 4, "categoria_nome": "Salário", "emoji": "💼"},
+    ]
+    return render_template(
+        "subcategorias.html",
+        categorias=categorias_demo,
+        subcategorias=subcategorias_demo,
+    )
 
 
 # cadastra uma nova categoria

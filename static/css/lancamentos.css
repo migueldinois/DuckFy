@@ -567,6 +567,12 @@
   margin-top: clamp(24px, 4vh, 44px);
 }
 
+.lancamento-wizard-step[data-wizard-step="1"] .lancamento-wizard-actions {
+  width: min(100%, 1040px);
+  margin-right: auto;
+  margin-left: auto;
+}
+
 .lancamento-wizard-step[data-wizard-step="2"] {
   width: min(100%, 1040px);
   margin-right: auto;
@@ -933,10 +939,16 @@
 }
 
 #lancamento-conta-resumo-saldo {
-  color: var(--brand-secondary);
-  font-size: 17px;
-  font-weight: 800;
+  color: var(--text-muted);
+  font-size: 13px;
+  font-weight: 600;
   font-variant-numeric: tabular-nums;
+}
+
+#lancamento-conta-resumo-nome {
+  color: var(--text-primary);
+  font-size: 16px;
+  font-weight: 800;
 }
 
 .lancamento-conta-alterar {
