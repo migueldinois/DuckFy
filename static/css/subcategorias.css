@@ -403,65 +403,6 @@ body.tema-claro .subcategorias-page {
     cursor: pointer;
 }
 
-.subcategoria-emoji-field {
-    position: relative;
-}
-
-.subcategoria-emoji-trigger {
-    display: flex;
-    align-items: center;
-    gap: 11px;
-    width: 100%;
-    min-height: 47px;
-    padding: 7px 12px;
-    border: 1px solid var(--sub-border);
-    border-radius: 9px;
-    background: var(--sub-panel);
-    color: var(--sub-text);
-    font: inherit;
-    font-size: 0.84rem;
-    text-align: left;
-    cursor: pointer;
-}
-
-.subcategoria-emoji-trigger > span:nth-child(2) {
-    flex: 1;
-}
-
-.subcategoria-emoji-trigger .emoji-ios,
-.subcategoria-emoji-trigger .emoji-ios img {
-    width: 29px;
-    height: 29px;
-}
-
-.subcategoria-emoji-picker {
-    position: absolute;
-    z-index: 20;
-    right: 0;
-    bottom: calc(100% + 7px);
-    left: 0;
-    max-height: 230px;
-    padding: 10px;
-    overflow-y: auto;
-    border: 1px solid var(--sub-border);
-    border-radius: 12px;
-    background: var(--sub-panel);
-    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.24);
-}
-
-.subcategoria-emoji-picker[hidden] {
-    display: none;
-}
-
-.subcategoria-emoji-picker .emoji-fallback-option {
-    font-size: 1.35rem;
-}
-
-.subcategoria-emoji-picker .emoji-fallback-option img {
-    width: 26px;
-    height: 26px;
-}
-
 .subcategorias-color-picker {
     gap: 10px;
 }
@@ -540,26 +481,6 @@ body.tema-claro .subcategorias-page {
 
 .duckfy-modal .subcategorias-form select.search-input {
     padding-right: 36px;
-}
-
-.duckfy-modal .subcategoria-emoji-trigger {
-    justify-content: flex-start;
-    color: var(--text-primary);
-    text-align: left;
-}
-
-.duckfy-modal .subcategoria-emoji-trigger > span:nth-child(2) {
-    flex: 1;
-}
-
-.duckfy-modal .subcategoria-emoji-trigger .emoji-ios {
-    position: static;
-    flex: 0 0 24px;
-    visibility: visible;
-}
-
-.duckfy-modal .subcategoria-emoji-field .input-icon {
-    z-index: 1;
 }
 
 .duckfy-modal .subcategorias-color-picker {

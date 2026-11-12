@@ -133,22 +133,16 @@
             </div>
 
             <div class="mb-3">
-                <label for="abrirSeletorEmojiSubcategoria" class="card-subtitle d-block mb-1">Emoji</label>
-                <div class="subcategoria-emoji-field input-icon-wrapper">
-                    <img src="{{ url_for('static', filename='img/icons/emoji.svg') }}" class="input-icon" alt="">
-                    <input type="hidden" id="emojiSubcategoria" name="emoji" value="⭐">
-                    <button type="button" id="abrirSeletorEmojiSubcategoria" class="search-input input-with-icon subcategoria-emoji-trigger" aria-label="Emoji selecionado estrela, escolher outro emoji" aria-expanded="false" aria-controls="emojiPickerSubcategoria">
-                        <span class="emoji-ios" id="previewEmojiSubcategoria">⭐</span>
-                        <span id="textoEmojiSubcategoria">Selecionar emoji</span>
-                        <i class="bi bi-chevron-down" aria-hidden="true"></i>
-                    </button>
-                    <div class="subcategoria-emoji-picker" id="emojiPickerSubcategoria" hidden>
-                        <div class="emoji-picker-fallback" aria-label="Emojis disponíveis">
-                            {% for emoji in ['🍎', '🍔', '🍕', '🍽️', '☕', '🛒', '🏠', '🚗', '🚌', '💊', '🎓', '🎮', '🎬', '👕', '🐶', '🐱', '💰', '💵', '💳', '🏦', '📈', '💼', '🎁', '💡', '✈️', '🌱', '⚽', '📱', '🔧', '❤️', '⭐', '📦'] %}
-                            <button type="button" class="emoji-fallback-option" data-emoji="{{ emoji }}" aria-label="Selecionar {{ emoji }}">{{ emoji }}</button>
-                            {% endfor %}
-                        </div>
-                    </div>
+                <label for="emojiSubcategoria" class="card-subtitle d-block mb-1">Emoji</label>
+                <div class="input-icon-wrapper emoji-field-wrapper">
+                    <img src="{{ url_for('static', filename='img/icons/emoji.svg') }}"
+                        class="input-icon emoji-icon-trigger" alt="Abrir seletor de emojis"
+                        data-emoji-trigger="emojiSubcategoria" role="button" tabindex="0"
+                        aria-label="Abrir seletor de emojis">
+
+                    <input type="text" name="emoji" id="emojiSubcategoria"
+                        class="search-input input-with-icon emoji-input" placeholder="Selecione um emoji"
+                        value="⭐" required autocomplete="off">
                 </div>
             </div>
 
@@ -183,5 +177,6 @@
 
 {% block extra_js %}
 <script src="{{ url_for('static', filename='js/emoji-ios.js') }}" defer></script>
+<script src="{{ url_for('static', filename='js/categorias.js') }}" defer></script>
 <script src="{{ url_for('static', filename='js/subcategorias.js') }}" defer></script>
 {% endblock %}

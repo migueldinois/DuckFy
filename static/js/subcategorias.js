@@ -12,9 +12,6 @@ document.addEventListener("DOMContentLoaded", () => {
     const submitButton = document.getElementById("salvarSubcategoria");
     const deleteButton = document.getElementById("excluirSubcategoria");
     const emojiInput = document.getElementById("emojiSubcategoria");
-    const emojiPreview = document.getElementById("previewEmojiSubcategoria");
-    const emojiPicker = document.getElementById("emojiPickerSubcategoria");
-    const emojiPickerButton = document.getElementById("abrirSeletorEmojiSubcategoria");
     const colorInput = document.getElementById("corSubcategoria");
     const customColorInput = document.getElementById("corPersonalizadaSubcategoria");
     const colorValue = document.getElementById("valorCorSubcategoria");
@@ -25,9 +22,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
     const setEmoji = (emoji) => {
         emojiInput.value = emoji;
-        emojiPreview.textContent = emoji;
-        document.getElementById("textoEmojiSubcategoria").textContent = "Selecionar emoji";
-        emojiPickerButton.setAttribute("aria-label", `Emoji selecionado ${emoji}, escolher outro emoji`);
+        emojiInput.dispatchEvent(new Event("input", { bubbles: true }));
+        emojiInput.dispatchEvent(new Event("change", { bubbles: true }));
         window.carregarEmojisIOS?.();
     };
 
@@ -171,19 +167,6 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     });
 
-    emojiPickerButton.addEventListener("click", () => {
-        emojiPicker.hidden = !emojiPicker.hidden;
-        emojiPickerButton.setAttribute("aria-expanded", String(!emojiPicker.hidden));
-    });
-
-    emojiPicker.addEventListener("click", (event) => {
-        const option = event.target.closest("[data-emoji]");
-        if (!option) return;
-        setEmoji(option.dataset.emoji);
-        emojiPicker.hidden = true;
-        emojiPickerButton.setAttribute("aria-expanded", "false");
-    });
-
     colorOptions.forEach((option) => {
         option.addEventListener("click", () => setColor(option.dataset.color));
     });
@@ -222,8 +205,6 @@ document.addEventListener("DOMContentLoaded", () => {
         form.reset();
         setEmoji("⭐");
         setColor("#7C4DFF");
-        emojiPicker.hidden = true;
-        emojiPickerButton.setAttribute("aria-expanded", "false");
         updateList();
         currentRow = null;
         ModalManager.fechar(modal.id);
