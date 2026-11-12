@@ -34,6 +34,7 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='css/layout.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/bottom-bar.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/confirmar_logout.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/custom_select.css') }}?v=1">
 
     <!-- estilos especificos da pagina -->
     {% block extra_css %}{% endblock %}
@@ -252,6 +253,7 @@
     <!-- comportamento do layout -->
     <script src="{{ url_for('static', filename='js/layout.js') }}"></script>
     <script src="{{ url_for('static', filename='js/confirmar_logout.js') }}" defer></script>
+    <script src="{{ url_for('static', filename='js/tipo_conta_select.js') }}?v=2"></script>
 
     <!-- scripts especificos da pagina -->
     {% block extra_js %}{% endblock %}
