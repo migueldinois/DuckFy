@@ -2,8 +2,8 @@
 {% extends 'layout.html' %}
 
 {% block extra_css %}
-<link rel="stylesheet" href="{{ url_for('static', filename='css/contas.css') }}?v=5">
-<link rel="stylesheet" href="{{ url_for('static', filename='css/duckfy-modal.css') }}?v=2">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/contas.css') }}?v=10">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/duckfy-modal.css') }}?v=9">
 {% endblock %}
 
 
@@ -97,7 +97,7 @@
           </span>
           {% if conta.valor_alocado|default(0, true)|float > 0 %}
           <span class="alocacao-reserva">
-            Na reserva: R$ {{ '%.2f'|format(conta.valor_alocado|float)|replace('.', ',') }}
+            Na reserva: {{ conta.valor_alocado|float|moeda_br }}
           </span>
           {% endif %}
         </div>
@@ -108,12 +108,10 @@
         <div class="saldo-banco">
           <span class="card-subtitle d-block">Disponível</span>
           <strong>
-            R$ {{ '%.2f'|format(
-                (conta.saldo_atual|float - conta.valor_alocado|default(0, true)|float)
-            )|replace('.', ',') }}
+            {{ (conta.saldo_atual|float - conta.valor_alocado|default(0, true)|float)|moeda_br }}
           </strong>
           <small class="card-subtitle d-block mt-1">
-            Saldo total: R$ {{ '%.2f'|format(conta.saldo_atual|float)|replace('.', ',') }}
+            Saldo total: {{ conta.saldo_atual|float|moeda_br }}
           </small>
         </div>
 
@@ -380,5 +378,4 @@
   });
 
 </script>
-<script src="{{ url_for('static', filename='js/tipo_conta_select.js') }}"></script>
 {% endblock %}
