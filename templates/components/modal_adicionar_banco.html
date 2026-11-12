@@ -25,19 +25,14 @@
                     Tipo de conta
                 </label>
 
-                <div class="input-icon-wrapper tipo-conta-select">
-                    <img src="{{ url_for('static', filename='img/icons/tipo.svg') }}" class="input-icon"
-                        alt="">
-
-                    <select name="tipo_conta" id="tipo_conta" class="search-input input-with-icon" required>
-                        <option value="" disabled selected>Selecione o tipo</option>
-                        <option value="Conta Corrente">Conta Corrente</option>
-                        <option value="Poupança">Poupança</option>
-                        <option value="Conta Digital">Conta Digital</option>
-                        <option value="Investimento">Investimento</option>
-                        <option value="Carteira Digital">Carteira Digital</option>
-                    </select>
-                </div>
+                <select name="tipo_conta" id="tipo_conta" class="search-input" required>
+                    <option value="" disabled selected>Selecione o tipo</option>
+                    <option value="Conta Corrente">Conta Corrente</option>
+                    <option value="Poupança">Poupança</option>
+                    <option value="Conta Digital">Conta Digital</option>
+                    <option value="Investimento">Investimento</option>
+                    <option value="Carteira Digital">Carteira Digital</option>
+                </select>
             </div>
 
             <div class="mb-3">

@@ -332,16 +332,12 @@ def contas():
         if patrimonio > 0 else Decimal('0')
     )
 
-    # formata os valores exibidos na página
-    def formatar_moeda(valor):
-        return f"{valor:,.2f}".replace(',', 'X').replace('.', ',').replace('X', '.')
-
     return render_template(
         'contas.html',
         contas_bancarias=lista_contas,
-        patrimonio_total=formatar_moeda(patrimonio),
-        reserva_total=formatar_moeda(total_reservado),
-        saldo_fora_reserva=formatar_moeda(saldo_fora_reserva),
+        patrimonio_total=patrimonio,
+        reserva_total=total_reservado,
+        saldo_fora_reserva=saldo_fora_reserva,
         porcentagem_reservada=porcentagem_reservada
     )
 

@@ -87,7 +87,7 @@
               <span class="lancamento-account-option-icon" aria-hidden="true"><i class="bi bi-bank"></i></span>
               <span class="lancamento-account-option-copy">
                 <strong>{{ conta.nome_conta }}</strong>
-                <small>{{ conta.tipo_conta }} · Saldo: R$ {{ '{:,.2f}'.format(conta.saldo_atual|default(0, true)|float).replace(',', 'X').replace('.', ',').replace('X', '.') }}</small>
+                <small>{{ conta.tipo_conta }} · Saldo: R$ {{ conta.saldo_atual|default(0, true)|moeda_br }}</small>
               </span>
               <i class="bi bi-arrow-right lancamento-account-option-arrow" aria-hidden="true"></i>
             </button>
