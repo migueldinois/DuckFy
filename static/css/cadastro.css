@@ -695,7 +695,8 @@ body.tema-claro .logo-fy {
     transform: translate(-49.48%, -46.85%);
 }
 
-.cadastro-cabecalho .cadastro-logo-imagem[src$="logo_duckfy.png"] {
+.cadastro-cabecalho .cadastro-logo-imagem[src$="logo_clara.png"],
+.cadastro-cabecalho .cadastro-logo-imagem[src$="logo_escura.png"] {
     width: calc(var(--logo-area-width) * 1.23);
     transform: translate(-52.60%, -49.07%);
 }

@@ -66,13 +66,12 @@ body.app-body {
   align-items: center;
   justify-content: center;
   width: 100%;
-  height: 90px;
+  height: 122px;
   padding: 0 10px;
   overflow: hidden;
   flex-shrink: 0;
   text-decoration: none;
-  transition: height 0.55s cubic-bezier(0.4, 0, 0.2, 1),
-    padding 0.55s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: padding 0.55s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .sidebar-logo {
@@ -83,11 +82,11 @@ body.app-body {
   object-fit: contain;
   object-position: center;
   flex-shrink: 0;
-  transition: width 0.55s cubic-bezier(0.4, 0, 0.2, 1),
-    max-width 0.55s cubic-bezier(0.4, 0, 0.2, 1),
-    height 0.55s cubic-bezier(0.4, 0, 0.2, 1),
-    transform 0.55s cubic-bezier(0.4, 0, 0.2, 1), filter 0.25s ease,
-    opacity 0.18s ease;
+  transition: opacity 0.18s ease,
+    width 0.35s cubic-bezier(0.4, 0, 0.2, 1),
+    height 0.35s cubic-bezier(0.4, 0, 0.2, 1),
+    transform 0.35s cubic-bezier(0.4, 0, 0.2, 1),
+    filter 0.35s ease;
 }
 
 .sidebar-logo.is-changing {
@@ -96,7 +95,6 @@ body.app-body {
 
 .sidebar.collapsed .sidebar-brand {
   padding: 0 4px;
-  transition-delay: 0.08s;
 }
 
 .sidebar.collapsed .sidebar-logo {
@@ -118,6 +116,10 @@ html.tema-claro .sidebar.collapsed .sidebar-logo {
   width: 100%;
   max-width: 260px;
   height: 110px;
+}
+
+html:not(.tema-claro) .sidebar:not(.collapsed) .sidebar-logo {
+  translate: -6px -2px;
 }
 
 
@@ -171,12 +173,19 @@ html.tema-claro .sidebar.collapsed .sidebar-logo {
 }
 
 .sidebar-icon {
+  box-sizing: border-box;
   width: 48px;
   height: 48px;
   padding: 12px;
   flex-shrink: 0;
   display: block;
   object-fit: contain;
+}
+
+.sidebar-theme-toggle .sidebar-icon {
+  display: grid;
+  place-items: center;
+  line-height: 1;
 }
 
 .sidebar-link .brand-text,

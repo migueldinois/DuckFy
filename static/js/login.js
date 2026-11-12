@@ -17,11 +17,7 @@ function atualizarLogo() {
 
     const temaClaro = document.documentElement.classList.contains("tema-claro");
 
-    if (temaClaro) {
-        logo.src = logo.dataset.logoEscuro;
-    } else {
-        logo.src = logo.dataset.logoClaro;
-    }
+    logo.src = temaClaro ? logo.dataset.logoClaro : logo.dataset.logoEscuro;
 }
 
 // aplica o tema escolhido pelo usuário
