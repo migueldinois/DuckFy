@@ -808,9 +808,17 @@ body.tema-claro .logo-fy {
     transform: translate(-49.48%, -46.85%);
 }
 
-.login-cabecalho .logo-imagem[src$="logo_clara.png"] {
+.login-cabecalho .logo-imagem[src$="logo_clara.png"],
+.login-cabecalho .logo-imagem[src$="logo_escura.png"] {
     width: calc(var(--logo-area-width) * 1.23);
+}
+
+.login-cabecalho .logo-imagem[src$="logo_escura.png"] {
     transform: translate(-52.60%, -49.07%);
+}
+
+.login-cabecalho .logo-imagem[src$="logo_clara.png"] {
+    transform: translate(-55.47%, -50.92%);
 }
 
 @media (max-width: 500px) {

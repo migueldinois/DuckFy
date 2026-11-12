@@ -57,7 +57,6 @@ function configurarLancamentos() {
   const indicadorEtapa = document.querySelector('#lancamento-step-count');
   const botaoContinuar = document.querySelector('[data-wizard-continue]');
   const botoesVoltar = document.querySelectorAll('[data-wizard-back]');
-  const avisoWizard = document.querySelector('#lancamento-wizard-feedback');
   const avisoSaldo = document.querySelector('#saldo-insuficiente');
   const botoesSelecionarConta = document.querySelectorAll('[data-account-select]');
   const campoConta = document.querySelector('#id_conta');
@@ -67,6 +66,15 @@ function configurarLancamentos() {
   const formularioLancamento = document.querySelector('.lancamento-wizard-form');
   const botoesAlterarConta = document.querySelectorAll('[data-account-trigger]');
   let saldoContaSelecionada = null;
+
+  function mostrarAvisoTipoObrigatorio() {
+    window.DuckFyAlert?.show({
+      icon: 'warning',
+      title: 'Tipo obrigatório',
+      text: 'Selecione entrada ou saída para continuar.',
+      confirmButtonText: 'Entendi',
+    });
+  }
 
   function mostrarErroSaldo(mensagem) {
     if (window.DuckFyAlert?.error) {
@@ -132,7 +140,7 @@ function configurarLancamentos() {
 
     if (!tipoSelecionado) {
       definirEtapaWizard(1);
-      if (avisoWizard) avisoWizard.hidden = false;
+      mostrarAvisoTipoObrigatorio();
       document.querySelector('[data-wizard-type]')?.focus();
       return;
     }
@@ -160,11 +168,10 @@ function configurarLancamentos() {
   botaoContinuar?.addEventListener('click', function () {
     const tipoSelecionado = document.querySelector('[data-wizard-type]:checked');
     if (!tipoSelecionado) {
-      if (avisoWizard) avisoWizard.hidden = false;
+      mostrarAvisoTipoObrigatorio();
       return;
     }
 
-    if (avisoWizard) avisoWizard.hidden = true;
     mostrarEtapaConta();
   });
 
@@ -323,7 +330,6 @@ function configurarLancamentos() {
 
   tiposTransacao.forEach(function (tipo) {
     tipo.addEventListener('change', function () {
-      if (avisoWizard) avisoWizard.hidden = true;
       atualizarCategoriasVisiveis();
 
       const primeiraCategoria = document.querySelector(
@@ -356,7 +362,7 @@ function configurarLancamentos() {
       evento.preventDefault();
       if (!tipoSelecionado) {
         definirEtapaWizard(1);
-        if (avisoWizard) avisoWizard.hidden = false;
+        mostrarAvisoTipoObrigatorio();
       } else {
         mostrarEtapaConta();
       }

@@ -290,7 +290,7 @@ def logar():
 # encerra a sessão do usuário
 @app.route("/logout")
 def logout():
-    session.pop("usuario", None)
+    session.clear()
     flash("Você saiu da sua conta!", "success")
     return redirect("/login")
 
@@ -699,9 +699,32 @@ def dashboard():
     resumo = Transacao.obter_resumo_dashboard(id_usuario, inicio_mes, inicio_proximo_mes)
     receitas_categoria = [item for item in resumo['categorias'] if item['tipo'] == 'receita']
     despesas_categoria = [item for item in resumo['categorias'] if item['tipo'] == 'despesa']
+    categorias_receita = Categoria.recuperar_categorias_por_tipo(id_usuario, "Receita")
+    categorias_despesa = Categoria.recuperar_categorias_por_tipo(id_usuario, "Despesa")
+
+    def incluir_categorias_zeradas(itens, categorias_cadastradas):
+        nomes_existentes = {item['categoria'] for item in itens}
+        for categoria in categorias_cadastradas:
+            if categoria['nome'] not in nomes_existentes:
+                itens.append({
+                    'categoria': categoria['nome'],
+                    'cor': categoria['cor'],
+                    'total': 0.0,
+                })
+
+    incluir_categorias_zeradas(receitas_categoria, categorias_receita)
+    incluir_categorias_zeradas(despesas_categoria, categorias_despesa)
     paleta = ['#58e4a0', '#ff796c', '#55c5d8', '#f6c85f', '#b093ff', '#8bd3a8']
 
     def preparar_categorias(itens, total):
+        if not total:
+            for indice, item in enumerate(itens):
+                item['percentual'] = 0
+                cor = str(item.get('cor') or '')
+                if len(cor) != 7 or cor[0] != '#' or not all(char in '0123456789abcdefABCDEF' for char in cor[1:]):
+                    item['cor'] = paleta[indice % len(paleta)]
+            return 'conic-gradient(#45454d 0% 100%)'
+
         acumulado = 0
         fatias = []
         for indice, item in enumerate(itens):
@@ -800,6 +823,9 @@ def acessibilidade():
     return redirect(url_for("perfil"))
 
 # Rota para exibir o perfil do usuário
+
+# exibe o perfil do usuário
+
 @app.route("/perfil", methods=["GET", "POST"])
 def perfil():
     email = session.get("email")
@@ -913,10 +939,13 @@ def excluir_conta_usuario():
 # exibe o extrato financeiro
 @app.get("/extrato")
 def tela_extrato():
+    id_usuario = session.get("id_usuario")
+    if not session.get("usuario") or not id_usuario:
+        flash("Você precisa estar logado para acessar o extrato.", "error")
+        return redirect(url_for("login"))
+
     try:
         # busca o id do usuário e os filtros selecionados
-        id_usuario = session.get('id_usuario', 1)
-
         tipo_ativo = request.args.get('tipo', 'tudo')
         id_conta = request.args.get('id_conta', type=int)
         data_inicio = request.args.get('data_inicio')
@@ -1042,6 +1071,32 @@ def categorias():
         return redirect('/login')
 
 
+@app.get("/subcategorias")
+def tela_subcategorias():
+    if "usuario" not in session:
+        flash("Você precisa estar logado para acessar as subcategorias!", "error")
+        return redirect(url_for("index"))
+
+    categorias_demo = [
+        {"id": 1, "nome": "Moradia", "tipo": "Despesa"},
+        {"id": 2, "nome": "Alimentação", "tipo": "Despesa"},
+        {"id": 3, "nome": "Transporte", "tipo": "Despesa"},
+        {"id": 4, "nome": "Salário", "tipo": "Receita"},
+    ]
+    subcategorias_demo = [
+        {"nome": "Aluguel", "categoria_id": 1, "categoria_nome": "Moradia", "emoji": "🏠"},
+        {"nome": "Energia elétrica", "categoria_id": 1, "categoria_nome": "Moradia", "emoji": "💡"},
+        {"nome": "Mercado", "categoria_id": 2, "categoria_nome": "Alimentação", "emoji": "🛒"},
+        {"nome": "Combustível", "categoria_id": 3, "categoria_nome": "Transporte", "emoji": "⛽"},
+        {"nome": "Salário mensal", "categoria_id": 4, "categoria_nome": "Salário", "emoji": "💼"},
+    ]
+    return render_template(
+        "subcategorias.html",
+        categorias=categorias_demo,
+        subcategorias=subcategorias_demo,
+    )
+
+
 # cadastra uma nova categoria
 @app.route("/categorias/criar", methods=["POST"])
 def adicionar_categoria():
@@ -1117,7 +1172,7 @@ def atualizar_categoria():
     # verifica se os campos foram preenchidos
     if not id_categoria or not nome or not tipo or not emoji or not cor:
         flash("Todos os campos são obrigatórios!", "error")
-        return redirect(url_for("/categorias"))
+        return redirect(url_for("categorias"))
 
     # salva as alterações da categoria
     categoria_atualizada = Categoria.atualizar_categoria(
@@ -1261,6 +1316,51 @@ def verificar_codigo():
     "message": "Código verificado com sucesso!",
     "reset_token": token
 }, 200
+
+
+@app.post("/api/recuperacao/redefinir-senha")
+def redefinir_senha_api():
+    dados = request.get_json(silent=True) or {}
+    token = dados.get("reset_token")
+    senha = dados.get("senha")
+
+    if not isinstance(token, str) or not token or not isinstance(senha, str):
+        return {"message": "Solicite um novo código de recuperação."}, 400
+
+    senha_bytes = senha.encode("utf-8")
+    senha_valida = (
+        len(senha_bytes) <= 72
+        and len(senha) >= 8
+        and any(caractere.isupper() for caractere in senha)
+        and any(not caractere.isalnum() for caractere in senha)
+    )
+    if not senha_valida:
+        return {
+            "message": "A senha deve ter ao menos 8 caracteres, uma letra maiúscula e um caractere especial."
+        }, 400
+
+    email = next(
+        (
+            email_cadastrado
+            for email_cadastrado, recuperacao in codigos_recuperacao.items()
+            if recuperacao.get("token")
+            and secrets.compare_digest(token, recuperacao["token"])
+        ),
+        None,
+    )
+    if email is None:
+        return {"message": "O código de recuperação é inválido ou expirou."}, 400
+
+    recuperacao = codigos_recuperacao[email]
+    if datetime.now() > recuperacao.get("token_expira_em", datetime.min):
+        codigos_recuperacao.pop(email, None)
+        return {"message": "O código de recuperação é inválido ou expirou."}, 400
+
+    if not Usuario.atualizar_senha(email, senha):
+        return {"message": "Não foi possível atualizar a senha. Tente novamente."}, 500
+
+    codigos_recuperacao.pop(email, None)
+    return {"message": "Senha redefinida com sucesso."}, 200
 
 @app.get("/teste-email")
 def teste_email():

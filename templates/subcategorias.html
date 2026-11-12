@@ -1,0 +1,15 @@
+{% extends 'layout.html' %}
+
+{% block title %}Subcategorias - DuckFy{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/subcategorias.css') }}">
+{% endblock %}
+
+{% block content %}
+<main class="subcategorias-status" aria-labelledby="subcategorias-status-title">
+    <i class="bi bi-hourglass-split" aria-hidden="true"></i>
+    <h1 id="subcategorias-status-title">Em desenvolvimento</h1>
+</main>
+{% endblock %}
+

@@ -39,7 +39,10 @@
     {% block extra_css %}{% endblock %}
     {% block styles %}{% endblock %}
     <link rel="stylesheet" href="{{ url_for('static', filename='css/tema-claro.css') }}?v=2.6">
+<<<<<<< HEAD
     <link rel="stylesheet" href="{{ url_for('static', filename='css/acessibilidade.css') }}">
+=======
+>>>>>>> 258bdc02a23440f251146e3ab541b8b405aa1807
     <link rel="stylesheet" href="{{ url_for('static', filename='css/botao-voltar.css') }}">
 </head>
 
@@ -59,9 +62,9 @@
 
             <a href="/dashboard" class="sidebar-brand" title="DuckFy">
 
-                <img src="{{ url_for('static', filename='img/d.png') }}"
+                <img src="{{ url_for('static', filename='img/logo_clara.png') }}"
                     data-logo-claro="{{ url_for('static', filename='img/logo_escura.png') }}"
-                    data-logo-escuro="{{ url_for('static', filename='img/logo_duckfy04.png') }}" alt="DuckFy"
+                    data-logo-escuro="{{ url_for('static', filename='img/logo_clara.png') }}" alt="DuckFy"
                     data-logo-recolhida="{{ url_for('static', filename='img/d.png') }}"
                     class="sidebar-logo">
             </a>
@@ -84,7 +87,7 @@
                     </a>
                 </li>
 
-                <!-- contas bancarias -->
+                <!-- contas bancárias -->
                 <li>
                     <a href="/contas"
                         class="sidebar-link {% if request.path.rstrip('/') == '/contas' %}active{% endif %}"
@@ -108,7 +111,18 @@
                     </a>
                 </li>
 
-                <!-- lancamentos -->
+                <!-- subcategorias -->
+                <li>
+                    <a href="{{ url_for('tela_subcategorias') }}"
+                        class="sidebar-link {% if request.path.rstrip('/') == '/subcategorias' %}active{% endif %}"
+                        title="Subcategorias" {% if request.path.rstrip('/') == '/subcategorias' %}aria-current="page"{% endif %}>
+                        <img src="{{ url_for('static', filename='img/icons/subcategoria.svg') }}" alt=""
+                            class="sidebar-icon">
+                        <span class="brand-text">Subcategorias</span>
+                    </a>
+                </li>
+
+                <!-- lançamentos -->
                 <li>
                     <a href="/lancamento"
                         class="sidebar-link {% if request.path.rstrip('/') == '/lancamento' %}active{% endif %}"
@@ -120,7 +134,7 @@
                     </a>
                 </li>
 
-                <!-- reserva de emergencia -->
+                <!-- reserva de emergência -->
                 <li>
                     <a href="/reserva_emergencia"
                         class="sidebar-link {% if request.path.rstrip('/') == '/reserva_emergencia' %}active{% endif %}"
@@ -143,7 +157,7 @@
                     </a>
                 </li>
 
-                <!-- simulador de patrimonio -->
+                <!-- simulador de patrimônio -->
                 <li>
                     <a href="/simulador"
                         class="sidebar-link {% if request.path.rstrip('/') == '/simulador' %}active{% endif %}"
@@ -155,7 +169,7 @@
                     </a>
                 </li>
 
-                <!-- sequencia -->
+                <!-- sequência -->
                 <li class="mt-auto">
                     <a href="/sequencia"
                         class="sidebar-link {% if request.path.rstrip('/') == '/sequencia' %}active{% endif %}"
@@ -181,7 +195,7 @@
                 <li>
                     <button type="button" class="sidebar-link sidebar-theme-toggle" data-theme-toggle
                         aria-label="Ativar tema claro" title="Ativar tema claro">
-                        <i class="bi bi-sun sidebar-icon" data-theme-icon aria-hidden="true"></i>
+                        <i class="bi bi-sun-fill sidebar-icon" data-theme-icon aria-hidden="true"></i>
                         <span class="brand-text" data-theme-label>Tema claro</span>
                     </button>
                 </li>
@@ -232,7 +246,6 @@
 
     <!-- tema -->
     <script src="{{ url_for('static', filename='js/tema.js') }}" defer></script>
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="{{ url_for('static', filename='js/acessibilidade.js') }}" defer></script>
 
     <!-- gerenciamento de modais -->
