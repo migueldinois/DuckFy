@@ -1,9 +1,10 @@
-document.querySelectorAll('.tipo-conta-select').forEach((container) => {
-    const select = container.querySelector('select[name="tipo_conta"]');
-    if (!select || !select.id) return;
+document.querySelectorAll('select:not(.custom-select-native):not([multiple])').forEach((select, selectIndex) => {
+    const container = select.parentElement;
+    if (!container) return;
+    if (!select.id) select.id = `duckfy-select-${selectIndex}`;
 
-    const label = document.querySelector(`label[for="${select.id}"]`);
-    if (!label) return;
+    const label = Array.from(document.querySelectorAll('label[for]'))
+        .find((candidate) => candidate.htmlFor === select.id);
 
     const options = Array.from(select.options);
     const trigger = document.createElement('button');
@@ -14,7 +15,7 @@ document.querySelectorAll('.tipo-conta-select').forEach((container) => {
     const optionElements = options.map((option, index) => {
         const optionElement = document.createElement('div');
         optionElement.id = `${select.id}-option-${index}`;
-        optionElement.className = 'tipo-conta-opcao';
+        optionElement.className = 'duckfy-select-option';
         optionElement.setAttribute('role', 'option');
         optionElement.setAttribute('aria-disabled', String(option.disabled));
         optionElement.setAttribute('aria-selected', 'false');
@@ -27,39 +28,41 @@ document.querySelectorAll('.tipo-conta-select').forEach((container) => {
     let typeahead = '';
     let typeaheadTimeout;
 
-    if (!label.id) label.id = `${select.id}-label`;
+    if (label && !label.id) label.id = `${select.id}-label`;
 
     trigger.id = `${select.id}-trigger`;
     trigger.type = 'button';
-    trigger.className = 'tipo-conta-trigger has-placeholder';
+    trigger.className = 'duckfy-select-trigger has-placeholder';
     trigger.setAttribute('role', 'combobox');
     trigger.setAttribute('aria-haspopup', 'listbox');
     trigger.setAttribute('aria-expanded', 'false');
     trigger.setAttribute('aria-controls', `${select.id}-options`);
     trigger.setAttribute('aria-autocomplete', 'none');
     trigger.setAttribute('aria-required', String(select.required));
-    trigger.setAttribute('aria-labelledby', `${label.id} ${select.id}-value`);
+    trigger.disabled = select.disabled;
+    if (label) trigger.setAttribute('aria-labelledby', `${label.id} ${select.id}-value`);
+    else if (select.getAttribute('aria-label')) trigger.setAttribute('aria-label', select.getAttribute('aria-label'));
     trigger.setAttribute('aria-describedby', `${select.id}-error`);
 
     valueLabel.id = `${select.id}-value`;
-    chevron.className = 'tipo-conta-chevron';
+    chevron.className = 'duckfy-select-chevron';
     chevron.setAttribute('aria-hidden', 'true');
     trigger.append(valueLabel, chevron);
 
     listbox.id = `${select.id}-options`;
-    listbox.className = 'tipo-conta-lista';
+    listbox.className = 'duckfy-select-options';
     listbox.setAttribute('role', 'listbox');
-    listbox.setAttribute('aria-labelledby', label.id);
+    if (label) listbox.setAttribute('aria-labelledby', label.id);
     listbox.hidden = true;
     listbox.append(...optionElements);
 
     error.id = `${select.id}-error`;
-    error.className = 'tipo-conta-erro';
+    error.className = 'duckfy-select-error';
     error.setAttribute('role', 'alert');
-    error.textContent = 'Selecione um tipo de conta.';
+    error.textContent = `Selecione ${label?.textContent.trim().toLocaleLowerCase() || 'uma opção'}.`;
     error.hidden = true;
 
-    container.classList.add('is-enhanced');
+    container.classList.add('duckfy-select', 'is-enhanced');
     container.classList.toggle('has-icon', Boolean(container.querySelector('.input-icon')));
     select.setAttribute('aria-hidden', 'true');
     select.tabIndex = -1;
@@ -67,7 +70,7 @@ document.querySelectorAll('.tipo-conta-select').forEach((container) => {
 
     function updateSelection() {
         const selectedOption = select.options[select.selectedIndex];
-        valueLabel.textContent = selectedOption?.textContent.trim() || 'Selecione o tipo';
+        valueLabel.textContent = selectedOption?.textContent.trim() || 'Selecione uma opção';
         trigger.classList.toggle('has-placeholder', !select.value);
         optionElements.forEach((option) => {
             option.setAttribute('aria-selected', String(option.dataset.value === select.value && Boolean(select.value)));
@@ -77,7 +80,7 @@ document.querySelectorAll('.tipo-conta-select').forEach((container) => {
     }
 
     function setActiveOption(index) {
-        if (!enabledOptions.length) return;
+        if (!enabledOptions.length || trigger.disabled) return;
         activeIndex = (index + enabledOptions.length) % enabledOptions.length;
         optionElements.forEach((option) => option.classList.remove('is-active'));
         const activeOption = enabledOptions[activeIndex];
@@ -87,7 +90,7 @@ document.querySelectorAll('.tipo-conta-select').forEach((container) => {
     }
 
     function openListbox() {
-        if (!enabledOptions.length) return;
+        if (!enabledOptions.length || trigger.disabled) return;
         listbox.hidden = false;
         container.classList.add('is-open');
         trigger.setAttribute('aria-expanded', 'true');
