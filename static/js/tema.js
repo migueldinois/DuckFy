@@ -49,10 +49,10 @@ document.addEventListener("DOMContentLoaded", function () {
             const icone = botao.querySelector("[data-theme-icon]");
             if (icone) {
                 const iconeSidebar = icone.classList.contains("sidebar-icon");
-                icone.className = claro ? "bi bi-moon-stars-fill" : "bi bi-sun-fill";
+                icone.className = claro ? "bi bi-moon-stars" : "bi bi-sun";
                 if (iconeSidebar) icone.classList.add("sidebar-icon");
             }
-            const texto = botao.querySelector("[data-theme-label]");
+            const texto = botao.querySelector("[data-theme-label], .theme-switch-label");
             if (texto) texto.textContent = claro ? "Tema escuro" : "Tema claro";
         });
     }

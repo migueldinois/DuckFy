@@ -201,6 +201,17 @@ html[class*="daltonismo-"] body.app-body :is(input, select, textarea, .form-cont
 	border-color: var(--border-color);
 }
 
+html[class*="daltonismo-"] body.app-body :is(.tipo-conta-trigger, .custom-select-trigger, .duckfy-select-trigger) {
+	background-color: var(--bg-surface-2) !important;
+	border-color: var(--border-color) !important;
+	color: var(--text-primary) !important;
+}
+
+html[class*="daltonismo-"] body.app-body :is(input, select, textarea, .form-control, .form-select, .tipo-conta-trigger, .custom-select-trigger, .duckfy-select-trigger):focus-visible {
+	outline: 3px solid var(--brand-primary) !important;
+	outline-offset: 2px;
+}
+
 html[class*="daltonismo-"] body.app-body .main-content .cabecalho-perfil {
 	background: linear-gradient(180deg, var(--bg-surface-2), var(--bg-primary)) !important;
 }
