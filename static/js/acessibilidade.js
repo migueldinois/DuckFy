@@ -33,16 +33,20 @@ document.addEventListener("DOMContentLoaded", function () {
 	const restaurar = document.getElementById("restaurar-acessibilidade");
 	const resumoFonte = document.getElementById("resumo-fonte");
 	const resumoPaleta = document.getElementById("resumo-paleta");
+	const previa = document.getElementById("previa-acessibilidade");
+	const nomePaletaPrevia = document.getElementById("previa-nome-paleta");
 	const classesDaltonismo = [
 		"daltonismo-protanopia",
 		"daltonismo-deuteranopia",
-		"daltonismo-tritanopia"
+		"daltonismo-tritanopia",
+		"daltonismo-monocromatica"
 	];
 	const nomesPaletas = {
 		normal: "Original",
 		protanopia: "Protanopia",
 		deuteranopia: "Deuteranopia",
-		tritanopia: "Tritanopia"
+		tritanopia: "Tritanopia",
+		monocromatica: "Monocromática"
 	};
 	let etapaAtual = 0;
 	let preferencias = lerPreferencias();
@@ -50,9 +54,13 @@ document.addEventListener("DOMContentLoaded", function () {
 
 	function lerPreferencias() {
 		localStorage.removeItem("duckfy-negrito");
+		const fonteSalva = Number(localStorage.getItem("duckfy-fonte") || 100);
+		const paletaSalva = localStorage.getItem("duckfy-daltonismo") || "normal";
 		return {
-			fonte: Number(localStorage.getItem("duckfy-fonte") || 100),
-			daltonismo: localStorage.getItem("duckfy-daltonismo") || "normal"
+			fonte: Number.isFinite(fonteSalva)
+				? Math.min(140, Math.max(90, Math.round(fonteSalva / 10) * 10))
+				: 100,
+			daltonismo: Object.prototype.hasOwnProperty.call(nomesPaletas, paletaSalva) ? paletaSalva : "normal"
 		};
 	}
 
@@ -97,6 +105,13 @@ document.addEventListener("DOMContentLoaded", function () {
 	function atualizarResumo() {
 		if (resumoFonte) resumoFonte.textContent = `${preferencias.fonte}%`;
 		if (resumoPaleta) resumoPaleta.textContent = nomesPaletas[preferencias.daltonismo] || nomesPaletas.normal;
+		if (previa) {
+			previa.dataset.paleta = preferencias.daltonismo;
+			previa.style.fontSize = `${preferencias.fonte}%`;
+		}
+		if (nomePaletaPrevia) {
+			nomePaletaPrevia.textContent = nomesPaletas[preferencias.daltonismo] || nomesPaletas.normal;
+		}
 	}
 
 	function atualizarControles() {

@@ -110,6 +110,18 @@ body {
     cursor: pointer;
 }
 
+.login-acessibilidade-toggle {
+    width: 42px;
+    height: 42px;
+    min-width: 42px;
+    padding: 0 !important;
+}
+
+.login-acessibilidade-toggle i {
+    font-size: 20px;
+    line-height: 1;
+}
+
 /* ícone do tema */
 #btn-tema i {
     display: block;
