@@ -10,16 +10,13 @@
     <title>DuckFy - Cadastro</title>
 
 
-    <!-- aplica o tema salvo antes de carregar o CSS -->
-    <script>
-        if (localStorage.getItem("duckfy-tema") === "claro") {
-            document.documentElement.classList.add("tema-claro");
-        }
-    </script>
+    <!-- aplica as preferencias salvas antes de carregar o CSS -->
+    <script src="{{ url_for('static', filename='js/tema-inicial.js') }}"></script>
 
     <!-- conecta os estilos -->
     <link rel="stylesheet" href="{{ url_for('static', filename='css/variables.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/cadastro.css') }}?v=2.2">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/acessibilidade.css') }}?v=2.9">
 
 
     <!-- biblioteca de ícones -->
@@ -202,6 +199,14 @@
         let altura = window.innerHeight;
         let animacaoAtiva = true;
 
+        function obterCoresParticulas() {
+            const estilosRaiz = getComputedStyle(document.documentElement);
+            return {
+                marca: estilosRaiz.getPropertyValue("--brand-primary").trim() || "#7C4DFF",
+                destaque: estilosRaiz.getPropertyValue("--accent-primary").trim() || "#00E676"
+            };
+        }
+
 
         function criarParticula() {
             return {
@@ -211,9 +216,7 @@
                 velocidadeX: (Math.random() - 0.5) * 0.35,
                 velocidadeY: (Math.random() - 0.5) * 0.35,
                 opacidade: Math.random() * 0.65 + 0.2,
-                cor: Math.random() > 0.5
-                    ? "124, 77, 255"
-                    : "0, 230, 118"
+                cor: Math.random() > 0.5 ? "marca" : "destaque"
             };
         }
 
@@ -250,6 +253,7 @@
 
 
             ctx.clearRect(0, 0, largura, altura);
+            const cores = obterCoresParticulas();
 
 
             particulas.forEach(function (particula) {
@@ -263,6 +267,9 @@
                 if (particula.y > altura) particula.y = 0;
 
 
+                const cor = cores[particula.cor];
+                ctx.save();
+                ctx.globalAlpha = particula.opacidade;
                 ctx.beginPath();
                 ctx.arc(
                     particula.x,
@@ -273,10 +280,11 @@
                 );
 
 
-                ctx.fillStyle = `rgba(${particula.cor}, ${particula.opacidade})`;
+                ctx.fillStyle = cor;
                 ctx.shadowBlur = 12;
-                ctx.shadowColor = `rgba(${particula.cor}, 0.8)`;
+                ctx.shadowColor = cor;
                 ctx.fill();
+                ctx.restore();
             });
 
 

@@ -163,6 +163,8 @@ html.daltonismo-monocromatica.tema-claro body.app-body.tema-claro {
 }
 
 html[class*="daltonismo-"] {
+	--acessibilidade-brilho-acao: color-mix(in srgb, var(--brand-primary) 30%, transparent);
+	--acessibilidade-brilho-acao-hover: color-mix(in srgb, var(--brand-primary) 43%, transparent);
 	--bg-main: var(--bg-primary);
 	--bg-dark: var(--bg-primary);
 	--bg-card: var(--bg-surface-1);
@@ -1326,4 +1328,56 @@ html.tema-claro .previa-acessibilidade[data-paleta="monocromatica"] {
 		scroll-behavior: auto !important;
 		transition-duration: 0.01ms !important;
 	}
+}
+
+html[class*="daltonismo-"] body :is(
+	.btn-cadastrar,
+	.btn-entrar:not(.verde),
+	.btn-purple-action,
+	.btn-purple,
+	.btn-salvar-topo,
+	.btn-editar-perfil,
+	.btn-editar,
+	.btn-adicionar-banco,
+	.btn-adicionar-dinheiro,
+	.btn-transferir-dinheiro,
+	.btn-continuar,
+	.botao-salvar,
+	button[type="submit"]
+) {
+	box-shadow: 0 8px 20px var(--acessibilidade-brilho-acao), inset 0 1px 0 rgba(255, 255, 255, 0.14) !important;
+}
+
+html[class*="daltonismo-"] body :is(
+	.btn-cadastrar,
+	.btn-entrar:not(.verde),
+	.btn-purple-action,
+	.btn-purple,
+	.btn-salvar-topo,
+	.btn-editar-perfil,
+	.btn-editar,
+	.btn-adicionar-banco,
+	.btn-adicionar-dinheiro,
+	.btn-transferir-dinheiro,
+	.btn-continuar,
+	.botao-salvar,
+	button[type="submit"]
+):hover {
+	box-shadow: 0 10px 24px var(--acessibilidade-brilho-acao-hover), inset 0 1px 0 rgba(255, 255, 255, 0.2) !important;
+}
+
+html[class*="daltonismo-"] body .btn-entrar.verde {
+	box-shadow: 0 8px 20px color-mix(in srgb, var(--accent-primary) 30%, transparent) !important;
+}
+
+html[class*="daltonismo-"] body .btn-entrar.verde:hover {
+	box-shadow: 0 10px 24px color-mix(in srgb, var(--accent-primary) 43%, transparent) !important;
+}
+
+html[class*="daltonismo-"] body .btn-success {
+	box-shadow: 0 8px 20px color-mix(in srgb, var(--confirmation-primary) 30%, transparent) !important;
+}
+
+html[class*="daltonismo-"] body .btn-danger {
+	box-shadow: 0 8px 20px color-mix(in srgb, var(--danger-primary) 30%, transparent) !important;
 }
