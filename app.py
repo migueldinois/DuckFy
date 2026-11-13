@@ -1056,20 +1056,21 @@ def salvar_lancamento():
             )
             return redirect(url_for("tela_extrato"))
     except ValueError as erro:
-        if str(erro) == "Saldo disponível insuficiente para essa despesa.":
-            dados_lancamento = request.form.to_dict()
-            dados_lancamento["erro_lancamento"] = str(erro)
-            session["lancamento_form_erro"] = dados_lancamento
-            return redirect(url_for("lancamento", etapa=3))
-        flash(str(erro), "error")
-        return redirect(url_for("lancamento"))
+        dados_lancamento = request.form.to_dict()
+        dados_lancamento["erro_lancamento"] = str(erro)
+        session["lancamento_form_erro"] = dados_lancamento
+        return redirect(url_for("lancamento", etapa=3))
     except Exception as erro:
         print(f"Erro ao salvar lançamento: {erro}")
-        flash("Não foi possível salvar a transação. Tente novamente.", "error")
-        return redirect(url_for("lancamento"))
+        dados_lancamento = request.form.to_dict()
+        dados_lancamento["erro_lancamento"] = "Não foi possível salvar a transação. Tente novamente."
+        session["lancamento_form_erro"] = dados_lancamento
+        return redirect(url_for("lancamento", etapa=3))
 
-    flash("Não foi possível salvar a transação.", "error")
-    return redirect(url_for("lancamento"))
+    dados_lancamento = request.form.to_dict()
+    dados_lancamento["erro_lancamento"] = "Não foi possível salvar a transação. Tente novamente."
+    session["lancamento_form_erro"] = dados_lancamento
+    return redirect(url_for("lancamento", etapa=3))
 
 
 # exibe as categorias de despesas e receitas
