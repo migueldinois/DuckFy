@@ -8,7 +8,7 @@ from dotenv import load_dotenv
 from datetime import datetime, timedelta
 from flask_mail import Mail, Message
 import requests
-from flask import Flask, render_template, request, redirect, session, flash, url_for
+from flask import Flask, jsonify, render_template, request, redirect, session, flash, url_for
 from decimal import Decimal, InvalidOperation
 
 # importa a função para proteger nomes de arquivos enviados
@@ -17,6 +17,7 @@ from werkzeug.utils import secure_filename
 # importa as classes do projeto
 from database.conexao import Conexao
 from model.categorias import Categoria
+from model.subcategorias import Subcategoria
 from model.usuarios import Usuario
 from model.usuarios_badges import UsuarioBadge
 from model.extrato import Extrato
@@ -1073,28 +1074,75 @@ def categorias():
 
 @app.get("/subcategorias")
 def tela_subcategorias():
-    if "usuario" not in session:
+    if "usuario" not in session or "id_usuario" not in session:
         flash("Você precisa estar logado para acessar as subcategorias!", "error")
         return redirect(url_for("index"))
 
-    categorias_demo = [
-        {"id": 1, "nome": "Moradia", "tipo": "Despesa"},
-        {"id": 2, "nome": "Alimentação", "tipo": "Despesa"},
-        {"id": 3, "nome": "Transporte", "tipo": "Despesa"},
-        {"id": 4, "nome": "Salário", "tipo": "Receita"},
-    ]
-    subcategorias_demo = [
-        {"nome": "Aluguel", "categoria_id": 1, "categoria_nome": "Moradia", "emoji": "🏠"},
-        {"nome": "Energia elétrica", "categoria_id": 1, "categoria_nome": "Moradia", "emoji": "💡"},
-        {"nome": "Mercado", "categoria_id": 2, "categoria_nome": "Alimentação", "emoji": "🛒"},
-        {"nome": "Combustível", "categoria_id": 3, "categoria_nome": "Transporte", "emoji": "⛽"},
-        {"nome": "Salário mensal", "categoria_id": 4, "categoria_nome": "Salário", "emoji": "💼"},
-    ]
+    id_usuario = session["id_usuario"]
     return render_template(
         "subcategorias.html",
-        categorias=categorias_demo,
-        subcategorias=subcategorias_demo,
+        categorias=Subcategoria.listar_categorias_pai(id_usuario),
+        subcategorias=Subcategoria.listar(id_usuario),
     )
+
+
+@app.post("/subcategorias/api")
+def criar_subcategoria():
+    if "usuario" not in session or "id_usuario" not in session:
+        return jsonify(ok=False, message="Sua sessão expirou. Entre novamente."), 401
+
+    dados = request.get_json(silent=True) or {}
+    try:
+        subcategoria = Subcategoria.salvar(
+            session["id_usuario"],
+            dados.get("nome"),
+            dados.get("categoria_id"),
+            dados.get("emoji"),
+            dados.get("cor"),
+        )
+        return jsonify(ok=True, subcategoria=subcategoria), 201
+    except ValueError as erro:
+        return jsonify(ok=False, message=str(erro)), 400
+    except Exception as erro:
+        print(f"Erro ao criar subcategoria: {erro}")
+        return jsonify(ok=False, message="Não foi possível salvar a subcategoria."), 500
+
+
+@app.put("/subcategorias/api/<int:id_subcategoria>")
+def atualizar_subcategoria(id_subcategoria):
+    if "usuario" not in session or "id_usuario" not in session:
+        return jsonify(ok=False, message="Sua sessão expirou. Entre novamente."), 401
+
+    dados = request.get_json(silent=True) or {}
+    try:
+        subcategoria = Subcategoria.salvar(
+            session["id_usuario"],
+            dados.get("nome"),
+            dados.get("categoria_id"),
+            dados.get("emoji"),
+            dados.get("cor"),
+            id_subcategoria=id_subcategoria,
+        )
+        return jsonify(ok=True, subcategoria=subcategoria)
+    except ValueError as erro:
+        return jsonify(ok=False, message=str(erro)), 400
+    except Exception as erro:
+        print(f"Erro ao atualizar subcategoria: {erro}")
+        return jsonify(ok=False, message="Não foi possível atualizar a subcategoria."), 500
+
+
+@app.delete("/subcategorias/api/<int:id_subcategoria>")
+def excluir_subcategoria(id_subcategoria):
+    if "usuario" not in session or "id_usuario" not in session:
+        return jsonify(ok=False, message="Sua sessão expirou. Entre novamente."), 401
+
+    try:
+        if not Subcategoria.deletar(session["id_usuario"], id_subcategoria):
+            return jsonify(ok=False, message="A subcategoria não foi encontrada."), 404
+        return jsonify(ok=True)
+    except Exception as erro:
+        print(f"Erro ao excluir subcategoria: {erro}")
+        return jsonify(ok=False, message="Não foi possível excluir a subcategoria."), 500
 
 
 # cadastra uma nova categoria
