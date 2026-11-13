@@ -140,17 +140,8 @@
         var(--cor-painel);
 }
 
-.categorias-resumo::after {
-    position: absolute;
-    top: -65px;
-    right: -35px;
-    width: 170px;
-    height: 170px;
-    border-radius: 50%;
-    background: rgba(124, 77, 255, 0.08);
-    content: "";
-    filter: blur(4px);
-    pointer-events: none;
+.categorias-resumo > .resumo-icone {
+    display: none !important;
 }
 
 .resumo-icone {
@@ -295,7 +286,7 @@
 
 .categorias-contagem {
     flex-shrink: 0;
-    color: var(--cor-secundaria);
+    color: var(--cor-texto);
     font-size: 0.8rem;
 }
 
@@ -371,12 +362,12 @@
 }
 
 .despesas-icone {
-    background: rgba(255, 111, 145, 0.11);
+    background: transparent;
     color: #ff8da8;
 }
 
 .receitas-icone {
-    background: rgba(0, 230, 118, 0.1);
+    background: transparent;
     color: #58e4a0;
 }
 
@@ -406,21 +397,19 @@
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    min-width: 29px;
-    height: 29px;
-    padding: 0 7px;
-    border: 1px solid var(--cor-borda);
-    border-radius: 9px;
-    background: rgba(255, 255, 255, 0.035);
-    color: var(--cor-secundaria);
+    min-width: 0;
+    height: auto;
+    padding: 0;
+    border: 0;
+    border-radius: 0;
+    background: transparent;
+    color: var(--cor-texto);
     font-size: 0.76rem;
     font-weight: 700;
 }
 
 .tab-btn.active .tab-count {
-    border-color: rgba(176, 147, 255, 0.2);
-    background: rgba(124, 77, 255, 0.16);
-    color: var(--cor-roxo-claro);
+    color: var(--cor-texto);
 }
 
 /* lista de categorias */
@@ -803,8 +792,6 @@ body.tema-claro .tab-count {
     }
 
     .tab-count {
-        min-width: 24px;
-        height: 24px;
         margin-left: auto;
         font-size: 0.7rem;
     }
