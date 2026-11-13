@@ -2,7 +2,7 @@
 
 {% block extra_css %}
 <link rel="stylesheet" href="{{ url_for('static', filename='css/extrato.css') }}?v=2.4">
-<link rel="stylesheet" href="{{ url_for('static', filename='css/reserva_emergencia.css') }}?v=2.1">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/reserva_emergencia.css') }}?v=2.2">
 {% endblock %}
 
 {% block content %}
@@ -11,7 +11,6 @@
 
     <header class="reserva-page-header">
       <div class="reserva-page-heading">
-        <span class="reserva-eyebrow"><i class="bi bi-shield-check" aria-hidden="true"></i> Objetivo financeiro</span>
         <div class="reserva-title-row">
           <a href="{{ url_for('dashboard') }}" class="btn-voltar-global" aria-label="Voltar ao painel">
             <i class="bi bi-arrow-left" aria-hidden="true"></i>
@@ -22,21 +21,7 @@
       </div>
     </header>
 
-    <section class="reserva-block reserva-overview mb-3" aria-labelledby="reserva-status-title">
-      <div class="reserva-overview-top">
-        <div class="reserva-section-title">
-          <span class="reserva-status-icon" aria-hidden="true"><i class="bi bi-safe2"></i></span>
-          <div>
-            <h2 id="reserva-status-title">Status da reserva</h2>
-            <p>Meta total: R$ {{ meta_total|moeda_br }}</p>
-          </div>
-        </div>
-        <div class="reserva-progress-summary">
-          <span>Progresso da meta</span>
-          <strong>{{ progresso_porcentagem }}%</strong>
-        </div>
-      </div>
-
+    <section class="reserva-block reserva-overview mb-3" aria-label="Progresso da reserva de emergência">
       <div class="reserva-progress-content">
         <div class="reserva-balance">
           <span>Total guardado</span>
@@ -44,6 +29,11 @@
         </div>
 
         <div class="reserva-progress-track">
+          <div class="reserva-progress-scale">
+            <span>R$ 0,00</span>
+            <span>{% if faltam_para_meta <= 0 %}<strong>Meta atingida</strong>{% else %}Faltam <strong>R$ {{ faltam_para_meta|moeda_br }}</strong>{% endif %}</span>
+            <span>R$ {{ meta_total|moeda_br }}</span>
+          </div>
           <div class="progress progress-reserva" aria-label="Progresso da reserva">
             <div class="progress-bar bar-progresso"
                  role="progressbar"
@@ -53,11 +43,6 @@
                  aria-valuemax="{{ meta_total }}"
                  aria-label="{{ progresso_porcentagem }}% da meta">
             </div>
-          </div>
-          <div class="reserva-progress-scale">
-            <span>R$ 0,00</span>
-            <span>Faltam <strong>R$ {{ faltam_para_meta|moeda_br }}</strong></span>
-            <span>R$ {{ meta_total|moeda_br }}</span>
           </div>
         </div>
       </div>
@@ -96,7 +81,7 @@
               <span class="date">{{ item.horario }}</span>
             </div>
             <div class="description fw-bold">{% if item.tipo == 'Crédito' %}Aporte na Reserva de Emergência{% else %}Retirada da Reserva de Emergência{% endif %}</div>
-            <small class="text-muted">Reserva de Emergência</small>
+            <small class="text-muted">{% if item.tipo == 'Débito' and item.descricao %}Motivo: {{ item.descricao }}{% else %}Reserva de Emergência{% endif %}</small>
           </div>
 
           <div class="amount {% if item.tipo == 'Crédito' %}positive{% else %}negative{% endif %}">
@@ -215,6 +200,12 @@
               <span class="input-group-text">R$</span>
               <input type="text" inputmode="numeric" data-currency-input data-currency-cents min="0.01" max="{{ '%.2f'|format(total_guardado) }}" class="form-control" id="valor_retirada" name="valor" placeholder="0,00" required {% if total_guardado <= 0 %}disabled{% endif %}>
             </div>
+          </div>
+
+          <div class="mb-3">
+            <label for="motivo_retirada" class="form-label text-white-50 fs-7 fw-medium mb-1">Por que precisa retirar?</label>
+            <textarea class="form-control" id="motivo_retirada" name="motivo" rows="3" maxlength="100" placeholder="Descreva o motivo da retirada" required {% if total_guardado <= 0 %}disabled{% endif %}></textarea>
+            <small class="text-white-50">O motivo ficará registrado no histórico da reserva.</small>
           </div>
 
         </div>

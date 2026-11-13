@@ -123,6 +123,46 @@ modalAlterarMeta?.addEventListener('show.bs.modal', () => {
   inputMeta.dispatchEvent(new Event('input', { bubbles: true }));
 });
 
+const formRetirada = document.querySelector('#modalRetirarDinheiro form');
+formRetirada?.addEventListener('submit', async (event) => {
+  if (formRetirada.dataset.confirmada === 'true') {
+    delete formRetirada.dataset.confirmada;
+    return;
+  }
+
+  event.preventDefault();
+
+  const conta = formRetirada.querySelector('[name="id_conta"]');
+  if (!conta?.value) return;
+
+  const campoMotivo = formRetirada.querySelector('[name="motivo"]');
+  const motivo = campoMotivo.value.trim();
+  if (!motivo) {
+    campoMotivo.focus();
+    await window.DuckFyAlert.show({
+      icon: 'warning',
+      title: 'Motivo obrigatório',
+      text: 'Informe por que precisa retirar dinheiro da reserva.',
+      confirmButtonText: 'Preencher motivo'
+    });
+    return;
+  }
+
+  const nomeConta = conta.selectedOptions[0]?.textContent.split(' • ')[0] || 'conta selecionada';
+  const valor = formRetirada.querySelector('[name="valor"]').value;
+  const confirmado = await window.DuckFyAlert.confirm({
+    title: 'Sua reserva protege seus planos',
+    text: `Manter esse valor guardado ajuda você a alcançar sua meta e estar preparado para imprevistos. Retire apenas se for realmente necessário. Valor: R$ ${valor}. Conta: ${nomeConta}. Motivo: ${motivo}`,
+    confirmButtonText: 'Sim, preciso retirar',
+    cancelButtonText: 'Vou manter guardado'
+  });
+
+  if (!confirmado) return;
+
+  formRetirada.dataset.confirmada = 'true';
+  formRetirada.submit();
+});
+
 const botaoRetirar = document.querySelector('[data-no-reserve-balance="true"]');
 botaoRetirar?.addEventListener('click', async (event) => {
   event.preventDefault();

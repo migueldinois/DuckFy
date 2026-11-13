@@ -18,7 +18,7 @@ class Extrato:
                             THEN 'Aporte na Reserva de Emergência'
                         WHEN t.id_reserva IS NOT NULL
                             AND LOWER(t.tipo) IN ('débito', 'debito', 'despesa', 'saida', 'saída')
-                            THEN 'Retirada da Reserva de Emergência'
+                            THEN CONCAT('Retirada da Reserva de Emergência: ', COALESCE(NULLIF(TRIM(t.descricao), ''), 'Sem motivo informado'))
                         ELSE COALESCE(t.descricao, 'Movimentação sem descrição')
                     END AS descricao,
                     t.valor,

@@ -61,6 +61,7 @@ class Reserva:
                 '''
                 SELECT
                     t.valor,
+                    t.descricao,
                     CASE
                         WHEN LOWER(t.tipo) IN ('crédito', 'credito', 'receita', 'entrada', 'transferência', 'transferencia')
                             THEN 'Crédito'
@@ -199,13 +200,14 @@ class Reserva:
             conexao.close()
 
     @staticmethod
-    def retirar_dinheiro(id_usuario: int, id_conta: int, valor_retirar):
+    def retirar_dinheiro(id_usuario: int, id_conta: int, valor_retirar, motivo: str):
         '''Libera uma alocação da reserva e registra a movimentação no extrato'''
         conexao, cursor = Conexao.conectar()
 
         try:
             valor_retirar = Decimal(str(valor_retirar))
-            if not valor_retirar.is_finite() or valor_retirar <= 0:
+            motivo = motivo.strip()
+            if not valor_retirar.is_finite() or valor_retirar <= 0 or not motivo:
                 conexao.rollback()
                 return False
 
@@ -273,10 +275,10 @@ class Reserva:
             cursor.execute(
                 '''
                 INSERT INTO transacoes
-                    (id_usuario, id_conta, valor, tipo, data_transacao, id_reserva)
-                VALUES (%s, %s, %s, 'Débito', CURDATE(), %s)
+                    (id_usuario, id_conta, descricao, valor, tipo, data_transacao, id_reserva)
+                VALUES (%s, %s, %s, %s, 'Débito', CURDATE(), %s)
                 ''',
-                [id_usuario, id_conta, valor_retirar, id_reserva]
+                [id_usuario, id_conta, motivo[:100], valor_retirar, id_reserva]
             )
 
             conexao.commit()

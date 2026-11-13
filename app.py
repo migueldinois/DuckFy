@@ -591,8 +591,8 @@ def reserva_emergencia():
 
     # calcula o progresso da meta
     faltam_para_meta = max(0.0, meta_total - total_guardado)
-    progresso_porcentagem = round((total_guardado / meta_total) * 100) if meta_total > 0 else 0
-    progresso_barra = min(100, progresso_porcentagem)
+    progresso_porcentagem = min(100, max(0, round((total_guardado / meta_total) * 100))) if meta_total > 0 else 0
+    progresso_barra = progresso_porcentagem
 
     return render_template(
         'reserva_emergencia.html',
@@ -649,6 +649,7 @@ def retirar_reserva():
         return redirect('/login')
 
     # recebe e valida os dados da retirada
+    motivo = request.form.get('motivo', '').strip()
     try:
         valor_retirar = parse_valor_monetario(request.form.get('valor', ''))
         id_conta = int(request.form.get('id_conta', ''))
@@ -656,11 +657,11 @@ def retirar_reserva():
         valor_retirar = Decimal('0')
         id_conta = None
 
-    if not valor_retirar.is_finite() or valor_retirar <= 0 or id_conta is None:
-        flash("Informe uma conta e um valor válido maior que zero.", "error")
+    if not valor_retirar.is_finite() or valor_retirar <= 0 or id_conta is None or not motivo:
+        flash("Informe uma conta, um valor válido e o motivo da retirada.", "error")
         return redirect(url_for('reserva_emergencia'))
 
-    if not Reserva.retirar_dinheiro(session['id_usuario'], id_conta, valor_retirar):
+    if not Reserva.retirar_dinheiro(session['id_usuario'], id_conta, valor_retirar, motivo):
         flash("Não foi possível retirar: confira o saldo da reserva e a conta selecionada.", "error")
         return redirect(url_for('reserva_emergencia'))
 
