@@ -46,29 +46,29 @@
 
                             <!-- Métrica de Percentual de Lucro -->
                             {% if resultado %}
-                            <div class="simulador-info-card p-3 rounded-3 mb-3">
+                            <div class="simulador-info-card simulador-multiplier-card p-3 rounded-3 mb-3">
                                 <div class="d-flex align-items-center mb-1">
                                     <i class="bi bi-graph-up-arrow text-destaque-verde me-2"></i>
                                     <small class="text-white-50 text-uppercase fw-semibold"
-                                        style="font-size: 0.75rem;">Multiplicador</small>
+                                        >Multiplicador</small>
                                 </div>
-                                <div class="fw-bold text-white fs-5">
+                                <div class="simulador-multiplier-value fw-bold">
                                     +{{ "%.1f"|format((resultado.rendimentos / resultado.total_investido) * 100) if
                                     resultado.total_investido > 0 else "0.0" }}%
                                 </div>
-                                <small class="text-white-50" style="font-size: 0.75rem;">
+                                <small class="simulador-info-description">
                                     Rendimento extra gerado sobre o capital aportado.
                                 </small>
                             </div>
                             {% endif %}
 
                             <!-- Dica de Educação Financeira -->
-                            <div class="simulador-info-card p-3 rounded-3">
+                            <div class="simulador-info-card simulador-constancy-card p-3 rounded-3">
                                 <div class="d-flex align-items-center mb-2">
                                     <i class="bi bi-lightbulb-fill text-warning me-2"></i>
                                     <strong class="text-white small">O Poder da Constância</strong>
                                 </div>
-                                <p class="text-white-50 mb-0" style="font-size: 0.78rem; line-height: 1.3;">
+                                <p class="simulador-constancy-message text-white-50 mb-0">
                                     Aportar todos os meses faz mais diferença a longo prazo do que um valor alto
                                     aplicado apenas no início.
                                 </p>
@@ -146,28 +146,28 @@
                 </div>
 
                 <div class="mt-4 pt-3 border-top border-secondary border-opacity-25 d-lg-none">
-                    <div class="simulador-info-card p-3 rounded-3">
+                    <div class="simulador-info-card simulador-constancy-card p-3 rounded-3">
                         <div class="d-flex align-items-center mb-2">
                             <i class="bi bi-lightbulb-fill text-warning me-2"></i>
                             <strong class="text-white small">O Poder da Constância</strong>
                         </div>
-                        <p class="text-white-50 mb-0" style="font-size: 0.78rem; line-height: 1.3;">
+                        <p class="simulador-constancy-message text-white-50 mb-0">
                             Aportar todos os meses faz mais diferença a longo prazo do que um valor alto
                             aplicado apenas no início.
                         </p>
                     </div>
 
                     {% if resultado %}
-                    <div class="simulador-info-card p-3 rounded-3 mt-3">
+                    <div class="simulador-info-card simulador-multiplier-card p-3 rounded-3 mt-3">
                         <div class="d-flex align-items-center mb-1">
                             <i class="bi bi-graph-up-arrow text-destaque-verde me-2"></i>
-                            <small class="text-white-50 text-uppercase fw-semibold" style="font-size: 0.75rem;">Multiplicador</small>
+                            <small class="text-white-50 text-uppercase fw-semibold">Multiplicador</small>
                         </div>
-                        <div class="fw-bold text-white fs-5">
+                        <div class="simulador-multiplier-value fw-bold">
                             +{{ "%.1f"|format((resultado.rendimentos / resultado.total_investido) * 100) if
                             resultado.total_investido > 0 else "0.0" }}%
                         </div>
-                        <small class="text-white-50" style="font-size: 0.75rem;">
+                        <small class="simulador-info-description">
                             Rendimento extra gerado sobre o capital aportado.
                         </small>
                     </div>
