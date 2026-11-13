@@ -160,9 +160,9 @@
     width: 49px;
     height: 49px;
     flex-shrink: 0;
-    border: 1px solid rgba(176, 147, 255, 0.2);
-    border-radius: 15px;
-    background: rgba(124, 77, 255, 0.14);
+    border: 0;
+    border-radius: 0;
+    background: transparent;
     color: var(--cor-roxo-claro);
     font-size: 1.25rem;
 }
@@ -366,17 +366,17 @@
     width: 43px;
     height: 43px;
     flex-shrink: 0;
-    border-radius: 13px;
+    border-radius: 0;
     font-size: 1.15rem;
 }
 
 .despesas-icone {
-    background: rgba(255, 111, 145, 0.11);
+    background: transparent;
     color: #ff8da8;
 }
 
 .receitas-icone {
-    background: rgba(0, 230, 118, 0.1);
+    background: transparent;
     color: #58e4a0;
 }
 

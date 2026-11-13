@@ -292,9 +292,9 @@
   width: 48px;
   height: 48px;
   color: var(--brand-secondary);
-  background: color-mix(in srgb, var(--brand-primary) 12%, var(--bg-surface-2));
-  border: 1px solid color-mix(in srgb, var(--brand-primary) 25%, var(--border-color));
-  border-radius: 15px;
+  background: transparent;
+  border: 0;
+  border-radius: 0;
   font-size: 1.25rem;
 }
 
