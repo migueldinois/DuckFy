@@ -4,8 +4,15 @@ document.addEventListener("DOMContentLoaded", () => {
     const categorySelect = document.getElementById("categoriaSubcategoria");
     const filterSelect = document.getElementById("filtroCategoria");
     const list = document.getElementById("listaSubcategorias");
+    const searchInput = document.getElementById("inputBusca");
+    const clearSearchButton = document.getElementById("limparBusca");
     const count = document.getElementById("contadorSubcategorias");
     const summaryCount = document.getElementById("contadorSubcategoriasResumo");
+    const expenseCount = document.getElementById("contadorDespesas");
+    const incomeCount = document.getElementById("contadorReceitas");
+    const expenseTab = document.getElementById("btnSaidas");
+    const incomeTab = document.getElementById("btnEntradas");
+    const listTitle = document.getElementById("tituloListaSubcategorias");
     const emptyMessage = document.getElementById("mensagemVazia");
     const modal = document.getElementById("modalNovaSubcategoria");
     const modalTitle = document.getElementById("tituloNovaSubcategoria");
@@ -20,8 +27,26 @@ document.addEventListener("DOMContentLoaded", () => {
     const colorValue = document.getElementById("valorCorSubcategoria");
     const colorSample = document.getElementById("amostraCorSubcategoria");
     const customColorButton = document.getElementById("abrirCorPersonalizada");
+    const alert = window.DuckFyAlert;
     const colorOptions = [...form.querySelectorAll(".color-option[data-color]")];
+    let activeType = "Despesa";
     let currentRow = null;
+
+    const enviarRequisicao = async (url, options) => {
+        const response = await fetch(url, {
+            ...options,
+            headers: { "Content-Type": "application/json", ...options.headers }
+        });
+        const result = await response.json().catch(() => ({}));
+        if (!response.ok || !result.ok) {
+            throw new Error(result.message || "Não foi possível concluir a operação.");
+        }
+        return result;
+    };
+
+    const mostrarErro = (error) => {
+        alert?.error(error.message || "Não foi possível concluir a operação.");
+    };
 
     const setEmoji = (emoji) => {
         emojiInput.value = emoji;
@@ -51,34 +76,57 @@ document.addEventListener("DOMContentLoaded", () => {
 
     const updateList = () => {
         const rows = [...list.querySelectorAll(".subcategoria-row")];
+        const searchTerm = searchInput.value.trim().toLocaleLowerCase("pt-BR");
         let visibleCount = 0;
 
         rows.forEach((row) => {
-            const visible = filterSelect.value === "todas" || row.dataset.categoria === filterSelect.value;
+            const matchesType = row.dataset.tipo === activeType;
+            const matchesCategory = filterSelect.value === "todas" || row.dataset.categoria === filterSelect.value;
+            const searchableText = `${row.dataset.nome} ${row.querySelector(".cat-subs").textContent}`
+                .toLocaleLowerCase("pt-BR");
+            const matchesSearch = searchableText.includes(searchTerm);
+            const visible = matchesType && matchesCategory && matchesSearch;
             row.hidden = !visible;
             if (visible) visibleCount += 1;
         });
 
-        count.textContent = String(visibleCount);
-        summaryCount.textContent = String(visibleCount);
+        const expenseTotal = rows.filter((row) => row.dataset.tipo === "Despesa").length;
+        const incomeTotal = rows.filter((row) => row.dataset.tipo === "Receita").length;
+        count.textContent = `${visibleCount} ${visibleCount === 1 ? "subcategoria" : "subcategorias"}`;
+        summaryCount.textContent = String(rows.length);
+        expenseCount.textContent = String(expenseTotal);
+        incomeCount.textContent = String(incomeTotal);
         emptyMessage.hidden = visibleCount > 0;
+        clearSearchButton.classList.toggle("d-none", searchTerm.length === 0);
+        expenseTab.classList.toggle("active", activeType === "Despesa");
+        incomeTab.classList.toggle("active", activeType === "Receita");
+        expenseTab.setAttribute("aria-selected", String(activeType === "Despesa"));
+        incomeTab.setAttribute("aria-selected", String(activeType === "Receita"));
+        listTitle.textContent = `Subcategorias de ${activeType === "Despesa" ? "despesas" : "receitas"}`;
+        document.getElementById("painelSubcategorias").setAttribute(
+            "aria-labelledby",
+            activeType === "Despesa" ? "btnSaidas" : "btnEntradas"
+        );
     };
 
-    const createRow = (name, categoryId, categoryName, emoji, color) => {
+    const createRow = (subcategoria) => {
         const row = document.createElement("article");
         row.className = "category-item subcategoria-row";
-        row.dataset.categoria = categoryId;
-        row.dataset.nome = name;
-        row.dataset.emoji = emoji;
-        row.dataset.cor = color;
+        row.dataset.id = subcategoria.id;
+        row.dataset.categoria = subcategoria.categoria_id;
+        row.dataset.tipo = subcategoria.categoria_tipo;
+        row.dataset.nome = subcategoria.nome;
+        row.dataset.emoji = subcategoria.emoji;
+        row.dataset.cor = subcategoria.cor;
 
         const icon = document.createElement("div");
         icon.className = "cat-icon-circle subcategoria-symbol";
-        icon.style.setProperty("--cor-categoria", color);
+        icon.dataset.cor = subcategoria.cor;
+        icon.style.setProperty("--cor-categoria", subcategoria.cor);
         icon.setAttribute("aria-hidden", "true");
         const emojiPreview = document.createElement("span");
         emojiPreview.className = "emoji-ios";
-        emojiPreview.textContent = emoji;
+        emojiPreview.textContent = subcategoria.emoji;
         icon.append(emojiPreview);
 
         const info = document.createElement("div");
@@ -87,11 +135,11 @@ document.addEventListener("DOMContentLoaded", () => {
         text.className = "category-text";
         const title = document.createElement("h3");
         title.className = "cat-name";
-        title.textContent = name;
+        title.textContent = subcategoria.nome;
         const category = document.createElement("p");
         category.className = "cat-subs";
         category.innerHTML = '<i class="bi bi-arrow-return-right" aria-hidden="true"></i> ';
-        category.append(document.createTextNode(categoryName));
+        category.append(document.createTextNode(subcategoria.categoria_nome));
         text.append(title, category);
         info.append(icon, text);
 
@@ -101,7 +149,7 @@ document.addEventListener("DOMContentLoaded", () => {
         const edit = document.createElement("button");
         edit.className = "arrow-link subcategoria-editar";
         edit.type = "button";
-        edit.setAttribute("aria-label", `Editar ${name}`);
+        edit.setAttribute("aria-label", `Editar ${subcategoria.nome}`);
         edit.title = "Editar subcategoria";
         edit.innerHTML = '<i class="bi bi-pencil" aria-hidden="true"></i>';
 
@@ -110,27 +158,29 @@ document.addEventListener("DOMContentLoaded", () => {
         return row;
     };
 
-    const updateRow = (row, name, categoryId, categoryName, emoji, color) => {
-        row.dataset.categoria = categoryId;
-        row.dataset.nome = name;
-        row.dataset.emoji = emoji;
-        row.dataset.cor = color;
+    const updateRow = (row, subcategoria) => {
+        row.dataset.id = subcategoria.id;
+        row.dataset.categoria = subcategoria.categoria_id;
+        row.dataset.tipo = subcategoria.categoria_tipo;
+        row.dataset.nome = subcategoria.nome;
+        row.dataset.emoji = subcategoria.emoji;
+        row.dataset.cor = subcategoria.cor;
 
         const icon = row.querySelector(".subcategoria-symbol");
-        icon.dataset.cor = color;
-        icon.style.setProperty("--cor-categoria", color);
+        icon.dataset.cor = subcategoria.cor;
+        icon.style.setProperty("--cor-categoria", subcategoria.cor);
         const emojiPreview = document.createElement("span");
         emojiPreview.className = "emoji-ios";
-        emojiPreview.textContent = emoji;
+        emojiPreview.textContent = subcategoria.emoji;
         icon.replaceChildren(emojiPreview);
 
-        row.querySelector(".cat-name").textContent = name;
+        row.querySelector(".cat-name").textContent = subcategoria.nome;
         const category = row.querySelector(".cat-subs");
         category.innerHTML = '<i class="bi bi-arrow-return-right" aria-hidden="true"></i> ';
-        category.append(document.createTextNode(categoryName));
+        category.append(document.createTextNode(subcategoria.categoria_nome));
 
         const editButton = row.querySelector(".subcategoria-editar");
-        editButton.setAttribute("aria-label", `Editar ${name}`);
+        editButton.setAttribute("aria-label", `Editar ${subcategoria.nome}`);
         window.carregarEmojisIOS?.();
     };
 
@@ -192,41 +242,69 @@ document.addEventListener("DOMContentLoaded", () => {
     customColorInput.addEventListener("input", () => setColor(customColorInput.value));
 
     deleteButton.addEventListener("click", async () => {
-        if (!currentRow) return;
+        if (!currentRow || !currentRow.dataset.id) return;
 
-        const confirmed = await window.DuckFyAlert.confirm({
+        const confirmed = await alert.confirm({
             title: "Excluir subcategoria?",
             text: `Deseja excluir ${currentRow.dataset.nome}?`,
             confirmButtonText: "Excluir subcategoria"
         });
         if (!confirmed) return;
 
-        currentRow.remove();
-        currentRow = null;
-        updateList();
-        ModalManager.fechar(modal.id);
+        deleteButton.disabled = true;
+        try {
+            await enviarRequisicao(`/subcategorias/api/${currentRow.dataset.id}`, { method: "DELETE" });
+            currentRow.remove();
+            currentRow = null;
+            updateList();
+            ModalManager.fechar(modal.id);
+        } catch (error) {
+            mostrarErro(error);
+        } finally {
+            deleteButton.disabled = false;
+        }
     });
 
-    form.addEventListener("submit", (event) => {
+    form.addEventListener("submit", async (event) => {
         event.preventDefault();
         const name = nameInput.value.trim();
         const selected = categorySelect.selectedOptions[0];
         if (!name || !selected.value) return;
 
-        if (currentRow) {
-            updateRow(currentRow, name, selected.value, selected.dataset.nome, emojiInput.value, colorInput.value);
-        } else {
-            list.prepend(createRow(name, selected.value, selected.dataset.nome, emojiInput.value, colorInput.value));
-            window.carregarEmojisIOS?.();
+        submitButton.disabled = true;
+        try {
+            const result = await enviarRequisicao(
+                currentRow ? `/subcategorias/api/${currentRow.dataset.id}` : "/subcategorias/api",
+                {
+                    method: currentRow ? "PUT" : "POST",
+                    body: JSON.stringify({
+                        nome: name,
+                        categoria_id: selected.value,
+                        emoji: emojiInput.value,
+                        cor: colorInput.value
+                    })
+                }
+            );
+
+            if (currentRow) {
+                updateRow(currentRow, result.subcategoria);
+            } else {
+                list.prepend(createRow(result.subcategoria));
+                window.carregarEmojisIOS?.();
+            }
+            form.reset();
+            setEmoji("⭐");
+            setColor("#7C4DFF");
+            emojiPicker.hidden = true;
+            emojiPickerButton.setAttribute("aria-expanded", "false");
+            updateList();
+            currentRow = null;
+            ModalManager.fechar(modal.id);
+        } catch (error) {
+            mostrarErro(error);
+        } finally {
+            submitButton.disabled = false;
         }
-        form.reset();
-        setEmoji("⭐");
-        setColor("#7C4DFF");
-        emojiPicker.hidden = true;
-        emojiPickerButton.setAttribute("aria-expanded", "false");
-        updateList();
-        currentRow = null;
-        ModalManager.fechar(modal.id);
     });
 
     list.addEventListener("click", (event) => {
@@ -248,7 +326,23 @@ document.addEventListener("DOMContentLoaded", () => {
 
     });
 
+    expenseTab.addEventListener("click", () => {
+        activeType = "Despesa";
+        filterSelect.value = "todas";
+        updateList();
+    });
+    incomeTab.addEventListener("click", () => {
+        activeType = "Receita";
+        filterSelect.value = "todas";
+        updateList();
+    });
     filterSelect.addEventListener("change", updateList);
+    searchInput.addEventListener("input", updateList);
+    clearSearchButton.addEventListener("click", () => {
+        searchInput.value = "";
+        searchInput.focus();
+        updateList();
+    });
     list.querySelectorAll(".subcategoria-symbol[data-cor]").forEach((icon) => {
         icon.style.setProperty("--cor-categoria", icon.dataset.cor);
     });
