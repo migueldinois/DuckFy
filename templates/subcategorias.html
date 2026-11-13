@@ -139,13 +139,10 @@
             <div class="subcategoria-emoji-field">
                 <label for="emojiSubcategoria">Emoji</label>
                 <div class="input-icon-wrapper emoji-field-wrapper">
-                    <img src="{{ url_for('static', filename='img/icons/emoji.svg') }}"
-                        class="input-icon emoji-icon-trigger" alt="Abrir seletor de emojis"
-                        data-emoji-trigger="emojiSubcategoria" role="button" tabindex="0"
-                        aria-label="Abrir seletor de emojis">
                     <input type="text" id="emojiSubcategoria" name="emoji"
                         class="search-input input-with-icon emoji-input" value="⭐"
-                        placeholder="Selecione um emoji" required autocomplete="off">
+                        placeholder="Selecione um emoji" required autocomplete="off"
+                        data-emoji-trigger="emojiSubcategoria" aria-label="Escolher emoji">
                 </div>
             </div>
 

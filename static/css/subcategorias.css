@@ -447,6 +447,10 @@ body.tema-claro .subcategorias-status {
     position: relative;
 }
 
+.subcategoria-emoji-field .emoji-input-preview {
+    left: 14px;
+}
+
 .subcategorias-color-picker {
     gap: 10px;
 }
