@@ -2,31 +2,51 @@
 <link rel="stylesheet" href="{{ url_for('static', filename='css/bottom-bar.css') }}">
 {% endblock %}
 
+{% set caminho_atual = request.path.rstrip('/') %}
+{% set mais_ativo = caminho_atual.startswith('/lancamento') or caminho_atual.startswith('/reserva_emergencia') or caminho_atual.startswith('/categorias') or caminho_atual.startswith('/subcategorias') or caminho_atual.startswith('/sequencia') %}
 
 <nav class="bottom-bar">
   <div class="bottom-bar-container">
-    <a href="/dashboard" class="nav-icon-btn active" title="Dashboard">
+    <a href="/dashboard" class="nav-icon-btn {% if caminho_atual == '/dashboard' %}active{% endif %}"
+      title="Dashboard" {% if caminho_atual == '/dashboard' %}aria-current="page"{% endif %}>
       <span><img src="{{ url_for('static', filename='img/icons/dashboard.svg') }}" alt="Dashboard"></span>
     </a>
-    <a href="/extrato" class="nav-icon-btn" title="Extrato">
-      <span><img src="{{ url_for('static', filename='img/icons/extrato.svg') }}" alt="Extrato"></span>
+    <a href="/contas" class="nav-icon-btn" title="Contas Bancárias">
+      <span><img src="{{ url_for('static', filename='img/icons/contas-bancarias.svg') }}" alt="Contas Bancárias"></span>
     </a>
-    <a href="/simulador" class="nav-icon-btn" title="Simulador de Patrimônio">
-      <span><img src="{{ url_for('static', filename='img/icons/simulador.svg') }}" alt="Simulador de Patrimônio"></span>
+    <a href="/categorias" class="nav-icon-btn {% if request.path.rstrip('/') == '/categorias' %}active{% endif %}" title="Categorias" {% if request.path.rstrip('/') == '/categorias' %}aria-current="page"{% endif %}>
+      <span><img src="{{ url_for('static', filename='img/icons/categoria.svg') }}" alt="Categorias"></span>
     </a>
-    <a href="/perfil" class="nav-icon-btn" title="Perfil">
-      <span><img src="{{ url_for('static', filename='img/icons/perfill.svg') }}" alt="Perfil"></span>
+    <a href="/lancamento" class="nav-icon-btn {% if request.path.rstrip('/') == '/lancamento' %}active{% endif %}" title="Lançamentos" {% if request.path.rstrip('/') == '/lancamento' %}aria-current="page"{% endif %}>
+      <span><img src="{{ url_for('static', filename='img/icons/lancamento.svg') }}" alt="Lançamentos"></span>
+    </a>
+    <a href="/reserva_emergencia" class="nav-icon-btn {% if request.path.rstrip('/') == '/reserva_emergencia' %}active{% endif %}" title="Reserva de Emergência" {% if request.path.rstrip('/') == '/reserva_emergencia' %}aria-current="page"{% endif %}>
+      <span><img src="{{ url_for('static', filename='img/icons/reserva.svg') }}" alt="Reserva de Emergência"></span>
     </a>
 
-    <div class="nav-icon-btn dropdown-trigger" title="Configurações">
+    <div class="nav-icon-btn dropdown-trigger {% if mais_ativo %}active{% endif %}" title="Configurações"
+      {% if mais_ativo %}aria-current="page"{% endif %}>
       <span><img src="{{ url_for('static', filename='img/icons/mais.svg') }}" alt="Configurações"></span>
       
       <div class="dropdown-menu">
-        <a href="/lancamento">Lançamentos</a>
-        <a href="/reserva">Reserva de emergencia</a>
-        <a href="/categorias">Categorias</a>
-        <a href="/sequencia">Sequencia</a>
-        <a href="/logout" class="logout-btn">Sair</a>
+        <a href="/lancamento" class="{% if caminho_atual.startswith('/lancamento') %}active{% endif %}"
+          {% if caminho_atual.startswith('/lancamento') %}aria-current="page"{% endif %}>Lançamentos</a>
+        <a href="/reserva_emergencia" class="{% if caminho_atual.startswith('/reserva_emergencia') %}active{% endif %}"
+          {% if caminho_atual.startswith('/reserva_emergencia') %}aria-current="page"{% endif %}>Reserva de emergência</a>
+        <a href="/categorias" class="{% if caminho_atual.startswith('/categorias') %}active{% endif %}"
+          {% if caminho_atual.startswith('/categorias') %}aria-current="page"{% endif %}>Categorias</a>
+        <a href="{{ url_for('tela_subcategorias') }}" class="{% if caminho_atual.startswith('/subcategorias') %}active{% endif %}"
+          {% if caminho_atual.startswith('/subcategorias') %}aria-current="page"{% endif %}>Subcategorias</a>
+        <a href="/sequencia" class="{% if caminho_atual.startswith('/sequencia') %}active{% endif %}"
+          {% if caminho_atual.startswith('/sequencia') %}aria-current="page"{% endif %}>Sequência</a>
+        <a href="/extrato">Extrato</a>
+        <a href="/simulador">Simulador de Patrimônio</a>
+        <a href="/perfil">Perfil</a>
+        <button type="button" class="bottom-theme-switch" data-theme-toggle aria-label="Ativar tema claro" title="Ativar tema claro">
+          <span class="theme-switch-label" data-theme-label>Tema claro</span>
+          <i class="bi bi-sun theme-switch-icon" data-theme-icon aria-hidden="true"></i>
+        </button>
+        <a href="/logout" class="logout-btn" data-confirmar-logout>Sair</a>
       </div>
     </div>
     

@@ -1,0 +1,327 @@
+{% extends 'layout.html' %}
+
+{% block title %}Categorias - DuckFy{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/categorias.css') }}">
+{% endblock %}
+
+{% block content %}
+
+<!-- modais -->
+{% include 'components/modal_categoria.html' %}
+{% include 'components/modal_editar_categoria.html' %}
+
+<div class="categorias-container">
+
+    <!-- cabeçalho -->
+    <header class="categorias-header">
+        <div class="categorias-heading">
+            <a class="btn-voltar-global" href="{{ url_for('dashboard') }}" aria-label="Voltar ao Dashboard">
+                <i class="bi bi-arrow-left" aria-hidden="true"></i>
+            </a>
+            <div class="header-texto">
+                <div class="header-etiqueta">
+                    <span class="etiqueta-ponto"></span>
+                    ORGANIZAÇÃO FINANCEIRA
+                </div>
+
+                <h1 class="page-title">Suas categorias<span>.</span></h1>
+                <p class="header-descricao">
+                    Cada gasto e cada conquista no seu devido lugar.
+                </p>
+            </div>
+        </div>
+
+        <div class="categorias-acoes">
+            <button type="button" class="btn-nova-categoria" data-open-modal="modalNovaCategoria">
+                <i class="bi bi-plus-lg"></i>
+                <span>Nova categoria</span>
+            </button>
+
+            <div class="search-box">
+                <i class="bi bi-search search-icon"></i>
+
+                <input type="text" id="inputBusca" class="search-input" placeholder="Buscar categoria..."
+                    aria-label="Buscar categoria">
+
+                <button type="button" id="limparBusca" class="search-clear d-none" aria-label="Limpar pesquisa">
+                    <i class="bi bi-x-lg"></i>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- resumo -->
+    <section class="categorias-resumo">
+        <div class="resumo-icone">
+            <i class="bi bi-grid-1x2-fill"></i>
+        </div>
+
+        <div class="resumo-texto">
+            <strong class="resumo-titulo">Visão Geral</strong>
+        </div>
+
+        <div class="resumo-divisor"></div>
+
+        <div class="resumo-numero">
+            <strong>{{ categorias_despesa|length + categorias_receita|length }}</strong>
+            <span>categorias</span>
+        </div>
+    </section>
+
+    <!-- pesquisa -->
+    <div class="categorias-ferramentas">
+        <span class="categorias-contagem" id="contadorCategorias">
+            {{ categorias_despesa|length }} categorias
+        </span>
+    </div>
+    <!-- Alternador de Abas -->
+    <!-- abas de categorias -->
+    <nav class="categorias-abas" role="tablist" aria-label="Tipo de categoria">
+
+        <button type="button" class="tab-btn active" id="btnSaidas" role="tab" aria-selected="true"
+            aria-controls="listaSaidas" onclick="alternarAba('SAIDA')">
+            <span class="aba-icone despesas-icone">
+                <i class="bi bi-arrow-up-right"></i>
+            </span>
+
+            <span class="aba-texto">
+                <strong>Despesas</strong>
+                <small>Para onde vai seu dinheiro</small>
+            </span>
+
+            <span class="tab-count">
+                {{ categorias_despesa|length }}
+            </span>
+        </button>
+
+        <button type="button" class="tab-btn" id="btnEntradas" role="tab" aria-selected="false"
+            aria-controls="listaEntradas" onclick="alternarAba('ENTRADA')">
+            <span class="aba-icone receitas-icone">
+                <i class="bi bi-arrow-down-left"></i>
+            </span>
+
+            <span class="aba-texto">
+                <strong>Receitas</strong>
+                <small>De onde vem seu dinheiro</small>
+            </span>
+
+            <span class="tab-count">
+                {{ categorias_receita|length }}
+            </span>
+        </button>
+
+    </nav>
+
+    <!-- lista de despesas -->
+    <section id="listaSaidas" class="category-panel" role="tabpanel" aria-labelledby="btnSaidas">
+
+        <div class="lista-cabecalho">
+            <div>
+                <h2>Suas despesas</h2>
+                <p>Encontre e gerencie suas categorias.</p>
+            </div>
+
+            <span class="lista-indicador">
+                <i class="bi bi-circle-fill"></i>
+                Saídas
+            </span>
+        </div>
+
+        <div class="category-list">
+            {% for despesa in categorias_despesa %}
+            <article class="category-item">
+                <div class="category-info">
+                    <div class="cat-icon-circle" style="--cor-categoria: {{ despesa.cor }};">
+                        <span class="emoji-ios">{{ despesa.emoji }}</span>
+                    </div>
+
+                    <div class="category-text">
+                        <h3 class="cat-name">{{ despesa.nome }}</h3>
+                        <p class="cat-subs">
+                            {{ despesa.descricao or '' }}
+                        </p>
+                    </div>
+                </div>
+
+                <!-- botão de edição -->
+                <button type="button" class="arrow-link" aria-label="Editar categoria {{ despesa.nome }}"
+                    data-id="{{ despesa.id_categoria }}" data-nome="{{ despesa.nome }}" data-tipo="SAIDA"
+                    data-emoji="{{ despesa.emoji }}" data-cor="{{ despesa.cor }}"
+                    onclick="preencherEAbrirModalEdit(event, this)">
+                    <i class="bi bi-pencil"></i>
+                </button>
+            </article>
+            {% endfor %}
+        </div>
+    </section>
+
+    <!-- lista de receitas -->
+    <section id="listaEntradas" class="category-panel d-none" role="tabpanel" aria-labelledby="btnEntradas" hidden>
+
+        <div class="lista-cabecalho">
+            <div>
+                <h2>Suas receitas</h2>
+                <p>Encontre e gerencie suas categorias.</p>
+            </div>
+
+            <span class="lista-indicador receitas-indicador">
+                <i class="bi bi-circle-fill"></i>
+                Entradas
+            </span>
+        </div>
+
+        <div class="category-list">
+            {% for receita in categorias_receita %}
+            <article class="category-item">
+                <div class="category-info">
+                    <div class="cat-icon-circle" style="--cor-categoria: {{ receita.cor }};">
+                        <span class="emoji-ios">{{ receita.emoji }}</span>
+                    </div>
+
+                    <div class="category-text">
+                        <h3 class="cat-name">{{ receita.nome }}</h3>
+                        <p class="cat-subs">
+                            {{ receita.descricao or '' }}
+                        </p>
+                    </div>
+                </div>
+
+                <!-- botão de edição -->
+                <button type="button" class="arrow-link" aria-label="Editar categoria {{ receita.nome }}"
+                    data-id="{{ receita.id_categoria }}" data-nome="{{ receita.nome }}" data-tipo="ENTRADA"
+                    data-emoji="{{ receita.emoji }}" data-cor="{{ receita.cor }}"
+                    onclick="preencherEAbrirModalEdit(event, this)">
+                    <i class="bi bi-pencil"></i>
+                </button>
+            </article>
+            {% endfor %}
+        </div>
+    </section>
+
+    <!-- mensagem sem resultados -->
+    <div class="categorias-vazio d-none" id="mensagemSemResultados">
+        <div class="vazio-icone">
+            <i class="bi bi-search"></i>
+        </div>
+        <h3>Nenhuma categoria encontrada</h3>
+        <p>Tente outro termo para encontrar o que procura.</p>
+    </div>
+
+</div>
+
+<!-- funções das abas e pesquisa -->
+<script>
+    // alterna entre despesas e receitas.
+    function alternarAba(tipo) {
+        const mostrarSaidas = tipo === 'SAIDA';
+
+        const btnSaidas = document.getElementById('btnSaidas');
+        const btnEntradas = document.getElementById('btnEntradas');
+        const listaSaidas = document.getElementById('listaSaidas');
+        const listaEntradas = document.getElementById('listaEntradas');
+
+        btnSaidas.classList.toggle('active', mostrarSaidas);
+        btnEntradas.classList.toggle('active', !mostrarSaidas);
+
+        btnSaidas.setAttribute('aria-selected', String(mostrarSaidas));
+        btnEntradas.setAttribute('aria-selected', String(!mostrarSaidas));
+
+        listaSaidas.classList.toggle('d-none', !mostrarSaidas);
+        listaEntradas.classList.toggle('d-none', mostrarSaidas);
+
+        listaSaidas.hidden = !mostrarSaidas;
+        listaEntradas.hidden = mostrarSaidas;
+
+        atualizarPesquisa();
+    }
+
+    // atualiza os resultados da pesquisa.
+    function atualizarPesquisa() {
+        const input = document.getElementById('inputBusca');
+        const termo = input.value.trim().toLocaleLowerCase('pt-BR');
+
+        const listaAtiva = document.getElementById('listaSaidas').hidden
+            ? document.getElementById('listaEntradas')
+            : document.getElementById('listaSaidas');
+
+        const lista = listaAtiva.querySelector('.category-list');
+        const itens = lista.querySelectorAll('.category-item');
+        const mensagem = document.getElementById('mensagemSemResultados');
+        const contador = document.getElementById('contadorCategorias');
+
+        let encontrados = 0;
+
+        itens.forEach(item => {
+            const nome = item.querySelector('.cat-name').textContent;
+            const descricao = item.querySelector('.cat-subs').textContent;
+            const texto = `${nome} ${descricao}`.toLocaleLowerCase('pt-BR');
+            const corresponde = texto.includes(termo);
+
+            item.classList.toggle('d-none', !corresponde);
+
+            if (corresponde) encontrados++;
+        });
+
+        lista.classList.toggle('d-none', encontrados === 0);
+        mensagem.classList.toggle('d-none', encontrados !== 0);
+
+        contador.textContent = `${encontrados} ${encontrados === 1 ? 'categoria' : 'categorias'
+            }`;
+    }
+
+    // configura a pesquisa e os emojis.
+    document.addEventListener('DOMContentLoaded', () => {
+        const input = document.getElementById('inputBusca');
+        const limpar = document.getElementById('limparBusca');
+
+        input.addEventListener('input', () => {
+            limpar.classList.toggle('d-none', input.value.length === 0);
+            atualizarPesquisa();
+        });
+
+        limpar.addEventListener('click', () => {
+            input.value = '';
+            limpar.classList.add('d-none');
+            atualizarPesquisa();
+            input.focus();
+        });
+
+        carregarEmojisIOS();
+        atualizarPesquisa();
+    });
+
+    // fecha as notificações automaticamente.
+    document.querySelectorAll('.alert-container .notificacao').forEach(notificacao => {
+        setTimeout(() => {
+            notificacao.classList.add('notificacao-saindo');
+
+            setTimeout(() => {
+                notificacao.remove();
+
+                const container = document.querySelector('.alert-container');
+
+                if (container && !container.querySelector('.notificacao')) {
+                    container.remove();
+                }
+            }, 350);
+
+        }, 2000);
+    });
+
+</script>
+
+<script src="{{ url_for('static', filename='js/emoji-ios.js') }}"></script>
+
+<!-- biblioteca de emojis -->
+<script>
+    window.emojiMartDataUrl = 'https://cdn.jsdelivr.net/npm/@emoji-mart/data';
+</script>
+
+<script src="https://cdn.jsdelivr.net/npm/emoji-mart@5.6.0/dist/browser.js"></script>
+
+<!-- javascript das categorias -->
+<script src="{{ url_for('static', filename='js/categorias.js') }}"></script>
+
+{% endblock %}

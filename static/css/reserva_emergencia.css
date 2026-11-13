@@ -29,6 +29,11 @@
   border: 1px solid var(--border-color, rgba(255, 255, 255, 0.1));
 }
 
+.reserva-history {
+  --extrato-green: #69dfa3;
+  --extrato-red: #ff887d;
+}
+
 /* Barra de Progresso - Usando !important para não ficar azul */
 .progress-reserva {
   height: 14px;
@@ -77,6 +82,23 @@
               inset 0 1px 0 rgba(255, 255, 255, 0.2);
 }
 
+.reserva-actions {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.75rem;
+}
+
+.reserva-actions .btn-purple-action {
+  min-width: 0;
+  min-height: 48px;
+  height: auto;
+  padding: 0.5rem 0.35rem;
+  font-size: 0.875rem;
+  line-height: 1.2;
+  white-space: normal;
+  overflow-wrap: anywhere;
+}
+
 .btn-purple-action:hover {
   background-color: var(--brand-secondary, #B093FF);
   opacity: 0.92;
@@ -85,6 +107,677 @@
               inset 0 1px 0 rgba(255, 255, 255, 0.3);
 }
 
+#modalGuardarDinheiro .modal-footer,
+#modalRetirarDinheiro .modal-footer,
+#modalAlterarMeta .modal-footer {
+  display: flex;
+  flex-direction: row;
+  gap: 0.75rem;
+  padding: 0 1rem 1rem;
+}
+
+#modalGuardarDinheiro .modal-footer > *,
+#modalRetirarDinheiro .modal-footer > *,
+#modalAlterarMeta .modal-footer > * {
+  width: 100%;
+  margin: 0;
+}
+
+.btn-reserva-secondary,
+.btn-reserva-primary,
+.btn-reserva-add-account {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 48px;
+  padding: 0.5rem 1rem;
+  border-radius: 12px;
+  font-size: 1rem;
+  font-weight: 600;
+  line-height: 1.25;
+  text-decoration: none;
+}
+
+.btn-reserva-secondary {
+  border: 0;
+  background: var(--danger-primary, #c62828);
+  color: #ffffff;
+  box-shadow: 0 8px 20px rgba(198, 40, 40, 0.3),
+              inset 0 1px 0 rgba(255, 255, 255, 0.2);
+  transition: background-color 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease;
+}
+
+.btn-reserva-secondary:hover {
+  background: var(--danger-secondary, #b71c1c);
+  color: #ffffff;
+  box-shadow: 0 12px 25px rgba(198, 40, 40, 0.4),
+              inset 0 1px 0 rgba(255, 255, 255, 0.3);
+  transform: translateY(-2px);
+}
+
+.btn-reserva-primary {
+  min-height: 48px;
+  height: 48px;
+  padding: 0.5rem 1rem;
+  border: 0;
+  border-radius: 12px;
+  background: var(--confirmation-primary, #16834a);
+  color: #ffffff;
+  box-shadow: 0 8px 20px rgba(22, 131, 74, 0.35),
+              inset 0 1px 0 rgba(255, 255, 255, 0.2);
+}
+
+.btn-reserva-primary:hover {
+  background: var(--confirmation-secondary, #1b9b57);
+  color: #ffffff;
+  box-shadow: 0 12px 25px rgba(22, 131, 74, 0.45),
+              inset 0 1px 0 rgba(255, 255, 255, 0.3);
+  transform: translateY(-2px);
+}
+
+.btn-reserva-primary:disabled,
+.btn-reserva-secondary:disabled {
+  box-shadow: none;
+  transform: none;
+  cursor: not-allowed;
+}
+
+.modal .btn-reserva-primary:disabled {
+  background: var(--confirmation-primary, #16834a);
+  border-color: var(--confirmation-primary, #16834a);
+  color: #ffffff;
+  opacity: 1;
+  box-shadow: 0 8px 20px rgba(22, 131, 74, 0.35),
+              inset 0 1px 0 rgba(255, 255, 255, 0.2);
+}
+
+#modalGuardarDinheiro .modal-footer > *,
+#modalRetirarDinheiro .modal-footer > *,
+#modalAlterarMeta .modal-footer > * {
+  flex: 1 1 0;
+  min-width: 0;
+}
+
+#modalGuardarDinheiro .input-group:focus-within,
+#modalRetirarDinheiro .input-group:focus-within,
+#modalAlterarMeta .input-group:focus-within {
+  position: relative;
+  z-index: 2;
+  border-radius: 0.5rem;
+  box-shadow: 0 0 0 0.2rem rgba(124, 77, 255, 0.25);
+}
+
+#modalGuardarDinheiro .input-group:focus-within .form-control,
+#modalRetirarDinheiro .input-group:focus-within .form-control,
+#modalAlterarMeta .input-group:focus-within .form-control {
+  border-color: var(--brand-primary);
+  box-shadow: none;
+}
+
+#modalGuardarDinheiro #valor::placeholder,
+#modalRetirarDinheiro #valor_retirada::placeholder {
+  color: rgba(255, 255, 255, 0.6);
+  opacity: 1;
+}
+
+#modalGuardarDinheiro .modal-body > .mb-3 > input:focus,
+#modalRetirarDinheiro .modal-body > .mb-3 > input:focus,
+#modalAlterarMeta .modal-body > input:focus {
+  border-color: var(--brand-primary);
+  outline: none;
+  box-shadow: 0 0 0 0.2rem rgba(124, 77, 255, 0.25);
+}
+
+.btn-reserva-add-account {
+  width: 100%;
+}
+
+.reserva-custom-select {
+  position: relative;
+}
+
+.reserva-custom-select .custom-select-native {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  clip-path: inset(50%);
+  border: 0;
+}
+
+.reserva-custom-select .custom-select-trigger {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  min-height: 48px;
+  padding: 11px 14px;
+  border: 1px solid var(--border-color);
+  border-radius: 10px;
+  background: var(--bg-surface-2);
+  color: var(--text-primary);
+  font: inherit;
+  font-size: 15px;
+  text-align: left;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+  cursor: pointer;
+}
+
+.reserva-custom-select .custom-select-trigger:focus-visible,
+.reserva-custom-select .custom-select-trigger:focus,
+.reserva-custom-select.is-open .custom-select-trigger {
+  border-color: var(--brand-primary);
+  outline: none;
+  box-shadow: none;
+}
+
+.reserva-custom-select:focus-within,
+.reserva-custom-select.is-open {
+  position: relative;
+  z-index: 2;
+  border-radius: 10px;
+  box-shadow: 0 0 0 0.2rem rgba(124, 77, 255, 0.25);
+}
+
+.reserva-custom-select .custom-select-trigger.has-placeholder {
+  color: color-mix(in srgb, var(--text-muted) 82%, transparent);
+}
+
+.reserva-custom-select .custom-select-trigger:disabled {
+  cursor: not-allowed;
+  opacity: 0.55;
+}
+
+.reserva-custom-select .custom-select-chevron {
+  width: 8px;
+  height: 8px;
+  margin: -4px 2px 0 12px;
+  flex: 0 0 auto;
+  border-right: 1.5px solid var(--text-muted);
+  border-bottom: 1.5px solid var(--text-muted);
+  transform: rotate(45deg);
+  transition: transform 0.2s ease;
+}
+
+.reserva-custom-select.is-open .custom-select-chevron {
+  margin-top: 4px;
+  transform: rotate(225deg);
+}
+
+.reserva-custom-select .custom-select-options {
+  position: absolute;
+  z-index: 1060;
+  top: calc(100% + 6px);
+  right: 0;
+  left: 0;
+  max-height: 220px;
+  overflow-y: auto;
+  padding: 5px;
+  border: 1px solid var(--border-color);
+  border-radius: 10px;
+  background: var(--bg-surface-2);
+  box-shadow: 0 12px 28px var(--shadow-color);
+}
+
+.reserva-custom-select .custom-select-options[hidden] {
+  display: none;
+}
+
+.reserva-custom-select .custom-select-option {
+  padding: 9px 11px;
+  border-radius: 6px;
+  color: var(--text-primary);
+  font-size: 14px;
+  cursor: pointer;
+  transition: background-color 0.15s ease, color 0.15s ease;
+}
+
+.reserva-custom-select .custom-select-option:hover,
+.reserva-custom-select .custom-select-option.is-active {
+  background: color-mix(in srgb, var(--brand-primary) 14%, var(--bg-surface-2));
+}
+
+.reserva-custom-select .custom-select-option[aria-selected="true"] {
+  background: color-mix(in srgb, var(--brand-primary) 20%, var(--bg-surface-2));
+  color: var(--text-primary);
+}
+
+.reserva-custom-select .custom-select-option[aria-disabled="true"] {
+  color: var(--text-muted);
+  cursor: default;
+}
+
+.reserva-select-error {
+  display: block;
+  margin-top: 0.4rem;
+  color: #ff8f9c;
+}
+
+.reserva-select-error[hidden] {
+  display: none;
+}
+
 .fs-7 {
   font-size: 13px;
+}
+
+#page-reserva {
+  --reserva-green: #35d39a;
+  --reserva-coral: #ff887d;
+  --reserva-line: rgba(255, 255, 255, 0.1);
+}
+
+#page-reserva .style-reserva-container {
+  max-width: 1120px;
+  padding: 0 1rem;
+}
+
+#page-reserva .reserva-page-header {
+  margin: 0 0 1.5rem;
+}
+
+#page-reserva .reserva-eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  color: var(--reserva-green);
+  font-size: 0.7rem;
+  font-weight: 750;
+  line-height: 1.3;
+}
+
+#page-reserva .reserva-page-heading h1 {
+  margin: 0;
+  color: var(--text-primary);
+  font-size: 1.75rem;
+  font-weight: 750;
+  line-height: 1.15;
+}
+
+#page-reserva .reserva-title-row {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin: 0.45rem 0 0.35rem;
+}
+
+#page-reserva .reserva-page-heading p {
+  margin: 0;
+  color: var(--text-muted);
+  font-size: 0.95rem;
+}
+
+#page-reserva .reserva-overview,
+#page-reserva .reserva-history-section {
+  border: 1px solid var(--border-color);
+  border-radius: 20px;
+  background: var(--bg-surface-1);
+  box-shadow: 0 16px 40px var(--shadow-color);
+}
+
+#page-reserva .reserva-history-section {
+  border-color: color-mix(in srgb, var(--brand-primary) 28%, var(--border-color));
+  background: linear-gradient(
+    145deg,
+    var(--bg-surface-1),
+    color-mix(in srgb, var(--brand-primary) 6%, var(--bg-surface-1))
+  );
+  box-shadow: 0 16px 40px var(--shadow-color), 0 0 22px color-mix(in srgb, var(--brand-primary) 5%, transparent);
+}
+
+#page-reserva .reserva-overview {
+  padding: clamp(1.25rem, 3vw, 2rem);
+  border-color: color-mix(in srgb, var(--accent-primary) 42%, var(--border-color));
+  background: linear-gradient(
+    145deg,
+    var(--bg-surface-1),
+    color-mix(in srgb, var(--accent-primary) 5%, var(--bg-surface-1))
+  );
+}
+
+#page-reserva .reserva-overview-top,
+#page-reserva .reserva-section-title,
+#page-reserva .reserva-progress-summary {
+  display: flex;
+  align-items: center;
+}
+
+#page-reserva .reserva-overview-top {
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 1.75rem;
+}
+
+#page-reserva .reserva-section-title {
+  gap: 0.85rem;
+}
+
+#page-reserva .reserva-status-icon {
+  display: grid;
+  width: 42px;
+  height: 42px;
+  flex: 0 0 42px;
+  place-items: center;
+  border: 1px solid rgba(53, 211, 154, 0.24);
+  border-radius: 8px;
+  background: rgba(53, 211, 154, 0.1);
+  color: var(--reserva-green);
+  font-size: 1.2rem;
+}
+
+#page-reserva .reserva-section-title h2,
+#page-reserva .reserva-history-header h2 {
+  margin: 0;
+  color: var(--text-primary);
+  font-size: 1.1rem;
+  font-weight: 700;
+}
+
+#page-reserva .reserva-section-title p {
+  margin: 0.25rem 0 0;
+  color: var(--text-muted);
+  font-size: 0.85rem;
+}
+
+#page-reserva .reserva-progress-summary {
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 0.15rem;
+}
+
+#page-reserva .reserva-progress-summary span,
+#page-reserva .reserva-balance > span {
+  color: var(--text-muted);
+  font-size: 0.8rem;
+}
+
+#page-reserva .reserva-progress-summary strong {
+  color: var(--reserva-green);
+  font-size: 1.25rem;
+  font-variant-numeric: tabular-nums;
+}
+
+#page-reserva .reserva-progress-content {
+  display: grid;
+  grid-template-columns: minmax(210px, 0.8fr) minmax(0, 1.7fr);
+  align-items: end;
+  gap: 2rem;
+  padding-top: 1.4rem;
+  border-top: 1px solid var(--reserva-line);
+}
+
+#page-reserva .reserva-balance {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+}
+
+#page-reserva .reserva-balance strong {
+  color: var(--text-primary);
+  font-size: 2.15rem;
+  font-variant-numeric: tabular-nums;
+  font-weight: 750;
+  line-height: 1.15;
+}
+
+#page-reserva .progress-reserva {
+  height: 12px;
+  margin: 0 0 0.75rem;
+  background: var(--bg-surface-2);
+}
+
+#page-reserva .bar-progresso {
+  min-width: 0;
+  background: var(--reserva-green);
+  box-shadow: 0 0 14px color-mix(in srgb, var(--reserva-green) 28%, transparent);
+  transition: width 650ms cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+#page-reserva .reserva-progress-scale {
+  display: flex;
+  justify-content: space-between;
+  gap: 0.75rem;
+  color: var(--text-muted);
+  font-size: 0.75rem;
+  font-variant-numeric: tabular-nums;
+}
+
+#page-reserva .reserva-progress-scale span:nth-child(2) {
+  text-align: center;
+}
+
+#page-reserva .reserva-progress-scale strong {
+  color: var(--text-primary);
+  font-weight: 650;
+}
+
+#page-reserva .reserva-actions {
+  gap: 0.75rem;
+}
+
+#page-reserva .reserva-actions .btn-purple-action {
+  display: flex;
+  min-height: 46px;
+  align-items: center;
+  justify-content: center;
+  gap: 9px;
+  padding: 0 18px;
+  border: 1px solid var(--brand-primary);
+  border-radius: 12px;
+  background: var(--brand-primary);
+  box-shadow: 0 8px 18px color-mix(in srgb, var(--brand-primary) 24%, transparent);
+  color: #ffffff;
+  font-size: 0.88rem;
+  font-weight: 650;
+  line-height: 1;
+  overflow-wrap: normal;
+  transition: background 0.2s ease, border-color 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+#page-reserva .reserva-actions .btn-purple-action i {
+  color: #ffffff;
+  font-size: 1.05rem;
+}
+
+#page-reserva .reserva-actions .btn-purple-action:hover {
+  border-color: var(--brand-dark);
+  background-color: var(--brand-dark);
+  box-shadow: 0 10px 22px color-mix(in srgb, var(--brand-primary) 30%, transparent);
+  opacity: 1;
+  transform: translateY(-2px);
+}
+
+#page-reserva .reserva-actions .btn-purple-action:focus-visible,
+#page-reserva .reserva-statement-link:focus-visible {
+  outline: 2px solid var(--reserva-green);
+  outline-offset: 3px;
+}
+
+#page-reserva .reserva-history-section {
+  padding: clamp(1.25rem, 3vw, 1.75rem);
+}
+
+#page-reserva .reserva-history-header {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 1rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid var(--reserva-line);
+}
+
+#page-reserva .reserva-history-header .reserva-eyebrow {
+  margin-bottom: 0.35rem;
+}
+
+#page-reserva .reserva-statement-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  color: var(--brand-secondary);
+  font-size: 0.82rem;
+  font-weight: 650;
+  text-decoration: none;
+}
+
+#page-reserva .reserva-statement-link:hover {
+  color: var(--text-primary);
+}
+
+#page-reserva .reserva-history .timeline-item {
+  display: grid;
+  grid-template-columns: 42px minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 1rem;
+  margin-top: 0.75rem;
+  padding: 1rem 1.15rem;
+  border: 1px solid var(--reserva-line);
+  border-radius: 14px;
+  background: var(--bg-surface-2);
+  box-shadow: 0 8px 20px var(--shadow-color);
+  transition: background-color 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease;
+}
+
+#page-reserva .reserva-history .timeline-item:hover {
+  background: color-mix(in srgb, var(--bg-surface-2) 88%, var(--bg-surface-1));
+  box-shadow: 0 10px 24px var(--shadow-color);
+  transform: translateY(-1px);
+}
+
+#page-reserva .reserva-history .icon-box {
+  display: grid;
+  width: 40px;
+  height: 40px;
+  place-items: center;
+  border: 1px solid var(--reserva-line);
+  border-radius: 12px;
+  background: var(--bg-surface-1);
+}
+
+#page-reserva .reserva-history .info {
+  min-width: 0;
+}
+
+#page-reserva .reserva-history .description {
+  color: var(--text-primary);
+  font-size: 0.9rem;
+}
+
+#page-reserva .reserva-history .date,
+#page-reserva .reserva-history .info small {
+  color: var(--text-muted);
+  font-size: 0.78rem;
+}
+
+#page-reserva .reserva-history .amount {
+  font-size: 0.9rem;
+  font-variant-numeric: tabular-nums;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+#page-reserva .reserva-history .amount.positive {
+  color: var(--reserva-green);
+}
+
+#page-reserva .reserva-history .amount.negative {
+  color: var(--reserva-coral);
+}
+
+@media (max-width: 640px) {
+  #page-reserva .style-reserva-container {
+    padding: 0 0.75rem;
+  }
+
+  #page-reserva .reserva-page-header {
+    margin-bottom: 1.1rem;
+  }
+
+  #page-reserva .reserva-page-heading h1 {
+    font-size: 1.5rem;
+  }
+
+  #page-reserva .reserva-overview-top {
+    align-items: flex-start;
+  }
+
+  #page-reserva .reserva-progress-summary {
+    padding: 0.45rem 0.65rem;
+    border: 1px solid rgba(53, 211, 154, 0.2);
+    border-radius: 8px;
+    background: rgba(53, 211, 154, 0.07);
+  }
+
+  #page-reserva .reserva-progress-summary span {
+    font-size: 0.68rem;
+  }
+
+  #page-reserva .reserva-progress-content {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 1.1rem;
+    padding-top: 1.1rem;
+  }
+
+  #page-reserva .reserva-balance strong {
+    font-size: 1.9rem;
+  }
+
+  #page-reserva .reserva-progress-scale {
+    font-size: 0.68rem;
+  }
+
+  #page-reserva .reserva-actions {
+    gap: 0.5rem;
+  }
+
+  #page-reserva .reserva-actions .btn-purple-action {
+    min-height: 68px;
+    flex-direction: column;
+    gap: 0.25rem;
+    padding: 0.55rem 0.35rem;
+    font-size: 0.75rem;
+    text-align: center;
+  }
+
+  #page-reserva .reserva-history-header {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  #page-reserva .reserva-history .timeline-item {
+    grid-template-columns: 36px minmax(0, 1fr) auto;
+    gap: 0.6rem;
+  }
+
+  #page-reserva .reserva-history .icon-box {
+    width: 36px;
+    height: 36px;
+  }
+
+  #page-reserva .reserva-history .amount {
+    font-size: 0.8rem;
+  }
+}
+
+@media (max-width: 380px) {
+  #page-reserva .reserva-overview-top {
+    flex-direction: column;
+  }
+
+  #page-reserva .reserva-progress-summary {
+    align-items: flex-start;
+  }
+
+  #page-reserva .reserva-progress-scale {
+    flex-wrap: wrap;
+  }
+
+  #page-reserva .reserva-progress-scale span:nth-child(2) {
+    order: 1;
+    width: 100%;
+    text-align: left;
+  }
 }

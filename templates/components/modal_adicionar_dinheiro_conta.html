@@ -1,0 +1,65 @@
+<div id="modalAdicionarDinheiro" class="duckfy-modal">
+    <div class="dash-card modal-content">
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <h3 class="card-section-title m-0">Depositar dinheiro</h3>
+            <button type="button" class="btn-close-custom" data-close-modal>&times;</button>
+        </div>
+
+        <form action="{{ url_for('adicionar_dinheiro') }}" method="POST" id="formAdicionarDinheiro">
+            <div class="mb-3">
+                    <label for="contaAdicionarDinheiro" class="card-subtitle d-block mb-1">
+                    Conta a adicionar  
+                </label>
+
+                <div class="input-icon-wrapper">
+                    <select name="id_conta" id="contaAdicionarDinheiro" class="search-input" required>
+                        <option value="" disabled {% if not request.args.get('conta_id')|int %}selected{% endif %}>Selecione onde adicionar</option>
+
+                        {% for conta in contas_bancarias %}
+                        <option value="{{ conta.id_conta }}" data-saldo="{{ conta.saldo_atual }}"
+                            data-reservado="{{ conta.valor_alocado|default(0, true) }}"
+                            {% if (request.args.get('conta_id')|int) == conta.id_conta %}selected{% endif %}>
+                            {{ conta.nome_conta }}
+                        </option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <div class="detalhes-saldo-conta" id="detalhesSaldoAdicionar" aria-live="polite" hidden>
+                    <span>Total <strong id="totalAdicionar">R$ 0,00</strong></span>
+                    <span>Na reserva <strong id="reservadoAdicionar">R$ 0,00</strong></span>
+                    <span>Disponível <strong id="disponivelAdicionar">R$ 0,00</strong></span>
+                </div>
+            </div>
+
+            <div class="mb-3">
+                <label for="valorAdicionarDinheiro" class="card-subtitle d-block mb-1">
+                    Valor a adicionar (R$)
+                </label>
+
+                <div class="input-icon-wrapper">
+                    <input type="text" name="valor" id="valorAdicionarDinheiro" class="search-input" placeholder="0,00"
+                        inputmode="decimal" data-currency-input data-invalid-message="Para depositar, informe quanto quer acrescentar à conta." min="0.01" required>
+                </div>
+            </div>
+
+            <div class="resumo-saldo-conta mb-3" id="resumoAdicionarDinheiro" hidden aria-live="polite">
+                <div class="d-flex justify-content-between align-items-center mb-2">
+                    <span class="card-subtitle">Saldo total após adicionar</span>
+                    <strong id="saldoFinalAdicionar">R$ 0,00</strong>
+                </div>
+                <small class="card-subtitle">O valor reservado permanece separado do saldo disponível.</small>
+            </div>
+
+            <div class="d-flex gap-2 mt-3">
+                <button type="button" class="btn-danger-action w-100" data-close-modal>
+                    Cancelar
+                </button>
+
+                <button type="submit" class="btn-confirm-action w-100">
+                    Depositar dinheiro
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
