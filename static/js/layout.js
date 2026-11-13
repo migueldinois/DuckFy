@@ -9,8 +9,13 @@ document.addEventListener("DOMContentLoaded", () => {
 
     const recolhida = sidebar.classList.contains("collapsed");
     const temaClaro = document.documentElement.classList.contains("tema-claro");
+    const paleta = localStorage.getItem("duckfy-daltonismo") || "normal";
+    const chavePaleta = `logoRecolhida${paleta.charAt(0).toUpperCase()}${paleta.slice(1)}`;
+    const origemRecolhida = logo.dataset[chavePaleta]
+      || (temaClaro ? logo.dataset.logoRecolhidaClaro : logo.dataset.logoRecolhidaEscuro)
+      || logo.dataset.logoRecolhida;
     const origem = recolhida
-      ? logo.dataset.logoRecolhida
+      ? origemRecolhida
       : temaClaro
         ? logo.dataset.logoClaro
         : logo.dataset.logoEscuro;
@@ -44,6 +49,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
     atualizarLogoSidebar(false);
   }
+
+  document.addEventListener("duckfy:logo-update", () => atualizarLogoSidebar());
 
   const conteudoPrincipal = document.querySelector(".main-content");
   const linksNavegacao = document.querySelectorAll(

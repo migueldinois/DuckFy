@@ -51,6 +51,15 @@
             <nav class="login-opcoes">
                 <button
                     type="button"
+                    class="login-acessibilidade-toggle"
+                    data-abrir-acessibilidade
+                    aria-label="Abrir configurações de acessibilidade"
+                    aria-haspopup="dialog"
+                    title="Acessibilidade">
+                    <i class="bi bi-universal-access" aria-hidden="true"></i>
+                </button>
+                <button
+                    type="button"
                     id="btn-tema"
                     aria-label="Ativar tema claro"
                     title="Ativar tema claro">
@@ -130,11 +139,14 @@
 
     </main>
 
+    {% include 'components/modal_acessibilidade.html' %}
+
     <!-- conecta o javascript da página -->
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="{{ url_for('static', filename='js/sweetalert-messages.js') }}"></script>
     <script src="{{ url_for('static', filename='js/particulas.js') }}"></script>
     <script src="{{ url_for('static', filename='js/login.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/acessibilidade.js') }}" defer></script>
 
 </body>
 

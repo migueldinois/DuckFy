@@ -35,6 +35,7 @@ document.addEventListener("DOMContentLoaded", function () {
         localStorage.setItem("duckfy-tema", tema);
 
         atualizarLogo();
+        document.dispatchEvent(new Event("duckfy:logo-update"));
 
         botoesTema.forEach((botao) => {
             botao.setAttribute(
