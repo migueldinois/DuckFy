@@ -8,7 +8,7 @@ from dotenv import load_dotenv
 from datetime import datetime, timedelta
 from flask_mail import Mail, Message
 import requests
-from flask import Flask, render_template, request, redirect, session, flash, url_for
+from flask import Flask, jsonify, render_template, request, redirect, session, flash, url_for
 from decimal import Decimal, InvalidOperation
 
 # importa a função para proteger nomes de arquivos enviados
@@ -503,44 +503,63 @@ def excluir_conta(id_conta):
 # cadastra uma nova conta bancária
 @app.route('/contas/criar', methods=['POST'])
 def criar_conta():
+    requisicao_ajax = request.headers.get("X-Requested-With") == "XMLHttpRequest"
+
+    def responder_erro(mensagem, status=400, destino="contas"):
+        if requisicao_ajax:
+            return jsonify(success=False, message=mensagem), status
+        flash(mensagem, "error")
+        return redirect(url_for(destino))
+
     if "usuario" not in session or "id_usuario" not in session:
-        flash("Faça login novamente para cadastrar uma conta.", "error")
-        return redirect(url_for('login'))
+        return responder_erro("Faça login novamente para cadastrar uma conta.", 401, "login")
 
     id_usuario = session.get('id_usuario')
     nome_conta = request.form.get('nome_conta', '').strip()
     tipo_conta = request.form.get('tipo_conta', '').strip()
     saldo_atual = request.form.get('saldo_atual', '0').strip()
 
-    # verifica se os campos obrigatórios foram preenchidos
     if not nome_conta or not tipo_conta:
-        flash("Preencha todos os campos.", "error")
-        return redirect(url_for('contas'))
+        return responder_erro("Preencha todos os campos.")
 
-    # valida o saldo e cria a conta
     try:
         saldo_atual = parse_valor_monetario(saldo_atual)
+    except (ValueError, TypeError, InvalidOperation):
+        return responder_erro("Informe um saldo válido.")
 
-        if not saldo_atual.is_finite() or saldo_atual < 0:
-            raise ValueError
-        if saldo_atual > ContaBancaria.SALDO_MAXIMO:
-            flash("O saldo máximo por conta é R$ 99.999.999,99.", "error")
-            return redirect(url_for('contas'))
+    if not saldo_atual.is_finite() or saldo_atual < 0:
+        return responder_erro("Informe um saldo válido.")
 
-        sucesso = ContaBancaria.criar_conta(
+    if saldo_atual > ContaBancaria.SALDO_MAXIMO:
+        return responder_erro("O saldo máximo por conta é R$ 99.999.999,99.")
+
+    if requisicao_ajax:
+        id_conta_criada = ContaBancaria.criar_conta(
             id_usuario,
             nome_conta,
             tipo_conta,
-            saldo_atual
+            saldo_atual,
+            retornar_id=True
+        )
+        if not id_conta_criada:
+            return responder_erro("Não foi possível criar a conta bancária.", 500)
+
+        return jsonify(
+            success=True,
+            account={
+                "id_conta": id_conta_criada,
+                "nome_conta": nome_conta,
+                "tipo_conta": tipo_conta,
+                "saldo_atual": str(saldo_atual),
+                "saldo_formatado": moeda_br(saldo_atual),
+            }
         )
 
-        if sucesso:
-            flash("Conta bancária criada com sucesso!", "success")
-        else:
-            flash("Não foi possível criar a conta bancária.", "error")
-
-    except (ValueError, TypeError, InvalidOperation):
-        flash("Informe um saldo válido.", "error")
+    sucesso = ContaBancaria.criar_conta(id_usuario, nome_conta, tipo_conta, saldo_atual)
+    if sucesso:
+        flash("Conta bancária criada com sucesso!", "success")
+    else:
+        flash("Não foi possível criar a conta bancária.", "error")
 
     return redirect(url_for('contas'))
 
@@ -1096,36 +1115,63 @@ def tela_subcategorias():
 # cadastra uma nova categoria
 @app.route("/categorias/criar", methods=["POST"])
 def adicionar_categoria():
-    if "usuario" in session:
-        # recebe os dados da categoria
-        nome = request.form.get("nome")
-        tipo = request.form.get("tipo")
+    requisicao_ajax = request.headers.get("X-Requested-With") == "XMLHttpRequest"
 
-        # converte o tipo para o formato do banco
-        if tipo == "SAIDA":
-            tipo = "Despesa"
-        elif tipo == "ENTRADA":
-            tipo = "Receita"
-        emoji = request.form.get("emoji")
-        cor = request.form.get("cor")
+    def responder_erro(mensagem, status=400, destino="categorias"):
+        if requisicao_ajax:
+            return jsonify(success=False, message=mensagem), status
+        flash(mensagem, "error")
+        return redirect(url_for(destino))
 
-        # verifica se todos os campos foram preenchidos
-        if not nome or not tipo or not emoji or not cor:
-            flash("Todos os campos são obrigatórios!", "error")
-            return redirect('/categorias')
+    if "usuario" not in session or not session.get("id_usuario"):
+        return responder_erro("Você precisa estar logado para adicionar categorias!", 401, "login")
 
-        # salva a categoria
-        categoria_criada = Categoria.criar_categoria(session["id_usuario"], nome, tipo, emoji, cor)
+    nome = request.form.get("nome", "").strip()
+    tipo_formulario = request.form.get("tipo", "").strip().upper()
+    emoji = request.form.get("emoji", "").strip()
+    cor = request.form.get("cor", "").strip()
 
-        if categoria_criada:
-            flash("Categoria criada com sucesso!", "success")
-        else:
-            flash("Erro ao criar categoria. Tente novamente.", "error")
+    tipos_categoria = {"SAIDA": "Despesa", "ENTRADA": "Receita"}
+    tipo = tipos_categoria.get(tipo_formulario)
+    cor_valida = (
+        len(cor) == 7
+        and cor.startswith("#")
+        and all(caractere in "0123456789abcdefABCDEF" for caractere in cor[1:])
+    )
 
-        return redirect('/categorias')
+    if not nome or not tipo or not emoji or not cor_valida:
+        return responder_erro("Preencha todos os campos com valores válidos.")
+
+    if requisicao_ajax:
+        id_categoria_criada = Categoria.criar_categoria(
+            session["id_usuario"],
+            nome,
+            tipo,
+            emoji,
+            cor,
+            retornar_id=True
+        )
+        if not id_categoria_criada:
+            return responder_erro("Erro ao criar categoria. Tente novamente.", 500)
+
+        return jsonify(
+            success=True,
+            categoria={
+                "id_categoria": id_categoria_criada,
+                "nome": nome,
+                "tipo": tipo_formulario.lower(),
+                "emoji": emoji,
+                "cor": cor,
+            }
+        )
+
+    categoria_criada = Categoria.criar_categoria(session["id_usuario"], nome, tipo, emoji, cor)
+    if categoria_criada:
+        flash("Categoria criada com sucesso!", "success")
     else:
-        flash("Você precisa estar logado para adicionar categorias!", "error")
-        return redirect('/login')
+        flash("Erro ao criar categoria. Tente novamente.", "error")
+
+    return redirect(url_for("categorias"))
 
 
 # exclui uma categoria

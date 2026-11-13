@@ -2,14 +2,19 @@
 <link rel="stylesheet" href="{{ url_for('static', filename='css/duckfy-modal.css') }}">
 <link rel="stylesheet" href="{{ url_for('static', filename='css/emoji-picker.css') }}?v=5">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@simonwep/pickr@1.10.2/dist/themes/classic.min.css">
+{% if modal_lancamento %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/modal-categoria-lancamento.css') }}">
+{% endif %}
 
 <!-- modal de nova categoria -->
-<div id="modalNovaCategoria" class="duckfy-modal">
-    <div class="dash-card modal-content">
+<div id="{{ 'modalCriarCategoriaLancamento' if modal_lancamento else 'modalNovaCategoria' }}"
+    class="duckfy-modal{% if modal_lancamento %} lancamento-categoria-modal{% endif %}"
+    {% if modal_lancamento %}aria-hidden="true"{% endif %}>
+    <div class="dash-card modal-content" {% if modal_lancamento %}role="dialog" aria-modal="true" aria-labelledby="titulo-modal-criar-categoria"{% endif %}>
 
         <!-- cabeçalho -->
         <div class="d-flex justify-content-between align-items-center mb-3">
-            <h3 class="card-section-title m-0">Nova Categoria</h3>
+            <h3 class="card-section-title m-0" {% if modal_lancamento %}id="titulo-modal-criar-categoria"{% endif %}>Nova Categoria</h3>
 
             <button type="button" class="btn-close-custom" data-close-modal>
                 &times;
@@ -17,7 +22,10 @@
         </div>
 
         <!-- formulário -->
-        <form action="/categorias/criar" method="POST">
+        <form action="{{ url_for('adicionar_categoria') }}" method="POST" {% if modal_lancamento %}data-category-create-form{% endif %}>
+            {% if modal_lancamento %}
+            <div class="category-create-feedback" data-category-form-feedback role="alert" hidden></div>
+            {% endif %}
 
             <!-- campo nome -->
             <div class="mb-3">
