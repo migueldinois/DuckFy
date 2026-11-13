@@ -24,12 +24,14 @@
         <div class="cartao-usuario-destaque p-4 rounded-4 d-flex flex-column flex-sm-row align-items-center justify-content-between gap-3">
             <div class="d-flex flex-column flex-sm-row align-items-center gap-3 text-center text-sm-start">
                 <div class="avatar-container flex-shrink-0">
-                    {% if usuario.foto_perfil %}
+                    {% if usuario.foto_perfil and 'placehold.co/400x400' not in usuario.foto_perfil %}
                         <img src="{{ usuario.foto_perfil }}" alt="Foto de {{ usuario.nome }}" class="avatar rounded-circle object-fit-cover">
                     {% else %}
-                        <div class="avatar rounded-circle d-flex align-items-center justify-content-center bg-purple-glow">
-                            <i class="fa-solid fa-user text-white fs-2"></i>
-                        </div>
+                        <img
+                            src="https://ui-avatars.com/api/?name={{ usuario.nome[0] | urlencode }}&background=7c4dff&color=ffffff&bold=true&size=128&format=svg"
+                            alt="Avatar com a inicial de {{ usuario.nome }}"
+                            class="avatar rounded-circle object-fit-cover"
+                        >
                     {% endif %}
                 </div>
 
@@ -91,6 +93,17 @@
                 <i class="fa-solid fa-chevron-right seta"></i>
             </a>
 
+            <a href="{{ url_for('acessibilidade') }}" class="item-lista-config"
+                data-abrir-acessibilidade aria-haspopup="dialog">
+                <div class="d-flex align-items-center gap-3">
+                    <div class="icone-box">
+                        <i class="fa-solid fa-universal-access" aria-hidden="true"></i>
+                    </div>
+                    <span class="texto-item">Acessibilidade</span>
+                </div>
+                <i class="fa-solid fa-chevron-right seta"></i>
+            </a>
+
             <a href="{{ url_for('logout') }}" class="item-lista-config sair" data-confirmar-logout>
                 <div class="d-flex align-items-center gap-3">
                     <div class="icone-box icone-sair">
@@ -105,5 +118,6 @@
     </section>
 
 </div>
+{% include 'components/modal_acessibilidade.html' %}
 {% endblock %}
 

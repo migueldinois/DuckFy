@@ -1,31 +1,24 @@
-const dialogConfirmarLogout = document.getElementById("dialog-confirmar-logout");
-const botaoCancelarLogout = document.getElementById("cancelar-logout");
-const botaoConfirmarLogout = document.getElementById("confirmar-logout");
-let urlLogoutSelecionada = "";
+document.addEventListener("click", async (event) => {
+    const linkSair = event.target.closest("[data-confirmar-logout]");
+    if (!linkSair) return;
 
-if (dialogConfirmarLogout && botaoCancelarLogout && botaoConfirmarLogout) {
-    document.addEventListener("click", (event) => {
-        const linkSair = event.target.closest("[data-confirmar-logout]");
-        if (!linkSair) return;
-
-        event.preventDefault();
-        urlLogoutSelecionada = linkSair.href;
-        dialogConfirmarLogout.showModal();
+    event.preventDefault();
+    const confirmado = await window.DuckFyAlert.confirm({
+        title: "Sair da conta?",
+        text: "Você deseja realmente sair da sua conta?",
+        confirmButtonText: "Sair da conta",
+        cancelButtonText: "Cancelar"
     });
 
-    botaoCancelarLogout.addEventListener("click", () => {
-        dialogConfirmarLogout.close();
-    });
-
-    botaoConfirmarLogout.addEventListener("click", () => {
-        if (urlLogoutSelecionada) {
-            window.location.assign(urlLogoutSelecionada);
-        }
-    });
-
-    dialogConfirmarLogout.addEventListener("click", (event) => {
-        if (event.target === dialogConfirmarLogout) {
-            dialogConfirmarLogout.close();
-        }
-    });
-}
+    if (confirmado) {
+        localStorage.removeItem("duckfy-fonte");
+        localStorage.removeItem("duckfy-daltonismo");
+        document.documentElement.style.removeProperty("font-size");
+        document.documentElement.classList.remove(
+            "daltonismo-protanopia",
+            "daltonismo-deuteranopia",
+            "daltonismo-tritanopia"
+        );
+        window.location.assign(linkSair.href);
+    }
+});

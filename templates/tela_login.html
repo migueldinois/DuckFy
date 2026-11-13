@@ -18,6 +18,7 @@
     <!-- conecta os arquivos css -->
     <link rel="stylesheet" href="{{ url_for('static', filename='css/variables.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/login.css') }}">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
 
     <!-- importa os ícones flaticon -->
     <link rel="stylesheet"
@@ -38,9 +39,9 @@
             <!-- logo que direciona para a página inicial -->
             <a href="/" class="login-logo" aria-label="DuckFy - Página inicial">
                 <img
-                    src="{{ url_for('static', filename='img/logo_escura.png') }}"
-                    data-logo-claro="{{ url_for('static', filename='img/logo_clara.png') }}"
-                    data-logo-escuro="{{ url_for('static', filename='img/logo_escura.png') }}"
+                    src="{{ url_for('static', filename='img/logo_clara.png') }}"
+                    data-logo-claro="{{ url_for('static', filename='img/logo_escura.png') }}"
+                    data-logo-escuro="{{ url_for('static', filename='img/logo_clara.png') }}"
                     alt="Logo DuckFy"
                     class="logo-imagem">
             </a>
@@ -52,7 +53,7 @@
                     id="btn-tema"
                     aria-label="Ativar tema claro"
                     title="Ativar tema claro">
-                    <i class="fi fi-sr-contrast" aria-hidden="true"></i>
+                    <i class="bi bi-brightness-high-fill theme-switch-icon" aria-hidden="true"></i>
                 </button>
             </nav>
 
@@ -80,6 +81,7 @@
                             name="email"
                             placeholder="Digite seu e-mail"
                             autocomplete="email"
+                            data-invalid-message="Informe um e-mail válido."
                             required>
                     </div>
 
@@ -95,6 +97,7 @@
                             name="senha"
                             placeholder="Digite sua senha"
                             autocomplete="current-password"
+                            data-invalid-message="Informe sua senha."
                             required>
                     </div>
 
@@ -131,6 +134,7 @@
     <!-- conecta o javascript da página -->
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="{{ url_for('static', filename='js/sweetalert-messages.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/particulas.js') }}"></script>
     <script src="{{ url_for('static', filename='js/login.js') }}"></script>
 
 </body>

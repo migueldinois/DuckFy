@@ -2,8 +2,8 @@
 {% extends 'layout.html' %}
 
 {% block extra_css %}
-<link rel="stylesheet" href="{{ url_for('static', filename='css/contas.css') }}?v=2">
-<link rel="stylesheet" href="{{ url_for('static', filename='css/duckfy-modal.css') }}?v=2">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/contas.css') }}?v=10">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/duckfy-modal.css') }}?v=9">
 {% endblock %}
 
 
@@ -27,7 +27,7 @@
     <article class="card-patrimonio">
       <span class="card-rotulo">Patrimônio total</span>
       <h2 class="card-valor">
-        R$ {{ patrimonio_total|default('0,00', true) }}
+        R$ {{ patrimonio_total|default(0, true)|moeda_br }}
       </h2>
       <p class="card-descricao">Soma dos saldos de todas as contas, incluindo a reserva.</p>
     </article>
@@ -35,7 +35,7 @@
     <article class="card-patrimonio card-reserva">
       <span class="card-rotulo">Reserva de emergência</span>
       <h2 class="card-valor">
-        R$ {{ reserva_total|default('0,00', true) }}
+        R$ {{ reserva_total|default(0, true)|moeda_br }}
       </h2>
       <p class="card-descricao">Valor separado para imprevistos, já incluído no patrimônio total.</p>
       <span class="card-detalhe-reserva">
@@ -50,7 +50,7 @@
     <article class="card-patrimonio">
       <span class="card-rotulo">Dinheiro disponível</span>
       <h2 class="card-valor">
-        R$ {{ saldo_fora_reserva|default('0,00', true) }}
+        R$ {{ saldo_fora_reserva|default(0, true)|moeda_br }}
       </h2>
       <p class="card-descricao">Valor que não está separado para a reserva de emergência.</p>
     </article>
@@ -97,7 +97,7 @@
           </span>
           {% if conta.valor_alocado|default(0, true)|float > 0 %}
           <span class="alocacao-reserva">
-            Na reserva: R$ {{ '%.2f'|format(conta.valor_alocado|float)|replace('.', ',') }}
+            Na reserva: {{ conta.valor_alocado|float|moeda_br }}
           </span>
           {% endif %}
         </div>
@@ -108,12 +108,10 @@
         <div class="saldo-banco">
           <span class="card-subtitle d-block">Disponível</span>
           <strong>
-            R$ {{ '%.2f'|format(
-                (conta.saldo_atual|float - conta.valor_alocado|default(0, true)|float)
-            )|replace('.', ',') }}
+            R$ {{ (conta.saldo_atual|float - conta.valor_alocado|default(0, true)|float)|moeda_br }}
           </strong>
           <small class="card-subtitle d-block mt-1">
-            Saldo total: R$ {{ '%.2f'|format(conta.saldo_atual|float)|replace('.', ',') }}
+            Saldo total: R$ {{ conta.saldo_atual|default(0, true)|moeda_br }}
           </small>
         </div>
 
@@ -177,6 +175,7 @@
       botao.addEventListener('click', () => {
         nome.value = botao.dataset.nome || '';
         tipo.value = botao.dataset.tipo || '';
+        tipo.dispatchEvent(new Event('change', { bubbles: true }));
         saldo.value = botao.dataset.saldo || '0';
         const totalAtual = Number(botao.dataset.saldo || 0);
         const reservadoAtual = Number(botao.dataset.reservado || 0);
@@ -341,9 +340,9 @@
       let mensagem = '';
 
       if (origem.value && destino.value && origem.value === destino.value) {
-        mensagem = 'Escolha contas diferentes para origem e destino.';
+        mensagem = 'A conta de origem e a conta de destino precisam ser diferentes.';
       } else if (dadosOrigem && valor > dadosOrigem.disponivel) {
-        mensagem = `Valor acima do disponível na origem. Máximo: ${formatarMoeda(dadosOrigem.disponivel)}.`;
+        mensagem = `O valor informado ultrapassa o saldo disponível. Você pode transferir até ${formatarMoeda(dadosOrigem.disponivel)}.`;
       }
 
       erroTransferencia.textContent = mensagem;
@@ -363,7 +362,7 @@
 
     origem?.addEventListener('change', validarTransferencia);
     destino?.addEventListener('change', validarTransferencia);
-    valorTransferencia?.addEventListener('input', validarTransferencia);
+    valorTransferencia?.addEventListener('currency:formatted', validarTransferencia);
     alternar?.addEventListener('click', () => {
       const valorOrigem = origem.value;
       origem.value = destino.value;

@@ -7,10 +7,18 @@
 
     <script>
         try {
-            if (localStorage.getItem("duckfy-tema") === "claro") {
-                document.documentElement.classList.add("tema-claro");
+            const raiz = document.documentElement;
+            const tema = localStorage.getItem("duckfy-tema") || "escuro";
+            const tamanhoFonte = Number(localStorage.getItem("duckfy-fonte") || 100);
+            const paleta = localStorage.getItem("duckfy-daltonismo") || "normal";
+
+            raiz.classList.toggle("tema-claro", tema === "claro");
+            raiz.classList.remove("daltonismo-protanopia", "daltonismo-deuteranopia", "daltonismo-tritanopia");
+            if (["protanopia", "deuteranopia", "tritanopia"].includes(paleta)) {
+                raiz.classList.add(`daltonismo-${paleta}`);
             }
-        } catch { }
+            raiz.style.fontSize = `${Math.min(140, Math.max(90, tamanhoFonte))}%`;
+        } catch {}
     </script>
 
     <title>{% block title %}DuckFy{% endblock %}</title>
@@ -31,6 +39,7 @@
     {% block extra_css %}{% endblock %}
     {% block styles %}{% endblock %}
     <link rel="stylesheet" href="{{ url_for('static', filename='css/tema-claro.css') }}?v=2.6">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/acessibilidade.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/botao-voltar.css') }}">
 </head>
 
@@ -50,9 +59,10 @@
 
             <a href="/dashboard" class="sidebar-brand" title="DuckFy">
 
-                <img src="{{ url_for('static', filename='img/logo_duckfy04.png') }}"
+                <img src="{{ url_for('static', filename='img/logo_clara.png') }}"
                     data-logo-claro="{{ url_for('static', filename='img/logo_escura.png') }}"
-                    data-logo-escuro="{{ url_for('static', filename='img/logo_duckfy04.png') }}" alt="DuckFy"
+                    data-logo-escuro="{{ url_for('static', filename='img/logo_clara.png') }}" alt="DuckFy"
+                    data-logo-recolhida="{{ url_for('static', filename='img/d.png') }}"
                     class="sidebar-logo">
             </a>
 
@@ -74,7 +84,7 @@
                     </a>
                 </li>
 
-                <!-- contas bancarias -->
+                <!-- contas bancárias -->
                 <li>
                     <a href="/contas"
                         class="sidebar-link {% if request.path.rstrip('/') == '/contas' %}active{% endif %}"
@@ -98,7 +108,18 @@
                     </a>
                 </li>
 
-                <!-- lancamentos -->
+                <!-- subcategorias -->
+                <li>
+                    <a href="{{ url_for('tela_subcategorias') }}"
+                        class="sidebar-link {% if request.path.rstrip('/') == '/subcategorias' %}active{% endif %}"
+                        title="Subcategorias" {% if request.path.rstrip('/') == '/subcategorias' %}aria-current="page"{% endif %}>
+                        <img src="{{ url_for('static', filename='img/icons/subcategoria.svg') }}" alt=""
+                            class="sidebar-icon">
+                        <span class="brand-text">Subcategorias</span>
+                    </a>
+                </li>
+
+                <!-- lançamentos -->
                 <li>
                     <a href="/lancamento"
                         class="sidebar-link {% if request.path.rstrip('/') == '/lancamento' %}active{% endif %}"
@@ -110,7 +131,7 @@
                     </a>
                 </li>
 
-                <!-- reserva de emergencia -->
+                <!-- reserva de emergência -->
                 <li>
                     <a href="/reserva_emergencia"
                         class="sidebar-link {% if request.path.rstrip('/') == '/reserva_emergencia' %}active{% endif %}"
@@ -133,7 +154,7 @@
                     </a>
                 </li>
 
-                <!-- simulador de patrimonio -->
+                <!-- simulador de patrimônio -->
                 <li>
                     <a href="/simulador"
                         class="sidebar-link {% if request.path.rstrip('/') == '/simulador' %}active{% endif %}"
@@ -145,7 +166,7 @@
                     </a>
                 </li>
 
-                <!-- sequencia -->
+                <!-- sequência -->
                 <li class="mt-auto">
                     <a href="/sequencia"
                         class="sidebar-link {% if request.path.rstrip('/') == '/sequencia' %}active{% endif %}"
@@ -168,12 +189,11 @@
                     </a>
                 </li>
 
-                <!-- botão para alternar entre os temas -->
                 <li>
-                    <button type="button" id="btn-tema" class="sidebar-link theme-switch"
+                    <button type="button" class="sidebar-link sidebar-theme-toggle" data-theme-toggle
                         aria-label="Ativar tema claro" title="Ativar tema claro">
-                        <i id="icone-tema" class="bi bi-brightness-high-fill theme-switch-icon" aria-hidden="true"></i>
-                        <span id="texto-tema" class="brand-text">Tema claro</span>
+                        <i class="bi bi-sun-fill sidebar-icon" data-theme-icon aria-hidden="true"></i>
+                        <span class="brand-text" data-theme-label>Tema claro</span>
                     </button>
                 </li>
 
@@ -223,6 +243,7 @@
 
     <!-- tema -->
     <script src="{{ url_for('static', filename='js/tema.js') }}" defer></script>
+    <script src="{{ url_for('static', filename='js/acessibilidade.js') }}" defer></script>
 
     <!-- gerenciamento de modais -->
     <script src="{{ url_for('static', filename='js/modalManager.js') }}"></script>

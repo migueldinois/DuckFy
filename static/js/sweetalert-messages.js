@@ -43,17 +43,39 @@
   const mostrarMensagens = async () => {
     const criarConfiguracao = (elemento) => {
       const tipo = elemento.dataset.swalType;
-      return {
+      const configuracao = {
         icon: tipo === 'success' || tipo === 'withdrawal' || tipo === 'transaction_success' ? 'success' : tipo === 'error' ? 'error' : tipo === 'warning' ? 'warning' : 'info',
-        title: tipo === 'transaction_success' ? 'Lançamento realizado!' : tipo === 'success' ? 'Ação concluída' : tipo === 'withdrawal' ? 'Retirada concluída' : tipo === 'error' ? 'Confira esta informação' : tipo === 'warning' ? 'Atenção' : 'Aviso',
+        title: elemento.dataset.swalTitle || (tipo === 'transaction_success' ? 'Lançamento realizado!' : tipo === 'success' ? 'Ação concluída' : tipo === 'withdrawal' ? 'Retirada concluída' : tipo === 'error' ? 'Confira esta informação' : tipo === 'warning' ? 'Atenção' : 'Aviso'),
         text: elemento.dataset.swalMessage,
         confirmButtonText: 'Entendi'
       };
+
+      if (elemento.dataset.swalActionUrl) {
+        Object.assign(configuracao, {
+          showCancelButton: true,
+          confirmButtonText: elemento.dataset.swalActionText || 'Criar nova conta',
+          cancelButtonText: elemento.dataset.swalCancelText || 'Entendi',
+          reverseButtons: true
+        });
+      }
+
+      return configuracao;
     };
 
     document.querySelectorAll('[data-swal-message][data-swal-modal]').forEach((elemento) => {
       const modal = document.querySelector(elemento.dataset.swalModal);
-      modal?.addEventListener('shown.bs.modal', () => mostrar(criarConfiguracao(elemento)));
+      modal?.addEventListener('shown.bs.modal', async () => {
+        const resultado = await mostrar(criarConfiguracao(elemento));
+        const urlAcao = elemento.dataset.swalActionUrl;
+        if (!urlAcao) return;
+
+        if (resultado.isConfirmed) {
+          window.location.assign(urlAcao);
+          return;
+        }
+
+        window.bootstrap?.Modal.getOrCreateInstance(modal).hide();
+      }, { once: Boolean(elemento.dataset.swalActionUrl) });
     });
 
     const mensagens = Array.from(document.querySelectorAll('[data-swal-message]:not([data-swal-modal])'));
@@ -74,7 +96,9 @@
     mostrar({
       icon: 'warning',
       title: 'Verifique os dados',
-      text: campo.dataset.invalidMessage || campo.validationMessage || 'Confira os campos obrigatórios.',
+      text: campo.validity.valueMissing
+        ? campo.dataset.invalidMessage || 'Este campo é obrigatório.'
+        : campo.validationMessage || campo.dataset.invalidMessage || 'Verifique o valor informado.',
       confirmButtonText: 'Corrigir'
     }).then(() => {
       campo.focus({ preventScroll: true });

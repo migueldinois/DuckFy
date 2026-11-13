@@ -590,7 +590,9 @@
 }
 
 .conquista.desbloqueada {
-    border-color: rgba(0, 230, 118, .25);
+    border-color: rgba(0, 230, 118, .58);
+    background: linear-gradient(130deg, rgba(0, 230, 118, .13), rgba(0, 230, 118, .04)), var(--bg-surface-2, #181826);
+    box-shadow: 0 8px 20px rgba(0, 230, 118, .1), inset 0 0 0 1px rgba(0, 230, 118, .08);
 }
 
 .conquista-icone {
@@ -606,8 +608,12 @@
 }
 
 .conquista.desbloqueada .conquista-icone {
-    background: rgba(0, 230, 118, .1);
+    background: rgba(0, 230, 118, .2);
     color: #00e676;
+}
+
+.conquista.desbloqueada .conquista-recompensa {
+    background: rgba(0, 230, 118, .18);
 }
 
 .conquista.bloqueada .conquista-icone {
@@ -622,6 +628,25 @@
 
 .conquista-info strong {
     display: block;
+.conquista-recompensa {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    margin-top: 10px;
+    padding: 5px 8px;
+    border-radius: 6px;
+    background: rgba(0, 230, 118, .1);
+    color: var(--accent-secondary, #58e4a0);
+    font-size: 11px;
+    font-weight: 700;
+}
+
+.conquista-recompensa small {
+    color: var(--text-muted, #a0a0b5);
+    font-size: 10px;
+    font-weight: 500;
+}
+
     margin-bottom: 8px;
     overflow-wrap: break-word;
     color: var(--text-primary, #ffffff);
@@ -635,6 +660,25 @@
     color: var(--text-muted, #a0a0b5);
     font-size: 12px;
     line-height: 1.7;
+}
+
+.conquista-recompensa {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    margin-top: 10px;
+    padding: 5px 8px;
+    border-radius: 6px;
+    background: rgba(0, 230, 118, .1);
+    color: var(--accent-secondary, #58e4a0);
+    font-size: 11px;
+    font-weight: 700;
+}
+
+.conquista-recompensa small {
+    color: var(--text-muted, #a0a0b5);
+    font-size: 10px;
+    font-weight: 500;
 }
 
 .conquista-status {

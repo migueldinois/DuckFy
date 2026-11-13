@@ -1,33 +1,25 @@
 {% extends 'layout.html' %}
 
 {% block title %}Dashboard Financeiro - DuckFy{% endblock %}
+{% block extra_css %} <link rel="stylesheet" href="/static/css/extrato.css">{% endblock %}
 
 {% block styles %}
-<link rel="stylesheet" href="{{ url_for('static', filename='css/extrato.css') }}?v=2.3">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/extrato.css') }}?v=2.7">
 {% endblock %}
 
 {% block content %}
 
-<main class="extrato-page">
-
-    {% with messages = get_flashed_messages(with_categories=true) %}
-    {% for category, message in messages %}
-    <div class="alert alert-{{ 'success' if category == 'success' else 'danger' }} mb-3" role="alert">
-        {{ message }}
-    </div>
-    {% endfor %}
-    {% endwith %}
-
-    <!-- HEADER -->
-    <header class="header mb-4 pt-2">
-        <div class="d-flex align-items-center">
-            <a href="../" class="text-white text-decoration-none fs-4 me-3" aria-label="Voltar">
+<div class="extrato-shell">
+    <header class="extrato-header">
+        <div class="d-flex align-items-center gap-3">
+            <a href="../" class="btn-voltar-global text-white text-decoration-none fs-4 me-3" aria-label="Voltar">
                 <i class="bi bi-arrow-left"></i>
             </a>
             <h1 class="h3 mb-0 fw-bold text-white">Extrato</h1>
         </div>
     </header>
 
+<main class="extrato-page">
     <!-- TABS DE FILTRO -->
     <nav class="filter-tabs text-uppercase" aria-label="Filtrar movimentações">
         <a href="/extrato?tipo=tudo"
@@ -60,14 +52,53 @@
                 aria-label="Buscar por descrição, categoria ou conta" />
         </div>
 
-        <!-- Seletor de Período -->
-        <select id="periodSelect" class="custom-select" aria-label="Filtrar por período">
-            <option value="all">Todo o período</option>
-            <option value="current_month" selected>Este Mês</option>
-            <option value="last_month">Mês Anterior</option>
-            <option value="7_days">Últimos 7 dias</option>
-            <option value="30_days">Últimos 30 dias</option>
-        </select>
+        <!-- Seletor de intervalo de datas -->
+        <div class="date-range-filter">
+            <button type="button" id="dateRangeTrigger" class="date-range-trigger" aria-haspopup="dialog"
+                aria-expanded="false" aria-controls="dateRangePicker">
+                <i class="bi bi-calendar3" aria-hidden="true"></i>
+                <span id="dateRangeLabel">Este mês</span>
+                <i class="bi bi-chevron-down" aria-hidden="true"></i>
+            </button>
+
+            <section id="dateRangePicker" class="date-range-picker" role="dialog"
+                aria-label="Escolher intervalo de datas" hidden>
+                <aside class="date-range-presets" aria-label="Períodos rápidos">
+                    <button type="button" data-preset="today">Hoje</button>
+                    <button type="button" data-preset="last_7">Últimos 7 dias</button>
+                    <button type="button" data-preset="last_14">Últimos 14 dias</button>
+                    <button type="button" data-preset="last_30">Últimos 30 dias</button>
+                    <button type="button" data-preset="last_90">Últimos 90 dias</button>
+                    <button type="button" data-preset="yesterday">Ontem</button>
+                    <button type="button" data-preset="this_month">Este mês</button>
+                    <button type="button" data-preset="last_month">Mês passado</button>
+                    <button type="button" data-preset="this_year">Este ano</button>
+                </aside>
+
+                <div class="date-range-content">
+                    <p class="date-range-hint">Escolha o primeiro e o último dia</p>
+                    <div class="date-range-month-nav" aria-label="Navegar entre os meses">
+                        <button type="button" data-month-shift="-1" aria-label="Meses anteriores">
+                            <i class="bi bi-chevron-left" aria-hidden="true"></i>
+                        </button>
+                        <button type="button" data-month-shift="1" aria-label="Próximos meses">
+                            <i class="bi bi-chevron-right" aria-hidden="true"></i>
+                        </button>
+                    </div>
+                    <div class="date-range-calendars">
+                        <div class="date-calendar" data-calendar="0"></div>
+                        <div class="date-calendar" data-calendar="1"></div>
+                    </div>
+                    <footer class="date-range-footer">
+                        <output id="dateRangePreview" aria-live="polite"></output>
+                        <div>
+                            <button type="button" class="date-range-cancel">Cancelar</button>
+                            <button type="button" class="date-range-apply">Aplicar</button>
+                        </div>
+                    </footer>
+                </div>
+            </section>
+        </div>
     </div>
 
     <section class="timeline-container" aria-label="Movimentações">
@@ -92,9 +123,9 @@
 
             <div class="amount {% if eh_entrada %}positive{% else %}negative{% endif %}">
                 {% if eh_entrada %}
-                +R$ {{ "%.2f"|format(item.valor|float) }}
+                +R$ {{ item.valor|moeda_br }}
                 {% else %}
-                -R$ {{ "%.2f"|format(item.valor|float) }}
+                -R$ {{ item.valor|moeda_br }}
                 {% endif %}
             </div>
 
@@ -102,19 +133,18 @@
         {% endfor %}
         {% else %}
         <!-- Caso não exista nenhuma transação para a busca -->
-        <div class="text-center text-white-50 py-5">
-            <i class="bi bi-inbox fs-1 d-block mb-2"></i>
+        <div class="empty-state-message text-center text-white-50 py-5">
             <p>Nenhuma movimentação encontrada.</p>
         </div>
         {% endif %}
 
         <div id="no-filter-results" class="empty-filter-message" role="status" hidden>
-            <i class="bi bi-search fs-1 d-block mb-2"></i>
             <p>Nenhuma movimentação corresponde aos filtros.</p>
         </div>
 
     </section>
 </main>
+</div>
 
 {% endblock %}
 

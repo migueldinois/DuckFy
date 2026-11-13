@@ -117,9 +117,27 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         const ctx = canvas.getContext('2d');
+        const estilosRaiz = getComputedStyle(document.documentElement);
+        const lerCor = (variavel, padrao) => estilosRaiz.getPropertyValue(variavel).trim() || padrao;
+        const corMarca = lerCor('--brand-primary', '#7C4DFF');
+        const corDestaque = lerCor('--accent-primary', '#00E676');
+        const corTexto = lerCor('--text-primary', '#FFFFFF');
+        const corTextoSuave = lerCor('--text-muted', '#A0A0B0');
+        const corSuperficie = lerCor('--bg-surface-2', '#181826');
+        const corBorda = lerCor('--border-color', 'rgba(255, 255, 255, 0.15)');
+        const comOpacidade = (cor, opacidade) => {
+            const hexadecimal = cor.match(/^#([\da-f]{6})$/i);
+            if (!hexadecimal) return cor;
+
+            const valor = parseInt(hexadecimal[1], 16);
+            const vermelho = (valor >> 16) & 255;
+            const verde = (valor >> 8) & 255;
+            const azul = valor & 255;
+            return `rgba(${vermelho}, ${verde}, ${azul}, ${opacidade})`;
+        };
         const gradientPatrimonio = ctx.createLinearGradient(0, 0, 0, 300);
-        gradientPatrimonio.addColorStop(0, 'rgba(255, 255, 255, 0.25)');
-        gradientPatrimonio.addColorStop(1, 'rgba(255, 255, 255, 0.0)');
+        gradientPatrimonio.addColorStop(0, comOpacidade(corDestaque, 0.25));
+        gradientPatrimonio.addColorStop(1, comOpacidade(corDestaque, 0));
 
         window.meuGraficoSimulador = new Chart(ctx, {
             type: 'line',
@@ -129,27 +147,27 @@ document.addEventListener('DOMContentLoaded', () => {
                     {
                         label: 'CDI (Benchmark)',
                         data: dadosGrafico.investido,
-                        borderColor: '#7C4DFF',
+                        borderColor: corMarca,
                         borderWidth: 2,
                         borderDash: [5, 5],
                         fill: false,
                         tension: 0.1,
                         pointRadius: 0,
                         pointHoverRadius: 5,
-                        pointBackgroundColor: '#7C4DFF'
+                        pointBackgroundColor: corMarca
                     },
                     {
                         label: 'Rentabilidade',
                         data: dadosGrafico.patrimonio,
-                        borderColor: '#FFFFFF',
+                        borderColor: corTexto,
                         backgroundColor: gradientPatrimonio,
                         fill: true,
                         tension: 0.2,
                         borderWidth: 2.5,
                         pointRadius: 0,
                         pointHoverRadius: 7,
-                        pointBackgroundColor: '#FFFFFF',
-                        pointBorderColor: '#00E676',
+                        pointBackgroundColor: corTexto,
+                        pointBorderColor: corDestaque,
                         pointBorderWidth: 2
                     }
                 ]
@@ -166,10 +184,10 @@ document.addEventListener('DOMContentLoaded', () => {
                         display: false
                     },
                     tooltip: {
-                        backgroundColor: '#181826',
-                        titleColor: '#FFFFFF',
-                        bodyColor: '#00E676',
-                        borderColor: 'rgba(255, 255, 255, 0.1)',
+                        backgroundColor: corSuperficie,
+                        titleColor: corTexto,
+                        bodyColor: corDestaque,
+                        borderColor: corBorda,
                         borderWidth: 1,
                         padding: 12,
                         displayColors: false,
@@ -181,12 +199,12 @@ document.addEventListener('DOMContentLoaded', () => {
                 scales: {
                     x: {
                         grid: { display: false },
-                        ticks: { color: '#8E8E93', font: { size: 11 } }
+                        ticks: { color: corTextoSuave, font: { size: 11 } }
                     },
                     y: {
-                        grid: { color: 'rgba(255, 255, 255, 0.05)' },
+                        grid: { color: comOpacidade(corTextoSuave, 0.18) },
                         ticks: {
-                            color: '#8E8E93',
+                            color: corTextoSuave,
                             font: { size: 11 },
                             callback: value => formatarMoeda(value)
                         }

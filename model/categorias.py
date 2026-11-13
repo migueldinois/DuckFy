@@ -82,3 +82,49 @@ class Categoria():
         finally:
             cursor.close()
             conexao.close()
+
+    def calcular_receitas_por_categoria():
+        """Função para calcular o total de receitas por categoria"""
+        conexao, cursor = Conexao.conectar()
+
+        sql = """
+            SELECT c.nome AS categoria, SUM(t.valor) AS total
+            FROM transacoes t
+            JOIN categorias c ON t.id_categoria = c.id_categoria
+            WHERE t.tipo = 'Receita'
+            GROUP BY c.nome
+        """
+        
+        try:
+            cursor.execute(sql)
+            resultados = cursor.fetchall()
+            return resultados
+        except Exception as erro:
+            print(f"Erro ao calcular receitas por categoria: {erro}")
+            return []
+        finally:
+            cursor.close()
+            conexao.close()
+
+    def calcular_despesas_por_categoria(id_usuario):
+        """Função para calcular o total de despesas por categoria"""
+        conexao, cursor = Conexao.conectar()
+
+        sql = """
+            SELECT c.nome AS categoria, SUM(t.valor) AS total
+            FROM transacoes t
+            JOIN categorias c ON t.id_categoria = c.id_categoria
+            WHERE t.tipo = 'Despesa'
+            GROUP BY c.nome
+        """
+        
+        try:
+            cursor.execute(sql)
+            resultados = cursor.fetchall()
+            return resultados
+        except Exception as erro:
+            print(f"Erro ao calcular despesas por categoria: {erro}")
+            return []
+        finally:
+            cursor.close()
+            conexao.close()

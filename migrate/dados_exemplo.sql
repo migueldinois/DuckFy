@@ -1,14 +1,15 @@
 
 USE duckfy;
 
+-- Senha de demonstração para os três usuários: DemoDuckfy2026!
 INSERT INTO usuarios
 (nome, email, senha_hash, dias_ofensiva, pontos_xp, foto_perfil)
 VALUES
-('Ana Silva', 'ana.silva@email.com', 'hash_demo_ana', 12, 1250,
+('Ana Silva', 'ana.silva@email.com', '$2b$12$A5r7UYuXpUDDeL3EiSM2G.nzAOROBFXNKLEc.4NqAen7YB665ysri', 12, 1250,
  'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=400'),
-('Carlos Eduardo', 'carlos.eduardo@email.com', 'hash_demo_carlos', 5, 450,
+('Carlos Eduardo', 'carlos.eduardo@email.com', '$2b$12$A5r7UYuXpUDDeL3EiSM2G.nzAOROBFXNKLEc.4NqAen7YB665ysri', 5, 450,
  'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=400'),
-('Mariana Costa', 'mariana.costa@email.com', 'hash_demo_mariana', 30, 3200,
+('Mariana Costa', 'mariana.costa@email.com', '$2b$12$A5r7UYuXpUDDeL3EiSM2G.nzAOROBFXNKLEc.4NqAen7YB665ysri', 30, 3200,
  'https://images.unsplash.com/photo-1580489944761-15a19d654956?w=400');
 
 

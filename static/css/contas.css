@@ -136,19 +136,33 @@
 .pagina-patrimonio .link-reserva {
   display: inline-flex;
   align-items: center;
-  gap: 5px;
+  justify-content: center;
+  gap: 8px;
   width: fit-content;
-  margin-top: 10px;
-  color: var(--brand-secondary);
-  font-size: .78rem;
-  font-weight: 600;
+  min-height: 40px;
+  margin-top: 14px;
+  padding: 0 14px;
+  color: #062b17;
+  background: #4ade80;
+  border: 1px solid #4ade80;
+  border-radius: 10px;
+  font-size: .84rem;
+  font-weight: 700;
   text-decoration: none;
+  transition: background .2s, border-color .2s, box-shadow .2s, transform .2s;
 }
 
 .pagina-patrimonio .link-reserva:hover {
-  color: var(--brand-primary);
-  text-decoration: underline;
-  text-underline-offset: 3px;
+  color: #062b17;
+  background: #86efac;
+  border-color: #86efac;
+  transform: translateY(-1px);
+}
+
+.pagina-patrimonio .link-reserva:focus-visible {
+  outline: 3px solid var(--text-primary);
+  outline-offset: 3px;
+  box-shadow: 0 0 0 5px rgba(74, 222, 128, .35);
 }
 
 .acoes-patrimonio {
@@ -400,13 +414,22 @@
 }
 
 .pagina-patrimonio select.search-input {
-  color-scheme: dark;
+  min-height: 48px;
+  border-radius: 10px;
+  padding: 11px 14px;
+  appearance: auto;
   cursor: pointer;
 }
 
 .pagina-patrimonio select.search-input option {
   color: var(--text-primary);
-  background: var(--bg-surface-1);
+  background: var(--bg-surface-2);
+}
+
+@supports (appearance: base-select) {
+  .pagina-patrimonio select.search-input {
+    appearance: base-select;
+  }
 }
 
 .pagina-patrimonio .search-input:focus {
@@ -665,7 +688,6 @@
   width: 100%;
 }
 
-#modalTransferirContas select.search-input,
 #modalTransferirContas input.search-input {
   display: block;
   width: 100%;
@@ -674,27 +696,16 @@
   color: var(--text-primary);
   background: var(--bg-surface-2);
   border: 1px solid var(--border-color);
-  border-radius: 12px;
+  border-radius: 10px;
   font-size: .9rem;
   outline: none;
   box-shadow: none;
   transition: border-color .2s, box-shadow .2s;
 }
 
-#modalTransferirContas select.search-input {
-  color-scheme: dark;
-  cursor: pointer;
-}
-
-#modalTransferirContas select.search-input option {
-  color: var(--text-primary);
-  background: var(--bg-surface-1);
-}
-
-#modalTransferirContas select.search-input:focus,
 #modalTransferirContas input.search-input:focus {
   border-color: var(--brand-primary);
-  box-shadow: 0 0 0 3px color-mix(in srgb, var(--brand-primary) 20%, transparent);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--brand-primary) 24%, transparent);
 }
 
 #modalTransferirContas input::placeholder {
