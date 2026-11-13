@@ -767,7 +767,6 @@ if (!window.duckfyCategoriasInicializado) {
 
         const campoCor = document.getElementById('cor');
         const colorBox = document.getElementById('colorBox');
-        const colorValue = document.getElementById('colorValue');
 
         const opcoesCores = document.querySelectorAll(
             '.color-option[data-color]'
@@ -841,11 +840,10 @@ if (!window.duckfyCategoriasInicializado) {
                 }
             }
 
-            if (!campoCor || !colorBox || !colorValue) return;
+            if (!campoCor || !colorBox) return;
 
             campoCor.value = cor;
             colorBox.style.backgroundColor = cor;
-            colorValue.textContent = cor;
 
             opcoesCores.forEach(opcao => {
 
@@ -997,7 +995,6 @@ if (!window.duckfyCategoriasInicializado) {
 
         const editCampoCor = document.getElementById('edit_cor');
         const editColorBox = document.getElementById('editColorBox');
-        const editColorValue = document.getElementById('editColorValue');
         const editBotaoPersonalizada = document.getElementById('editCorPersonalizada');
         const editHistoricoContainer = document.getElementById('editHistoricoCores');
 
@@ -1008,13 +1005,12 @@ if (!window.duckfyCategoriasInicializado) {
 
         function editAtualizarCorPreview(cor) {
 
-            if (!editCampoCor || !editColorBox || !editColorValue || !cor) return;
+            if (!editCampoCor || !editColorBox || !cor) return;
 
             cor = cor.toUpperCase();
 
             editCampoCor.value = cor;
             editColorBox.style.backgroundColor = cor;
-            editColorValue.textContent = cor;
 
             editOpcoesCores.forEach(opcao => {
 

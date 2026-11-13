@@ -137,16 +137,15 @@
             </select>
 
             <div class="subcategoria-emoji-field">
-                <label for="abrirSeletorEmojiSubcategoria">Emoji</label>
-                <input type="hidden" id="emojiSubcategoria" name="emoji" value="⭐">
-                <button type="button" class="subcategoria-emoji-trigger" id="abrirSeletorEmojiSubcategoria" aria-expanded="false" aria-controls="emojiPickerSubcategoria">
-                    <span class="emoji-ios" id="previewEmojiSubcategoria" aria-hidden="true">⭐</span>
-                    <span id="textoEmojiSubcategoria">Selecionar emoji</span>
-                </button>
-                <div class="emoji-picker-fallback subcategoria-emoji-picker" id="emojiPickerSubcategoria" hidden>
-                    {% for emoji in ['⭐', '🏠', '🛒', '🍽️', '🚗', '⛽', '💡', '💊', '🎓', '🎮', '✈️', '🐾', '👕', '💼', '🎁', '🏥'] %}
-                    <button type="button" class="emoji-fallback-option" data-emoji="{{ emoji }}" aria-label="Selecionar emoji {{ emoji }}">{{ emoji }}</button>
-                    {% endfor %}
+                <label for="emojiSubcategoria">Emoji</label>
+                <div class="input-icon-wrapper emoji-field-wrapper">
+                    <img src="{{ url_for('static', filename='img/icons/emoji.svg') }}"
+                        class="input-icon emoji-icon-trigger" alt="Abrir seletor de emojis"
+                        data-emoji-trigger="emojiSubcategoria" role="button" tabindex="0"
+                        aria-label="Abrir seletor de emojis">
+                    <input type="text" id="emojiSubcategoria" name="emoji"
+                        class="search-input input-with-icon emoji-input" value="⭐"
+                        placeholder="Selecione um emoji" required autocomplete="off">
                 </div>
             </div>
 
@@ -164,7 +163,6 @@
                 </div>
                 <div class="color-preview">
                     <span id="amostraCorSubcategoria" aria-hidden="true"></span>
-                    <output id="valorCorSubcategoria">#7C4DFF</output>
                 </div>
             </div>
 
@@ -179,6 +177,7 @@
 
 {% block extra_js %}
 <script src="{{ url_for('static', filename='js/emoji-ios.js') }}"></script>
+<script src="{{ url_for('static', filename='js/categorias.js') }}"></script>
 <script src="{{ url_for('static', filename='js/subcategorias.js') }}"></script>
 {% endblock %}
 
