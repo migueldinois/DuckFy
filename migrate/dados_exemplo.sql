@@ -105,8 +105,7 @@ SET @reserva_semanal = LAST_INSERT_ID();
 
 INSERT INTO reserva_contas (id_reserva, id_conta, valor_alocado)
 VALUES
-	(@reserva_semanal, @conta_semanal_nubank, 200.00),
-	(@reserva_semanal, @conta_semanal_caixa, 100.00);
+	(@reserva_semanal, @conta_semanal_caixa, 300.00);
 
 INSERT INTO transacoes
 	(id_usuario, id_conta, id_categoria, descricao, valor, tipo, data_transacao, id_reserva)
@@ -116,9 +115,7 @@ VALUES
 	(@id_mensal, @conta_semanal_nubank, @categoria_semanal_mercado,
 	 'Compras da semana', 245.70, 'Despesa', DATE_SUB(CURDATE(), INTERVAL 4 DAY), NULL),
 	(@id_mensal, @conta_semanal_nubank, @categoria_semanal_lazer,
-	 'Cinema', 68.00, 'Despesa', DATE_SUB(CURDATE(), INTERVAL 2 DAY), NULL),
-	(@id_mensal, @conta_semanal_caixa, NULL,
-	 'Aporte na reserva de emergência', 100.00, 'Transferência', CURDATE(), @reserva_semanal);
+	 'Cinema', 68.00, 'Despesa', DATE_SUB(CURDATE(), INTERVAL 2 DAY), NULL);
 
 -- Dados do perfil veterano: contas bancárias comuns, categorias, movimentações
 -- e uma reserva ainda em formação.
@@ -201,9 +198,9 @@ SET @reserva_investidora = LAST_INSERT_ID();
 
 INSERT INTO reserva_contas (id_reserva, id_conta, valor_alocado)
 VALUES
-	(@reserva_investidora, @conta_investidora_nubank, 5000.00),
+	(@reserva_investidora, @conta_investidora_nubank, 6000.00),
 	(@reserva_investidora, @conta_investidora_itau, 4000.00),
-	(@reserva_investidora, @conta_investidora_corretora, 3000.00);
+	(@reserva_investidora, @conta_investidora_corretora, 2000.00);
 
 INSERT INTO transacoes
 	(id_usuario, id_conta, id_categoria, descricao, valor, tipo, data_transacao, id_reserva)
@@ -229,31 +226,7 @@ VALUES
 	(@id_investidora, @conta_investidora_corretora, @categoria_investidora_investimentos,
 	 'Rendimento de investimentos', 185.00, 'Receita', DATE_SUB(CURDATE(), INTERVAL 2 DAY), NULL),
 	(@id_investidora, @conta_investidora_nubank, @categoria_investidora_casa,
-	 'Manutenção doméstica', 160.00, 'Despesa', DATE_SUB(CURDATE(), INTERVAL 1 DAY), NULL),
-	(@id_investidora, @conta_investidora_itau, NULL,
-	 'Aporte na reserva de emergência', 1000.00, 'Transferência', CURDATE(), @reserva_investidora);
-
--- Onze aportes anteriores de R$ 1.000, espaçados ao longo dos seis meses.
-INSERT INTO transacoes
-	(id_usuario, id_conta, id_categoria, descricao, valor, tipo, data_transacao, id_reserva)
-SELECT
-	@id_investidora,
-	CASE
-		WHEN aportes.numero <= 5 THEN @conta_investidora_nubank
-		WHEN aportes.numero <= 8 THEN @conta_investidora_itau
-		ELSE @conta_investidora_corretora
-	END,
-	NULL,
-	'Aporte na reserva de emergência',
-	1000.00,
-	'Transferência',
-	DATE_SUB(CURDATE(), INTERVAL (aportes.numero * 15) DAY),
-	@reserva_investidora
-FROM (
-	SELECT 1 AS numero UNION ALL SELECT 2 UNION ALL SELECT 3 UNION ALL SELECT 4
-	UNION ALL SELECT 5 UNION ALL SELECT 6 UNION ALL SELECT 7 UNION ALL SELECT 8
-	UNION ALL SELECT 9 UNION ALL SELECT 10 UNION ALL SELECT 11
-) AS aportes;
+	 'Manutenção doméstica', 160.00, 'Despesa', DATE_SUB(CURDATE(), INTERVAL 1 DAY), NULL);
 
 -- Garante os badges usados pelo exemplo sem duplicar os que já existem.
 INSERT INTO conquistas_badges (nome, descricao, icone)
@@ -308,3 +281,119 @@ WHERE badge.nome IN (
 	'Categorias para Tudo', '1.000 XP', '2.500 XP', 'Reserva de R$ 500',
 	'Reserva de R$ 5.000', 'Reserva de R$ 10.000'
 );
+
+-- Reexecutável: alinha os históricos das reservas dos usuários demonstrativos.
+USE duckfy;
+
+SET @id_ivo_demo = (
+	SELECT id_usuario FROM usuarios WHERE email = 'mensal@duckfy.demo'
+);
+SET @id_barbosa_demo = (
+	SELECT id_usuario FROM usuarios WHERE email = 'seis.meses@duckfy.demo'
+);
+SET @reserva_ivo_demo = (
+	SELECT id_reserva FROM reserva_emergencia
+	WHERE id_usuario = @id_ivo_demo
+	ORDER BY id_reserva DESC LIMIT 1
+);
+SET @reserva_barbosa_demo = (
+	SELECT id_reserva FROM reserva_emergencia
+	WHERE id_usuario = @id_barbosa_demo
+	ORDER BY id_reserva DESC LIMIT 1
+);
+SET @conta_ivo_mercado_pago = (
+	SELECT id_conta FROM contas_bancarias
+	WHERE id_usuario = @id_ivo_demo AND nome_conta = 'Mercado Pago'
+	ORDER BY id_conta DESC LIMIT 1
+);
+SET @conta_barbosa_nubank = (
+	SELECT id_conta FROM contas_bancarias
+	WHERE id_usuario = @id_barbosa_demo AND nome_conta = 'Nubank'
+	ORDER BY id_conta DESC LIMIT 1
+);
+SET @conta_barbosa_itau = (
+	SELECT id_conta FROM contas_bancarias
+	WHERE id_usuario = @id_barbosa_demo AND nome_conta = 'Itaú'
+	ORDER BY id_conta DESC LIMIT 1
+);
+SET @conta_barbosa_inter = (
+	SELECT id_conta FROM contas_bancarias
+	WHERE id_usuario = @id_barbosa_demo AND nome_conta = 'Inter'
+	ORDER BY id_conta DESC LIMIT 1
+);
+
+DELETE t
+FROM transacoes t
+INNER JOIN reserva_emergencia r ON r.id_reserva = t.id_reserva
+WHERE r.id_usuario IN (@id_ivo_demo, @id_barbosa_demo)
+	AND t.descricao = 'Aporte na reserva de emergência'
+	AND t.tipo = 'Transferência';
+
+DELETE rc
+FROM reserva_contas rc
+INNER JOIN reserva_emergencia r ON r.id_reserva = rc.id_reserva
+WHERE r.id_usuario IN (@id_ivo_demo, @id_barbosa_demo);
+
+UPDATE reserva_emergencia
+SET valor_atual = 300.00
+WHERE id_reserva = @reserva_ivo_demo;
+
+UPDATE reserva_emergencia
+SET valor_atual = 12000.00
+WHERE id_reserva = @reserva_barbosa_demo;
+
+INSERT INTO reserva_contas (id_reserva, id_conta, valor_alocado)
+SELECT @reserva_ivo_demo, @conta_ivo_mercado_pago, 300.00
+WHERE @reserva_ivo_demo IS NOT NULL AND @conta_ivo_mercado_pago IS NOT NULL;
+
+INSERT INTO reserva_contas (id_reserva, id_conta, valor_alocado)
+SELECT @reserva_barbosa_demo, @conta_barbosa_nubank, 6000.00
+WHERE @reserva_barbosa_demo IS NOT NULL AND @conta_barbosa_nubank IS NOT NULL;
+
+INSERT INTO reserva_contas (id_reserva, id_conta, valor_alocado)
+SELECT @reserva_barbosa_demo, @conta_barbosa_itau, 4000.00
+WHERE @reserva_barbosa_demo IS NOT NULL AND @conta_barbosa_itau IS NOT NULL;
+
+INSERT INTO reserva_contas (id_reserva, id_conta, valor_alocado)
+SELECT @reserva_barbosa_demo, @conta_barbosa_inter, 2000.00
+WHERE @reserva_barbosa_demo IS NOT NULL AND @conta_barbosa_inter IS NOT NULL;
+
+INSERT INTO transacoes
+	(id_usuario, id_conta, id_categoria, descricao, valor, tipo, data_transacao, id_reserva)
+SELECT
+	@id_ivo_demo,
+	@conta_ivo_mercado_pago,
+	NULL,
+	'Aporte na reserva de emergência',
+	300.00,
+	'Transferência',
+	CURDATE(),
+	@reserva_ivo_demo
+WHERE @id_ivo_demo IS NOT NULL
+	AND @conta_ivo_mercado_pago IS NOT NULL
+	AND @reserva_ivo_demo IS NOT NULL;
+
+INSERT INTO transacoes
+	(id_usuario, id_conta, id_categoria, descricao, valor, tipo, data_transacao, id_reserva)
+SELECT
+	@id_barbosa_demo,
+	CASE
+		WHEN aportes.mes < 3 THEN @conta_barbosa_nubank
+		WHEN aportes.mes < 5 THEN @conta_barbosa_itau
+		ELSE @conta_barbosa_inter
+	END,
+	NULL,
+	'Aporte na reserva de emergência',
+	2000.00,
+	'Transferência',
+	DATE_SUB(CURDATE(), INTERVAL aportes.mes MONTH),
+	@reserva_barbosa_demo
+FROM (
+	SELECT 0 AS mes UNION ALL SELECT 1 UNION ALL SELECT 2
+	UNION ALL SELECT 3 UNION ALL SELECT 4 UNION ALL SELECT 5
+) AS aportes
+WHERE @id_barbosa_demo IS NOT NULL
+	AND @reserva_barbosa_demo IS NOT NULL
+	AND @conta_barbosa_nubank IS NOT NULL
+	AND @conta_barbosa_itau IS NOT NULL
+	AND @conta_barbosa_inter IS NOT NULL;
