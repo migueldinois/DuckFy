@@ -33,6 +33,8 @@ document.addEventListener("DOMContentLoaded", function () {
 	const restaurar = document.getElementById("restaurar-acessibilidade");
 	const resumoFonte = document.getElementById("resumo-fonte");
 	const resumoPaleta = document.getElementById("resumo-paleta");
+	const previa = document.getElementById("previa-acessibilidade");
+	const nomePaletaPrevia = document.getElementById("previa-nome-paleta");
 	const classesDaltonismo = [
 		"daltonismo-protanopia",
 		"daltonismo-deuteranopia",
@@ -97,6 +99,13 @@ document.addEventListener("DOMContentLoaded", function () {
 	function atualizarResumo() {
 		if (resumoFonte) resumoFonte.textContent = `${preferencias.fonte}%`;
 		if (resumoPaleta) resumoPaleta.textContent = nomesPaletas[preferencias.daltonismo] || nomesPaletas.normal;
+		if (previa) {
+			previa.dataset.paleta = preferencias.daltonismo;
+			previa.style.fontSize = `${preferencias.fonte}%`;
+		}
+		if (nomePaletaPrevia) {
+			nomePaletaPrevia.textContent = nomesPaletas[preferencias.daltonismo] || nomesPaletas.normal;
+		}
 	}
 
 	function atualizarControles() {
