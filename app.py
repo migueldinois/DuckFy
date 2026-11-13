@@ -1202,9 +1202,27 @@ def cadastrar():
     confirmar_senha = request.form.get("confirmar_senha")
     foto_perfil = request.form.get("foto_perfil") or "https://placehold.co/400x400"
 
-    # verifica os campos obrigatórios
-    if not nome or not email or not senha:
-        flash("Todos os campos são obrigatórios!", "error")
+    # valida os dados antes de tentar criar a conta
+    if not nome:
+        flash("Informe seu nome completo.", "error")
+        return redirect('/cadastro')
+    if not email:
+        flash("Informe seu e-mail.", "error")
+        return redirect('/cadastro')
+    if not senha:
+        flash("Informe uma senha.", "error")
+        return redirect('/cadastro')
+    if not confirmar_senha:
+        flash("Confirme sua senha.", "error")
+        return redirect('/cadastro')
+    if senha != confirmar_senha:
+        flash("As senhas não coincidem. Confira a confirmação da senha.", "error")
+        return redirect('/cadastro')
+    if request.form.get("aceitar_termos") != "sim":
+        flash("Aceite os Termos de Uso e a Política de Privacidade para criar sua conta.", "error")
+        return redirect('/cadastro')
+    if Usuario.buscar_por_email(email):
+        flash("Este e-mail já está cadastrado. Faça login ou use outro e-mail.", "error")
         return redirect('/cadastro')
 
     # cria o usuário no banco de dados
@@ -1214,7 +1232,7 @@ def cadastrar():
         flash("Cadastro realizado com sucesso! Agora você já pode entrar.", "success")
         return redirect('/login')
     else:
-        flash("Erro ao cadastrar usuário. Tente novamente.", "error")
+        flash("Não foi possível criar sua conta agora. Tente novamente.", "error")
         return redirect('/cadastro')
 
 
