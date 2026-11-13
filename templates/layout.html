@@ -203,7 +203,15 @@
                 <li>
                     <button type="button" class="sidebar-link sidebar-theme-toggle" data-theme-toggle
                         aria-label="Ativar tema claro" title="Ativar tema claro">
-                        <i class="bi bi-sun-fill sidebar-icon" data-theme-icon aria-hidden="true"></i>
+                        <img
+                            src="{{ url_for('static', filename='img/icons/tema claro.svg') }}"
+                            data-theme-icon
+                            data-theme-light="{{ url_for('static', filename='img/icons/tema claro.svg') }}"
+                            data-theme-dark="{{ url_for('static', filename='img/icons/tema-escuro.svg') }}"
+                            class="sidebar-icon"
+                            alt=""
+                            aria-hidden="true"
+                        >
                         <span class="brand-text" data-theme-label>Tema claro</span>
                     </button>
                 </li>

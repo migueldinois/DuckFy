@@ -96,7 +96,9 @@
     mostrar({
       icon: 'warning',
       title: 'Verifique os dados',
-      text: campo.dataset.invalidMessage || 'Preencha todos os campos.',
+      text: campo.validity.valueMissing
+        ? campo.dataset.invalidMessage || 'Este campo é obrigatório.'
+        : campo.validationMessage || campo.dataset.invalidMessage || 'Verifique o valor informado.',
       confirmButtonText: 'Corrigir'
     }).then(() => {
       campo.focus({ preventScroll: true });

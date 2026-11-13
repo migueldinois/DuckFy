@@ -3,13 +3,182 @@
 {% block title %}Subcategorias - DuckFy{% endblock %}
 
 {% block extra_css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/categorias.css') }}">
 <link rel="stylesheet" href="{{ url_for('static', filename='css/subcategorias.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/duckfy-modal.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/emoji-picker.css') }}">
 {% endblock %}
 
 {% block content %}
-<main class="subcategorias-status" aria-labelledby="subcategorias-status-title">
-    <i class="bi bi-hourglass-split" aria-hidden="true"></i>
-    <h1 id="subcategorias-status-title">Em desenvolvimento</h1>
-</main>
+<div class="categorias-container subcategorias-page">
+    <header class="categorias-header">
+        <div class="categorias-heading">
+            <a class="btn-voltar-global" href="{{ url_for('dashboard') }}" aria-label="Voltar ao Dashboard">
+                <i class="bi bi-arrow-left" aria-hidden="true"></i>
+            </a>
+            <div class="header-texto">
+                <h1 class="page-title" id="subcategorias-title">Suas subcategorias<span>.</span></h1>
+                <p class="header-descricao">Detalhe suas categorias para organizar melhor cada lançamento.</p>
+            </div>
+        </div>
+        <div class="categorias-acoes subcategorias-acoes">
+            <button type="button" class="btn-nova-categoria" data-open-modal="modalNovaSubcategoria">
+                <i class="bi bi-plus-lg" aria-hidden="true"></i><span>Nova subcategoria</span>
+            </button>
+            <div class="search-box">
+                <i class="bi bi-search search-icon" aria-hidden="true"></i>
+                <input type="text" id="inputBusca" class="search-input" placeholder="Buscar subcategoria..." aria-label="Buscar subcategoria">
+                <button type="button" id="limparBusca" class="search-clear d-none" aria-label="Limpar pesquisa">
+                    <i class="bi bi-x-lg" aria-hidden="true"></i>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <section class="categorias-resumo" aria-label="Resumo de subcategorias">
+        <div class="resumo-texto"><strong class="resumo-titulo">Visão Geral</strong></div>
+        <div class="resumo-divisor"></div>
+        <div class="resumo-numero">
+            <strong id="contadorSubcategoriasResumo">{{ subcategorias|length }}</strong>
+            <span>subcategorias</span>
+        </div>
+    </section>
+
+    <div class="categorias-ferramentas">
+        <span class="categorias-contagem" id="contadorSubcategorias">{{ subcategorias|length }} subcategorias</span>
+    </div>
+
+    <nav class="categorias-abas" role="tablist" aria-label="Tipo de subcategoria">
+        <button type="button" class="tab-btn active" id="btnSaidas" role="tab" aria-selected="true" aria-controls="painelSubcategorias">
+            <span class="aba-icone despesas-icone"><i class="bi bi-arrow-up-right" aria-hidden="true"></i></span>
+            <span class="aba-texto"><strong>Despesas</strong><small>Subcategorias de saída</small></span>
+            <span class="tab-count" id="contadorDespesas">{{ subcategorias|selectattr('categoria_tipo', 'equalto', 'Despesa')|list|length }}</span>
+        </button>
+        <button type="button" class="tab-btn" id="btnEntradas" role="tab" aria-selected="false" aria-controls="painelSubcategorias">
+            <span class="aba-icone receitas-icone"><i class="bi bi-arrow-down-left" aria-hidden="true"></i></span>
+            <span class="aba-texto"><strong>Receitas</strong><small>Subcategorias de entrada</small></span>
+            <span class="tab-count" id="contadorReceitas">{{ subcategorias|selectattr('categoria_tipo', 'equalto', 'Receita')|list|length }}</span>
+        </button>
+    </nav>
+
+    <section id="painelSubcategorias" class="category-panel" role="tabpanel" aria-labelledby="btnSaidas">
+        <div class="lista-cabecalho">
+            <div>
+                <h2 id="tituloListaSubcategorias">Subcategorias de despesas</h2>
+                <p>Encontre e gerencie suas subcategorias.</p>
+            </div>
+            <div class="subcategorias-panel-acoes">
+                <label class="subcategorias-filtro" for="filtroCategoria">
+                    <select id="filtroCategoria" aria-label="Filtrar por categoria">
+                        <option value="todas">Todas as categorias</option>
+                        {% for categoria in categorias %}
+                        <option value="{{ categoria.id }}">{{ categoria.nome }}</option>
+                        {% endfor %}
+                    </select>
+                </label>
+            </div>
+        </div>
+
+        <div class="category-list subcategorias-list" id="listaSubcategorias" aria-live="polite">
+            {% for subcategoria in subcategorias %}
+            <article class="category-item subcategoria-row"
+                data-id="{{ subcategoria.id }}"
+                data-categoria="{{ subcategoria.categoria_id }}"
+                data-tipo="{{ subcategoria.categoria_tipo }}"
+                data-nome="{{ subcategoria.nome }}"
+                data-emoji="{{ subcategoria.emoji or '⭐' }}"
+                data-cor="{{ subcategoria.cor or '#7C4DFF' }}">
+                <div class="category-info">
+                    <div class="cat-icon-circle subcategoria-symbol" data-cor="{{ subcategoria.cor or '#7C4DFF' }}" aria-hidden="true">
+                        <span class="emoji-ios">{{ subcategoria.emoji or '⭐' }}</span>
+                    </div>
+                    <div class="category-text">
+                        <h3 class="cat-name">{{ subcategoria.nome }}</h3>
+                        <p class="cat-subs"><i class="bi bi-arrow-return-right" aria-hidden="true"></i> {{ subcategoria.categoria_nome }}</p>
+                    </div>
+                </div>
+                {% if subcategoria.pode_editar %}
+                <div class="subcategoria-actions">
+                    <button type="button" class="arrow-link subcategoria-editar" aria-label="Editar {{ subcategoria.nome }}" title="Editar subcategoria">
+                        <i class="bi bi-pencil" aria-hidden="true"></i>
+                    </button>
+                </div>
+                {% endif %}
+            </article>
+            {% endfor %}
+        </div>
+        <div class="categorias-vazio" id="mensagemVazia" {% if subcategorias %}hidden{% endif %}>
+            <div class="vazio-icone"><i class="bi bi-search" aria-hidden="true"></i></div>
+            <h3>Nenhuma subcategoria encontrada</h3>
+            <p>Altere o tipo, filtro ou termo de busca.</p>
+        </div>
+    </section>
+
+<div id="modalNovaSubcategoria" class="duckfy-modal" role="dialog" aria-modal="true" aria-labelledby="tituloNovaSubcategoria">
+    <div class="dash-card modal-content subcategorias-modal-content">
+        <div class="subcategorias-modal-header">
+            <div>
+                <span class="subcategorias-label">ORGANIZAÇÃO</span>
+                <h2 class="card-section-title" id="tituloNovaSubcategoria">Nova subcategoria</h2>
+            </div>
+            <button type="button" class="btn-close-custom" data-close-modal aria-label="Fechar">&times;</button>
+        </div>
+
+        <form id="formSubcategoria" class="subcategorias-form">
+            <label for="nomeSubcategoria">Nome</label>
+            <input class="search-input" id="nomeSubcategoria" name="nome" type="text" maxlength="50" required placeholder="Ex.: Supermercado">
+
+            <label for="categoriaSubcategoria">Categoria principal</label>
+            <select class="search-input" id="categoriaSubcategoria" name="categoria_id" required {% if not categorias %}disabled{% endif %}>
+                <option value="" disabled selected>Selecione uma categoria</option>
+                {% for categoria in categorias %}
+                <option value="{{ categoria.id }}" data-nome="{{ categoria.nome }}">{{ categoria.nome }} · {{ categoria.tipo }}</option>
+                {% endfor %}
+            </select>
+
+            <div class="subcategoria-emoji-field">
+                <label for="abrirSeletorEmojiSubcategoria">Emoji</label>
+                <input type="hidden" id="emojiSubcategoria" name="emoji" value="⭐">
+                <button type="button" class="subcategoria-emoji-trigger" id="abrirSeletorEmojiSubcategoria" aria-expanded="false" aria-controls="emojiPickerSubcategoria">
+                    <span class="emoji-ios" id="previewEmojiSubcategoria" aria-hidden="true">⭐</span>
+                    <span id="textoEmojiSubcategoria">Selecionar emoji</span>
+                </button>
+                <div class="emoji-picker-fallback subcategoria-emoji-picker" id="emojiPickerSubcategoria" hidden>
+                    {% for emoji in ['⭐', '🏠', '🛒', '🍽️', '🚗', '⛽', '💡', '💊', '🎓', '🎮', '✈️', '🐾', '👕', '💼', '🎁', '🏥'] %}
+                    <button type="button" class="emoji-fallback-option" data-emoji="{{ emoji }}" aria-label="Selecionar emoji {{ emoji }}">{{ emoji }}</button>
+                    {% endfor %}
+                </div>
+            </div>
+
+            <label>Cor</label>
+            <input type="hidden" id="corSubcategoria" name="cor" value="#7C4DFF">
+            <div class="color-picker-wrapper subcategorias-color-picker">
+                <div class="color-options" aria-label="Cores da subcategoria">
+                {% for cor, nome in [('#7C4DFF', 'Roxo'), ('#00A878', 'Verde'), ('#168AAD', 'Azul'), ('#F4A261', 'Laranja'), ('#D1495B', 'Vermelho'), ('#68717A', 'Cinza')] %}
+                <button type="button" class="color-option{% if loop.first %} selecionada{% endif %}" data-color="{{ cor }}" style="--cor-opcao: {{ cor }}" aria-label="{{ nome }}"></button>
+                {% endfor %}
+                <button type="button" id="abrirCorPersonalizada" class="color-option color-custom" aria-label="Escolher outra cor">
+                    <i class="bi bi-plus-lg" aria-hidden="true"></i>
+                </button>
+                <input class="subcategorias-native-color" type="color" id="corPersonalizadaSubcategoria" value="#7C4DFF" aria-label="Cor personalizada">
+                </div>
+                <div class="color-preview">
+                    <span id="amostraCorSubcategoria" aria-hidden="true"></span>
+                    <output id="valorCorSubcategoria">#7C4DFF</output>
+                </div>
+            </div>
+
+            <div class="subcategorias-modal-actions">
+                <button type="button" id="excluirSubcategoria" class="btn-danger-action" hidden>Excluir</button>
+                <button type="submit" id="salvarSubcategoria" class="btn-purple-action" {% if not categorias %}disabled{% endif %}>Criar subcategoria</button>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="{{ url_for('static', filename='js/emoji-ios.js') }}"></script>
+<script src="{{ url_for('static', filename='js/subcategorias.js') }}"></script>
 {% endblock %}
 

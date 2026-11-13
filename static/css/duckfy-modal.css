@@ -19,7 +19,7 @@
 }
 
 body > .swal2-container {
-  z-index: 10000 !important;
+  z-index: 10000;
 }
 
 .duckfy-modal.active {
@@ -93,17 +93,99 @@ body > .swal2-container {
 
 /* Estilização do Select */
 select.search-input {
-  appearance: none;
-  -webkit-appearance: none;
-  background-image: url("data:image/svg+xml;utf8,<svg fill='%23a0a0b5' height='24' viewBox='0 0 24 24' width='24' xmlns='http://www.w3.org/2000/svg'><path d='M7 10l5 5 5-5z'/></svg>");
-  background-repeat: no-repeat;
-  background-position: right 10px center;
-  padding-right: 36px;
+  min-height: 48px;
+  padding: 11px 14px;
+  border-radius: 10px;
+  appearance: auto;
+  font-size: 15px;
 }
 
 select.search-input option {
   background-color: var(--bg-surface-2);
   color: var(--text-primary);
+}
+
+select.search-input option:checked {
+  background: var(--brand-primary);
+  color: #fff;
+}
+
+select.search-input:has(option:checked:disabled) {
+  color: var(--text-muted);
+}
+
+select.search-input:focus {
+  border-color: var(--brand-primary);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--brand-primary) 24%, transparent);
+}
+
+@supports (appearance: base-select) {
+  select.search-input {
+    appearance: base-select;
+  }
+
+  select.search-input::picker-icon {
+    appearance: none;
+    display: block;
+    content: "";
+    width: 8px;
+    height: 8px;
+    align-self: center;
+    margin-block: 0;
+    margin-inline-start: auto;
+    margin-inline-end: 2px;
+    border-right: 1.5px solid var(--text-muted);
+    border-bottom: 1.5px solid var(--text-muted);
+    color: transparent;
+    rotate: 45deg;
+    transition: rotate 0.2s ease, margin 0.2s ease;
+  }
+
+  select.search-input:open::picker-icon {
+    rotate: 225deg;
+  }
+
+  select.search-input::picker(select) {
+    appearance: base-select;
+    position-area: block-end span-inline-end;
+    position-try-fallbacks: none;
+    margin-block: 6px;
+    padding: 5px;
+    border: 1px solid var(--border-color);
+    border-radius: 10px;
+    background: var(--bg-surface-2);
+    color: var(--text-primary);
+    box-shadow: 0 12px 28px var(--shadow-color);
+  }
+
+  select.search-input option {
+    display: flex;
+    min-height: 36px;
+    align-items: center;
+    padding: 9px 11px;
+    border: 0;
+    border-radius: 6px;
+    background: var(--bg-surface-2);
+    color: var(--text-primary);
+    font-size: 14px;
+    font-weight: 400;
+  }
+
+  select.search-input option:hover,
+  select.search-input option:focus {
+    background: color-mix(in srgb, var(--brand-primary) 14%, var(--bg-surface-2));
+  }
+
+  select.search-input option:checked {
+    background: color-mix(in srgb, var(--brand-primary) 20%, var(--bg-surface-2));
+    color: var(--text-primary);
+    font-weight: 400;
+  }
+
+  select.search-input option:disabled,
+  select.search-input option::checkmark {
+    display: none;
+  }
 }
 
 /* Input Seletor de Cor */
@@ -214,7 +296,7 @@ select.search-input option {
 
 /* Espaçamento interno para evitar sobreposição do texto ao ícone */
 .input-with-icon {
-  padding-left: 42px !important;
+  padding-left: 42px;
 }
 
 /* Estrutura do Seletor de Cor Customizado */

@@ -2,17 +2,19 @@
 
 {% block extra_css %}
 <link rel="stylesheet" href="{{ url_for('static', filename='css/lancamentos.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/duckfy-modal.css') }}?v=9">
 {% endblock %}
 
 {% block content %}
+{% include 'components/modal_adicionar_banco.html' %}
+{% set modal_lancamento = true %}
+{% include 'components/modal_categoria.html' %}
 <main id="page-lancamento" class="py-3" data-initial-step="{{ etapa_inicial|default(1) }}">
   <div class="style-container">
     <header class="lancamento-wizard-header">
       <div class="lancamento-wizard-topline">
         <div class="lancamento-wizard-title-group">
-          <div class="lancamento-card-icon" aria-hidden="true"><i class="bi bi-arrow-left-right"></i></div>
           <div>
-            <span class="lancamento-eyebrow"><i class="bi bi-stars" aria-hidden="true"></i> MOVIMENTAÇÃO FINANCEIRA</span>
             <h1>Novo lançamento</h1>
             <p>Registre uma entrada ou saída na sua conta.</p>
           </div>
@@ -38,7 +40,6 @@
 
       <section class="lancamento-wizard-step is-active" data-wizard-step="1" aria-labelledby="titulo-etapa-tipo">
         <div class="lancamento-step-intro">
-          <span class="lancamento-step-kicker">PASSO 1</span>
           <h2 id="titulo-etapa-tipo">Escolha o tipo de lançamento</h2>
           <p>Isso ajuda o DuckFy a organizar sua movimentação.</p>
         </div>
@@ -74,7 +75,6 @@
 
       <section class="lancamento-wizard-step" data-wizard-step="2" aria-labelledby="titulo-etapa-conta" hidden>
         <div class="lancamento-step-intro lancamento-step-intro-left">
-          <span class="lancamento-step-kicker">PASSO 2</span>
           <h2 id="titulo-etapa-conta">Em qual conta vai lançar?</h2>
           <p>Selecione a conta onde esta entrada ou saída será registrada.</p>
         </div>
@@ -87,7 +87,7 @@
               <span class="lancamento-account-option-icon" aria-hidden="true"><i class="bi bi-bank"></i></span>
               <span class="lancamento-account-option-copy">
                 <strong>{{ conta.nome_conta }}</strong>
-                <small>{{ conta.tipo_conta }} · Saldo: R$ {{ '{:,.2f}'.format(conta.saldo_atual|default(0, true)|float).replace(',', 'X').replace('.', ',').replace('X', '.') }}</small>
+                <small>{{ conta.tipo_conta }} · Saldo: R$ {{ conta.saldo_atual|default(0, true)|moeda_br }}</small>
               </span>
               <i class="bi bi-arrow-right lancamento-account-option-arrow" aria-hidden="true"></i>
             </button>
@@ -98,13 +98,13 @@
             <span class="lancamento-account-empty-icon" aria-hidden="true"><i class="bi bi-bank"></i></span>
             <h3>Nenhuma conta cadastrada</h3>
             <p>Cadastre uma conta bancária para continuar com o lançamento.</p>
-            <a class="lancamento-adicionar-categoria" href="{{ url_for('contas', adicionar=1) }}">
+            <button type="button" class="lancamento-adicionar-categoria" data-open-modal="modalAdicionarBanco">
               <i class="bi bi-plus-circle" aria-hidden="true"></i><span>Cadastrar conta bancária</span>
-            </a>
+            </button>
           </div>
           {% endif %}
         </div>
-
+        
         <div class="lancamento-wizard-actions lancamento-wizard-actions-end">
           <button type="button" class="lancamento-back-action" data-wizard-back="1">
             <i class="bi bi-arrow-left" aria-hidden="true"></i><span>Voltar</span>
@@ -114,7 +114,6 @@
 
       <section class="lancamento-wizard-step" data-wizard-step="3" aria-labelledby="titulo-etapa-detalhes" hidden>
         <div class="lancamento-step-intro lancamento-step-intro-left">
-          <span class="lancamento-step-kicker">PASSO 3</span>
           <h2 id="titulo-etapa-detalhes">Quais são os detalhes?</h2>
           <p>Informe o valor e os dados desta movimentação.</p>
         </div>
@@ -168,12 +167,12 @@
                   </button>
                 </div>
                 <div class="categoria-selecionada-nome" id="categoria-selecionada-nome" aria-live="polite"></div>
-                <a class="lancamento-adicionar-categoria" data-category-create="saida" href="{{ url_for('categorias', criar='saida') }}" {% if categorias_despesa %}hidden{% endif %}>
+                <button type="button" class="lancamento-adicionar-categoria" data-category-create="saida" {% if categorias_despesa %}hidden{% endif %}>
                   <i class="bi bi-plus-circle" aria-hidden="true"></i><span>Adicionar categoria de saída</span>
-                </a>
-                <a class="lancamento-adicionar-categoria" data-category-create="entrada" href="{{ url_for('categorias', criar='entrada') }}" {% if categorias_receita %}hidden{% endif %}>
+                </button>
+                <button type="button" class="lancamento-adicionar-categoria" data-category-create="entrada" {% if categorias_receita %}hidden{% endif %}>
                   <i class="bi bi-plus-circle" aria-hidden="true"></i><span>Adicionar categoria de entrada</span>
-                </a>
+                </button>
               </div>
             </div>
             <div class="lancamento-field lancamento-field-wide">

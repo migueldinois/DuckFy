@@ -67,7 +67,7 @@ class ContaBancaria:
             conexao.close()
 
     @staticmethod
-    def criar_conta(id_usuario, nome_conta, tipo_conta, saldo_atual=0.0):
+    def criar_conta(id_usuario, nome_conta, tipo_conta, saldo_atual=0.0, retornar_id=False):
         """Cadastra uma nova conta bancária no banco de dados."""
         conexao, cursor = Conexao.conectar()
         try:
@@ -84,10 +84,11 @@ class ContaBancaria:
                 VALUES (%s, %s, %s, %s)
             """
             cursor.execute(sql, (id_usuario, nome_conta, tipo_conta, saldo_atual))
+            id_conta_criada = cursor.lastrowid
             # A criação da conta e seus pontos são confirmados ou desfeitos juntos.
-            Progresso.conceder_xp(cursor, id_usuario, f"conta:{cursor.lastrowid}", 20)
+            Progresso.conceder_xp(cursor, id_usuario, f"conta:{id_conta_criada}", 20)
             conexao.commit()
-            return True
+            return id_conta_criada if retornar_id else True
         except Exception as e:
             print(f"Erro ao criar conta bancária: {e}")
             conexao.rollback()

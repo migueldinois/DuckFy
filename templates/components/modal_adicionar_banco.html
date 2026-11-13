@@ -5,7 +5,8 @@
             <button type="button" class="btn-close-custom" data-close-modal>&times;</button>
         </div>
 
-        <form action="{{ url_for('criar_conta') }}" method="POST">
+        <form action="{{ url_for('criar_conta') }}" method="POST" data-account-create-form>
+            <div class="account-create-feedback" data-account-form-feedback role="alert" hidden></div>
 
             <div class="mb-3">
                 <label for="nome_conta" class="card-subtitle d-block mb-1">
@@ -25,19 +26,14 @@
                     Tipo de conta
                 </label>
 
-                <div class="input-icon-wrapper tipo-conta-select">
-                    <img src="{{ url_for('static', filename='img/icons/tipo.svg') }}" class="input-icon"
-                        alt="">
-
-                    <select name="tipo_conta" id="tipo_conta" class="search-input input-with-icon" required>
-                        <option value="" disabled selected>Selecione o tipo</option>
-                        <option value="Conta Corrente">Conta Corrente</option>
-                        <option value="Poupança">Poupança</option>
-                        <option value="Conta Digital">Conta Digital</option>
-                        <option value="Investimento">Investimento</option>
-                        <option value="Carteira Digital">Carteira Digital</option>
-                    </select>
-                </div>
+                <select name="tipo_conta" id="tipo_conta" class="search-input" required>
+                    <option value="" disabled selected>Selecione o tipo</option>
+                    <option value="Conta Corrente">Conta Corrente</option>
+                    <option value="Poupança">Poupança</option>
+                    <option value="Conta Digital">Conta Digital</option>
+                    <option value="Investimento">Investimento</option>
+                    <option value="Carteira Digital">Carteira Digital</option>
+                </select>
             </div>
 
             <div class="mb-3">

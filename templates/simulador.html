@@ -1,9 +1,5 @@
 {% extends 'layout.html' %}
 
-{% macro moeda_br(valor) -%}
-{{ "{:,.2f}".format(valor)|replace(",", "X")|replace(".", ",")|replace("X", ".") }}
-{%- endmacro %}
-
 {% block title %}Simulador Patrimônio - DuckFy{% endblock %}
 
 {% block extra_css %}
@@ -32,7 +28,7 @@
                             <label class="form-label text-white-50 fw-semibold">Aporte Inicial (R$)</label>
                             <input type="text" inputmode="decimal" autocomplete="off"
                                 class="form-control input-custom" id="aporte-inicial" name="aporte_inicial"
-                                value="{{ 'R$ ' ~ moeda_br(aporte_inicial) if aporte_inicial else '' }}"
+                                value="{{ 'R$ ' ~ (aporte_inicial|moeda_br) if aporte_inicial else '' }}"
                                 placeholder="R$ 0,00" aria-label="Aporte inicial em reais">
                         </div>
 
@@ -40,7 +36,7 @@
                             <label class="form-label text-white-50 fw-semibold">Aporte Mensal (R$)</label>
                             <input type="text" inputmode="decimal" autocomplete="off"
                                 class="form-control input-custom" id="aporte-mensal" name="aporte_mensal"
-                                value="{{ 'R$ ' ~ moeda_br(aporte_mensal) if aporte_mensal else '' }}"
+                                value="{{ 'R$ ' ~ (aporte_mensal|moeda_br) if aporte_mensal else '' }}"
                                 placeholder="R$ 0,00" aria-label="Aporte mensal em reais">
                         </div>
 
@@ -50,29 +46,29 @@
 
                             <!-- Métrica de Percentual de Lucro -->
                             {% if resultado %}
-                            <div class="simulador-info-card p-3 rounded-3 mb-3">
+                            <div class="simulador-info-card simulador-multiplier-card p-3 rounded-3 mb-3">
                                 <div class="d-flex align-items-center mb-1">
                                     <i class="bi bi-graph-up-arrow text-destaque-verde me-2"></i>
                                     <small class="text-white-50 text-uppercase fw-semibold"
-                                        style="font-size: 0.75rem;">Multiplicador</small>
+                                        >Multiplicador</small>
                                 </div>
-                                <div class="fw-bold text-white fs-5">
+                                <div class="simulador-multiplier-value fw-bold">
                                     +{{ "%.1f"|format((resultado.rendimentos / resultado.total_investido) * 100) if
                                     resultado.total_investido > 0 else "0.0" }}%
                                 </div>
-                                <small class="text-white-50" style="font-size: 0.75rem;">
+                                <small class="simulador-info-description">
                                     Rendimento extra gerado sobre o capital aportado.
                                 </small>
                             </div>
                             {% endif %}
 
                             <!-- Dica de Educação Financeira -->
-                            <div class="simulador-info-card p-3 rounded-3">
+                            <div class="simulador-info-card simulador-constancy-card p-3 rounded-3">
                                 <div class="d-flex align-items-center mb-2">
                                     <i class="bi bi-lightbulb-fill text-warning me-2"></i>
                                     <strong class="text-white small">O Poder da Constância</strong>
                                 </div>
-                                <p class="text-white-50 mb-0" style="font-size: 0.78rem; line-height: 1.3;">
+                                <p class="simulador-constancy-message text-white-50 mb-0">
                                     Aportar todos os meses faz mais diferença a longo prazo do que um valor alto
                                     aplicado apenas no início.
                                 </p>
@@ -112,7 +108,7 @@
                         <div class="col-12 col-sm-6 col-md-4">
                             <div class="metric-box p-3">
                                 <h3 class="metric-value fw-bold text-white mb-1">
-                                    R$ {{ moeda_br(resultado.total_investido) if resultado else "0,00" }}
+                                    R$ {{ resultado.total_investido|moeda_br if resultado else "0,00" }}
                                 </h3>
                                 <small class="text-white-50 text-uppercase fw-semibold d-block">Investido</small>
                             </div>
@@ -121,7 +117,7 @@
                         <div class="col-12 col-sm-6 col-md-4">
                             <div class="metric-box p-3">
                                 <h3 class="metric-value fw-bold mb-1 text-destaque-verde">
-                                    R$ {{ moeda_br(resultado.rendimentos) if resultado else "0,00" }}
+                                    R$ {{ resultado.rendimentos|moeda_br if resultado else "0,00" }}
                                 </h3>
                                 <small class="text-white-50 text-uppercase fw-semibold d-block">Juros Acumulados</small>
                             </div>
@@ -130,7 +126,7 @@
                         <div class="col-12 col-md-4">
                             <div class="metric-box p-3">
                                 <h3 class="metric-value fw-bold mb-1 text-destaque-verde">
-                                    R$ {{ moeda_br(resultado.valor_total_final) if resultado else "0,00" }}
+                                    R$ {{ resultado.valor_total_final|moeda_br if resultado else "0,00" }}
                                 </h3>
                                 <small class="text-white-50 text-uppercase fw-semibold d-block">Valor Final</small>
                             </div>
@@ -150,28 +146,28 @@
                 </div>
 
                 <div class="mt-4 pt-3 border-top border-secondary border-opacity-25 d-lg-none">
-                    <div class="simulador-info-card p-3 rounded-3">
+                    <div class="simulador-info-card simulador-constancy-card p-3 rounded-3">
                         <div class="d-flex align-items-center mb-2">
                             <i class="bi bi-lightbulb-fill text-warning me-2"></i>
                             <strong class="text-white small">O Poder da Constância</strong>
                         </div>
-                        <p class="text-white-50 mb-0" style="font-size: 0.78rem; line-height: 1.3;">
+                        <p class="simulador-constancy-message text-white-50 mb-0">
                             Aportar todos os meses faz mais diferença a longo prazo do que um valor alto
                             aplicado apenas no início.
                         </p>
                     </div>
 
                     {% if resultado %}
-                    <div class="simulador-info-card p-3 rounded-3 mt-3">
+                    <div class="simulador-info-card simulador-multiplier-card p-3 rounded-3 mt-3">
                         <div class="d-flex align-items-center mb-1">
                             <i class="bi bi-graph-up-arrow text-destaque-verde me-2"></i>
-                            <small class="text-white-50 text-uppercase fw-semibold" style="font-size: 0.75rem;">Multiplicador</small>
+                            <small class="text-white-50 text-uppercase fw-semibold">Multiplicador</small>
                         </div>
-                        <div class="fw-bold text-white fs-5">
+                        <div class="simulador-multiplier-value fw-bold">
                             +{{ "%.1f"|format((resultado.rendimentos / resultado.total_investido) * 100) if
                             resultado.total_investido > 0 else "0.0" }}%
                         </div>
-                        <small class="text-white-50" style="font-size: 0.75rem;">
+                        <small class="simulador-info-description">
                             Rendimento extra gerado sobre o capital aportado.
                         </small>
                     </div>
@@ -223,10 +219,10 @@
                                 {% for linha in resultado.tabela_anual %}
                                 <tr>
                                     <td class="fw-semibold text-nowrap">Ano {{ linha.ano }}</td>
-                                    <td class="text-nowrap">R$ {{ moeda_br(linha.capital_inicial) }}</td>
-                                    <td class="text-nowrap text-destaque-verde">R$ {{ moeda_br(linha.juros_ano) }}
+                                    <td class="text-nowrap">R$ {{ linha.capital_inicial|moeda_br }}</td>
+                                    <td class="text-nowrap text-destaque-verde">R$ {{ linha.juros_ano|moeda_br }}
                                     </td>
-                                    <td class="fw-bold text-nowrap">R$ {{ moeda_br(linha.montante_final) }}</td>
+                                    <td class="fw-bold text-nowrap">R$ {{ linha.montante_final|moeda_br }}</td>
                                 </tr>
                                 {% endfor %}
                             </tbody>
