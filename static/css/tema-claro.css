@@ -667,22 +667,22 @@ html.tema-claro body.pagina-publica .termos-abas {
 
 html.tema-claro body.pagina-publica nav.termos-abas > a.aba:not(.aba-ativa),
 html.tema-claro body.pagina-publica nav.termos-abas > a.aba:not(.aba-ativa):visited {
-  color: #292238 !important;
+  color: var(--text-primary) !important;
 }
 
 html.tema-claro body.pagina-publica nav.termos-abas > a.aba:not(.aba-ativa):hover {
-  color: #292238 !important;
-  background-color: #e8e0f7 !important;
+  color: var(--text-primary) !important;
+  background-color: var(--bg-surface-2) !important;
 }
 
 html.tema-claro body.pagina-publica .termos-topo > a.btn-voltar:not(.btn-voltar-global),
 html.tema-claro body.pagina-publica .termos-topo > a.btn-voltar:not(.btn-voltar-global) i {
-  color: #292238 !important;
+  color: var(--text-primary) !important;
 }
 
 html.tema-claro body.pagina-publica .termos-topo > a.btn-voltar:not(.btn-voltar-global) {
-  background-color: #e8e0f7 !important;
-  border-color: #d7c8f2 !important;
+  background-color: var(--bg-surface-2) !important;
+  border-color: var(--border-color) !important;
 }
 
 body.app-body .modal-content,

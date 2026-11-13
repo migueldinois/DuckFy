@@ -11,10 +11,30 @@
     {% block styles %}{% endblock %}
     <link rel="stylesheet" href="{{ url_for('static', filename='css/tema-claro.css') }}?v=2.2">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/botao-voltar.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/acessibilidade.css') }}">
     <script>
-        if (localStorage.getItem("duckfy-tema") === "claro") {
-            document.documentElement.classList.add("tema-claro");
-        }
+        try {
+            const raiz = document.documentElement;
+            const tema = localStorage.getItem("duckfy-tema") || "escuro";
+            const fonteSalva = Number(localStorage.getItem("duckfy-fonte") || 100);
+            const tamanhoFonte = Number.isFinite(fonteSalva)
+                ? Math.min(140, Math.max(90, Math.round(fonteSalva / 10) * 10))
+                : 100;
+            const paleta = localStorage.getItem("duckfy-daltonismo") || "normal";
+            const paletasDaltonismo = ["protanopia", "deuteranopia", "tritanopia", "monocromatica"];
+
+            raiz.classList.toggle("tema-claro", tema === "claro");
+            raiz.classList.remove(
+                "daltonismo-protanopia",
+                "daltonismo-deuteranopia",
+                "daltonismo-tritanopia",
+                "daltonismo-monocromatica"
+            );
+            if (paletasDaltonismo.includes(paleta)) {
+                raiz.classList.add(`daltonismo-${paleta}`);
+            }
+            raiz.style.fontSize = `${tamanhoFonte}%`;
+        } catch {}
     </script>
 </head>
 
