@@ -90,13 +90,25 @@
                             <label for="senha">Senha:</label>
                         </div>
 
-                        <input
-                            type="password"
-                            id="senha"
-                            name="senha"
-                            placeholder="Digite sua senha"
-                            autocomplete="current-password"
-                            required>
+                        <div class="senha-campo">
+                            <input
+                                type="password"
+                                id="senha"
+                                name="senha"
+                                placeholder="Digite sua senha"
+                                autocomplete="current-password"
+                                required>
+                            <button
+                                type="button"
+                                class="senha-alternar"
+                                id="alternar-senha"
+                                aria-label="Mostrar senha"
+                                aria-pressed="false"
+                                aria-controls="senha"
+                                title="Mostrar senha">
+                                <i class="bi bi-eye" aria-hidden="true"></i>
+                            </button>
+                        </div>
                     </div>
 
                     <!-- envia o formulário -->

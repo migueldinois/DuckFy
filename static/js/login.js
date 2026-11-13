@@ -78,3 +78,24 @@ if (fecharAviso && avisoTermos) {
         avisoTermos.hidden = true;
     });
 }
+
+// alterna a visibilidade da senha
+const campoSenha = document.getElementById("senha");
+const botaoAlternarSenha = document.getElementById("alternar-senha");
+
+if (campoSenha && botaoAlternarSenha) {
+    botaoAlternarSenha.addEventListener("click", function () {
+        const senhaVisivel = campoSenha.type === "password";
+        campoSenha.type = senhaVisivel ? "text" : "password";
+
+        const descricao = senhaVisivel ? "Ocultar senha" : "Mostrar senha";
+        botaoAlternarSenha.setAttribute("aria-label", descricao);
+        botaoAlternarSenha.setAttribute("title", descricao);
+        botaoAlternarSenha.setAttribute("aria-pressed", String(senhaVisivel));
+
+        const icone = botaoAlternarSenha.querySelector("i");
+        if (icone) {
+            icone.className = senhaVisivel ? "bi bi-eye-slash" : "bi bi-eye";
+        }
+    });
+}

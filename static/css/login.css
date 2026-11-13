@@ -399,6 +399,46 @@ body {
     text-decoration: underline;
 }
 
+.senha-campo {
+    position: relative;
+}
+
+.login .senha-campo input {
+    padding-right: 52px;
+}
+
+.senha-alternar {
+    position: absolute;
+    top: 50%;
+    right: 5px;
+    width: 40px;
+    height: 40px;
+    padding: 0;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    transform: translateY(-50%);
+    color: var(--text-muted, #a0a0b5);
+    background: transparent;
+    border: 0;
+    border-radius: 9px;
+    cursor: pointer;
+}
+
+.senha-alternar:hover {
+    color: var(--brand-secondary, #B093FF);
+}
+
+.senha-alternar:focus-visible {
+    outline: 2px solid var(--brand-secondary, #B093FF);
+    outline-offset: -2px;
+}
+
+.senha-alternar i {
+    font-size: 1.05rem;
+    line-height: 1;
+}
+
 /* campos de entrada */
 .login .campo input {
     display: block;
