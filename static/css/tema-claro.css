@@ -428,7 +428,8 @@ body.app-body.tema-claro .main-content .extrato-page {
 }
 
 body.app-body.tema-claro .main-content .filter-tabs {
-  background-color: var(--bg-surface-2);
+  background-color: transparent;
+  border-color: var(--border-color);
 }
 
 body.app-body.tema-claro .main-content .tab-btn:not(.active),
@@ -440,6 +441,16 @@ body.app-body.tema-claro .main-content .table-hint {
 body.app-body.tema-claro .main-content .tab-btn.active,
 body.app-body.tema-claro .main-content .type-switcher .tab-btn.active {
   color: #ffffff;
+  background-color: var(--brand-primary);
+}
+
+body.app-body.tema-claro .main-content .filter-tabs .tab-btn.active {
+  color: var(--brand-primary);
+  background-color: transparent;
+  box-shadow: none;
+}
+
+body.app-body.tema-claro .main-content .filter-tabs .tab-btn.active::after {
   background-color: var(--brand-primary);
 }
 
@@ -457,12 +468,8 @@ body.app-body.tema-claro .main-content .category-item:hover {
 }
 
 body.app-body.tema-claro .main-content input:not([type="radio"]):not([type="checkbox"]):not([type="hidden"]),
-body.app-body.tema-claro .main-content select,
 body.app-body.tema-claro .main-content textarea,
-body.app-body.tema-claro .main-content .form-control,
-body.app-body.tema-claro .main-content .form-select,
-body.app-body.tema-claro .main-content .custom-select-trigger,
-body.app-body.tema-claro .main-content .custom-select-options {
+body.app-body.tema-claro .main-content .form-control {
   background-color: var(--bg-surface-1) !important;
   border-color: var(--border-color) !important;
   color: var(--text-primary) !important;
@@ -479,15 +486,13 @@ body.app-body.tema-claro #page-lancamento .input-group-text {
 }
 
 body.app-body.tema-claro .main-content input::placeholder,
-body.app-body.tema-claro .main-content textarea::placeholder,
-body.app-body.tema-claro .main-content .custom-select-trigger.has-placeholder {
+body.app-body.tema-claro .main-content textarea::placeholder {
   color: var(--text-muted) !important;
   -webkit-text-fill-color: var(--text-muted);
   opacity: 1;
 }
 
 body.app-body.tema-claro .main-content input:focus,
-body.app-body.tema-claro .main-content select:focus,
 body.app-body.tema-claro .main-content textarea:focus {
   border-color: var(--brand-primary) !important;
   box-shadow: 0 0 0 0.2rem rgba(112, 66, 200, 0.16) !important;
@@ -529,8 +534,8 @@ body.app-body.tema-claro .main-content .custom-select-option.is-active {
 }
 
 body.app-body.tema-claro .main-content .custom-select-option[aria-selected="true"] {
-  background-color: var(--brand-primary);
-  color: #ffffff;
+  background-color: color-mix(in srgb, var(--brand-primary) 20%, var(--bg-surface-1));
+  color: var(--text-primary);
 }
 
 body.app-body.tema-claro .main-content table,
@@ -701,11 +706,8 @@ body.app-body .main-content .categoria-modal-conteudo h2 {
 }
 
 body.app-body .modal-content .form-control,
-body.app-body .modal-content .form-select,
-body.app-body .modal-content .custom-select-trigger,
-body.app-body .modal-content .custom-select-options,
-body.app-body .modal-content .search-input,
-body.app-body .main-content .duckfy-modal .search-input {
+body.app-body .modal-content .search-input:not(select),
+body.app-body .main-content .duckfy-modal .search-input:not(select) {
   color: var(--text-primary) !important;
   background-color: var(--bg-surface-2) !important;
   border-color: var(--border-color) !important;
@@ -726,8 +728,8 @@ body.app-body .main-content .duckfy-modal .search-input::placeholder {
   opacity: 1;
 }
 
-body.app-body .modal-content :is(.form-control, .form-select, .custom-select-trigger, .search-input):focus,
-body.app-body .main-content .duckfy-modal .search-input:focus {
+body.app-body .modal-content :is(.form-control, .search-input:not(select)):focus,
+body.app-body .main-content .duckfy-modal .search-input:not(select):focus {
   border-color: var(--brand-primary) !important;
   box-shadow: 0 0 0 3px color-mix(in srgb, var(--brand-primary) 20%, transparent) !important;
 }

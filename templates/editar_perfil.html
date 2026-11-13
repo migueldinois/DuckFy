@@ -28,13 +28,15 @@
             <!-- CARTÃO DE FOTO E UPLOAD -->
             <div class="cartao-usuario-destaque p-4 rounded-4 d-flex flex-column align-items-center justify-content-center gap-2 text-center">
                 <div class="avatar-container position-relative">
-                    {% if usuario and usuario.foto_perfil %}
+                    {% if usuario and usuario.foto_perfil and 'placehold.co/400x400' not in usuario.foto_perfil %}
                         <img id="preview-avatar" src="{{ usuario.foto_perfil }}" alt="Foto de perfil" class="avatar rounded-circle object-fit-cover">
                     {% else %}
-                        <div id="preview-avatar-placeholder" class="avatar rounded-circle d-flex align-items-center justify-content-center bg-purple-glow">
-                            <i class="fa-solid fa-user text-white fs-2"></i>
-                        </div>
-                        <img id="preview-avatar" src="" alt="Foto de perfil" class="avatar rounded-circle object-fit-cover d-none">
+                        <img
+                            id="preview-avatar"
+                            src="https://ui-avatars.com/api/?name={{ (usuario.nome[0] if usuario and usuario.nome else 'U') | urlencode }}&background=7c4dff&color=ffffff&bold=true&size=128&format=svg"
+                            alt="Avatar com a inicial de {{ usuario.nome if usuario else 'Usuário' }}"
+                            class="avatar rounded-circle object-fit-cover"
+                        >
                     {% endif %}
                 </div>
 

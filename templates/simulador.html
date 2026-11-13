@@ -1,9 +1,5 @@
 {% extends 'layout.html' %}
 
-{% macro moeda_br(valor) -%}
-{{ "{:,.2f}".format(valor)|replace(",", "X")|replace(".", ",")|replace("X", ".") }}
-{%- endmacro %}
-
 {% block title %}Simulador Patrimônio - DuckFy{% endblock %}
 
 {% block extra_css %}
@@ -32,7 +28,7 @@
                             <label class="form-label text-white-50 fw-semibold">Aporte Inicial (R$)</label>
                             <input type="text" inputmode="decimal" autocomplete="off"
                                 class="form-control input-custom" id="aporte-inicial" name="aporte_inicial"
-                                value="{{ 'R$ ' ~ moeda_br(aporte_inicial) if aporte_inicial else '' }}"
+                                value="{{ 'R$ ' ~ (aporte_inicial|moeda_br) if aporte_inicial else '' }}"
                                 placeholder="R$ 0,00" aria-label="Aporte inicial em reais">
                         </div>
 
@@ -40,7 +36,7 @@
                             <label class="form-label text-white-50 fw-semibold">Aporte Mensal (R$)</label>
                             <input type="text" inputmode="decimal" autocomplete="off"
                                 class="form-control input-custom" id="aporte-mensal" name="aporte_mensal"
-                                value="{{ 'R$ ' ~ moeda_br(aporte_mensal) if aporte_mensal else '' }}"
+                                value="{{ 'R$ ' ~ (aporte_mensal|moeda_br) if aporte_mensal else '' }}"
                                 placeholder="R$ 0,00" aria-label="Aporte mensal em reais">
                         </div>
 
@@ -112,7 +108,7 @@
                         <div class="col-12 col-sm-6 col-md-4">
                             <div class="metric-box p-3">
                                 <h3 class="metric-value fw-bold text-white mb-1">
-                                    R$ {{ moeda_br(resultado.total_investido) if resultado else "0,00" }}
+                                    R$ {{ resultado.total_investido|moeda_br if resultado else "0,00" }}
                                 </h3>
                                 <small class="text-white-50 text-uppercase fw-semibold d-block">Investido</small>
                             </div>
@@ -121,7 +117,7 @@
                         <div class="col-12 col-sm-6 col-md-4">
                             <div class="metric-box p-3">
                                 <h3 class="metric-value fw-bold mb-1 text-destaque-verde">
-                                    R$ {{ moeda_br(resultado.rendimentos) if resultado else "0,00" }}
+                                    R$ {{ resultado.rendimentos|moeda_br if resultado else "0,00" }}
                                 </h3>
                                 <small class="text-white-50 text-uppercase fw-semibold d-block">Juros Acumulados</small>
                             </div>
@@ -130,7 +126,7 @@
                         <div class="col-12 col-md-4">
                             <div class="metric-box p-3">
                                 <h3 class="metric-value fw-bold mb-1 text-destaque-verde">
-                                    R$ {{ moeda_br(resultado.valor_total_final) if resultado else "0,00" }}
+                                    R$ {{ resultado.valor_total_final|moeda_br if resultado else "0,00" }}
                                 </h3>
                                 <small class="text-white-50 text-uppercase fw-semibold d-block">Valor Final</small>
                             </div>
@@ -223,10 +219,10 @@
                                 {% for linha in resultado.tabela_anual %}
                                 <tr>
                                     <td class="fw-semibold text-nowrap">Ano {{ linha.ano }}</td>
-                                    <td class="text-nowrap">R$ {{ moeda_br(linha.capital_inicial) }}</td>
-                                    <td class="text-nowrap text-destaque-verde">R$ {{ moeda_br(linha.juros_ano) }}
+                                    <td class="text-nowrap">R$ {{ linha.capital_inicial|moeda_br }}</td>
+                                    <td class="text-nowrap text-destaque-verde">R$ {{ linha.juros_ano|moeda_br }}
                                     </td>
-                                    <td class="fw-bold text-nowrap">R$ {{ moeda_br(linha.montante_final) }}</td>
+                                    <td class="fw-bold text-nowrap">R$ {{ linha.montante_final|moeda_br }}</td>
                                 </tr>
                                 {% endfor %}
                             </tbody>
