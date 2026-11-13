@@ -81,10 +81,10 @@ function configurarLancamentos() {
     });
   }
 
-  function mostrarErroSaldo(mensagem) {
+  function mostrarErroSaldo(mensagem, titulo = 'Saldo insuficiente') {
     if (window.DuckFyAlert?.error) {
       if (avisoSaldo) avisoSaldo.hidden = true;
-      window.DuckFyAlert.error(mensagem, 'Saldo insuficiente');
+      window.DuckFyAlert.error(mensagem, titulo);
       return;
     }
 
@@ -363,7 +363,7 @@ function configurarLancamentos() {
   const etapaInicial = Number(paginaLancamento?.dataset.initialStep) || 1;
   definirEtapaWizard(etapaInicial === 3 && contaRestaurada ? 3 : 1);
   if (avisoSaldo && !avisoSaldo.hidden) {
-    mostrarErroSaldo(avisoSaldo.textContent.trim());
+    mostrarErroSaldo(avisoSaldo.textContent.trim(), 'Não foi possível salvar');
   }
   configurarFormularioCriarConta();
 

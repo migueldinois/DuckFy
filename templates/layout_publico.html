@@ -11,10 +11,30 @@
     {% block styles %}{% endblock %}
     <link rel="stylesheet" href="{{ url_for('static', filename='css/tema-claro.css') }}?v=2.2">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/botao-voltar.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/acessibilidade.css') }}?v=2.9">
     <script>
-        if (localStorage.getItem("duckfy-tema") === "claro") {
-            document.documentElement.classList.add("tema-claro");
-        }
+        try {
+            const raiz = document.documentElement;
+            const tema = localStorage.getItem("duckfy-tema") || "escuro";
+            const fonteSalva = Number(localStorage.getItem("duckfy-fonte") || 100);
+            const tamanhoFonte = Number.isFinite(fonteSalva)
+                ? Math.min(140, Math.max(90, Math.round(fonteSalva / 10) * 10))
+                : 100;
+            const paleta = localStorage.getItem("duckfy-daltonismo") || "normal";
+            const paletasDaltonismo = ["protanopia", "deuteranopia", "tritanopia", "monocromatica"];
+
+            raiz.classList.toggle("tema-claro", tema === "claro");
+            raiz.classList.remove(
+                "daltonismo-protanopia",
+                "daltonismo-deuteranopia",
+                "daltonismo-tritanopia",
+                "daltonismo-monocromatica"
+            );
+            if (paletasDaltonismo.includes(paleta)) {
+                raiz.classList.add(`daltonismo-${paleta}`);
+            }
+            raiz.style.fontSize = `${tamanhoFonte}%`;
+        } catch {}
     </script>
 </head>
 
@@ -23,9 +43,9 @@
     <canvas id="particulas-fundo" aria-hidden="true"></canvas>
     {% include 'components/sweetalert_messages.html' %}
     {% block content %}{% endblock %}
-    </script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="{{ url_for('static', filename='js/sweetalert-messages.js') }}"></script>
+    <script>
         const canvas = document.getElementById("particulas-fundo");
         const ctx = canvas.getContext("2d");
         let particulas = [];
@@ -43,6 +63,11 @@
             ctx.setTransform(escala, 0, 0, escala, 0, 0);
 
             const quantidade = Math.min(100, Math.max(35, Math.floor((largura * altura) / 14000)));
+            const estilosRaiz = getComputedStyle(document.documentElement);
+            const cores = [
+                estilosRaiz.getPropertyValue("--brand-primary").trim() || "#7C4DFF",
+                estilosRaiz.getPropertyValue("--accent-primary").trim() || "#00E676"
+            ];
             particulas = Array.from({ length: quantidade }, () => ({
                 x: Math.random() * largura,
                 y: Math.random() * altura,
@@ -51,7 +76,7 @@
                 velocidadeY: (Math.random() - 0.5) * 0.35,
                 opacidade: Math.random() * 0.6 + 0.2,
                 fase: Math.random() * Math.PI * 2,
-                cor: Math.random() > 0.5 ? "124, 77, 255" : "0, 230, 118"
+                cor: cores[Math.floor(Math.random() * cores.length)]
             }));
         }
 
@@ -73,8 +98,8 @@
                 ctx.globalAlpha = movimentoReduzido
                     ? particula.opacidade
                     : particula.opacidade * (0.7 + Math.sin(tempo + particula.fase) * 0.3);
-                ctx.fillStyle = `rgb(${particula.cor})`;
-                ctx.shadowColor = `rgb(${particula.cor})`;
+                ctx.fillStyle = particula.cor;
+                ctx.shadowColor = particula.cor;
                 ctx.shadowBlur = particula.tamanho * 7;
                 ctx.beginPath();
                 ctx.arc(particula.x, particula.y, particula.tamanho, 0, Math.PI * 2);

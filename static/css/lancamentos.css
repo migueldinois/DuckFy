@@ -621,9 +621,9 @@
   position: relative;
   display: grid;
   grid-template-columns: minmax(0, 1fr);
-  grid-template-rows: 44px auto;
-  align-content: start;
-  justify-items: start;
+  grid-template-rows: 56px auto;
+  align-content: center;
+  justify-items: center;
   gap: 0;
   min-height: 160px;
   padding: 20px;
@@ -677,21 +677,20 @@
 
 .lancamento-type-card-icon {
   order: 1;
-  width: 44px;
-  height: 44px;
-  font-size: 20px;
+  width: 56px;
+  height: 56px;
+  background: transparent;
+  border: 0;
+  border-radius: 0;
+  font-size: 40px;
 }
 
 .lancamento-type-card-icon-entry {
   color: var(--lancamento-entry);
-  background: color-mix(in srgb, var(--lancamento-entry) 12%, var(--bg-surface-2));
-  border-color: color-mix(in srgb, var(--lancamento-entry) 30%, var(--border-color));
 }
 
 .lancamento-type-card-icon-exit {
   color: var(--lancamento-exit);
-  background: color-mix(in srgb, var(--lancamento-exit) 12%, var(--bg-surface-2));
-  border-color: color-mix(in srgb, var(--lancamento-exit) 30%, var(--border-color));
 }
 
 .lancamento-type-card-copy {
@@ -699,11 +698,11 @@
   display: grid;
   width: 100%;
   gap: 6px;
-  justify-items: start;
+  justify-items: center;
   max-width: 48ch;
   margin-top: 14px;
   padding: 0;
-  text-align: left;
+  text-align: center;
 }
 
 .lancamento-type-card-copy strong {
