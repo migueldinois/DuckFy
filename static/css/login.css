@@ -399,44 +399,50 @@ body {
     text-decoration: underline;
 }
 
-.senha-campo {
+.campo-senha-controle {
     position: relative;
 }
 
-.login .senha-campo input {
+.campo-senha-controle input {
     padding-right: 52px;
 }
 
-.senha-alternar {
+.btn-olho-senha {
     position: absolute;
     top: 50%;
-    right: 5px;
-    width: 40px;
-    height: 40px;
-    padding: 0;
+    right: 8px;
+    width: 36px;
+    height: 36px;
     display: inline-flex;
     align-items: center;
     justify-content: center;
     transform: translateY(-50%);
-    color: var(--text-muted, #a0a0b5);
+    color: #a0a0b5;
     background: transparent;
     border: 0;
-    border-radius: 9px;
+    border-radius: 8px;
     cursor: pointer;
 }
 
-.senha-alternar:hover {
-    color: var(--brand-secondary, #B093FF);
+.btn-olho-senha:hover,
+.btn-olho-senha:focus-visible {
+    color: #B093FF;
+    outline: none;
+    background: rgba(124, 77, 255, 0.14);
 }
 
-.senha-alternar:focus-visible {
-    outline: 2px solid var(--brand-secondary, #B093FF);
-    outline-offset: -2px;
-}
-
-.senha-alternar i {
-    font-size: 1.05rem;
+.btn-olho-senha i {
+    font-size: 16px;
     line-height: 1;
+}
+
+body.tema-claro .btn-olho-senha {
+    color: #706a80;
+}
+
+body.tema-claro .btn-olho-senha:hover,
+body.tema-claro .btn-olho-senha:focus-visible {
+    color: #7C4DFF;
 }
 
 /* campos de entrada */

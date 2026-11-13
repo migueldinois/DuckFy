@@ -95,7 +95,8 @@ if (campoSenha && botaoAlternarSenha) {
 
         const icone = botaoAlternarSenha.querySelector("i");
         if (icone) {
-            icone.className = senhaVisivel ? "bi bi-eye-slash" : "bi bi-eye";
+            icone.classList.toggle("fi-sr-eye", !senhaVisivel);
+            icone.classList.toggle("fi-sr-eye-crossed", senhaVisivel);
         }
     });
 }
