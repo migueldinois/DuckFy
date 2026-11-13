@@ -428,7 +428,8 @@ body.app-body.tema-claro .main-content .extrato-page {
 }
 
 body.app-body.tema-claro .main-content .filter-tabs {
-  background-color: var(--bg-surface-2);
+  background-color: transparent;
+  border-color: var(--border-color);
 }
 
 body.app-body.tema-claro .main-content .tab-btn:not(.active),
@@ -440,6 +441,16 @@ body.app-body.tema-claro .main-content .table-hint {
 body.app-body.tema-claro .main-content .tab-btn.active,
 body.app-body.tema-claro .main-content .type-switcher .tab-btn.active {
   color: #ffffff;
+  background-color: var(--brand-primary);
+}
+
+body.app-body.tema-claro .main-content .filter-tabs .tab-btn.active {
+  color: var(--brand-primary);
+  background-color: transparent;
+  box-shadow: none;
+}
+
+body.app-body.tema-claro .main-content .filter-tabs .tab-btn.active::after {
   background-color: var(--brand-primary);
 }
 
