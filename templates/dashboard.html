@@ -17,15 +17,16 @@
         <h2 class="card-main-title m-0">Resumo do mês</h2>
         <span class="card-subtitle">{{ mes_atual }}</span>
       </div>
-
-      {% if sequencia > 0 %}
-      <a href="{{ url_for('sequencia') }}" class="sequence-indicator" aria-label="Abrir sequência de {{ sequencia }} dias">
-        <span class="sequence-flame" aria-hidden="true">
-          <img src="{{ url_for('static', filename='img/icons/sequencia.svg') }}" alt="">
-          <strong class="sequence-value">{{ sequencia }}</strong>
+      <div class="summary-corner-stats" aria-label="Progresso de gamificação">
+        <a href="{{ url_for('sequencia') }}" class="summary-corner-stat summary-corner-streak" aria-label="Ofensiva atual: {{ sequencia }} {{ 'dia' if sequencia == 1 else 'dias' }}" title="Ofensiva atual">
+          <img src="{{ url_for('static', filename='img/icons/sequencia.svg') }}" alt="" aria-hidden="true">
+          <strong>{{ sequencia }}</strong>
+        </a>
+        <span class="summary-corner-stat summary-corner-xp" aria-label="{{ pontos_xp }} XP acumulado" title="XP acumulado">
+          <i class="bi bi-star-fill" aria-hidden="true"></i>
+          <strong>{{ pontos_xp }} XP</strong>
         </span>
-      </a>
-      {% endif %}
+      </div>
     </div>
 
     <div class="row g-3 dashboard-summary-row">
