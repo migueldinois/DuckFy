@@ -1144,21 +1144,6 @@ html.tema-claro .previa-acessibilidade[data-paleta="monocromatica"] {
 	background-color: var(--confirmation-primary);
 }
 
-.sidebar.collapsed .sidebar-logo[src$="d_protanopia.jpg"],
-.sidebar.collapsed .sidebar-logo[src$="d_deuteranopia.jpg"],
-.sidebar.collapsed .sidebar-logo[src$="d_tritanopia.jpg"] {
-	object-fit: cover;
-	object-position: center;
-	filter: none;
-	mix-blend-mode: multiply;
-}
-
-html.tema-claro .sidebar.collapsed .sidebar-logo[src$="d_protanopia.jpg"],
-html.tema-claro .sidebar.collapsed .sidebar-logo[src$="d_deuteranopia.jpg"],
-html.tema-claro .sidebar.collapsed .sidebar-logo[src$="d_tritanopia.jpg"] {
-	filter: none;
-}
-
 @keyframes acessibilidade-entrada {
 	from { opacity: 0; transform: translateY(10px) scale(0.985); }
 	to { opacity: 1; transform: translateY(0) scale(1); }

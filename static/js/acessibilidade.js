@@ -74,7 +74,6 @@ document.addEventListener("DOMContentLoaded", function () {
 
 		localStorage.setItem("duckfy-fonte", String(preferencias.fonte));
 		localStorage.setItem("duckfy-daltonismo", preferencias.daltonismo);
-		document.dispatchEvent(new Event("duckfy:logo-update"));
 	}
 
 	function mostrarStatus(titulo, mensagem) {
