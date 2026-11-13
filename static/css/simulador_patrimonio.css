@@ -169,13 +169,19 @@
     border-radius: 14px;
     padding: 1.5rem 1rem;
     border: 1px solid rgba(255, 255, 255, 0.03);
+    min-width: 0;
 }
 
 .metric-value {
+    max-width: 100%;
     font-size: 1.35rem;
     line-height: 1.25;
     white-space: nowrap;
     overflow-wrap: normal;
+}
+
+.simulador-page-wrapper .row.text-center > [class*="col-"] {
+    min-width: 0;
 }
 
 .text-destaque-verde {
@@ -265,10 +271,6 @@ tbody tr:last-child {
         padding: 1rem 0.75rem !important;
     }
 
-    .metric-value {
-        font-size: 1rem;
-    }
-
     .grafic-container {
         min-height: 280px;
         padding: 0.75rem;
@@ -316,9 +318,6 @@ tbody tr:last-child {
         padding-left: 0.5rem;
     }
 
-    .metric-value {
-        font-size: 1rem;
-    }
 }
 
 @media (max-width: 359.98px) {
@@ -334,7 +333,4 @@ tbody tr:last-child {
         padding: 0.45rem 0.75rem;
     }
 
-    .metric-value {
-        font-size: 0.85rem;
-    }
 }
