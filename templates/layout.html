@@ -9,12 +9,21 @@
         try {
             const raiz = document.documentElement;
             const tema = localStorage.getItem("duckfy-tema") || "escuro";
-            const tamanhoFonte = Number(localStorage.getItem("duckfy-fonte") || 100);
+            const fonteSalva = Number(localStorage.getItem("duckfy-fonte") || 100);
+            const tamanhoFonte = Number.isFinite(fonteSalva)
+                ? Math.min(140, Math.max(90, Math.round(fonteSalva / 10) * 10))
+                : 100;
             const paleta = localStorage.getItem("duckfy-daltonismo") || "normal";
+            const paletasDaltonismo = ["protanopia", "deuteranopia", "tritanopia", "monocromatica"];
 
             raiz.classList.toggle("tema-claro", tema === "claro");
-            raiz.classList.remove("daltonismo-protanopia", "daltonismo-deuteranopia", "daltonismo-tritanopia");
-            if (["protanopia", "deuteranopia", "tritanopia"].includes(paleta)) {
+            raiz.classList.remove(
+                "daltonismo-protanopia",
+                "daltonismo-deuteranopia",
+                "daltonismo-tritanopia",
+                "daltonismo-monocromatica"
+            );
+            if (paletasDaltonismo.includes(paleta)) {
                 raiz.classList.add(`daltonismo-${paleta}`);
             }
             raiz.style.fontSize = `${Math.min(140, Math.max(90, tamanhoFonte))}%`;

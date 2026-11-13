@@ -121,6 +121,47 @@ html.daltonismo-tritanopia.tema-claro body.app-body.tema-claro {
 	--shadow-color: rgba(59, 38, 29, 0.12);
 }
 
+html.daltonismo-monocromatica:not(.tema-claro) {
+	--bg-primary: #111111;
+	--bg-surface-1: #1c1c1c;
+	--bg-surface-2: #303030;
+	--brand-primary: #686868;
+	--brand-secondary: #e0e0e0;
+	--brand-dark: #4a4a4a;
+	--accent-primary: #f0f0f0;
+	--accent-secondary: #d8d8d8;
+	--accent-dark: #bcbcbc;
+	--confirmation-primary: #d8d8d8;
+	--confirmation-secondary: #f0f0f0;
+	--danger-primary: #a0a0a0;
+	--danger-secondary: #c0c0c0;
+	--text-primary: #f5f5f5;
+	--text-muted: #c2c2c2;
+	--border-color: #686868;
+	--shadow-color: rgba(0, 0, 0, 0.42);
+}
+
+html.daltonismo-monocromatica.tema-claro,
+html.daltonismo-monocromatica.tema-claro body.app-body.tema-claro {
+	--bg-primary: #eeeeee;
+	--bg-surface-1: #ffffff;
+	--bg-surface-2: #dedede;
+	--brand-primary: #333333;
+	--brand-secondary: #444444;
+	--brand-dark: #111111;
+	--accent-primary: #222222;
+	--accent-secondary: #3a3a3a;
+	--accent-dark: #111111;
+	--confirmation-primary: #333333;
+	--confirmation-secondary: #111111;
+	--danger-primary: #666666;
+	--danger-secondary: #444444;
+	--text-primary: #151515;
+	--text-muted: #414141;
+	--border-color: #777777;
+	--shadow-color: rgba(0, 0, 0, 0.16);
+}
+
 html[class*="daltonismo-"] {
 	--bg-main: var(--bg-primary);
 	--bg-dark: var(--bg-primary);
@@ -705,7 +746,7 @@ html.tema-claro .modal-acessibilidade::backdrop {
 }
 
 .paleta-opcao[data-paleta="deuteranopia"] {
-	--amostra-1: #164c72;
+	--amostra-1: #0072b2;
 	--amostra-2: #e69f00;
 	--amostra-3: #56b4e9;
 	--amostra-4: #d55e00;
@@ -716,6 +757,13 @@ html.tema-claro .modal-acessibilidade::backdrop {
 	--amostra-2: #32b88c;
 	--amostra-3: #d65b83;
 	--amostra-4: #f0a36a;
+}
+
+.paleta-opcao[data-paleta="monocromatica"] {
+	--amostra-1: #222222;
+	--amostra-2: #666666;
+	--amostra-3: #aaaaaa;
+	--amostra-4: #eeeeee;
 }
 
 .resumo-acessibilidade {
@@ -2060,6 +2108,13 @@ html.tema-claro .modal-acessibilidade::backdrop {
 	--previa-perigo: #d65b83;
 }
 
+.previa-acessibilidade[data-paleta="monocromatica"] {
+	--previa-destaque: #e0e0e0;
+	--previa-acento: #f0f0f0;
+	--previa-confirmacao: #d8d8d8;
+	--previa-perigo: #a0a0a0;
+}
+
 html.tema-claro .previa-acessibilidade[data-paleta="protanopia"] {
 	--previa-destaque: #006ea8;
 	--previa-acento: #8a7300;
@@ -2081,6 +2136,13 @@ html.tema-claro .previa-acessibilidade[data-paleta="tritanopia"] {
 	--previa-perigo: #a23b72;
 }
 
+html.tema-claro .previa-acessibilidade[data-paleta="monocromatica"] {
+	--previa-destaque: #333333;
+	--previa-acento: #222222;
+	--previa-confirmacao: #333333;
+	--previa-perigo: #666666;
+}
+
 @media (max-width: 620px) {
 	.assistente-etapa .controle-assistente {
 		padding: 16px;
@@ -2088,5 +2150,276 @@ html.tema-claro .previa-acessibilidade[data-paleta="tritanopia"] {
 
 	.assistente-etapa-cabecalho {
 		align-items: flex-start;
+	}
+}
+
+/* Acabamento do assistente */
+.modal-acessibilidade {
+	width: min(720px, calc(100vw - 32px));
+	max-height: min(88dvh, 760px);
+	border-color: color-mix(in srgb, var(--acessibilidade-borda) 82%, transparent);
+	border-radius: 20px;
+	box-shadow: 0 24px 64px rgba(0, 0, 0, 0.3);
+}
+
+.modal-acessibilidade .acessibilidade-pagina {
+	max-height: min(88dvh, 760px);
+}
+
+.modal-acessibilidade .acessibilidade-cabecalho {
+	gap: 13px;
+	padding: 18px 24px 16px;
+	background: var(--acessibilidade-superficie);
+}
+
+.acessibilidade-marca {
+	width: 42px;
+	height: 42px;
+	flex-basis: 42px;
+	border-radius: 12px;
+	font-size: 1.2rem;
+}
+
+.modal-acessibilidade .acessibilidade-identidade h2 {
+	font-size: 1.2rem;
+	font-weight: 750;
+}
+
+.modal-acessibilidade .acessibilidade-identidade p {
+	margin-top: 2px;
+	font-size: 0.82rem;
+}
+
+.modal-acessibilidade .acessibilidade-fechar {
+	width: 36px;
+	height: 36px;
+	flex-basis: 36px;
+}
+
+.assistente-progresso {
+	gap: 12px;
+	padding: 13px 24px 0;
+}
+
+.assistente-trilho {
+	height: 4px;
+}
+
+#rotulo-etapa {
+	font-size: 0.7rem;
+}
+
+.assistente-corpo {
+	align-content: start;
+	gap: 10px;
+	padding: 8px 24px 14px;
+}
+
+.assistente-etapa {
+	padding: 14px 0 8px;
+}
+
+.assistente-etapa-cabecalho {
+	margin-bottom: 16px;
+}
+
+.assistente-icone {
+	width: 40px;
+	height: 40px;
+	flex-basis: 40px;
+	border-radius: 12px;
+}
+
+.assistente-etapa-cabecalho h3 {
+	font-size: 1.05rem;
+}
+
+.assistente-etapa-cabecalho p {
+	font-size: 0.78rem;
+}
+
+.assistente-etapa .paleta-opcoes {
+	gap: 8px;
+}
+
+.assistente-etapa .paleta-conteudo {
+	min-height: 66px;
+	gap: 8px;
+	padding: 9px 11px;
+	border-radius: 11px;
+	background: color-mix(in srgb, var(--acessibilidade-superficie) 65%, var(--bg-surface-2));
+}
+
+.assistente-etapa .paleta-opcao:hover .paleta-conteudo {
+	transform: none;
+}
+
+.assistente-etapa .paleta-info {
+	gap: 3px;
+}
+
+.assistente-etapa .paleta-info strong {
+	font-size: 0.78rem;
+}
+
+.assistente-etapa .paleta-info small {
+	font-size: 0.66rem;
+	line-height: 1.3;
+}
+
+.assistente-etapa .paleta-amostras {
+	gap: 3px;
+}
+
+.assistente-etapa .paleta-amostras i {
+	width: 7px;
+	height: 7px;
+}
+
+.assistente-etapa .paleta-check {
+	width: 18px;
+	height: 18px;
+	flex-basis: 18px;
+}
+
+.assistente-etapa .aviso-paleta {
+	margin-top: 9px;
+	font-size: 0.7rem;
+	line-height: 1.4;
+}
+
+.previa-acessibilidade {
+	margin: 0;
+	padding: 10px 0 0;
+	border: 0;
+	border-top: 1px solid var(--acessibilidade-borda);
+	border-radius: 0;
+	background: transparent;
+}
+
+.previa-cabecalho {
+	margin-bottom: 7px;
+}
+
+.previa-cabecalho h3 {
+	font-size: 0.76rem;
+	font-weight: 750;
+}
+
+.previa-cabecalho p {
+	font-size: 0.66rem;
+}
+
+.previa-cabecalho > span {
+	padding: 4px 8px;
+	font-size: 0.64rem;
+}
+
+.previa-cartao {
+	gap: 10px;
+	padding: 9px 11px;
+	border-radius: 10px;
+}
+
+.previa-cartao-icone {
+	width: 32px;
+	height: 32px;
+	flex-basis: 32px;
+	border-radius: 9px;
+}
+
+.previa-cartao-conteudo > span,
+.previa-cartao-conteudo > small {
+	font-size: 0.64em;
+}
+
+.previa-cartao-conteudo > strong {
+	font-size: 0.96em;
+}
+
+.modal-acessibilidade .acessibilidade-rodape {
+	min-height: 68px;
+	gap: 8px;
+	padding: 11px 24px;
+}
+
+.botao-acessibilidade {
+	min-height: 40px;
+	padding: 8px 13px;
+	border-radius: 10px;
+	font-size: 0.8rem;
+}
+
+.botao-acessibilidade:hover {
+	transform: none;
+}
+
+.botao-continuar,
+.botao-salvar {
+	box-shadow: none;
+}
+
+@media (max-width: 620px) {
+	.modal-acessibilidade {
+		width: calc(100vw - 24px);
+		max-height: calc(100dvh - 24px);
+		border-radius: 17px;
+	}
+
+	.modal-acessibilidade .acessibilidade-pagina {
+		max-height: calc(100dvh - 26px);
+	}
+
+	.modal-acessibilidade .acessibilidade-cabecalho {
+		padding: 15px 17px 13px;
+	}
+
+	.assistente-progresso {
+		padding: 11px 17px 0;
+	}
+
+	.assistente-corpo {
+		padding: 6px 17px 11px;
+	}
+
+	.assistente-etapa .paleta-opcoes {
+		grid-template-columns: minmax(0, 1fr);
+	}
+
+	.assistente-etapa .paleta-conteudo {
+		min-height: 56px;
+	}
+
+	.modal-acessibilidade .acessibilidade-rodape {
+		flex-wrap: wrap;
+		padding: 10px 17px calc(10px + env(safe-area-inset-bottom));
+	}
+
+	.modal-acessibilidade .acessibilidade-alerta {
+		flex-basis: 100%;
+	}
+}
+
+@media (max-width: 380px) {
+	.modal-acessibilidade .acessibilidade-identidade p {
+		max-width: 210px;
+		font-size: 0.74rem;
+	}
+
+	.assistente-etapa .paleta-conteudo {
+		padding-inline: 9px;
+	}
+
+	.assistente-etapa .paleta-info small {
+		font-size: 0.64rem;
+	}
+
+	.modal-acessibilidade .acessibilidade-rodape {
+		gap: 6px;
+	}
+
+	.botao-acessibilidade {
+		padding-inline: 10px;
+		font-size: 0.74rem;
 	}
 }
