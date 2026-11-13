@@ -59,11 +59,16 @@ function configurarLancamentos() {
   const botoesVoltar = document.querySelectorAll('[data-wizard-back]');
   const avisoSaldo = document.querySelector('#saldo-insuficiente');
   const botoesSelecionarConta = document.querySelectorAll('[data-account-select]');
+  const painelContas = document.querySelector('.lancamento-account-page-panel');
   const campoConta = document.querySelector('#id_conta');
   const resumoConta = document.querySelector('#lancamento-conta-resumo');
   const nomeResumoConta = document.querySelector('#lancamento-conta-resumo-nome');
   const saldoResumoConta = document.querySelector('#lancamento-conta-resumo-saldo');
   const formularioLancamento = document.querySelector('.lancamento-wizard-form');
+  const formularioCriarConta = document.querySelector('[data-account-create-form]');
+  const feedbackCriarConta = document.querySelector('[data-account-form-feedback]');
+  const inputSaldoNovaConta = document.querySelector('#saldo_atual');
+  const previaSaldoNovaConta = document.querySelector('#previaSaldoNovoBanco');
   const botoesAlterarConta = document.querySelectorAll('[data-account-trigger]');
   let saldoContaSelecionada = null;
 
@@ -112,7 +117,7 @@ function configurarLancamentos() {
 
   function mostrarEtapaConta() {
     definirEtapaWizard(2);
-    document.querySelector('[data-account-select]')?.focus();
+    document.querySelector('[data-account-select], [data-open-modal="modalAdicionarBanco"]')?.focus();
   }
 
   function atualizarResumoConta(botao) {
@@ -128,6 +133,156 @@ function configurarLancamentos() {
       })}`;
     }
     if (resumoConta) resumoConta.hidden = false;
+  }
+
+  function atualizarPreviaSaldoNovaConta() {
+    if (!inputSaldoNovaConta || !previaSaldoNovaConta) return;
+
+    const textoValor = inputSaldoNovaConta.value.trim();
+    const valor = Number(textoValor.replace(/\./g, '').replace(',', '.'));
+    previaSaldoNovaConta.textContent = `R$ ${Number.isFinite(valor)
+      ? valor.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })
+      : '0,00'}`;
+  }
+
+  function mostrarFeedbackCriarConta(mensagem) {
+    if (feedbackCriarConta) {
+      feedbackCriarConta.textContent = mensagem;
+      feedbackCriarConta.hidden = false;
+      return;
+    }
+
+    if (window.DuckFyAlert?.error) {
+      window.DuckFyAlert.error(mensagem, 'Erro ao criar conta');
+      return;
+    }
+
+    console.error(mensagem);
+  }
+
+  function configurarBotaoSelecaoConta(botao) {
+    botao.addEventListener('click', function () {
+      atualizarResumoConta(botao);
+      definirEtapaWizard(3);
+      document.querySelector('#local')?.focus();
+    });
+  }
+
+  function criarOpcaoConta(conta) {
+    const botao = document.createElement('button');
+    botao.type = 'button';
+    botao.className = 'lancamento-account-option';
+    botao.dataset.accountSelect = '';
+    botao.dataset.accountId = String(conta.id_conta);
+    botao.dataset.accountName = conta.nome_conta;
+    botao.dataset.accountBalance = conta.saldo_atual;
+
+    const icone = document.createElement('span');
+    icone.className = 'lancamento-account-option-icon';
+    icone.setAttribute('aria-hidden', 'true');
+    const iconeBanco = document.createElement('i');
+    iconeBanco.className = 'bi bi-bank';
+    icone.append(iconeBanco);
+
+    const texto = document.createElement('span');
+    texto.className = 'lancamento-account-option-copy';
+    const nome = document.createElement('strong');
+    nome.textContent = conta.nome_conta;
+    const detalhes = document.createElement('small');
+    detalhes.textContent = `${conta.tipo_conta} · Saldo: R$ ${conta.saldo_formatado}`;
+    texto.append(nome, detalhes);
+
+    const seta = document.createElement('i');
+    seta.className = 'bi bi-arrow-right lancamento-account-option-arrow';
+    seta.setAttribute('aria-hidden', 'true');
+    botao.append(icone, texto, seta);
+    return botao;
+  }
+
+  function exibirNovaConta(conta) {
+    if (!painelContas) return null;
+
+    let listaContas = painelContas.querySelector('.lancamento-account-list');
+    if (!listaContas) {
+      listaContas = document.createElement('div');
+      listaContas.className = 'lancamento-account-list';
+      listaContas.setAttribute('aria-label', 'Contas bancárias');
+      painelContas.replaceChildren(listaContas);
+    }
+
+    const botaoConta = criarOpcaoConta(conta);
+    listaContas.prepend(botaoConta);
+    configurarBotaoSelecaoConta(botaoConta);
+    return botaoConta;
+  }
+
+  function configurarFormularioCriarConta() {
+    if (!formularioCriarConta) return;
+
+    inputSaldoNovaConta?.addEventListener('currency:formatted', atualizarPreviaSaldoNovaConta);
+    inputSaldoNovaConta?.addEventListener('input', atualizarPreviaSaldoNovaConta);
+    atualizarPreviaSaldoNovaConta();
+
+    formularioCriarConta.addEventListener('input', function () {
+      if (feedbackCriarConta) {
+        feedbackCriarConta.hidden = true;
+        feedbackCriarConta.textContent = '';
+      }
+    });
+
+    formularioCriarConta.addEventListener('submit', async function (evento) {
+      evento.preventDefault();
+
+      const botaoEnviar = formularioCriarConta.querySelector('[type="submit"]');
+      const textoBotaoOriginal = botaoEnviar?.textContent;
+      if (feedbackCriarConta) {
+        feedbackCriarConta.hidden = true;
+        feedbackCriarConta.textContent = '';
+      }
+      if (botaoEnviar) {
+        botaoEnviar.disabled = true;
+        botaoEnviar.textContent = 'Salvando...';
+      }
+
+      try {
+        const resposta = await fetch(formularioCriarConta.action, {
+          method: 'POST',
+          headers: {
+            'X-Requested-With': 'XMLHttpRequest',
+            'Accept': 'application/json',
+          },
+          body: new FormData(formularioCriarConta),
+        });
+        const resultado = await resposta.json();
+
+        if (!resposta.ok || !resultado.success) {
+          mostrarFeedbackCriarConta(resultado.message || 'Não foi possível criar a conta bancária.');
+          return;
+        }
+
+        if (!resultado.account || !resultado.account.id_conta) {
+          throw new Error('A resposta do servidor não contém a conta criada.');
+        }
+
+        const botaoConta = exibirNovaConta(resultado.account);
+        if (!botaoConta) {
+          throw new Error('Não foi possível atualizar a lista de contas do lançamento.');
+        }
+
+        formularioCriarConta.reset();
+        atualizarPreviaSaldoNovaConta();
+        ModalManager.fechar('modalAdicionarBanco');
+        botaoConta.focus();
+      } catch (erro) {
+        console.error('Erro ao criar conta pelo lançamento:', erro);
+        mostrarFeedbackCriarConta('Não foi possível salvar a conta. Verifique sua conexão e tente novamente.');
+      } finally {
+        if (botaoEnviar) {
+          botaoEnviar.disabled = false;
+          botaoEnviar.textContent = textoBotaoOriginal;
+        }
+      }
+    });
   }
 
   function navegarParaEtapa(etapa) {
@@ -184,13 +339,7 @@ function configurarLancamentos() {
     });
   });
 
-  botoesSelecionarConta.forEach(function (botao) {
-    botao.addEventListener('click', function () {
-      atualizarResumoConta(botao);
-      definirEtapaWizard(3);
-      document.querySelector('#local')?.focus();
-    });
-  });
+  botoesSelecionarConta.forEach(configurarBotaoSelecaoConta);
 
   botoesAlterarConta.forEach(function (botao) {
     botao.addEventListener('click', function () {
@@ -208,6 +357,7 @@ function configurarLancamentos() {
   if (avisoSaldo && !avisoSaldo.hidden) {
     mostrarErroSaldo(avisoSaldo.textContent.trim());
   }
+  configurarFormularioCriarConta();
 
   const campoCategoria = document.querySelector('#categoria-selecionada');
   const nomeCategoriaSelecionada = document.querySelector('#categoria-selecionada-nome');

@@ -5,7 +5,8 @@
             <button type="button" class="btn-close-custom" data-close-modal>&times;</button>
         </div>
 
-        <form action="{{ url_for('criar_conta') }}" method="POST">
+        <form action="{{ url_for('criar_conta') }}" method="POST" data-account-create-form>
+            <div class="account-create-feedback" data-account-form-feedback role="alert" hidden></div>
 
             <div class="mb-3">
                 <label for="nome_conta" class="card-subtitle d-block mb-1">

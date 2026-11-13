@@ -381,7 +381,9 @@
   border-radius: 9px;
   font-size: 13px;
   font-weight: 650;
+  font-family: inherit;
   text-decoration: none;
+  cursor: pointer;
   transition: color .18s, background-color .18s, border-color .18s;
 }
 
@@ -397,6 +399,16 @@
   color: var(--text-primary);
   background: color-mix(in srgb, var(--brand-primary) 18%, var(--bg-surface-1));
   border-color: var(--brand-primary);
+}
+
+.account-create-feedback:not([hidden]) {
+  margin-bottom: 16px;
+  padding: 10px 12px;
+  color: var(--lancamento-exit);
+  background: color-mix(in srgb, var(--lancamento-exit) 10%, var(--bg-surface-1));
+  border: 1px solid color-mix(in srgb, var(--lancamento-exit) 35%, var(--border-color));
+  border-radius: 9px;
+  font-size: 13px;
 }
 
 .btn-purple-action {

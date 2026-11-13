@@ -8,7 +8,7 @@ from dotenv import load_dotenv
 from datetime import datetime, timedelta
 from flask_mail import Mail, Message
 import requests
-from flask import Flask, render_template, request, redirect, session, flash, url_for
+from flask import Flask, jsonify, render_template, request, redirect, session, flash, url_for
 from decimal import Decimal, InvalidOperation
 
 # importa a função para proteger nomes de arquivos enviados
@@ -503,44 +503,63 @@ def excluir_conta(id_conta):
 # cadastra uma nova conta bancária
 @app.route('/contas/criar', methods=['POST'])
 def criar_conta():
+    requisicao_ajax = request.headers.get("X-Requested-With") == "XMLHttpRequest"
+
+    def responder_erro(mensagem, status=400, destino="contas"):
+        if requisicao_ajax:
+            return jsonify(success=False, message=mensagem), status
+        flash(mensagem, "error")
+        return redirect(url_for(destino))
+
     if "usuario" not in session or "id_usuario" not in session:
-        flash("Faça login novamente para cadastrar uma conta.", "error")
-        return redirect(url_for('login'))
+        return responder_erro("Faça login novamente para cadastrar uma conta.", 401, "login")
 
     id_usuario = session.get('id_usuario')
     nome_conta = request.form.get('nome_conta', '').strip()
     tipo_conta = request.form.get('tipo_conta', '').strip()
     saldo_atual = request.form.get('saldo_atual', '0').strip()
 
-    # verifica se os campos obrigatórios foram preenchidos
     if not nome_conta or not tipo_conta:
-        flash("Preencha todos os campos.", "error")
-        return redirect(url_for('contas'))
+        return responder_erro("Preencha todos os campos.")
 
-    # valida o saldo e cria a conta
     try:
         saldo_atual = parse_valor_monetario(saldo_atual)
+    except (ValueError, TypeError, InvalidOperation):
+        return responder_erro("Informe um saldo válido.")
 
-        if not saldo_atual.is_finite() or saldo_atual < 0:
-            raise ValueError
-        if saldo_atual > ContaBancaria.SALDO_MAXIMO:
-            flash("O saldo máximo por conta é R$ 99.999.999,99.", "error")
-            return redirect(url_for('contas'))
+    if not saldo_atual.is_finite() or saldo_atual < 0:
+        return responder_erro("Informe um saldo válido.")
 
-        sucesso = ContaBancaria.criar_conta(
+    if saldo_atual > ContaBancaria.SALDO_MAXIMO:
+        return responder_erro("O saldo máximo por conta é R$ 99.999.999,99.")
+
+    if requisicao_ajax:
+        id_conta_criada = ContaBancaria.criar_conta(
             id_usuario,
             nome_conta,
             tipo_conta,
-            saldo_atual
+            saldo_atual,
+            retornar_id=True
+        )
+        if not id_conta_criada:
+            return responder_erro("Não foi possível criar a conta bancária.", 500)
+
+        return jsonify(
+            success=True,
+            account={
+                "id_conta": id_conta_criada,
+                "nome_conta": nome_conta,
+                "tipo_conta": tipo_conta,
+                "saldo_atual": str(saldo_atual),
+                "saldo_formatado": moeda_br(saldo_atual),
+            }
         )
 
-        if sucesso:
-            flash("Conta bancária criada com sucesso!", "success")
-        else:
-            flash("Não foi possível criar a conta bancária.", "error")
-
-    except (ValueError, TypeError, InvalidOperation):
-        flash("Informe um saldo válido.", "error")
+    sucesso = ContaBancaria.criar_conta(id_usuario, nome_conta, tipo_conta, saldo_atual)
+    if sucesso:
+        flash("Conta bancária criada com sucesso!", "success")
+    else:
+        flash("Não foi possível criar a conta bancária.", "error")
 
     return redirect(url_for('contas'))
 

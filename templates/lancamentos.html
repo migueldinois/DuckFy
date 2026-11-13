@@ -2,9 +2,11 @@
 
 {% block extra_css %}
 <link rel="stylesheet" href="{{ url_for('static', filename='css/lancamentos.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/duckfy-modal.css') }}?v=9">
 {% endblock %}
 
 {% block content %}
+{% include 'components/modal_adicionar_banco.html' %}
 <main id="page-lancamento" class="py-3" data-initial-step="{{ etapa_inicial|default(1) }}">
   <div class="style-container">
     <header class="lancamento-wizard-header">
@@ -98,9 +100,9 @@
             <span class="lancamento-account-empty-icon" aria-hidden="true"><i class="bi bi-bank"></i></span>
             <h3>Nenhuma conta cadastrada</h3>
             <p>Cadastre uma conta bancária para continuar com o lançamento.</p>
-            <a class="lancamento-adicionar-categoria" href="{{ url_for('contas', adicionar=1) }}">
+            <button type="button" class="lancamento-adicionar-categoria" data-open-modal="modalAdicionarBanco">
               <i class="bi bi-plus-circle" aria-hidden="true"></i><span>Cadastrar conta bancária</span>
-            </a>
+            </button>
           </div>
           {% endif %}
         </div>
