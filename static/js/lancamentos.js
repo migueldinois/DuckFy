@@ -244,6 +244,7 @@ function configurarLancamentos() {
         botaoEnviar.textContent = 'Salvando...';
       }
 
+      let botaoContaCriada;
       try {
         const resposta = await fetch(formularioCriarConta.action, {
           method: 'POST',
@@ -264,24 +265,31 @@ function configurarLancamentos() {
           throw new Error('A resposta do servidor não contém a conta criada.');
         }
 
-        const botaoConta = exibirNovaConta(resultado.account);
-        if (!botaoConta) {
+        botaoContaCriada = exibirNovaConta(resultado.account);
+        if (!botaoContaCriada) {
           throw new Error('Não foi possível atualizar a lista de contas do lançamento.');
         }
 
         formularioCriarConta.reset();
         atualizarPreviaSaldoNovaConta();
         ModalManager.fechar('modalAdicionarBanco');
-        botaoConta.focus();
       } catch (erro) {
         console.error('Erro ao criar conta pelo lançamento:', erro);
         mostrarFeedbackCriarConta('Não foi possível salvar a conta. Verifique sua conexão e tente novamente.');
+        return;
       } finally {
         if (botaoEnviar) {
           botaoEnviar.disabled = false;
           botaoEnviar.textContent = textoBotaoOriginal;
         }
       }
+
+      window.DuckFyAlert.success(
+        'A conta foi criada. Selecione-a na lista para continuar o lançamento.',
+        'Conta adicionada!'
+      ).then(function () {
+        botaoContaCriada.focus();
+      });
     });
   }
 
@@ -364,16 +372,26 @@ function configurarLancamentos() {
   const botaoAbrirModalCategoria = document.querySelector('#abrir-modal-categorias');
   const modalCategoria = document.querySelector('#modal-selecionar-categoria');
   const botaoFecharModalCategoria = document.querySelector('#fechar-modal-categorias');
-  const botoesCategoria = document.querySelectorAll('[data-category-choice]');
+  let botoesCategoria = Array.from(document.querySelectorAll('[data-category-choice]'));
   const tiposTransacao = document.querySelectorAll('[name="tipo_transacao"]');
-  const botoesAdicionarCategoria = document.querySelectorAll('[data-category-create]');
+  const botoesAdicionarCategoria = Array.from(document.querySelectorAll('[data-category-create]'));
+  const formularioCriarCategoria = document.querySelector('[data-category-create-form]');
+  const feedbackCriarCategoria = document.querySelector('[data-category-form-feedback]');
+  const tipoNovaCategoria = document.querySelector('#tipo');
+  const nomeNovaCategoria = document.querySelector('#nome');
+  const emojiNovaCategoria = document.querySelector('#emoji');
+  const tituloModalCriarCategoria = document.querySelector('#titulo-modal-criar-categoria');
 
-  botoesCategoria.forEach(function (botao) {
+  function configurarBotaoCategoria(botao) {
     const cor = botao.dataset.categoryColor;
     if (cor && /^#[\da-f]{6}$/i.test(cor)) {
       botao.style.setProperty('--category-color', cor);
     }
-  });
+
+    botao.addEventListener('click', function () {
+      selecionarCategoria(botao);
+    });
+  }
 
   function abrirModalCategoria() {
     if (!modalCategoria) return;
@@ -429,10 +447,66 @@ function configurarLancamentos() {
       opcao.classList.toggle('is-selected', mesmaCategoria);
     });
 
-    if (botao.closest('.categoria-modal') && modalCategoria.classList.contains('active')) {
+    if (botao.closest('.categoria-modal') && modalCategoria?.classList.contains('active')) {
       fecharModalCategoria();
       botaoAbrirModalCategoria?.focus();
     }
+  }
+
+  function criarOpcaoCategoria(categoria, dentroDoModal) {
+    const botao = document.createElement('button');
+    botao.type = 'button';
+    botao.className = dentroDoModal ? 'categoria-modal-opcao' : 'btn-categoria-icon';
+    botao.dataset.categoryChoice = '';
+    botao.dataset.categoryType = categoria.tipo;
+    botao.dataset.categoryId = String(categoria.id_categoria);
+    botao.dataset.categoryName = categoria.nome;
+    botao.dataset.categoryColor = categoria.cor;
+    botao.title = categoria.nome;
+    botao.setAttribute('aria-label', categoria.nome);
+
+    const emoji = document.createElement('span');
+    emoji.className = dentroDoModal ? 'categoria-modal-emoji emoji-ios' : 'emoji-ios';
+    emoji.textContent = categoria.emoji;
+    botao.append(emoji);
+
+    if (dentroDoModal) {
+      const nome = document.createElement('span');
+      nome.textContent = categoria.nome;
+      botao.append(nome);
+    }
+
+    configurarBotaoCategoria(botao);
+    return botao;
+  }
+
+  function exibirNovaCategoria(categoria) {
+    const categoriasRapidas = document.querySelector('#categorias-rapidas');
+    const listaCategoriasModal = document.querySelector('.categoria-modal-lista');
+    if (!categoriasRapidas || !listaCategoriasModal) return null;
+
+    const botaoRapido = criarOpcaoCategoria(categoria, false);
+    const botaoVerTodas = document.querySelector('#abrir-modal-categorias');
+    categoriasRapidas.insertBefore(botaoRapido, botaoVerTodas);
+
+    const botaoModal = criarOpcaoCategoria(categoria, true);
+    const avisoVazio = listaCategoriasModal.querySelector(
+      `[data-category-empty="${categoria.tipo}"]`
+    );
+    if (avisoVazio) {
+      avisoVazio.remove();
+    }
+    listaCategoriasModal.append(botaoModal);
+
+    botoesCategoria.push(botaoRapido, botaoModal);
+    const botaoAdicionar = botoesAdicionarCategoria.find(function (botao) {
+      return botao.dataset.categoryCreate === categoria.tipo;
+    });
+    botaoAdicionar?.remove();
+
+    atualizarCategoriasVisiveis();
+    selecionarCategoria(botaoRapido);
+    return botaoRapido;
   }
 
   function iniciarCategorias() {
@@ -460,9 +534,105 @@ function configurarLancamentos() {
     }
   }
 
-  botoesCategoria.forEach(function (botao) {
+  botoesCategoria.forEach(configurarBotaoCategoria);
+
+  botoesAdicionarCategoria.forEach(function (botao) {
     botao.addEventListener('click', function () {
-      selecionarCategoria(botao);
+      if (!formularioCriarCategoria || !tipoNovaCategoria || !nomeNovaCategoria || !emojiNovaCategoria) return;
+
+      const tipo = botao.dataset.categoryCreate;
+      if (tituloModalCriarCategoria) {
+        const tipoLegivel = tipo === 'saida' ? 'saída' : 'entrada';
+        tituloModalCriarCategoria.textContent = `Adicionar categoria de ${tipoLegivel}`;
+      }
+      if (feedbackCriarCategoria) {
+        feedbackCriarCategoria.hidden = true;
+        feedbackCriarCategoria.textContent = '';
+      }
+      nomeNovaCategoria.value = '';
+      emojiNovaCategoria.value = '';
+      emojiNovaCategoria.dispatchEvent(new Event('input', { bubbles: true }));
+      document.querySelector(
+        `.tipo-categoria-btn[data-tipo="${tipo === 'entrada' ? 'ENTRADA' : 'SAIDA'}"]`
+      )?.click();
+      ModalManager.abrir('modalCriarCategoriaLancamento');
+      nomeNovaCategoria?.focus();
+    });
+  });
+
+  formularioCriarCategoria?.addEventListener('input', function () {
+    if (feedbackCriarCategoria) {
+      feedbackCriarCategoria.hidden = true;
+      feedbackCriarCategoria.textContent = '';
+    }
+  });
+
+  formularioCriarCategoria?.addEventListener('submit', async function (evento) {
+    evento.preventDefault();
+
+    const botaoEnviar = formularioCriarCategoria.querySelector('[type="submit"]');
+    const textoBotaoOriginal = botaoEnviar?.textContent;
+    if (feedbackCriarCategoria) {
+      feedbackCriarCategoria.hidden = true;
+      feedbackCriarCategoria.textContent = '';
+    }
+    if (botaoEnviar) {
+      botaoEnviar.disabled = true;
+      botaoEnviar.textContent = 'Salvando...';
+    }
+
+    let botaoCategoriaCriada;
+    try {
+      const resposta = await fetch(formularioCriarCategoria.action, {
+        method: 'POST',
+        headers: {
+          'X-Requested-With': 'XMLHttpRequest',
+          'Accept': 'application/json',
+        },
+        body: new FormData(formularioCriarCategoria),
+      });
+      const resultado = await resposta.json();
+
+      if (!resposta.ok || !resultado.success) {
+        if (feedbackCriarCategoria) {
+          feedbackCriarCategoria.textContent = resultado.message || 'Não foi possível criar a categoria.';
+          feedbackCriarCategoria.hidden = false;
+        }
+        return;
+      }
+
+      if (!resultado.categoria || !resultado.categoria.id_categoria) {
+        throw new Error('A resposta do servidor não contém a categoria criada.');
+      }
+
+      botaoCategoriaCriada = exibirNovaCategoria(resultado.categoria);
+      if (!botaoCategoriaCriada) {
+        throw new Error('Não foi possível atualizar as categorias do lançamento.');
+      }
+
+      nomeNovaCategoria.value = '';
+      emojiNovaCategoria.value = '';
+      emojiNovaCategoria.dispatchEvent(new Event('input', { bubbles: true }));
+      ModalManager.fechar('modalCriarCategoriaLancamento');
+    } catch (erro) {
+      console.error('Erro ao criar categoria pelo lançamento:', erro);
+      if (feedbackCriarCategoria) {
+        feedbackCriarCategoria.textContent = 'Não foi possível salvar a categoria. Verifique sua conexão e tente novamente.';
+        feedbackCriarCategoria.hidden = false;
+      }
+      return;
+    } finally {
+      if (botaoEnviar) {
+        botaoEnviar.disabled = false;
+        botaoEnviar.textContent = textoBotaoOriginal;
+      }
+    }
+
+    window.DuckFyAlert.success(
+      'A categoria foi criada e selecionada neste lançamento.',
+      'Categoria adicionada!'
+    ).then(function () {
+      botaoCategoriaCriada.focus();
     });
   });
 

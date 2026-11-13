@@ -23,7 +23,7 @@ class Categoria():
         conexao.close()
 
         return dados_categorias
-    def criar_categoria(id_usuario, nome, tipo, emoji, cor):
+    def criar_categoria(id_usuario, nome, tipo, emoji, cor, retornar_id=False):
         """Função para criar uma nova categoria"""
         conexao, cursor = Conexao.conectar()
 
@@ -34,10 +34,11 @@ class Categoria():
         
         try:
             cursor.execute(sql, (id_usuario, nome, tipo, emoji, cor))
+            id_categoria_criada = cursor.lastrowid
             # Concede XP só depois de inserir a categoria, na mesma transação.
-            Progresso.conceder_xp(cursor, id_usuario, f"categoria:{cursor.lastrowid}", 10)
+            Progresso.conceder_xp(cursor, id_usuario, f"categoria:{id_categoria_criada}", 10)
             conexao.commit()
-            return True
+            return id_categoria_criada if retornar_id else True
         except Exception as erro:
             print(f"Erro ao criar categoria: {erro}")
             conexao.rollback()

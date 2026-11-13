@@ -1115,36 +1115,63 @@ def tela_subcategorias():
 # cadastra uma nova categoria
 @app.route("/categorias/criar", methods=["POST"])
 def adicionar_categoria():
-    if "usuario" in session:
-        # recebe os dados da categoria
-        nome = request.form.get("nome")
-        tipo = request.form.get("tipo")
+    requisicao_ajax = request.headers.get("X-Requested-With") == "XMLHttpRequest"
 
-        # converte o tipo para o formato do banco
-        if tipo == "SAIDA":
-            tipo = "Despesa"
-        elif tipo == "ENTRADA":
-            tipo = "Receita"
-        emoji = request.form.get("emoji")
-        cor = request.form.get("cor")
+    def responder_erro(mensagem, status=400, destino="categorias"):
+        if requisicao_ajax:
+            return jsonify(success=False, message=mensagem), status
+        flash(mensagem, "error")
+        return redirect(url_for(destino))
 
-        # verifica se todos os campos foram preenchidos
-        if not nome or not tipo or not emoji or not cor:
-            flash("Todos os campos são obrigatórios!", "error")
-            return redirect('/categorias')
+    if "usuario" not in session or not session.get("id_usuario"):
+        return responder_erro("Você precisa estar logado para adicionar categorias!", 401, "login")
 
-        # salva a categoria
-        categoria_criada = Categoria.criar_categoria(session["id_usuario"], nome, tipo, emoji, cor)
+    nome = request.form.get("nome", "").strip()
+    tipo_formulario = request.form.get("tipo", "").strip().upper()
+    emoji = request.form.get("emoji", "").strip()
+    cor = request.form.get("cor", "").strip()
 
-        if categoria_criada:
-            flash("Categoria criada com sucesso!", "success")
-        else:
-            flash("Erro ao criar categoria. Tente novamente.", "error")
+    tipos_categoria = {"SAIDA": "Despesa", "ENTRADA": "Receita"}
+    tipo = tipos_categoria.get(tipo_formulario)
+    cor_valida = (
+        len(cor) == 7
+        and cor.startswith("#")
+        and all(caractere in "0123456789abcdefABCDEF" for caractere in cor[1:])
+    )
 
-        return redirect('/categorias')
+    if not nome or not tipo or not emoji or not cor_valida:
+        return responder_erro("Preencha todos os campos com valores válidos.")
+
+    if requisicao_ajax:
+        id_categoria_criada = Categoria.criar_categoria(
+            session["id_usuario"],
+            nome,
+            tipo,
+            emoji,
+            cor,
+            retornar_id=True
+        )
+        if not id_categoria_criada:
+            return responder_erro("Erro ao criar categoria. Tente novamente.", 500)
+
+        return jsonify(
+            success=True,
+            categoria={
+                "id_categoria": id_categoria_criada,
+                "nome": nome,
+                "tipo": tipo_formulario.lower(),
+                "emoji": emoji,
+                "cor": cor,
+            }
+        )
+
+    categoria_criada = Categoria.criar_categoria(session["id_usuario"], nome, tipo, emoji, cor)
+    if categoria_criada:
+        flash("Categoria criada com sucesso!", "success")
     else:
-        flash("Você precisa estar logado para adicionar categorias!", "error")
-        return redirect('/login')
+        flash("Erro ao criar categoria. Tente novamente.", "error")
+
+    return redirect(url_for("categorias"))
 
 
 # exclui uma categoria

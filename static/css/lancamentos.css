@@ -34,17 +34,6 @@
   transform: translateX(-2px);
 }
 
-.lancamento-eyebrow {
-  display: inline-flex;
-  align-items: center;
-  gap: 7px;
-  margin-bottom: 5px;
-  color: var(--brand-secondary);
-  font-size: 11px;
-  font-weight: 700;
-  letter-spacing: .08em;
-}
-
 #page-lancamento .lancamento-header {
   display: flex;
   align-items: center;
@@ -83,19 +72,6 @@
   margin-bottom: 30px;
   padding-bottom: 24px;
   border-bottom: 1px solid var(--border-color);
-}
-
-.lancamento-card-icon {
-  display: grid;
-  width: 52px;
-  height: 52px;
-  flex: 0 0 52px;
-  place-items: center;
-  color: var(--brand-secondary);
-  background: color-mix(in srgb, var(--brand-primary) 13%, var(--bg-surface-2));
-  border: 1px solid color-mix(in srgb, var(--brand-primary) 30%, var(--border-color));
-  border-radius: 15px;
-  font-size: 21px;
 }
 
 .lancamento-card-heading h2 {
@@ -401,7 +377,8 @@
   border-color: var(--brand-primary);
 }
 
-.account-create-feedback:not([hidden]) {
+.account-create-feedback:not([hidden]),
+.category-create-feedback:not([hidden]) {
   margin-bottom: 16px;
   padding: 10px 12px;
   color: var(--lancamento-exit);
@@ -476,12 +453,6 @@
 .lancamento-wizard-title-group {
   min-width: 0;
   gap: 14px;
-}
-
-.lancamento-wizard-title-group .lancamento-card-icon {
-  width: 50px;
-  height: 50px;
-  flex-basis: 50px;
 }
 
 .lancamento-wizard-title-group h1 {
@@ -616,15 +587,6 @@
   margin-right: 0;
   margin-left: 0;
   text-align: left;
-}
-
-.lancamento-step-kicker {
-  display: block;
-  margin-bottom: 7px;
-  color: var(--brand-secondary);
-  font-size: 10px;
-  font-weight: 750;
-  letter-spacing: .08em;
 }
 
 .lancamento-step-intro h2 {
@@ -1276,13 +1238,6 @@
     gap: 10px;
   }
 
-  .lancamento-wizard-title-group .lancamento-card-icon {
-    width: 40px;
-    height: 40px;
-    flex-basis: 40px;
-    font-size: 17px;
-  }
-
   .lancamento-wizard-title-group h1 {
     font-size: 21px;
   }
@@ -1412,14 +1367,6 @@
     gap: 11px;
     margin-bottom: 20px;
     padding-bottom: 17px;
-  }
-
-  .lancamento-card-icon {
-    width: 42px;
-    height: 42px;
-    flex-basis: 42px;
-    border-radius: 12px;
-    font-size: 19px;
   }
 
   .lancamento-type-section {
