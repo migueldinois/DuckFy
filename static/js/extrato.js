@@ -9,6 +9,8 @@ document.addEventListener('DOMContentLoaded', function () {
     const calendars = Array.from(document.querySelectorAll('.date-calendar'));
     const filterTabs = Array.from(document.querySelectorAll('.filter-tabs .tab-btn'));
     const activeTab = document.querySelector('.filter-tabs .tab-btn.active');
+    let updatedTransaction = null;
+    let preserveUpdatedTransaction = false;
     let activeType = activeTab ? activeTab.dataset.tipo : 'tudo';
 
     if (!searchInput || !dateRangeTrigger || !dateRangePicker || !emptyMessage) {
@@ -16,8 +18,14 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     const today = startOfDay(new Date());
+    const earliestTransactionDate = items.reduce(function (earliest, item) {
+        const transactionDate = parseDate(item.querySelector('.date').textContent.trim());
+        if (!transactionDate || transactionDate > today) return earliest;
+        return !earliest || transactionDate < earliest ? transactionDate : earliest;
+    }, null);
     const appliedRange = {
-        start: new Date(today.getFullYear(), today.getMonth(), 1),
+        start: earliestTransactionDate
+            || new Date(today.getFullYear(), today.getMonth(), 1),
         end: today
     };
     let draftRange = copyRange(appliedRange);
@@ -57,6 +65,16 @@ document.addEventListener('DOMContentLoaded', function () {
         }
 
         return date;
+    }
+
+    function parseIsoDate(dateText) {
+        const parts = (dateText || '').split('-').map(Number);
+        if (parts.length !== 3 || !parts[0] || !parts[1] || !parts[2]) return null;
+        const date = new Date(parts[0], parts[1] - 1, parts[2]);
+        if (date.getFullYear() !== parts[0]
+            || date.getMonth() !== parts[1] - 1
+            || date.getDate() !== parts[2]) return null;
+        return startOfDay(date);
     }
 
     function formatDate(date) {
@@ -167,7 +185,8 @@ document.addEventListener('DOMContentLoaded', function () {
             const matchesDate = itemDate !== null
                 && itemDate >= appliedRange.start
                 && itemDate <= appliedRange.end;
-            const shouldShow = matchesSearch && matchesType && matchesDate;
+            const shouldShow = (preserveUpdatedTransaction && item === updatedTransaction)
+                || (matchesSearch && matchesType && matchesDate);
 
             item.hidden = !shouldShow;
             if (shouldShow) {
@@ -291,7 +310,24 @@ document.addEventListener('DOMContentLoaded', function () {
 
     searchInput.addEventListener('input', applyFilters);
 
-    dateRangeLabel.textContent = 'Este mês';
+    dateRangeLabel.textContent = 'Todas até hoje';
+    const updatedTransactionId = new URLSearchParams(window.location.search).get('transacao_atualizada');
+    updatedTransaction = items.find(function (item) {
+        return item.dataset.transactionId === updatedTransactionId;
+    });
+    const updatedTransactionDate = updatedTransaction
+        ? parseIsoDate(updatedTransaction.dataset.date)
+        : null;
+    if (updatedTransactionDate && updatedTransactionDate <= today) {
+        if (updatedTransactionDate < appliedRange.start) {
+            appliedRange.start = updatedTransactionDate;
+        }
+        dateRangeLabel.textContent = 'Período atualizado';
+    }
     renderCalendars();
+    preserveUpdatedTransaction = Boolean(
+        updatedTransaction && (!updatedTransactionDate || updatedTransactionDate <= today)
+    );
     applyFilters();
+    preserveUpdatedTransaction = false;
 });

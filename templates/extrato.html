@@ -4,7 +4,7 @@
 {% block extra_css %} <link rel="stylesheet" href="/static/css/extrato.css">{% endblock %}
 
 {% block styles %}
-<link rel="stylesheet" href="{{ url_for('static', filename='css/extrato.css') }}?v=2.7">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/extrato.css') }}?v=3.0">
 {% endblock %}
 
 {% block content %}
@@ -106,7 +106,14 @@
         {% if transacoes %}
         {% for item in transacoes %}
         {% set eh_entrada = item.tipo|lower in ['receita', 'entradas', 'entrada', 'retirada'] %}
-        <div class="timeline-item">
+        <div class="timeline-item"
+            data-transaction-id="{{ item.id_transacao }}"
+            data-editable="{{ item.pode_editar|default(0)|int }}"
+            data-description="{{ item.descricao }}"
+            data-amount="{{ '%.2f'|format(item.valor) }}"
+            data-type="{{ item.tipo_edicao }}"
+            data-category="{{ item.id_categoria or '' }}"
+            data-date="{{ item.data_edicao }}">
 
             <div class="icon-box {% if eh_entrada %}entrada{% else %}saida{% endif %}">
                 <i class="bi {% if eh_entrada %}bi-arrow-down-left{% else %}bi-arrow-up-right{% endif %}"></i>
@@ -121,11 +128,19 @@
             </div>
 
 
-            <div class="amount {% if eh_entrada %}positive{% else %}negative{% endif %}">
-                {% if eh_entrada %}
-                +R$ {{ item.valor|moeda_br }}
-                {% else %}
-                -R$ {{ item.valor|moeda_br }}
+            <div class="timeline-item-end">
+                <div class="amount {% if eh_entrada %}positive{% else %}negative{% endif %}">
+                    {% if eh_entrada %}
+                    +R$ {{ item.valor|moeda_br }}
+                    {% else %}
+                    -R$ {{ item.valor|moeda_br }}
+                    {% endif %}
+                </div>
+                {% if item.pode_editar|default(0)|int %}
+                <button type="button" class="transaction-menu-trigger" data-transaction-action
+                    aria-label="Opções para {{ item.descricao }}" aria-haspopup="dialog">
+                    <i class="bi bi-three-dots-vertical" aria-hidden="true"></i>
+                </button>
                 {% endif %}
             </div>
 
@@ -146,8 +161,140 @@
 </main>
 </div>
 
+<div class="transaction-modal" id="transactionActionModal" aria-hidden="true">
+    <section class="transaction-dialog transaction-actions-dialog" role="dialog" aria-modal="true"
+        aria-labelledby="transactionActionTitle">
+        <header class="transaction-dialog-header">
+            <div>
+                <span class="transaction-dialog-eyebrow">MOVIMENTAÇÃO</span>
+                <h2 id="transactionActionTitle">Opções da transação</h2>
+                <p id="transactionActionDescription"></p>
+            </div>
+            <button type="button" class="transaction-modal-close" data-close-transaction-modal
+                aria-label="Fechar"><i class="bi bi-x-lg" aria-hidden="true"></i></button>
+        </header>
+        <div class="transaction-action-buttons">
+            <button type="button" class="transaction-action-edit" id="editTransactionButton">
+                <i class="bi bi-pencil-square" aria-hidden="true"></i>
+                <span>Editar informações</span>
+                <i class="bi bi-chevron-right" aria-hidden="true"></i>
+            </button>
+            <button type="button" class="transaction-action-delete" id="deleteTransactionButton">
+                <i class="bi bi-trash3" aria-hidden="true"></i>
+                <span>Excluir transação</span>
+                <i class="bi bi-chevron-right" aria-hidden="true"></i>
+            </button>
+        </div>
+    </section>
+</div>
+
+<div class="transaction-modal" id="editTransactionModal" aria-hidden="true">
+    <section class="transaction-dialog transaction-edit-dialog" role="dialog" aria-modal="true"
+        aria-labelledby="editTransactionTitle">
+        <header class="transaction-dialog-header">
+            <div>
+                <span class="transaction-dialog-eyebrow">MOVIMENTAÇÃO</span>
+                <h2 id="editTransactionTitle">Editar transação</h2>
+                <p>Atualize os dados do lançamento.</p>
+            </div>
+            <button type="button" class="transaction-modal-close" data-close-transaction-modal
+                aria-label="Fechar"><i class="bi bi-x-lg" aria-hidden="true"></i></button>
+        </header>
+        <form id="editTransactionForm" method="POST" class="transaction-edit-form">
+            <label for="editTransactionDescription">Descrição</label>
+            <input id="editTransactionDescription" name="descricao" type="text" maxlength="100" required>
+
+            <div class="transaction-edit-grid">
+                <div>
+                    <label for="editTransactionAmount">Valor</label>
+                    <div class="transaction-input-currency">
+                        <span>R$</span>
+                        <input id="editTransactionAmount" name="valor" type="number" min="0.01"
+                            max="99999999.99" step="0.01" required>
+                    </div>
+                </div>
+                <div>
+                    <label for="editTransactionType">Tipo</label>
+                    <select id="editTransactionType" name="tipo" required>
+                        <option value="saida">Saída</option>
+                        <option value="entrada">Entrada</option>
+                    </select>
+                </div>
+            </div>
+
+            <label for="editTransactionCategory">Categoria <span>(opcional)</span></label>
+            <select id="editTransactionCategory" name="id_categoria">
+                <option value="">Sem categoria</option>
+                {% for categoria in categorias_despesa %}
+                <option value="{{ categoria.id_categoria }}" data-type="saida">{{ categoria.nome }}</option>
+                {% endfor %}
+                {% for subcategoria in subcategorias %}
+                {% if subcategoria.categoria_tipo == 'Despesa' %}
+                <option value="{{ subcategoria.id }}" data-type="saida">
+                    {{ subcategoria.categoria_nome }} · {{ subcategoria.nome }}
+                </option>
+                {% endif %}
+                {% endfor %}
+                {% for categoria in categorias_receita %}
+                <option value="{{ categoria.id_categoria }}" data-type="entrada">{{ categoria.nome }}</option>
+                {% endfor %}
+                {% for subcategoria in subcategorias %}
+                {% if subcategoria.categoria_tipo == 'Receita' %}
+                <option value="{{ subcategoria.id }}" data-type="entrada">
+                    {{ subcategoria.categoria_nome }} · {{ subcategoria.nome }}
+                </option>
+                {% endif %}
+                {% endfor %}
+            </select>
+
+            <label for="editTransactionDate">Data</label>
+            <div class="transaction-date-picker">
+                <input id="editTransactionDate" name="data_transacao" type="text"
+                    placeholder="DD/MM/AAAA" inputmode="numeric" autocomplete="off" readonly required>
+                <button type="button" class="transaction-date-trigger" id="transactionDateTrigger"
+                    aria-label="Abrir calendário" aria-haspopup="dialog" aria-expanded="false"
+                    aria-controls="transactionDateCalendar">
+                    <i class="bi bi-calendar3" aria-hidden="true"></i>
+                </button>
+                <section class="transaction-calendar" id="transactionDateCalendar" role="dialog"
+                    aria-label="Escolher data da transação" hidden>
+                    <header class="transaction-calendar-header">
+                        <button type="button" data-calendar-shift="-1" aria-label="Mês anterior">
+                            <i class="bi bi-chevron-left" aria-hidden="true"></i>
+                        </button>
+                        <h3 id="transactionCalendarMonth"></h3>
+                        <button type="button" data-calendar-shift="1" aria-label="Próximo mês">
+                            <i class="bi bi-chevron-right" aria-hidden="true"></i>
+                        </button>
+                    </header>
+                    <div class="transaction-calendar-grid transaction-calendar-weekdays" aria-hidden="true">
+                        <span>Do</span><span>Se</span><span>Te</span><span>Qu</span>
+                        <span>Qui</span><span>Sex</span><span>Sáb</span>
+                    </div>
+                    <div class="transaction-calendar-grid transaction-calendar-days"
+                        id="transactionCalendarDays"></div>
+                    <footer class="transaction-calendar-footer">
+                        <button type="button" data-calendar-today>Hoje</button>
+                        <button type="button" data-calendar-close>Fechar</button>
+                    </footer>
+                </section>
+            </div>
+
+            <footer class="transaction-edit-actions">
+                <button type="button" class="transaction-edit-cancel" data-close-transaction-modal>Cancelar</button>
+                <button type="submit" class="transaction-edit-save">
+                    <i class="bi bi-check2" aria-hidden="true"></i> Salvar alterações
+                </button>
+            </footer>
+        </form>
+    </section>
+</div>
+
+<form id="deleteTransactionForm" method="POST" hidden></form>
+
 {% endblock %}
 
 {% block extra_js %}
-<script src="{{ url_for('static', filename='js/extrato.js') }}" defer></script>
+<script src="{{ url_for('static', filename='js/extrato.js') }}?v=3.0" defer></script>
+<script src="{{ url_for('static', filename='js/extrato-transacoes.js') }}?v=3.0" defer></script>
 {% endblock %}

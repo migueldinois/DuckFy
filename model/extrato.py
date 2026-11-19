@@ -22,6 +22,20 @@ class Extrato:
                         ELSE COALESCE(t.descricao, 'Movimentação sem descrição')
                     END AS descricao,
                     t.valor,
+                    t.id_conta,
+                    t.id_categoria,
+                    t.id_reserva,
+                    CASE
+                        WHEN t.id_reserva IS NULL AND LOWER(t.tipo) IN ('receita', 'despesa')
+                            THEN 1
+                        ELSE 0
+                    END AS pode_editar,
+                    CASE
+                        WHEN LOWER(t.tipo) = 'receita' THEN 'entrada'
+                        WHEN LOWER(t.tipo) = 'despesa' THEN 'saida'
+                        ELSE LOWER(t.tipo)
+                    END AS tipo_edicao,
+                    DATE_FORMAT(t.data_transacao, '%Y-%m-%d') AS data_edicao,
                     CASE
                         WHEN t.id_reserva IS NOT NULL
                             AND LOWER(t.tipo) IN ('crédito', 'credito', 'receita', 'entrada')

@@ -975,12 +975,86 @@ def tela_extrato():
             data_fim=data_fim
         )
 
-        return render_template('extrato.html', transacoes=lista_transacoes, tipo_ativo=tipo_ativo)
+        return render_template(
+            'extrato.html',
+            transacoes=lista_transacoes,
+            tipo_ativo=tipo_ativo,
+            categorias_despesa=Categoria.recuperar_categorias_por_tipo(id_usuario, "Despesa"),
+            categorias_receita=Categoria.recuperar_categorias_por_tipo(id_usuario, "Receita"),
+            subcategorias=Subcategoria.listar(id_usuario),
+        )
 
     except Exception as e:
         print(f"Erro na rota /extrato: {e}")
         # exibe a página sem transações em caso de erro
-        return render_template('extrato.html', transacoes=[], tipo_ativo='tudo')
+        return render_template(
+            'extrato.html',
+            transacoes=[],
+            tipo_ativo='tudo',
+            categorias_despesa=[],
+            categorias_receita=[],
+            subcategorias=[],
+        )
+
+
+@app.post("/transacoes/<int:id_transacao>/editar")
+def editar_transacao(id_transacao):
+    if "usuario" not in session or not session.get("id_usuario"):
+        flash("Faça login para editar uma transação.", "error")
+        return redirect(url_for("login"))
+
+    try:
+        descricao = request.form.get("descricao", "").strip()
+        valor = parse_valor_monetario(request.form.get("valor", ""))
+        tipo_formulario = request.form.get("tipo", "").strip().lower()
+        tipo = {"entrada": "Receita", "saida": "Despesa"}.get(tipo_formulario)
+        if not tipo:
+            raise ValueError("Selecione entrada ou saída.")
+
+        id_categoria_raw = request.form.get("id_categoria", "").strip()
+        id_categoria = int(id_categoria_raw) if id_categoria_raw else None
+        data_texto = request.form.get("data_transacao", "").strip()
+        try:
+            data_transacao = datetime.strptime(data_texto, "%d/%m/%Y").date()
+        except ValueError:
+            data_transacao = datetime.strptime(data_texto, "%Y-%m-%d").date()
+
+        Transacao.atualizar(
+            id_usuario=session["id_usuario"],
+            id_transacao=id_transacao,
+            descricao=descricao,
+            valor=valor,
+            tipo=tipo,
+            id_categoria=id_categoria,
+            data_transacao=data_transacao,
+        )
+        flash("As informações da transação foram atualizadas.", "success")
+        return redirect(url_for("tela_extrato", transacao_atualizada=id_transacao))
+    except (ValueError, InvalidOperation) as erro:
+        flash(str(erro), "error")
+    except Exception as erro:
+        print(f"Erro ao editar transação: {erro}")
+        flash("Não foi possível editar a transação. Tente novamente.", "error")
+
+    return redirect(url_for("tela_extrato"))
+
+
+@app.post("/transacoes/<int:id_transacao>/excluir")
+def excluir_transacao(id_transacao):
+    if "usuario" not in session or not session.get("id_usuario"):
+        flash("Faça login para excluir uma transação.", "error")
+        return redirect(url_for("login"))
+
+    try:
+        Transacao.deletar(session["id_usuario"], id_transacao)
+        flash("A transação foi excluída e o saldo da conta foi atualizado.", "success")
+    except ValueError as erro:
+        flash(str(erro), "error")
+    except Exception as erro:
+        print(f"Erro ao excluir transação: {erro}")
+        flash("Não foi possível excluir a transação. Tente novamente.", "error")
+
+    return redirect(url_for("tela_extrato"))
 
 
 # exibe a página de lançamentos
