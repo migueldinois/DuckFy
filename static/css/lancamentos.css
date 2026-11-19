@@ -363,6 +363,11 @@
   transition: color .18s, background-color .18s, border-color .18s;
 }
 
+.lancamento-subcategoria-actions {
+  display: flex;
+  justify-content: flex-start;
+}
+
 .lancamento-adicionar-categoria i {
   font-size: 16px;
 }
@@ -620,13 +625,14 @@
 .lancamento-type-card {
   position: relative;
   display: grid;
-  grid-template-columns: minmax(0, 1fr);
-  grid-template-rows: 56px auto;
+  grid-template-columns: 56px minmax(0, 1fr) 24px;
+  grid-template-rows: minmax(0, 1fr);
   align-content: center;
-  justify-items: center;
-  gap: 0;
-  min-height: 160px;
-  padding: 20px;
+  align-items: center;
+  justify-items: stretch;
+  gap: 16px;
+  min-height: 132px;
+  padding: 20px 24px;
   color: var(--text-primary);
   background: var(--bg-surface-1);
   border: 1px solid var(--border-color);
@@ -676,13 +682,12 @@
 }
 
 .lancamento-type-card-icon {
-  order: 1;
-  width: 56px;
-  height: 56px;
+  width: 52px;
+  height: 52px;
   background: transparent;
   border: 0;
   border-radius: 0;
-  font-size: 40px;
+  font-size: 30px;
 }
 
 .lancamento-type-card-icon-entry {
@@ -694,15 +699,11 @@
 }
 
 .lancamento-type-card-copy {
-  order: 2;
   display: grid;
-  width: 100%;
-  gap: 6px;
-  justify-items: center;
-  max-width: 48ch;
-  margin-top: 14px;
+  min-width: 0;
+  gap: 5px;
   padding: 0;
-  text-align: center;
+  text-align: left;
 }
 
 .lancamento-type-card-copy strong {
@@ -718,9 +719,8 @@
 }
 
 .lancamento-type-check {
-  position: absolute;
-  top: 19px;
-  right: 19px;
+  justify-self: end;
+  align-self: center;
   color: var(--brand-secondary);
   opacity: 0;
   transform: scale(.85);
