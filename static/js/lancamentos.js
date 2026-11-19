@@ -382,6 +382,21 @@ function configurarLancamentos() {
   const nomeNovaCategoria = document.querySelector('#nome');
   const emojiNovaCategoria = document.querySelector('#emoji');
   const tituloModalCriarCategoria = document.querySelector('#titulo-modal-criar-categoria');
+  const botaoNovaSubcategoria = document.querySelector('#abrir-modal-nova-subcategoria');
+  const modalNovaSubcategoria = document.querySelector('#modalNovaSubcategoriaLancamento');
+  const formularioNovaSubcategoria = document.querySelector('#formNovaSubcategoriaLancamento');
+  const nomeNovaSubcategoria = document.querySelector('#nomeNovaSubcategoriaLancamento');
+  const categoriaBaseSubcategoria = document.querySelector('#categoriaBaseSubcategoriaLancamento');
+  const emojiNovaSubcategoria = document.querySelector('#emojiNovaSubcategoriaLancamento');
+  const corNovaSubcategoria = document.querySelector('#corNovaSubcategoriaLancamento');
+  const botaoSalvarSubcategoria = document.querySelector('#salvarNovaSubcategoriaLancamento');
+  const tituloModalNovaSubcategoria = document.querySelector('#tituloNovaSubcategoriaLancamento');
+  const opcoesCorSubcategoria = Array.from(
+    document.querySelectorAll('#modalNovaSubcategoriaLancamento [data-subcategory-color]')
+  );
+  const botaoCorPersonalizadaSubcategoria = document.querySelector('#corPersonalizadaNovaSubcategoria');
+  const inputCorPersonalizadaSubcategoria = document.querySelector('#corPersonalizadaInputNovaSubcategoria');
+  const amostraCorSubcategoria = document.querySelector('#colorBoxNovaSubcategoria');
 
   function configurarBotaoCategoria(botao) {
     const cor = botao.dataset.categoryColor;
@@ -516,6 +531,14 @@ function configurarLancamentos() {
     listaCategoriasModal.append(botaoModal);
 
     botoesCategoria.push(botaoRapido, botaoModal);
+    if (categoriaBaseSubcategoria) {
+      const opcaoCategoriaBase = document.createElement('option');
+      opcaoCategoriaBase.value = String(categoria.id_categoria);
+      opcaoCategoriaBase.dataset.categoryType = categoria.tipo;
+      opcaoCategoriaBase.textContent = `${categoria.nome} · ${categoria.tipo === 'entrada' ? 'Entrada' : 'Saída'}`;
+      categoriaBaseSubcategoria.append(opcaoCategoriaBase);
+    }
+
     const botaoAdicionar = botoesAdicionarCategoria.find(function (botao) {
       return botao.dataset.categoryCreate === categoria.tipo;
     });
@@ -524,6 +547,72 @@ function configurarLancamentos() {
     atualizarCategoriasVisiveis();
     selecionarCategoria(botaoRapido);
     return botaoRapido;
+  }
+
+  function atualizarCategoriasBaseSubcategoria() {
+    if (!categoriaBaseSubcategoria) return;
+
+    const tipo = obterTipoTransacao();
+    const subcategoriaSelecionada = campoSubcategoria?.selectedOptions[0];
+    const categoriaBaseAtual = campoCategoria?.value
+      || subcategoriaSelecionada?.dataset.parentCategory
+      || '';
+
+    Array.from(categoriaBaseSubcategoria.options).forEach(function (opcao) {
+      if (!opcao.dataset.categoryType) return;
+      const incompatible = opcao.dataset.categoryType !== tipo;
+      opcao.disabled = incompatible;
+      opcao.hidden = incompatible;
+    });
+
+    const categoriaBaseDisponivel = Array.from(categoriaBaseSubcategoria.options).find(function (opcao) {
+      return opcao.value === categoriaBaseAtual && !opcao.disabled;
+    });
+    const primeiraCategoriaDisponivel = Array.from(categoriaBaseSubcategoria.options).find(function (opcao) {
+      return opcao.value && !opcao.disabled;
+    });
+    categoriaBaseSubcategoria.value = (categoriaBaseDisponivel || primeiraCategoriaDisponivel)?.value || '';
+  }
+
+  function criarOpcaoSubcategoria(subcategoria) {
+    const opcao = document.createElement('option');
+    opcao.value = String(subcategoria.id);
+    opcao.dataset.categoryType = subcategoria.categoria_tipo === 'Despesa' ? 'saida' : 'entrada';
+    opcao.dataset.parentCategory = String(subcategoria.categoria_id);
+    opcao.textContent = `${subcategoria.nome} · ${subcategoria.categoria_nome}`;
+    campoSubcategoria.append(opcao);
+
+    const categoriaBase = botoesCategoria.find(function (botao) {
+      return botao.dataset.categoryId === String(subcategoria.categoria_id);
+    });
+    if (categoriaBase) {
+      selecionarCategoria(categoriaBase);
+    } else if (campoCategoria) {
+      campoCategoria.value = String(subcategoria.categoria_id);
+    }
+
+    campoSubcategoria.value = opcao.value;
+    campoSubcategoria.dispatchEvent(new Event('change', { bubbles: true }));
+    return opcao;
+  }
+
+  function definirCorSubcategoria(cor) {
+    const corNormalizada = cor.toUpperCase();
+    corNovaSubcategoria.value = corNormalizada;
+    inputCorPersonalizadaSubcategoria.value = corNormalizada;
+    amostraCorSubcategoria.style.backgroundColor = corNormalizada;
+
+    const corPredefinida = opcoesCorSubcategoria.some(function (opcao) {
+      return opcao.dataset.subcategoryColor === corNormalizada;
+    });
+    opcoesCorSubcategoria.forEach(function (opcao) {
+      opcao.classList.toggle(
+        'selecionada',
+        opcao.dataset.subcategoryColor === corNormalizada
+      );
+    });
+    botaoCorPersonalizadaSubcategoria.classList.toggle('selecionada', !corPredefinida);
+    botaoCorPersonalizadaSubcategoria.style.backgroundColor = corPredefinida ? '' : corNormalizada;
   }
 
   function iniciarCategorias() {
@@ -660,6 +749,135 @@ function configurarLancamentos() {
     ).then(function () {
       botaoCategoriaCriada.focus();
     });
+  });
+
+  botaoNovaSubcategoria?.addEventListener('click', async function () {
+    const tipo = obterTipoTransacao();
+    const categoriaBaseDisponivel = Array.from(categoriaBaseSubcategoria.options).some(function (opcao) {
+      return opcao.value && opcao.dataset.categoryType === tipo;
+    });
+
+    if (!categoriaBaseDisponivel) {
+      const tipoLegivel = tipo === 'entrada' ? 'entrada' : 'saída';
+      const resultado = await window.DuckFyAlert.show({
+        icon: 'warning',
+        title: 'Categoria-base necessária',
+        text: `Crie primeiro uma categoria principal de ${tipoLegivel} para adicionar uma subcategoria.`,
+        showCancelButton: true,
+        confirmButtonText: 'Criar categoria principal',
+        cancelButtonText: 'Agora não',
+        reverseButtons: true,
+      });
+      if (resultado.isConfirmed) {
+        const botaoCriarCategoria = botoesAdicionarCategoria.find(function (botao) {
+          return botao.dataset.categoryCreate === tipo;
+        });
+        if (botaoCriarCategoria) {
+          botaoCriarCategoria.click();
+        } else {
+          window.location.assign(`/categorias?criar=${tipo}`);
+        }
+      }
+      return;
+    }
+
+    formularioNovaSubcategoria.reset();
+    emojiNovaSubcategoria.value = '⭐';
+    emojiNovaSubcategoria.dispatchEvent(new Event('input', { bubbles: true }));
+    definirCorSubcategoria(corNovaSubcategoria.value);
+    atualizarCategoriasBaseSubcategoria();
+    tituloModalNovaSubcategoria.textContent =
+      `Adicionar subcategoria de ${tipo === 'entrada' ? 'entrada' : 'saída'}`;
+    ModalManager.abrir(modalNovaSubcategoria.id);
+    modalNovaSubcategoria.setAttribute('aria-hidden', 'false');
+    nomeNovaSubcategoria.focus();
+  });
+
+  opcoesCorSubcategoria.forEach(function (opcao) {
+    opcao.addEventListener('click', function () {
+      definirCorSubcategoria(opcao.dataset.subcategoryColor);
+    });
+  });
+
+  botaoCorPersonalizadaSubcategoria?.addEventListener('click', function () {
+    inputCorPersonalizadaSubcategoria.click();
+  });
+  inputCorPersonalizadaSubcategoria?.addEventListener('input', function () {
+    definirCorSubcategoria(inputCorPersonalizadaSubcategoria.value);
+  });
+
+  modalNovaSubcategoria?.addEventListener('click', function (evento) {
+    if (evento.target === modalNovaSubcategoria || evento.target.closest?.('[data-close-modal]')) {
+      ModalManager.fechar(modalNovaSubcategoria.id);
+      modalNovaSubcategoria.setAttribute('aria-hidden', 'true');
+      botaoNovaSubcategoria?.focus();
+    }
+  });
+
+  document.addEventListener('keydown', function (evento) {
+    if (evento.key === 'Escape' && modalNovaSubcategoria?.classList.contains('active')) {
+      ModalManager.fechar(modalNovaSubcategoria.id);
+      modalNovaSubcategoria.setAttribute('aria-hidden', 'true');
+      botaoNovaSubcategoria?.focus();
+    }
+  });
+
+  formularioNovaSubcategoria?.addEventListener('submit', async function (evento) {
+    evento.preventDefault();
+
+    const tipo = obterTipoTransacao();
+    const categoriaBase = categoriaBaseSubcategoria.selectedOptions[0];
+    if (!categoriaBase?.value || categoriaBase.dataset.categoryType !== tipo) {
+      await window.DuckFyAlert.error(
+        'Selecione uma categoria-base do mesmo tipo do lançamento.',
+        'Categoria-base obrigatória'
+      );
+      categoriaBaseSubcategoria.focus();
+      return;
+    }
+
+    botaoSalvarSubcategoria.disabled = true;
+    try {
+      const resposta = await fetch(formularioNovaSubcategoria.action, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json',
+        },
+        body: JSON.stringify({
+          nome: nomeNovaSubcategoria.value.trim(),
+          categoria_id: categoriaBase.value,
+          emoji: emojiNovaSubcategoria.value.trim(),
+          cor: corNovaSubcategoria.value,
+        }),
+      });
+      const resultado = await resposta.json().catch(function () {
+        throw new Error('O servidor retornou uma resposta inválida. Tente novamente.');
+      });
+
+      if (!resposta.ok || !resultado.ok) {
+        throw new Error(resultado.message || 'Não foi possível criar a subcategoria.');
+      }
+      if (!resultado.subcategoria?.id) {
+        throw new Error('A resposta do servidor não contém a subcategoria criada.');
+      }
+
+      criarOpcaoSubcategoria(resultado.subcategoria);
+      ModalManager.fechar(modalNovaSubcategoria.id);
+      modalNovaSubcategoria.setAttribute('aria-hidden', 'true');
+      await window.DuckFyAlert.success(
+        `“${resultado.subcategoria.nome}” foi criada em “${resultado.subcategoria.categoria_nome}” e selecionada neste lançamento.`,
+        'Subcategoria criada!'
+      );
+      campoSubcategoria.focus();
+    } catch (erro) {
+      console.error('Erro ao criar subcategoria pelo lançamento:', erro);
+      await window.DuckFyAlert.error(
+        erro.message || 'Não foi possível salvar a subcategoria. Verifique sua conexão e tente novamente.'
+      );
+    } finally {
+      botaoSalvarSubcategoria.disabled = false;
+    }
   });
 
   botaoAbrirModalCategoria?.addEventListener('click', abrirModalCategoria);

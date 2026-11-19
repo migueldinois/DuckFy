@@ -13,6 +13,10 @@
   overscroll-behavior: contain;
 }
 
+.lancamento-categoria-modal select.input-with-icon {
+  padding-left: 42px;
+}
+
 .lancamento-categoria-modal .tipo-categoria-opcoes {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -128,6 +132,15 @@ body.tema-claro .lancamento-categoria-modal .tipo-categoria-btn.tipo-entrada.sel
   border-radius: 50%;
   cursor: pointer;
   transition: transform .2s ease, box-shadow .2s ease;
+}
+
+.lancamento-categoria-modal .lancamento-subcategoria-native-color {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  opacity: 0;
+  pointer-events: none;
 }
 
 .lancamento-categoria-modal .color-option:hover {

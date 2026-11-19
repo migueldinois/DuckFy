@@ -193,6 +193,11 @@
                 </option>
                 {% endfor %}
               </select>
+              <div class="lancamento-subcategoria-actions">
+                <button type="button" class="lancamento-adicionar-categoria" id="abrir-modal-nova-subcategoria">
+                  <i class="bi bi-plus-circle" aria-hidden="true"></i><span>Adicionar subcategoria</span>
+                </button>
+              </div>
               <small class="form-text">A subcategoria pode ser selecionada sem escolher uma categoria principal.</small>
             </div>
 
@@ -213,6 +218,82 @@
         </div>
       </section>
     </form>
+
+    <div class="duckfy-modal lancamento-categoria-modal" id="modalNovaSubcategoriaLancamento"
+      role="dialog" aria-modal="true" aria-labelledby="tituloNovaSubcategoriaLancamento" aria-hidden="true">
+      <div class="dash-card modal-content">
+        <div class="d-flex justify-content-between align-items-center mb-3">
+          <h3 class="card-section-title m-0" id="tituloNovaSubcategoriaLancamento">Adicionar subcategoria</h3>
+          <button type="button" class="btn-close-custom" data-close-modal aria-label="Fechar">&times;</button>
+        </div>
+
+        <form id="formNovaSubcategoriaLancamento" action="{{ url_for('criar_subcategoria') }}" method="POST">
+          <div class="mb-3">
+            <label for="nomeNovaSubcategoriaLancamento" class="card-subtitle d-block mb-1">Nome</label>
+            <div class="input-icon-wrapper">
+              <img src="{{ url_for('static', filename='img/icons/nome.svg') }}" class="input-icon" alt="Nome">
+              <input class="search-input input-with-icon" id="nomeNovaSubcategoriaLancamento" name="nome"
+                type="text" maxlength="50" required placeholder="Ex.: Supermercado">
+            </div>
+          </div>
+
+          <div class="mb-3">
+            <label for="categoriaBaseSubcategoriaLancamento" class="card-subtitle d-block mb-1">Categoria-base</label>
+            <div class="input-icon-wrapper">
+              <img src="{{ url_for('static', filename='img/icons/categoria.svg') }}" class="input-icon" alt="">
+              <select class="search-input input-with-icon" id="categoriaBaseSubcategoriaLancamento" name="categoria_id" required>
+                <option value="" selected disabled>Selecione uma categoria-base</option>
+                {% for categoria in categorias_despesa %}
+                <option value="{{ categoria.id_categoria }}" data-category-type="saida">{{ categoria.nome }} · Saída</option>
+                {% endfor %}
+                {% for categoria in categorias_receita %}
+                <option value="{{ categoria.id_categoria }}" data-category-type="entrada">{{ categoria.nome }} · Entrada</option>
+                {% endfor %}
+              </select>
+            </div>
+          </div>
+
+          <div class="mb-3">
+            <label for="emojiNovaSubcategoriaLancamento" class="card-subtitle d-block mb-1">Emoji</label>
+            <div class="input-icon-wrapper emoji-field-wrapper">
+              <img src="{{ url_for('static', filename='img/icons/emoji.svg') }}"
+                class="input-icon emoji-icon-trigger" alt="Abrir seletor de emojis"
+                data-emoji-trigger="emojiNovaSubcategoriaLancamento" role="button" tabindex="0"
+                aria-label="Abrir seletor de emojis">
+              <input class="search-input input-with-icon emoji-input" id="emojiNovaSubcategoriaLancamento"
+                name="emoji" type="text" required autocomplete="off" placeholder="Selecione um emoji"
+                aria-label="Escolher emoji">
+            </div>
+          </div>
+
+          <div class="mb-3">
+            <label for="corNovaSubcategoriaLancamento" class="card-subtitle d-block mb-1">Cor</label>
+            <div class="color-picker-wrapper">
+              <input type="hidden" name="cor" id="corNovaSubcategoriaLancamento" value="#7C4DFF">
+              <div class="color-options" aria-label="Cores da subcategoria">
+                {% for cor, nome in [('#7C4DFF', 'Roxo'), ('#00E676', 'Verde'), ('#58A6FF', 'Azul'), ('#FFB547', 'Laranja'), ('#FF758F', 'Rosa'), ('#A0A0B0', 'Cinza')] %}
+                <button type="button" class="color-option{% if loop.first %} selecionada{% endif %}"
+                  data-subcategory-color="{{ cor }}" style="--cor-opcao: {{ cor }}" aria-label="{{ nome }}"></button>
+                {% endfor %}
+                <button type="button" id="corPersonalizadaNovaSubcategoria"
+                  class="color-option color-custom" aria-label="Escolher outra cor">
+                  <i class="bi bi-plus-lg" aria-hidden="true"></i>
+                </button>
+                <input class="lancamento-subcategoria-native-color" type="color"
+                  id="corPersonalizadaInputNovaSubcategoria" value="#7C4DFF" aria-label="Cor personalizada">
+              </div>
+              <div class="color-preview">
+                <span id="colorBoxNovaSubcategoria" aria-hidden="true"></span>
+              </div>
+            </div>
+          </div>
+
+          <button type="submit" class="btn-purple-action w-100 mt-2" id="salvarNovaSubcategoriaLancamento">
+            Criar subcategoria
+          </button>
+        </form>
+      </div>
+    </div>
 
     <div class="duckfy-modal categoria-modal" id="modal-selecionar-categoria" aria-hidden="true">
       <section class="categoria-modal-conteudo" role="dialog" aria-modal="true" aria-labelledby="titulo-modal-categorias">
