@@ -184,11 +184,6 @@ body.tema-claro .lancamento-categoria-modal .tipo-categoria-btn.tipo-entrada.sel
   border-radius: 5px;
 }
 
-.lancamento-categoria-modal #colorValue {
-  font-family: monospace;
-  letter-spacing: .5px;
-}
-
 .lancamento-categoria-modal .color-history-container {
   margin-top: 16px;
 }

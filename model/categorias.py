@@ -14,6 +14,7 @@ class Categoria():
             FROM categorias 
             WHERE (id_usuario = %s OR id_usuario IS NULL) 
             AND tipo = %s
+            AND id_categoria_0 IS NULL
         """
         
         cursor.execute(sql, (id_usuario, tipo))

@@ -40,6 +40,61 @@ if (!window.duckfyCategoriasInicializado) {
             document.getElementById('nome')?.focus();
         }
 
+        const modalSubcategorias = document.getElementById('modalSubcategoriasCategoria');
+        const tituloModalSubcategorias = document.getElementById('tituloModalSubcategorias');
+        const linkGerenciarSubcategorias = document.getElementById('gerenciarSubcategorias');
+        const fecharModalSubcategorias = document.getElementById('fecharModalSubcategorias');
+        let botaoSubcategoriasAtivo = null;
+
+        const fecharModalListaSubcategorias = () => {
+            if (!modalSubcategorias) return;
+            modalSubcategorias.classList.remove('active');
+            modalSubcategorias.setAttribute('aria-hidden', 'true');
+            document.body.style.overflow = '';
+            botaoSubcategoriasAtivo?.setAttribute('aria-expanded', 'false');
+            botaoSubcategoriasAtivo?.focus();
+        };
+
+        document.querySelectorAll('[data-category-subcategories]').forEach(botao => {
+            botao.addEventListener('click', event => {
+                const categoriaId = botao.dataset.categoryId;
+                const subcategoriasDaCategoria = Array.from(
+                    modalSubcategorias.querySelectorAll('.category-subcategory-row')
+                ).filter(item => item.dataset.parentCategory === categoriaId);
+
+                if (!subcategoriasDaCategoria.length) return;
+
+                event.preventDefault();
+                botaoSubcategoriasAtivo = botao;
+                if (botao.id === 'btnIrSubcategorias') {
+                    ModalManager.fechar('modalEditarCategoria');
+                    botaoSubcategoriasAtivo = Array.from(
+                        document.querySelectorAll('.category-subcategories-link[data-category-id]')
+                    ).find(item => item.dataset.categoryId === categoriaId) || botao;
+                }
+                modalSubcategorias.querySelectorAll('.category-subcategory-row').forEach(item => {
+                    item.hidden = item.dataset.parentCategory !== categoriaId;
+                });
+                tituloModalSubcategorias.textContent = `Subcategorias de ${botao.dataset.categoryName}`;
+                linkGerenciarSubcategorias.href = botao.href;
+                modalSubcategorias.classList.add('active');
+                modalSubcategorias.setAttribute('aria-hidden', 'false');
+                document.body.style.overflow = 'hidden';
+                botaoSubcategoriasAtivo?.setAttribute('aria-expanded', 'true');
+                fecharModalSubcategorias.focus();
+            });
+        });
+
+        fecharModalSubcategorias?.addEventListener('click', fecharModalListaSubcategorias);
+        modalSubcategorias?.addEventListener('click', event => {
+            if (event.target === modalSubcategorias) fecharModalListaSubcategorias();
+        });
+        document.addEventListener('keydown', event => {
+            if (event.key === 'Escape' && modalSubcategorias?.classList.contains('active')) {
+                fecharModalListaSubcategorias();
+            }
+        });
+
         // ========================================
         // CONFIGURAÇÃO DO SELETOR DE EMOJIS
         // ========================================
@@ -767,7 +822,6 @@ if (!window.duckfyCategoriasInicializado) {
 
         const campoCor = document.getElementById('cor');
         const colorBox = document.getElementById('colorBox');
-        const colorValue = document.getElementById('colorValue');
 
         const opcoesCores = document.querySelectorAll(
             '.color-option[data-color]'
@@ -841,11 +895,10 @@ if (!window.duckfyCategoriasInicializado) {
                 }
             }
 
-            if (!campoCor || !colorBox || !colorValue) return;
+            if (!campoCor || !colorBox) return;
 
             campoCor.value = cor;
             colorBox.style.backgroundColor = cor;
-            colorValue.textContent = cor;
 
             opcoesCores.forEach(opcao => {
 
@@ -997,7 +1050,6 @@ if (!window.duckfyCategoriasInicializado) {
 
         const editCampoCor = document.getElementById('edit_cor');
         const editColorBox = document.getElementById('editColorBox');
-        const editColorValue = document.getElementById('editColorValue');
         const editBotaoPersonalizada = document.getElementById('editCorPersonalizada');
         const editHistoricoContainer = document.getElementById('editHistoricoCores');
 
@@ -1008,13 +1060,12 @@ if (!window.duckfyCategoriasInicializado) {
 
         function editAtualizarCorPreview(cor) {
 
-            if (!editCampoCor || !editColorBox || !editColorValue || !cor) return;
+            if (!editCampoCor || !editColorBox || !cor) return;
 
             cor = cor.toUpperCase();
 
             editCampoCor.value = cor;
             editColorBox.style.backgroundColor = cor;
-            editColorValue.textContent = cor;
 
             editOpcoesCores.forEach(opcao => {
 
