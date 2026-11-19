@@ -41,15 +41,18 @@ function criarParticulas() {
             velocidadeY: (Math.random() - 0.5) * 0.35,
             opacidade: Math.random() * 0.6 + 0.2,
             fase: Math.random() * Math.PI * 2,
-            cor: Math.random() > 0.5
-                ? "124, 77, 255"
-                : "0, 230, 118"
+            cor: Math.random() > 0.5 ? "marca" : "destaque"
         });
     }
 }
 
 function desenharParticulas() {
     ctx.clearRect(0, 0, largura, altura);
+    const estilosRaiz = getComputedStyle(document.documentElement);
+    const cores = {
+        marca: estilosRaiz.getPropertyValue("--brand-primary").trim() || "#7C4DFF",
+        destaque: estilosRaiz.getPropertyValue("--accent-primary").trim() || "#00E676"
+    };
 
     const tempo = performance.now() * 0.001;
 
@@ -72,8 +75,9 @@ function desenharParticulas() {
 
         ctx.save();
         ctx.globalAlpha = brilho;
-        ctx.fillStyle = `rgb(${particula.cor})`;
-        ctx.shadowColor = `rgb(${particula.cor})`;
+        const cor = cores[particula.cor];
+        ctx.fillStyle = cor;
+        ctx.shadowColor = cor;
         ctx.shadowBlur = particula.tamanho * 7;
         ctx.beginPath();
         ctx.arc(particula.x, particula.y, particula.tamanho, 0, Math.PI * 2);

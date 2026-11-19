@@ -17,7 +17,8 @@ document.addEventListener("click", async (event) => {
         document.documentElement.classList.remove(
             "daltonismo-protanopia",
             "daltonismo-deuteranopia",
-            "daltonismo-tritanopia"
+            "daltonismo-tritanopia",
+            "daltonismo-monocromatica"
         );
         window.location.assign(linkSair.href);
     }

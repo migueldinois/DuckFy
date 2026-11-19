@@ -104,6 +104,49 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
+    function ajustarValoresMetricas() {
+        const metricas = document.querySelectorAll('.metric-box');
+        const largurasMetricas = new WeakMap();
+
+        function ajustarTamanho(valor) {
+            valor.style.fontSize = '';
+            const tamanhoBase = Number.parseFloat(getComputedStyle(valor).fontSize);
+            const larguraDisponivel = valor.clientWidth;
+            const larguraTexto = valor.scrollWidth;
+
+            if (larguraDisponivel && larguraTexto > larguraDisponivel) {
+                const tamanhoAjustado = tamanhoBase * larguraDisponivel / larguraTexto;
+                valor.style.fontSize = `${Math.max(10, tamanhoAjustado)}px`;
+            }
+        }
+
+        function ajustarTodas() {
+            metricas.forEach(metrica => {
+                largurasMetricas.set(metrica, metrica.clientWidth);
+                const valor = metrica.querySelector('.metric-value');
+                if (valor) ajustarTamanho(valor);
+            });
+        }
+
+        ajustarTodas();
+
+        if ('ResizeObserver' in window) {
+            const observador = new ResizeObserver(entradas => {
+                entradas.forEach(({ target }) => {
+                    const larguraAtual = target.clientWidth;
+                    if (largurasMetricas.get(target) === larguraAtual) return;
+
+                    largurasMetricas.set(target, larguraAtual);
+                    const valor = target.querySelector('.metric-value');
+                    if (valor) ajustarTamanho(valor);
+                });
+            });
+            metricas.forEach(metrica => observador.observe(metrica));
+        } else {
+            window.addEventListener('resize', ajustarTodas);
+        }
+    }
+
     function configurarGrafico() {
         const canvas = document.getElementById('graficoSimulador');
         const dadosGrafico = window.dadosGrafico;
@@ -215,5 +258,6 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     configurarFormulario();
+    ajustarValoresMetricas();
     configurarGrafico();
 });

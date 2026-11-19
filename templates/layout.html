@@ -9,12 +9,21 @@
         try {
             const raiz = document.documentElement;
             const tema = localStorage.getItem("duckfy-tema") || "escuro";
-            const tamanhoFonte = Number(localStorage.getItem("duckfy-fonte") || 100);
+            const fonteSalva = Number(localStorage.getItem("duckfy-fonte") || 100);
+            const tamanhoFonte = Number.isFinite(fonteSalva)
+                ? Math.min(140, Math.max(90, Math.round(fonteSalva / 10) * 10))
+                : 100;
             const paleta = localStorage.getItem("duckfy-daltonismo") || "normal";
+            const paletasDaltonismo = ["protanopia", "deuteranopia", "tritanopia", "monocromatica"];
 
             raiz.classList.toggle("tema-claro", tema === "claro");
-            raiz.classList.remove("daltonismo-protanopia", "daltonismo-deuteranopia", "daltonismo-tritanopia");
-            if (["protanopia", "deuteranopia", "tritanopia"].includes(paleta)) {
+            raiz.classList.remove(
+                "daltonismo-protanopia",
+                "daltonismo-deuteranopia",
+                "daltonismo-tritanopia",
+                "daltonismo-monocromatica"
+            );
+            if (paletasDaltonismo.includes(paleta)) {
                 raiz.classList.add(`daltonismo-${paleta}`);
             }
             raiz.style.fontSize = `${Math.min(140, Math.max(90, tamanhoFonte))}%`;
@@ -39,7 +48,7 @@
     {% block extra_css %}{% endblock %}
     {% block styles %}{% endblock %}
     <link rel="stylesheet" href="{{ url_for('static', filename='css/tema-claro.css') }}?v=2.6">
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/acessibilidade.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/acessibilidade.css') }}?v=2.9">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/botao-voltar.css') }}">
 </head>
 
@@ -63,6 +72,8 @@
                     data-logo-claro="{{ url_for('static', filename='img/logo_escura.png') }}"
                     data-logo-escuro="{{ url_for('static', filename='img/logo_clara.png') }}" alt="DuckFy"
                     data-logo-recolhida="{{ url_for('static', filename='img/d.png') }}"
+                    data-logo-recolhida-claro="{{ url_for('static', filename='img/d.png') }}"
+                    data-logo-recolhida-escuro="{{ url_for('static', filename='img/d_escuro.png') }}"
                     class="sidebar-logo">
             </a>
 
