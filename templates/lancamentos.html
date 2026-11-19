@@ -187,6 +187,7 @@
                 {% for subcategoria in subcategorias %}
                 <option value="{{ subcategoria.id }}"
                   data-category-type="{% if subcategoria.categoria_tipo == 'Despesa' %}saida{% else %}entrada{% endif %}"
+                  data-parent-category="{{ subcategoria.categoria_id }}"
                   {% if dados_lancamento.get('subcategoria')|string == subcategoria.id|string %}selected{% endif %}>
                   {{ subcategoria.nome }} · {{ subcategoria.categoria_nome }}
                 </option>

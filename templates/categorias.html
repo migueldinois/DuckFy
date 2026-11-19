@@ -218,41 +218,33 @@
         aria-labelledby="tituloModalSubcategorias">
         <header class="category-subcategories-header">
             <div class="category-subcategories-heading">
-                <span class="category-subcategories-heading-icon" aria-hidden="true">
-                    <i class="bi bi-diagram-3"></i>
-                </span>
                 <div>
-                    <span class="category-subcategories-eyebrow">ORGANIZAÇÃO</span>
                     <h2 class="card-section-title" id="tituloModalSubcategorias">Subcategorias</h2>
                 </div>
             </div>
-            <div class="category-subcategories-header-actions">
-                <span class="category-subcategories-count" id="contadorModalSubcategorias" aria-live="polite">0</span>
-                <button type="button" class="category-subcategories-close" id="fecharModalSubcategorias" aria-label="Fechar">
-                    <i class="bi bi-x-lg" aria-hidden="true"></i>
-                </button>
-            </div>
+            <button type="button" class="category-subcategories-close" id="fecharModalSubcategorias" aria-label="Fechar">
+                <i class="bi bi-x-lg" aria-hidden="true"></i>
+            </button>
         </header>
         <p class="category-subcategories-description" id="descricaoModalSubcategorias">
-            Subcategorias organizadas nesta categoria base.
+            Subcategorias cadastradas nesta categoria.
         </p>
         <div class="category-subcategories-list" id="listaModalSubcategorias">
             {% for subcategoria in subcategorias %}
-            <div class="category-subcategory-row" data-parent-category="{{ subcategoria.categoria_id }}" hidden>
+            <a class="category-subcategory-row" data-parent-category="{{ subcategoria.categoria_id }}"
+                href="{{ url_for('tela_subcategorias', categoria=subcategoria.categoria_id) }}" hidden>
                 <span class="category-subcategory-icon" style="--cor-categoria: {{ subcategoria.cor or '#7C4DFF' }};" aria-hidden="true">
                     <span class="emoji-ios">{{ subcategoria.emoji or '⭐' }}</span>
                 </span>
                 <span class="category-subcategory-name">{{ subcategoria.nome }}</span>
                 <span class="category-subcategory-label">Subcategoria</span>
                 <i class="bi bi-chevron-right category-subcategory-chevron" aria-hidden="true"></i>
-            </div>
+            </a>
             {% endfor %}
         </div>
         <a class="category-subcategories-manage" id="gerenciarSubcategorias"
             href="{{ url_for('tela_subcategorias') }}">
-            <i class="bi bi-sliders2" aria-hidden="true"></i>
             <span>Gerenciar subcategorias</span>
-            <i class="bi bi-arrow-up-right category-subcategories-manage-arrow" aria-hidden="true"></i>
         </a>
     </section>
 </div>

@@ -431,9 +431,13 @@ function configurarLancamentos() {
     });
 
     if (campoSubcategoria) {
+      const categoriaSelecionada = campoCategoria?.value || '';
       Array.from(campoSubcategoria.options).forEach(function (opcao) {
         if (!opcao.value) return;
-        opcao.disabled = opcao.dataset.categoryType !== tipo;
+        const tipoIncompativel = opcao.dataset.categoryType !== tipo;
+        const categoriaIncompativel = categoriaSelecionada
+          && opcao.dataset.parentCategory !== categoriaSelecionada;
+        opcao.disabled = tipoIncompativel || categoriaIncompativel;
         opcao.hidden = opcao.disabled;
       });
       const subcategoriaSelecionada = campoSubcategoria.selectedOptions[0];
@@ -458,6 +462,7 @@ function configurarLancamentos() {
       const mesmaCategoria = opcao.dataset.categoryId === botao.dataset.categoryId;
       opcao.classList.toggle('is-selected', mesmaCategoria);
     });
+    atualizarCategoriasVisiveis();
 
     if (botao.closest('.categoria-modal') && modalCategoria?.classList.contains('active')) {
       fecharModalCategoria();
@@ -683,6 +688,7 @@ function configurarLancamentos() {
       } else {
         campoCategoria.value = '';
         nomeCategoriaSelecionada.textContent = 'Nenhuma categoria cadastrada';
+        atualizarCategoriasVisiveis();
       }
     });
   });
@@ -697,6 +703,7 @@ function configurarLancamentos() {
       nomeCategoriaSelecionada.textContent = 'Subcategoria selecionada abaixo';
       nomeCategoriaSelecionada.style.removeProperty('--category-color');
     }
+    atualizarCategoriasVisiveis();
   });
 
   formularioLancamento?.addEventListener('submit', function (evento) {

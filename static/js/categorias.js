@@ -42,8 +42,6 @@ if (!window.duckfyCategoriasInicializado) {
 
         const modalSubcategorias = document.getElementById('modalSubcategoriasCategoria');
         const tituloModalSubcategorias = document.getElementById('tituloModalSubcategorias');
-        const descricaoModalSubcategorias = document.getElementById('descricaoModalSubcategorias');
-        const contadorModalSubcategorias = document.getElementById('contadorModalSubcategorias');
         const linkGerenciarSubcategorias = document.getElementById('gerenciarSubcategorias');
         const fecharModalSubcategorias = document.getElementById('fecharModalSubcategorias');
         let botaoSubcategoriasAtivo = null;
@@ -78,11 +76,6 @@ if (!window.duckfyCategoriasInicializado) {
                     item.hidden = item.dataset.parentCategory !== categoriaId;
                 });
                 tituloModalSubcategorias.textContent = `Subcategorias de ${botao.dataset.categoryName}`;
-                const quantidade = subcategoriasDaCategoria.length;
-                contadorModalSubcategorias.textContent = String(quantidade);
-                descricaoModalSubcategorias.textContent = `${quantidade} ${
-                    quantidade === 1 ? 'subcategoria vinculada' : 'subcategorias vinculadas'
-                } a esta categoria base.`;
                 linkGerenciarSubcategorias.href = botao.href;
                 modalSubcategorias.classList.add('active');
                 modalSubcategorias.setAttribute('aria-hidden', 'false');

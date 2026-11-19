@@ -238,6 +238,7 @@ document.addEventListener("DOMContentLoaded", () => {
             currentRow = null;
             updateList();
             ModalManager.fechar(modal.id);
+            alert?.success("A subcategoria foi excluída com sucesso.", "Subcategoria excluída!");
         } catch (error) {
             mostrarErro(error);
         } finally {
@@ -251,12 +252,13 @@ document.addEventListener("DOMContentLoaded", () => {
         const selected = categorySelect.selectedOptions[0];
         if (!name || !selected.value) return;
 
+        const editing = Boolean(currentRow);
         submitButton.disabled = true;
         try {
             const result = await enviarRequisicao(
-                currentRow ? `/subcategorias/api/${currentRow.dataset.id}` : "/subcategorias/api",
+                editing ? `/subcategorias/api/${currentRow.dataset.id}` : "/subcategorias/api",
                 {
-                    method: currentRow ? "PUT" : "POST",
+                    method: editing ? "PUT" : "POST",
                     body: JSON.stringify({
                         nome: name,
                         categoria_id: selected.value,
@@ -278,6 +280,12 @@ document.addEventListener("DOMContentLoaded", () => {
             updateList();
             currentRow = null;
             ModalManager.fechar(modal.id);
+            alert?.success(
+                editing
+                    ? "As alterações da subcategoria foram salvas com sucesso."
+                    : "A subcategoria foi criada com sucesso.",
+                editing ? "Subcategoria atualizada!" : "Subcategoria criada!"
+            );
         } catch (error) {
             mostrarErro(error);
         } finally {
