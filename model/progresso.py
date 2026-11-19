@@ -34,7 +34,62 @@ class Progresso:
         "2.500 XP": 100,
         "Reserva de R$ 10.000": 120,
         "Lenda da Consistência": 150,
+        "Primeiro Dia": 10,
+        "Dois Dias Seguidos": 12,
+        "Ritmo de Cinco Dias": 15,
+        "Dez Dias Firmes": 20,
+        "Três Semanas Constantes": 25,
+        "60 Dias Constantes": 45,
+        "Um Ano de Disciplina": 200,
+        "50 XP": 10,
+        "250 XP": 20,
+        "1.500 XP": 50,
+        "5.000 XP": 100,
+        "10.000 XP": 200,
+        "Duas Contas": 10,
+        "Quatro Contas": 20,
+        "Dez Contas": 50,
+        "Três Categorias": 10,
+        "Sete Categorias": 20,
+        "Quinze Categorias": 50,
+        "Reserva de R$ 50": 10,
+        "Reserva de R$ 250": 15,
+        "Reserva de R$ 750": 25,
+        "Reserva de R$ 2.000": 40,
+        "Reserva de R$ 7.500": 80,
+        "Reserva de R$ 25.000": 200,
+        "Meta Iniciada": 12,
+        "Quase na Meta": 60,
     }
+
+    CONQUISTAS_ADICIONAIS = (
+        ("Primeiro Dia", "Mantenha 1 dia de ofensiva.", "bi-calendar-day"),
+        ("Dois Dias Seguidos", "Mantenha 2 dias de ofensiva.", "bi-calendar2"),
+        ("Ritmo de Cinco Dias", "Mantenha 5 dias de ofensiva.", "bi-calendar-check"),
+        ("Dez Dias Firmes", "Mantenha 10 dias seguidos.", "bi-calendar2-week"),
+        ("Três Semanas Constantes", "Mantenha 21 dias seguidos.", "bi-calendar3-week"),
+        ("60 Dias Constantes", "Mantenha 60 dias seguidos.", "bi-calendar2-check"),
+        ("Um Ano de Disciplina", "Mantenha 365 dias seguidos.", "bi-trophy-fill"),
+        ("50 XP", "Acumule 50 pontos de experiência.", "bi-lightning-charge-fill"),
+        ("250 XP", "Acumule 250 pontos de XP.", "bi-lightning-charge"),
+        ("1.500 XP", "Acumule 1.500 pontos de XP.", "bi-stars"),
+        ("5.000 XP", "Acumule 5.000 pontos de XP.", "bi-stars"),
+        ("10.000 XP", "Acumule 10.000 pontos de XP.", "bi-trophy-fill"),
+        ("Duas Contas", "Cadastre 2 contas bancárias.", "bi-bank"),
+        ("Quatro Contas", "Cadastre 4 contas bancárias.", "bi-buildings"),
+        ("Dez Contas", "Cadastre 10 contas bancárias.", "bi-bank2"),
+        ("Três Categorias", "Crie 3 categorias financeiras.", "bi-tags"),
+        ("Sete Categorias", "Crie 7 categorias financeiras.", "bi-grid-3x3-gap"),
+        ("Quinze Categorias", "Crie 15 categorias financeiras.", "bi-grid-fill"),
+        ("Reserva de R$ 50", "Guarde R$ 50 na reserva.", "bi-piggy-bank"),
+        ("Reserva de R$ 250", "Guarde R$ 250 na reserva.", "bi-piggy-bank-fill"),
+        ("Reserva de R$ 750", "Guarde R$ 750 na reserva.", "bi-safe2"),
+        ("Reserva de R$ 2.000", "Guarde R$ 2.000 na reserva.", "bi-safe"),
+        ("Reserva de R$ 7.500", "Guarde R$ 7.500 na reserva.", "bi-shield-check"),
+        ("Reserva de R$ 25.000", "Guarde R$ 25.000 na reserva.", "bi-trophy"),
+        ("Meta Iniciada", "Complete 10% da meta da reserva.", "bi-bullseye"),
+        ("Quase na Meta", "Complete 90% da meta da reserva.", "bi-flag-fill"),
+    )
 
     @staticmethod
     def calcular_nivel(pontos_xp):
@@ -215,6 +270,28 @@ class Progresso:
     def sincronizar_conquistas(id_usuario):
         conexao, cursor = Conexao.conectar()
         try:
+            selects = ["SELECT %s AS nome, %s AS descricao, %s AS icone"]
+            selects.extend(
+                "SELECT %s, %s, %s"
+                for _ in Progresso.CONQUISTAS_ADICIONAIS[1:]
+            )
+            valores_catalogo = tuple(
+                valor
+                for conquista in Progresso.CONQUISTAS_ADICIONAIS
+                for valor in conquista
+            )
+            cursor.execute(
+                f"""
+                INSERT INTO conquistas_badges (nome, descricao, icone)
+                SELECT novas.nome, novas.descricao, novas.icone
+                FROM ({' UNION ALL '.join(selects)}) AS novas
+                WHERE NOT EXISTS (
+                    SELECT 1 FROM conquistas_badges existente
+                    WHERE existente.nome = novas.nome
+                )
+                """,
+                valores_catalogo,
+            )
             cursor.execute(
                 """
                 SELECT
@@ -275,6 +352,52 @@ class Progresso:
                     resumo["meta_reserva"] > 0
                     and resumo["reserva"] >= resumo["meta_reserva"] * Decimal("0.5")
                 ),
+                "Primeiro Dia": resumo["melhor_sequencia"] >= 1,
+                "Dois Dias Seguidos": resumo["melhor_sequencia"] >= 2,
+                "Ritmo de Cinco Dias": resumo["melhor_sequencia"] >= 5,
+                "Dez Dias Firmes": resumo["melhor_sequencia"] >= 10,
+                "Três Semanas Constantes": resumo["melhor_sequencia"] >= 21,
+                "45 Dias de Ritmo": resumo["melhor_sequencia"] >= 45,
+                "60 Dias Constantes": resumo["melhor_sequencia"] >= 60,
+                "90 Dias de Foco": resumo["melhor_sequencia"] >= 90,
+                "Meio Ano em Movimento": resumo["melhor_sequencia"] >= 180,
+                "Um Ano de Disciplina": resumo["melhor_sequencia"] >= 365,
+                "25 XP": resumo["pontos_xp"] >= 25,
+                "50 XP": resumo["pontos_xp"] >= 50,
+                "250 XP": resumo["pontos_xp"] >= 250,
+                "750 XP": resumo["pontos_xp"] >= 750,
+                "1.500 XP": resumo["pontos_xp"] >= 1500,
+                "5.000 XP": resumo["pontos_xp"] >= 5000,
+                "10.000 XP": resumo["pontos_xp"] >= 10000,
+                "Duas Contas": resumo["contas"] >= 2,
+                "Quatro Contas": resumo["contas"] >= 4,
+                "Dez Contas": resumo["contas"] >= 10,
+                "Quinze Contas": resumo["contas"] >= 15,
+                "Três Categorias": resumo["categorias"] >= 3,
+                "Sete Categorias": resumo["categorias"] >= 7,
+                "Quinze Categorias": resumo["categorias"] >= 15,
+                "Vinte Categorias": resumo["categorias"] >= 20,
+                "Reserva de R$ 50": resumo["reserva"] >= 50,
+                "Reserva de R$ 250": resumo["reserva"] >= 250,
+                "Reserva de R$ 750": resumo["reserva"] >= 750,
+                "Reserva de R$ 2.000": resumo["reserva"] >= 2000,
+                "Reserva de R$ 3.000": resumo["reserva"] >= 3000,
+                "Reserva de R$ 7.500": resumo["reserva"] >= 7500,
+                "Reserva de R$ 15.000": resumo["reserva"] >= 15000,
+                "Reserva de R$ 25.000": resumo["reserva"] >= 25000,
+                "Meta Iniciada": (
+                    resumo["meta_reserva"] > 0
+                    and resumo["reserva"] >= resumo["meta_reserva"] * Decimal("0.1")
+                ),
+                "Reta Final": (
+                    resumo["meta_reserva"] > 0
+                    and resumo["reserva"] >= resumo["meta_reserva"] * Decimal("0.75")
+                ),
+                "Quase na Meta": (
+                    resumo["meta_reserva"] > 0
+                    and resumo["reserva"] >= resumo["meta_reserva"] * Decimal("0.9")
+                ),
+                "Primeira Reserva": resumo["reserva"] >= 1,
             }
 
             for badge in badges:
@@ -301,10 +424,17 @@ class Progresso:
                     )
 
             marcos_xp = {
+                "25 XP": 25,
+                "50 XP": 50,
                 "100 XP": 100,
+                "250 XP": 250,
                 "500 XP": 500,
+                "750 XP": 750,
                 "1.000 XP": 1000,
+                "1.500 XP": 1500,
                 "2.500 XP": 2500,
+                "5.000 XP": 5000,
+                "10.000 XP": 10000,
             }
             marcos_processados = {
                 badge["id_badge"]

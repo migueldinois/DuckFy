@@ -229,7 +229,6 @@ def obter_estado_fogo(dias_ofensiva):
             "cor_principal": "#6C757D",
             "glow": "rgba(108, 117, 125, 0.15)",
             "tamanho_px": 100,
-            "icone": "bi-fire",
             "titulo": "Começa a tua sequência hoje!",
             "mensagem": "Registre a tua atividade diária para acender a chama.",
         }
@@ -262,7 +261,6 @@ def obter_estado_fogo(dias_ofensiva):
         "cor_principal": cor,
         "glow": glow,
         "tamanho_px": tamanho,
-        "icone": "bi-fire",
         "titulo": f"Sequência ativa há {dias} {unidade}!",
         "mensagem": "Continua a registar a tua atividade diária para manter a chama acesa.",
     }
@@ -776,6 +774,7 @@ def dashboard():
         saldo_disponivel=saldo_disponivel,
         usuario=usuario,
         sequencia=usuario.get('dias_ofensiva') or 0,
+        pontos_xp=int(usuario.get('pontos_xp') or 0),
         mes_atual=f"{mes_nome.capitalize()} {hoje.year}",
         total_receitas=total_receitas,
         total_despesas=total_despesas,
