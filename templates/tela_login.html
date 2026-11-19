@@ -18,6 +18,7 @@
     <!-- conecta os arquivos css -->
     <link rel="stylesheet" href="{{ url_for('static', filename='css/variables.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/login.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/acessibilidade.css') }}?v=2.9">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
 
     <!-- importa os ícones flaticon -->
@@ -48,6 +49,15 @@
 
             <!-- botão para alternar entre os temas -->
             <nav class="login-opcoes">
+                <button
+                    type="button"
+                    class="login-acessibilidade-toggle"
+                    data-abrir-acessibilidade
+                    aria-label="Abrir configurações de acessibilidade"
+                    aria-haspopup="dialog"
+                    title="Acessibilidade">
+                    <i class="bi bi-universal-access" aria-hidden="true"></i>
+                </button>
                 <button
                     type="button"
                     id="btn-tema"
@@ -131,11 +141,14 @@
 
     </main>
 
+    {% include 'components/modal_acessibilidade.html' %}
+
     <!-- conecta o javascript da página -->
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="{{ url_for('static', filename='js/sweetalert-messages.js') }}"></script>
     <script src="{{ url_for('static', filename='js/particulas.js') }}"></script>
     <script src="{{ url_for('static', filename='js/login.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/acessibilidade.js') }}" defer></script>
 
 </body>
 

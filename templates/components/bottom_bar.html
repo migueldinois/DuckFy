@@ -44,7 +44,15 @@
         <a href="/perfil">Perfil</a>
         <button type="button" class="bottom-theme-switch" data-theme-toggle aria-label="Ativar tema claro" title="Ativar tema claro">
           <span class="theme-switch-label" data-theme-label>Tema claro</span>
-          <i class="bi bi-sun theme-switch-icon" data-theme-icon aria-hidden="true"></i>
+          <img
+            src="{{ url_for('static', filename='img/icons/tema claro.svg') }}"
+            data-theme-icon
+            data-theme-light="{{ url_for('static', filename='img/icons/tema claro.svg') }}"
+            data-theme-dark="{{ url_for('static', filename='img/icons/tema-escuro.svg') }}"
+            class="theme-switch-icon"
+            alt=""
+            aria-hidden="true"
+          >
         </button>
         <a href="/logout" class="logout-btn" data-confirmar-logout>Sair</a>
       </div>

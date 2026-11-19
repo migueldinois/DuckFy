@@ -112,7 +112,7 @@ class Transacao:
 			conexao.close()
 
 	@staticmethod
-	def registrar(id_usuario, id_conta, id_categoria, descricao, valor, tipo):
+	def registrar(id_usuario, id_conta, id_categoria, descricao, valor, tipo, id_subcategoria=None):
 		try:
 			valor = Decimal(str(valor)).quantize(Decimal("0.01"))
 		except (InvalidOperation, TypeError, ValueError):
@@ -123,6 +123,8 @@ class Transacao:
 
 		if tipo not in ("Receita", "Despesa"):
 			raise ValueError("Tipo de lançamento inválido.")
+		if id_categoria is not None and id_subcategoria is not None:
+			raise ValueError("Selecione uma categoria ou uma subcategoria, não ambas.")
 
 		conexao, cursor = Conexao.conectar()
 		try:
@@ -135,7 +137,27 @@ class Transacao:
 				raise ValueError("A conta selecionada não é válida.")
 >>>>>>> 395814ecbaea09d69dd6c48ab1b6a5b908ea5edc
 
-			if id_categoria is not None:
+			if id_subcategoria is not None:
+				cursor.execute(
+					"""
+					SELECT sub.id_categoria
+					FROM categorias sub
+					INNER JOIN categorias pai
+						ON pai.id_categoria = sub.id_categoria_0
+					WHERE sub.id_categoria = %s
+					  AND (sub.id_usuario = %s OR sub.id_usuario IS NULL)
+					  AND (pai.id_usuario = %s OR pai.id_usuario IS NULL)
+					  AND sub.id_categoria_0 IS NOT NULL
+					  AND pai.id_categoria_0 IS NULL
+					  AND LOWER(sub.tipo) = LOWER(%s)
+					  AND LOWER(pai.tipo) = LOWER(%s)
+					""",
+					(id_subcategoria, id_usuario, id_usuario, tipo, tipo)
+				)
+				if not cursor.fetchone():
+					raise ValueError("A subcategoria não corresponde ao tipo do lançamento.")
+				id_categoria = id_subcategoria
+			elif id_categoria is not None:
 				cursor.execute(
 					"""
 <<<<<<< HEAD
@@ -156,6 +178,7 @@ class Transacao:
 					SELECT id_categoria FROM categorias
 					WHERE id_categoria = %s
 					  AND (id_usuario = %s OR id_usuario IS NULL)
+					  AND id_categoria_0 IS NULL
 					  AND LOWER(tipo) = LOWER(%s)
 					""",
 					(id_categoria, id_usuario, tipo)

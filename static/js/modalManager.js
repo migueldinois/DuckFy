@@ -84,7 +84,10 @@ function abrirModalEditarCategoria(dados) {
     atualizarCorPreviewEdit(dados.cor);
   }
   if (linkSubcats) {
-    linkSubcats.href = `/categorias/${dados.id}/subcategorias`;
+    linkSubcats.href = `/subcategorias?categoria=${encodeURIComponent(dados.id)}`;
+    linkSubcats.dataset.categoryId = String(dados.id);
+    linkSubcats.dataset.categoryName = dados.nome;
+    linkSubcats.setAttribute('aria-expanded', 'false');
   }
 
   ModalManager.abrir('modalEditarCategoria');
