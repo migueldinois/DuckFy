@@ -35,13 +35,20 @@ class Extrato:
                     cb.nome_conta,
                     CASE
                         WHEN t.id_reserva IS NOT NULL THEN 'Reserva de Emergência'
+                        WHEN cat.id_categoria_0 IS NOT NULL
+                            THEN CONCAT(COALESCE(pai.nome, 'Sem Categoria'), ' • ', cat.nome)
                         ELSE COALESCE(cat.nome, 'Sem Categoria')
                     END AS nome_categoria,
                     COALESCE(cat.emoji, '💸') AS emoji,
                     COALESCE(cat.cor, '#CCCCCC') AS cor
                 FROM transacoes t
                 LEFT JOIN contas_bancarias cb ON t.id_conta = cb.id_conta
-                LEFT JOIN categorias cat ON t.id_categoria = cat.id_categoria
+                LEFT JOIN categorias cat
+                    ON t.id_categoria = cat.id_categoria
+                    AND (cat.id_usuario = t.id_usuario OR cat.id_usuario IS NULL)
+                LEFT JOIN categorias pai
+                    ON pai.id_categoria = cat.id_categoria_0
+                    AND (pai.id_usuario = t.id_usuario OR pai.id_usuario IS NULL)
                 WHERE t.id_usuario = %s
             """
             params = [id_usuario]

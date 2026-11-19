@@ -61,7 +61,8 @@
         </button>
     </nav>
 
-    <section id="painelSubcategorias" class="category-panel" role="tabpanel" aria-labelledby="btnSaidas">
+    <section id="painelSubcategorias" class="category-panel" role="tabpanel" aria-labelledby="btnSaidas"
+        data-initial-type="{{ tipo_inicial }}" data-initial-category="{{ categoria_inicial }}">
         <div class="lista-cabecalho">
             <div>
                 <h2 id="tituloListaSubcategorias">Subcategorias de despesas</h2>
@@ -72,7 +73,7 @@
                     <select id="filtroCategoria" aria-label="Filtrar por categoria">
                         <option value="todas">Todas as categorias</option>
                         {% for categoria in categorias %}
-                        <option value="{{ categoria.id }}">{{ categoria.nome }}</option>
+                        <option value="{{ categoria.id }}" {% if categoria_inicial|string == categoria.id|string %}selected{% endif %}>{{ categoria.nome }}</option>
                         {% endfor %}
                     </select>
                 </label>

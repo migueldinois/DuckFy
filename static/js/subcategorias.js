@@ -25,7 +25,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const customColorButton = document.getElementById("abrirCorPersonalizada");
     const alert = window.DuckFyAlert;
     const colorOptions = [...form.querySelectorAll(".color-option[data-color]")];
-    let activeType = "Despesa";
+    let activeType = document.getElementById("painelSubcategorias").dataset.initialType || "Despesa";
     let currentRow = null;
 
     const enviarRequisicao = async (url, options) => {
@@ -325,6 +325,7 @@ document.addEventListener("DOMContentLoaded", () => {
         icon.style.setProperty("--cor-categoria", icon.dataset.cor);
     });
     window.carregarEmojisIOS?.();
+    filterSelect.value = document.getElementById("painelSubcategorias").dataset.initialCategory || "todas";
     setColor(colorInput.value);
     updateList();
 });

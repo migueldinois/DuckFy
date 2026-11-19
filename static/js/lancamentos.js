@@ -368,6 +368,7 @@ function configurarLancamentos() {
   configurarFormularioCriarConta();
 
   const campoCategoria = document.querySelector('#categoria-selecionada');
+  const campoSubcategoria = document.querySelector('#subcategoria-selecionada');
   const nomeCategoriaSelecionada = document.querySelector('#categoria-selecionada-nome');
   const botaoAbrirModalCategoria = document.querySelector('#abrir-modal-categorias');
   const modalCategoria = document.querySelector('#modal-selecionar-categoria');
@@ -428,11 +429,22 @@ function configurarLancamentos() {
     document.querySelectorAll('[data-category-empty]').forEach(function (aviso) {
       aviso.hidden = aviso.dataset.categoryEmpty !== tipo;
     });
+
+    if (campoSubcategoria) {
+      Array.from(campoSubcategoria.options).forEach(function (opcao) {
+        if (!opcao.value) return;
+        opcao.disabled = opcao.dataset.categoryType !== tipo;
+        opcao.hidden = opcao.disabled;
+      });
+      const subcategoriaSelecionada = campoSubcategoria.selectedOptions[0];
+      if (subcategoriaSelecionada?.disabled) campoSubcategoria.value = '';
+    }
   }
 
   function selecionarCategoria(botao) {
     if (!campoCategoria) return;
 
+    if (campoSubcategoria) campoSubcategoria.value = '';
     campoCategoria.value = botao.dataset.categoryId;
     nomeCategoriaSelecionada.textContent = `Selecionada: ${botao.dataset.categoryName}`;
     const corCategoria = botao.dataset.categoryColor;
@@ -515,6 +527,15 @@ function configurarLancamentos() {
     const tipo = obterTipoTransacao();
     if (!tipo) {
       if (nomeCategoriaSelecionada) nomeCategoriaSelecionada.textContent = 'Escolha o tipo para ver as categorias';
+      return;
+    }
+
+    if (campoSubcategoria?.value) {
+      campoCategoria.value = '';
+      botoesCategoria.forEach(function (botao) {
+        botao.classList.remove('is-selected');
+      });
+      if (nomeCategoriaSelecionada) nomeCategoriaSelecionada.textContent = 'Subcategoria selecionada abaixo';
       return;
     }
 
@@ -651,6 +672,7 @@ function configurarLancamentos() {
   tiposTransacao.forEach(function (tipo) {
     tipo.addEventListener('change', function () {
       atualizarCategoriasVisiveis();
+      if (campoSubcategoria) campoSubcategoria.value = '';
 
       const primeiraCategoria = document.querySelector(
         `.categoria-modal-lista [data-category-choice][data-category-type="${tipo.value}"]`
@@ -663,6 +685,18 @@ function configurarLancamentos() {
         nomeCategoriaSelecionada.textContent = 'Nenhuma categoria cadastrada';
       }
     });
+  });
+
+  campoSubcategoria?.addEventListener('change', function () {
+    if (!campoSubcategoria.value) return;
+    campoCategoria.value = '';
+    botoesCategoria.forEach(function (botao) {
+      botao.classList.remove('is-selected');
+    });
+    if (nomeCategoriaSelecionada) {
+      nomeCategoriaSelecionada.textContent = 'Subcategoria selecionada abaixo';
+      nomeCategoriaSelecionada.style.removeProperty('--category-color');
+    }
   });
 
   formularioLancamento?.addEventListener('submit', function (evento) {

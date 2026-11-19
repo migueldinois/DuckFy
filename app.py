@@ -1004,6 +1004,7 @@ def lancamento():
             "lancamentos.html",
             categorias_despesa=categorias_despesa,
             categorias_receita=categorias_receita,
+            subcategorias=Subcategoria.listar(id_usuario),
             contas=contas,
             etapa_inicial=etapa_inicial,
             dados_lancamento=dados_lancamento,
@@ -1036,6 +1037,8 @@ def salvar_lancamento():
         id_conta = int(request.form.get("id_conta", ""))
         id_categoria_raw = request.form.get("categoria", "").strip()
         id_categoria = int(id_categoria_raw) if id_categoria_raw else None
+        id_subcategoria_raw = request.form.get("subcategoria", "").strip()
+        id_subcategoria = int(id_subcategoria_raw) if id_subcategoria_raw else None
         valor = parse_valor_monetario(request.form.get("valor", ""))
 
         detalhes = [descricao]
@@ -1050,6 +1053,7 @@ def salvar_lancamento():
             descricao=" - ".join(detalhes)[:100],
             valor=valor,
             tipo=tipo,
+            id_subcategoria=id_subcategoria,
         ):
             flash(
                 "A transação foi salva com sucesso e já está disponível no extrato.",
@@ -1081,7 +1085,12 @@ def categorias():
         categorias_despesa = Categoria.recuperar_categorias_por_tipo(session["id_usuario"], "Despesa")
         categorias_receita = Categoria.recuperar_categorias_por_tipo(session["id_usuario"], "Receita")
 
-        return render_template("categorias.html", categorias_despesa=categorias_despesa, categorias_receita=categorias_receita)
+        return render_template(
+            "categorias.html",
+            categorias_despesa=categorias_despesa,
+            categorias_receita=categorias_receita,
+            subcategorias=Subcategoria.listar(session["id_usuario"]),
+        )
     else:
         flash("Você precisa estar logado para acessar as categorias!", "error")
         return redirect('/login')
@@ -1094,10 +1103,18 @@ def tela_subcategorias():
         return redirect(url_for("index"))
 
     id_usuario = session["id_usuario"]
+    categorias = Subcategoria.listar_categorias_pai(id_usuario)
+    categoria_inicial = request.args.get("categoria", type=int)
+    categoria_selecionada = next(
+        (categoria for categoria in categorias if categoria["id"] == categoria_inicial),
+        None,
+    )
     return render_template(
         "subcategorias.html",
-        categorias=Subcategoria.listar_categorias_pai(id_usuario),
+        categorias=categorias,
         subcategorias=Subcategoria.listar(id_usuario),
+        categoria_inicial=categoria_selecionada["id"] if categoria_selecionada else "",
+        tipo_inicial=categoria_selecionada["tipo"] if categoria_selecionada else "Despesa",
     )
 
 
